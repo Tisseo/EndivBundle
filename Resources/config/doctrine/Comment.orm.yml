@@ -1,0 +1,27 @@
+Tisseo\EndivBundle\Entity\Comment:
+    type: entity
+    table: comment
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        label:
+            type: string
+            nullable: true
+            length: 5
+            fixed: false
+            comment: 'Lettre servant a signer le commentaire.'
+        commentText:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Description textuelle du commentaire.'
+            column: comment_text
+    lifecycleCallbacks: {  }

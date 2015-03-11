@@ -1,0 +1,15 @@
+Tisseo\EndivBundle\Entity\ExportProd:
+    type: entity
+    table: export_prod
+    id:
+        tableName:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+            id: true
+            column: table_name
+            generator:
+                strategy: SEQUENCE
+    lifecycleCallbacks: {  }

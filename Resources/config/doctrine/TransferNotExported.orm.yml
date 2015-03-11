@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\TransferNotExported:
+    type: entity
+    table: transfer_not_exported
+    indexes:
+        IDX_F25970F7A574F401:
+            columns:
+                - export_destination_id
+        IDX_F25970F7537048AF:
+            columns:
+                - transfer_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        exportDestination:
+            targetEntity: ExportDestination
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                export_destination_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        transfer:
+            targetEntity: Transfer
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                transfer_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,26 @@
+Tisseo\EndivBundle\Entity\ExportDestination:
+    type: entity
+    table: export_destination
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nom:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        url:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

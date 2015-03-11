@@ -1,0 +1,49 @@
+Tisseo\EndivBundle\Entity\StopDatasource:
+    type: entity
+    table: stop_datasource
+    indexes:
+        stop_datasource_code_idx:
+            columns:
+                - code
+        stop_datasource_stop_id_idx:
+            columns:
+                - stop_id
+        IDX_AD391F17712290DD:
+            columns:
+                - datasource_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        stop:
+            targetEntity: Stop
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                stop_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

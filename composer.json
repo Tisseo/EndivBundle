@@ -1,0 +1,28 @@
+{
+    "name" : "tisseo/endiv-bundle",
+    "description" : "Provides mapping and services in order to manage data from ENDIV database.",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "Vincent Passama",
+        "email" : "vincent.passama@capgemini.com"
+    }],
+    "keywords" : [
+        "tisseo endiv bundle"
+    ],
+    "license" : "MIT",
+    "require" : {
+        "php": ">=5.4.3",
+        "creof/doctrine2-spatial": "0.0.1"
+    },
+    "autoload" : {
+        "psr-0" : { "Tisseo\\EndivBundle\\" : "" }
+    },
+    "target-dir" : "Tisseo/EndivBundle",
+    "repositories" : [{
+    }],
+    "extra" : {
+        "branch-alias" : {
+            "dev-master" : "0.1-dev"
+        }
+    }
+}

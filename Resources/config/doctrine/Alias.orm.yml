@@ -1,0 +1,34 @@
+Tisseo\EndivBundle\Entity\Alias:
+    type: entity
+    table: alias
+    indexes:
+        IDX_E16C6B941AD056BA:
+            columns:
+                - stop_area_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        stopArea:
+            targetEntity: StopArea
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                stop_area_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,62 @@
+Tisseo\EndivBundle\Entity\StopHistory:
+    type: entity
+    table: stop_history
+    indexes:
+        IDX_8065666D3902063D:
+            columns:
+                - stop_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        startDate:
+            type: date
+            nullable: false
+            comment: ''
+            column: start_date
+        endDate:
+            type: date
+            nullable: true
+            comment: ''
+            column: end_date
+        shortName:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: 'Nom de l''arret dans le referentiel Hastus. Pas de modification possible.'
+            column: short_name
+        longName:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Champ inutile pour le moment. Laisser vide.'
+            column: long_name
+        theGeom:
+            type: geometry
+            nullable: false
+            comment: ''
+            requireSQLConversion: true
+            column: the_geom
+        accessibility:
+            type: boolean
+            nullable: true
+            comment: 'Accessibilite de l''arret pour les UFR (fauteuil roulant) selon les releves du service accessibilite.'
+    manyToOne:
+        stop:
+            targetEntity: Stop
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                stop_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

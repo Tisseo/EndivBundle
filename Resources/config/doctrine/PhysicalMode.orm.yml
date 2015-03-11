@@ -1,0 +1,26 @@
+Tisseo\EndivBundle\Entity\PhysicalMode:
+    type: entity
+    table: physical_mode
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+        type:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

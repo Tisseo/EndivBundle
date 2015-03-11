@@ -1,0 +1,44 @@
+Tisseo\EndivBundle\Entity\Agency:
+    type: entity
+    table: agency
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        url:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        timezone:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        lang:
+            type: string
+            nullable: true
+            length: 3
+            fixed: false
+            comment: ''
+        phone:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

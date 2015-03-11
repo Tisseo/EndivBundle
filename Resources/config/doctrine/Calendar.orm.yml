@@ -1,0 +1,52 @@
+Tisseo\EndivBundle\Entity\Calendar:
+    type: entity
+    table: calendar
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        calendarType:
+            type: calendar_type
+            requireSQLConversion: true
+            comment: ''
+            column: calendar_type
+    oneToMany:
+        calendarElements:
+            targetEntity: CalendarElement
+            cascade: ['persist', 'remove']
+            mappedBy: calendar
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        periodTrips:
+            targetEntity: Trip
+            mappedBy: periodCalendar
+            inversedBy: null
+            orphanRemoval: false
+            fetch: 'EXTRA_LAZY'
+        dayTrips:
+            targetEntity: Trip
+            mappedBy: dayCalendar
+            inversedBy: null
+            orphanRemoval: false
+            fetch: 'EXTRA_LAZY'
+        calendarDatasources:
+            targetEntity: CalendarDatasource
+            cascade: ['persist', 'remove']
+            mappedBy: calendar
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

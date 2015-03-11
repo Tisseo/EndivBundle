@@ -1,0 +1,46 @@
+Tisseo\EndivBundle\Entity\TransferDatasource:
+    type: entity
+    table: transfer_datasource
+    indexes:
+        IDX_41C06199712290DD:
+            columns:
+                - datasource_id
+        IDX_41C06199537048AF:
+            columns:
+                - transfer_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        transfer:
+            targetEntity: Transfer
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                transfer_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

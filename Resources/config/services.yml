@@ -1,0 +1,31 @@
+parameters:
+    tisseo_endiv.line_manager.class: Tisseo\EndivBundle\Services\LineManager
+    tisseo_endiv.physical_mode_manager.class: Tisseo\EndivBundle\Services\PhysicalModeManager
+    tisseo_endiv.line_version_manager.class: Tisseo\EndivBundle\Services\LineVersionManager
+    tisseo_endiv.printing_manager.class: Tisseo\EndivBundle\Services\PrintingManager
+    tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
+    tisseo_endiv.grid_calendar_manager.class: Tisseo\EndivBundle\Services\GridCalendarManager
+    tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
+
+services:
+    tisseo_endiv.line_manager:
+        class: %tisseo_endiv.line_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.trip_manager:
+        class: %tisseo_endiv.trip_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.physical_mode_manager:
+        class: %tisseo_endiv.physical_mode_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_version_manager:
+        class: %tisseo_endiv.line_version_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.trip_manager']
+    tisseo_endiv.grid_calendar_manager:
+        class: %tisseo_endiv.grid_calendar_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.printing_manager:
+        class: %tisseo_endiv.printing_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.exception_type_manager:
+        class: %tisseo_endiv.exception_type_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']

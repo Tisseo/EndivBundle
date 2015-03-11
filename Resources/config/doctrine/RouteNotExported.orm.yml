@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\RouteNotExported:
+    type: entity
+    table: route_not_exported
+    indexes:
+        IDX_D60ABFC6A574F401:
+            columns:
+                - export_destination_id
+        IDX_D60ABFC634ECB4E6:
+            columns:
+                - route_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        exportDestination:
+            targetEntity: ExportDestination
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                export_destination_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        route:
+            targetEntity: Route
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                route_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

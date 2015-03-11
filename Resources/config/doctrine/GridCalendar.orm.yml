@@ -1,0 +1,68 @@
+Tisseo\EndivBundle\Entity\GridCalendar:
+    type: entity
+    table: grid_calendar
+    indexes:
+        grid_calendar_line_version_id_idx:
+            columns:
+                - line_version_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        monday:
+            type: boolean
+            nullable: false
+            comment: ''
+        tuesday:
+            type: boolean
+            nullable: false
+            comment: ''
+        wednesday:
+            type: boolean
+            nullable: false
+            comment: ''
+        thursday:
+            type: boolean
+            nullable: false
+            comment: ''
+        friday:
+            type: boolean
+            nullable: false
+            comment: ''
+        saturday:
+            type: boolean
+            nullable: false
+            comment: ''
+        sunday:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        lineVersion:
+            targetEntity: LineVersion
+            mappedBy: null
+            inversedBy: gridCalendars
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
+    oneToMany:
+        gridLinkCalendarMaskTypes:
+            targetEntity: GridLinkCalendarMaskType
+            cascade: ['persist', 'remove']
+            mappedBy: gridCalendar
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

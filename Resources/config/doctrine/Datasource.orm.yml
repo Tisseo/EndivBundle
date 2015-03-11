@@ -1,0 +1,34 @@
+Tisseo\EndivBundle\Entity\Datasource:
+    type: entity
+    table: datasource
+    indexes:
+        IDX_9B0D5F70CDEADB2A:
+            columns:
+                - agency_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+    manyToOne:
+        agency:
+            targetEntity: Agency
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                agency_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

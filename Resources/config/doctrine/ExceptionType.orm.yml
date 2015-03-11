@@ -1,0 +1,41 @@
+Tisseo\EndivBundle\Entity\ExceptionType:
+    type: entity
+    table: exception_type
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        label:
+            type: string
+            nullable: true
+            length: 5
+            fixed: false
+            comment: 'Lettre servant a signer le commentaire.'
+        exceptionText:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Description textuelle du commentaire.'
+            column: exception_text
+        gridCalendarPattern:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: 'Circulation LMMJVSD de la grille horaire cible.'
+            column: grid_calendar_pattern
+        tripCalendarPattern:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: 'Circulation LMMJVSD du service cible.'
+            column: trip_calendar_pattern
+    lifecycleCallbacks: {  }

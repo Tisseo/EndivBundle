@@ -1,0 +1,42 @@
+Tisseo\EndivBundle\Entity\CalendarDatasource:
+    type: entity
+    table: calendar_datasource
+    indexes:
+        IDX_D479B75A40A2C8:
+            columns:
+                - calendar_id
+        IDX_D479B75712290DD:
+            columns:
+                - datasource_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        calendar:
+            targetEntity: Calendar
+            mappedBy: null
+            inversedBy: calendarDatasources
+            joinColumns:
+                calendar_id:
+                    referencedColumnName: id
+        datasource:
+            targetEntity: Datasource
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

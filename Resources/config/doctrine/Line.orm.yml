@@ -1,0 +1,50 @@
+Tisseo\EndivBundle\Entity\Line:
+    type: entity
+    table: line
+    indexes:
+        IDX_D114B4F6635D2D67:
+            columns:
+                - physical_mode_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        number:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+        priority:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+    oneToMany:
+        lineDatasources:
+            targetEntity: LineDatasource
+            cascade: ['persist', 'remove']
+            mappedBy: line
+            inversedBy: null
+        lineVersions:
+            targetEntity: LineVersion
+            cascade: ['persist', 'remove']
+            mappedBy: line
+            inversedBy: null
+    manyToOne:
+        physicalMode:
+            targetEntity: PhysicalMode
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                physical_mode_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

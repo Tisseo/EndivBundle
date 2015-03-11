@@ -1,0 +1,45 @@
+Tisseo\EndivBundle\Entity\TripDatasource:
+    type: entity
+    table: trip_datasource
+    indexes:
+        trip_datasource_code_idx:
+            columns:
+                - code
+        trip_datasource_trip_id_idx:
+            columns:
+                - trip_id
+        IDX_6E1F8466712290DD:
+            columns:
+                - datasource_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+        trip:
+            targetEntity: Trip
+            mappedBy: null
+            inversedBy: tripDatasources
+            joinColumns:
+                trip_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

@@ -1,0 +1,89 @@
+Tisseo\EndivBundle\Entity\Trip:
+    type: entity
+    table: trip
+    indexes:
+        trip_route_id_idx:
+            columns:
+                - route_id
+        trip_period_calendar_id_idx:
+            columns:
+                - period_calendar_id
+        IDX_7656F53BF8697D13:
+            columns:
+                - comment_id
+        IDX_7656F53BFE610542:
+            columns:
+                - trip_calendar_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: 'Nom de l''objet. Si vient d''Hastus, identiques a la datasource.'
+        isPattern:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: is_pattern
+    oneToMany:
+        stopTimes:
+            targetEntity: StopTime
+            cascade: ['persist', 'remove']
+            mappedBy: trip
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        tripDatasources:
+            targetEntity: TripDatasource
+            cascade: ['persist', 'remove']
+            mappedBy: trip
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    manyToOne:
+        periodCalendar:
+            targetEntity: Calendar
+            mappedBy: null
+            inversedBy: periodTrips
+            joinColumns:
+                period_calendar_id:
+                    referencedColumnName: id
+        dayCalendar:
+            targetEntity: Calendar
+            mappedBy: null
+            inversedBy: dayTrips
+            joinColumns:
+                day_calendar_id:
+                    referencedColumnName: id
+        comment:
+            targetEntity: Comment
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                comment_id:
+                    referencedColumnName: id
+        route:
+            targetEntity: Route
+            mappedBy: null
+            inversedBy: trips
+            joinColumns:
+                route_id:
+                    referencedColumnName: id
+        tripCalendar:
+            targetEntity: TripCalendar
+            mappedBy: null
+            inversedBy: trips
+            joinColumns:
+                trip_calendar_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

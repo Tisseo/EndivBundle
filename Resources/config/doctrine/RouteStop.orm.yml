@@ -1,0 +1,83 @@
+Tisseo\EndivBundle\Entity\RouteStop:
+    type: entity
+    table: route_stop
+    indexes:
+        route_stop_route_id_idx:
+            columns:
+                - route_id
+        route_stop_waypoint_id_idx:
+            columns:
+                - waypoint_id
+        IDX_14131733D654299D:
+            columns:
+                - route_section_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rank:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: 'Ordre dans l''itineraire. Commence a 1.'
+        scheduledStop:
+            type: boolean
+            nullable: false
+            comment: 'Indique s''il s''agit d''un waypoint qui comporte des horaires.'
+            column: scheduled_stop
+        pickup:
+            type: boolean
+            nullable: false
+            comment: ''
+        dropOff:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: drop_off
+        reservationRequired:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: reservation_required
+        internalService:
+            type: boolean
+            nullable: true
+            comment: 'Dans le cas d''une zone TAD, idique si la desserte interne de la zone est autorisee.'
+            column: internal_service
+    manyToOne:
+        route:
+            targetEntity: Route
+            mappedBy: null
+            inversedBy: routeStops
+            joinColumns:
+                route_id:
+                    referencedColumnName: id
+        routeSection:
+            targetEntity: RouteSection
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                route_section_id:
+                    referencedColumnName: id
+        waypoint:
+            targetEntity: Waypoint
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                waypoint_id:
+                    referencedColumnName: id
+    oneToMany:
+        stopTimes:
+            targetEntity: StopTime
+            cascade: ['remove']
+            mappedBy: routeStop
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

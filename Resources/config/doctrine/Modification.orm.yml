@@ -1,0 +1,28 @@
+Tisseo\EndivBundle\Entity\Modification:
+    type: entity
+    table: modification
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        description:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    oneToMany:
+        modificationLinks:
+            targetEntity: ModificationLink
+            cascade: {  }
+            mappedBy: modification
+            inversedBy: null
+            orphanRemoval: false
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

@@ -1,0 +1,48 @@
+Tisseo\EndivBundle\Entity\Stop:
+    type: entity
+    table: stop
+    indexes:
+        IDX_B95616B6E525EB55:
+            columns:
+                - master_stop_id
+        IDX_B95616B61AD056BA:
+            columns:
+                - stop_area_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE    
+    oneToOne:
+        waypoint:
+            targetEntity: Waypoint
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    manyToOne:
+        masterStop:
+            targetEntity: Stop
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                master_stop_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        stopArea:
+            targetEntity: StopArea
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                stop_area_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

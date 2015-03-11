@@ -1,0 +1,35 @@
+Tisseo\EndivBundle\Entity\OdtArea:
+    type: entity
+    table: odt_area
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+        comment:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    oneToOne:
+        waypoint:
+            targetEntity: Waypoint
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

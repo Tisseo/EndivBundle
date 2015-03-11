@@ -1,0 +1,177 @@
+Tisseo\EndivBundle\Entity\LineVersion:
+    type: entity
+    table: line_version
+    indexes:
+        IDX_AB852A44D7B7542:
+            columns:
+                - line_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        version:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        startDate:
+            type: date
+            nullable: false
+            comment: 'Date de debut d''offre.'
+            column: start_date
+        endDate:
+            type: date
+            nullable: true
+            comment: 'Date effective de fin d''offre, non reneignee a la creation.'
+            column: end_date
+        plannedEndDate:
+            type: date
+            nullable: false
+            comment: 'Date de fin previsionnelle d''offre.'
+            column: planned_end_date
+        childLineId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'Ligne rattachee (ligne de soiree)'
+            column: child_line_id
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        forwardDirection:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            column: forward_direction
+        backwardDirection:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            column: backward_direction
+        bgColor:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            default: blanc
+            column: bg_color
+        bgHexaColor:
+            type: string
+            nullable: false
+            length: 7
+            fixed: false
+            comment: ''
+            default: '#FFFFFF'
+            column: bg_hexa_color
+        fgColor:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            default: noir
+            column: fg_color
+        fgHexaColor:
+            type: string
+            nullable: false
+            length: 7
+            fixed: false
+            comment: ''
+            default: '#000000'
+            column: fg_hexa_color
+        cartoFile:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: carto_file
+        accessibility:
+            type: boolean
+            nullable: true
+            comment: ''
+        airConditioned:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: air_conditioned
+        certified:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+        comment:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        depot:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        status:
+            type: line_version_status
+            requireSQLConversion: true
+            comment: ''
+    oneToOne:
+        childLine:
+            targetEntity: Line
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                child_line_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    manyToOne:
+        line:
+            targetEntity: Line
+            mappedBy: null
+            inversedBy: lineVersions
+            joinColumns:
+                line_id:
+                    referencedColumnName: id
+    oneToMany:
+        gridCalendars:
+            targetEntity: GridCalendar
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        modificationLinks:
+            targetEntity: ModificationLink
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+        printings:
+            targetEntity: Printing
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+        routes:
+            targetEntity: Route
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

@@ -1,0 +1,43 @@
+Tisseo\EndivBundle\Entity\GridMaskType:
+    type: entity
+    table: grid_mask_type
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        calendarType:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: 'Type du calendrier. Semaine correspond à LaV si un type Samedi existe sur l''offre et à LaS sinon. Dimanche regroupe egalement les jours feries.'
+            column: calendar_type
+        calendarPeriod:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: 'Periode d''application du calendrier. BASE correspond a la periode hors vacances si une periode vacance existe sur cette offre et a la periode hiver sinon.'
+            column: calendar_period
+    oneToMany:
+        gridLinkCalendarMaskTypes:
+            targetEntity: GridLinkCalendarMaskType
+            cascade: ['persist', 'remove']
+            mappedBy: gridMaskType
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        tripCalendars:
+            targetEntity: TripCalendar
+            cascade: ['persist', 'remove']
+            mappedBy: gridMaskType
+            inversedBy: null
+            oprhanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

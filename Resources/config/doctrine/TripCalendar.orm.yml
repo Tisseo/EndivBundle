@@ -1,0 +1,63 @@
+Tisseo\EndivBundle\Entity\TripCalendar:
+    type: entity
+    table: trip_calendar
+    indexes:
+        IDX_C6F892567D504B03:
+            columns:
+                - grid_mask_type_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        monday:
+            type: boolean
+            nullable: false
+            comment: ''
+        tuesday:
+            type: boolean
+            nullable: false
+            comment: ''
+        wednesday:
+            type: boolean
+            nullable: false
+            comment: ''
+        thursday:
+            type: boolean
+            nullable: false
+            comment: ''
+        friday:
+            type: boolean
+            nullable: false
+            comment: ''
+        saturday:
+            type: boolean
+            nullable: false
+            comment: ''
+        sunday:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        gridMaskType:
+            targetEntity: GridMaskType
+            cascade: {  }
+            mappedBy: null
+            inversedBy: tripCalendars
+            joinColumns:
+                grid_mask_type_id:
+                    referencedColumnName: id
+            fetch: "EXTRA_LAZY"
+    oneToMany:
+        trips:
+            targetEntity: Trip
+            cascade: ['persist', 'remove']
+            mappedBy: tripCalendar
+            inversedBy: null
+            fetch: "EXTRA_LAZY"
+    lifecycleCallbacks: {  }

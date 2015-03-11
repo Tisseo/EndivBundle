@@ -1,0 +1,46 @@
+Tisseo\EndivBundle\Entity\PoiAddressDatasource:
+    type: entity
+    table: poi_address_datasource
+    indexes:
+        IDX_22D5E904712290DD:
+            columns:
+                - datasource_id
+        IDX_22D5E9045AD77D91:
+            columns:
+                - poi_address_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        poiAddress:
+            targetEntity: PoiAddress
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                poi_address_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

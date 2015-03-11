@@ -1,0 +1,13 @@
+Tisseo\EndivBundle\Entity\Waypoint:
+    type: entity
+    table: waypoint
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    lifecycleCallbacks: {  }

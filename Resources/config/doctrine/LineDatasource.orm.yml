@@ -1,0 +1,46 @@
+Tisseo\EndivBundle\Entity\LineDatasource:
+    type: entity
+    table: line_datasource
+    indexes:
+        IDX_25B64C9B712290DD:
+            columns:
+                - datasource_id
+        IDX_25B64C9B4D7B7542:
+            columns:
+                - line_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        line:
+            targetEntity: Line
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineDatasources
+            joinColumns:
+                line_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

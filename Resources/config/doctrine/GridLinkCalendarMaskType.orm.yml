@@ -1,0 +1,40 @@
+Tisseo\EndivBundle\Entity\GridLinkCalendarMaskType:
+    type: entity
+    table: grid_link_calendar_mask_type
+    indexes:
+        grid_link_calendar_mask_type_grid_calendar_id_idx:
+            columns:
+                - grid_calendar_id
+        grid_link_calendar_mask_type_grid_mask_type_id_idx:
+            columns:
+                - grid_mask_type_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        active:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        gridCalendar:
+            targetEntity: GridCalendar
+            mappedBy: null
+            inversedBy: gridLinkCalendarMaskTypes
+            joinColumns:
+                grid_calendar_id:
+                    referencedColumnName: id
+        gridMaskType:
+            targetEntity: GridMaskType
+            mappedBy: null
+            inversedBy: gridLinkCalendarMaskTypes
+            joinColumns:
+                grid_mask_type_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

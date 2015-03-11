@@ -1,0 +1,50 @@
+Tisseo\EndivBundle\Entity\Log:
+    type: entity
+    table: log
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        datetime:
+            type: datetime
+            nullable: false
+            comment: ''
+        table:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+        action:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+        previousData:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: previous_data
+        insertedData:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: inserted_data
+        user:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

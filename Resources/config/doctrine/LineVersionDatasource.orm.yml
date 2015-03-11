@@ -1,0 +1,46 @@
+Tisseo\EndivBundle\Entity\LineVersionDatasource:
+    type: entity
+    table: line_version_datasource
+    indexes:
+        IDX_667F4EFA712290DD:
+            columns:
+                - datasource_id
+        IDX_667F4EFAF50734EE:
+            columns:
+                - line_version_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lineVersion:
+            targetEntity: LineVersion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,76 @@
+Tisseo\EndivBundle\Entity\Route:
+    type: entity
+    table: route
+    indexes:
+        route_line_version_id_idx:
+            columns:
+                - line_version_id
+        IDX_2C42079F8697D13:
+            columns:
+                - comment_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        way:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: 'Aller ou retour.'
+        name:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: 'Nom du parcours type (Hastus ou Tigre).'
+        direction:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: 'Titre de la direction, a terme, viendra de l''application girouette.'
+    manyToOne:
+        comment:
+            targetEntity: Comment
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                comment_id:
+                    referencedColumnName: id
+        lineVersion:
+            targetEntity: LineVersion
+            mappedBy: null
+            inversedBy: routes
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
+    oneToMany:
+        trips:
+            targetEntity: Trip
+            cascade: ['persist', 'remove']
+            mappedBy: route
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        routeDatasources:
+            targetEntity: RouteDatasource
+            cascade: ['persist', 'remove']
+            mappedBy: route
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        routeStops:
+            targetEntity: RouteStop
+            cascade: ['persist', 'remove']
+            mappedBy: route
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

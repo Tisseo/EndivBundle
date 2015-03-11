@@ -1,0 +1,48 @@
+Tisseo\EndivBundle\Entity\StopTime:
+    type: entity
+    table: stop_time
+    indexes:
+        stop_time_route_stop_id_idx:
+            columns:
+                - route_stop_id
+        stop_time_trip_id_idx:
+            columns:
+                - trip_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        arrivalTime:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'Temps en seconde apres minuit de la date. Peut depasser 23h59.'
+            column: arrival_time
+        departureTime:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'Temps en seconde apres minuit de la date. Peut depasser 23h59.'
+            column: departure_time
+    manyToOne:
+        trip:
+            targetEntity: Trip
+            mappedBy: null
+            inversedBy: stopTimes
+            joinColumns:
+                trip_id:
+                    referencedColumnName: id
+        routeStop:
+            targetEntity: RouteStop
+            mappedBy: null
+            inversedBy: stopTimes
+            joinColumns:
+                route_stop_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

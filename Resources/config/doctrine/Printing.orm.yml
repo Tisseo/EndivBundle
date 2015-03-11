@@ -1,0 +1,43 @@
+Tisseo\EndivBundle\Entity\Printing:
+    type: entity
+    table: printing
+    indexes:
+        IDX_308F6DF3F50734EE:
+            columns:
+                - line_version_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        quantity:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        date:
+            type: date
+            nullable: true
+            comment: ''
+        comment:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: 'Raison du tirage : initial, reassort ou correction.'
+    manyToOne:
+        lineVersion:
+            targetEntity: LineVersion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: printings
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

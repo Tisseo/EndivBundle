@@ -1,0 +1,54 @@
+Tisseo\EndivBundle\Entity\StopArea:
+    type: entity
+    table: stop_area
+    indexes:
+        IDX_3D72FF778BAC62AF:
+            columns:
+                - city_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        shortName:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: 'Nom identique aux noms des arrets le composant.'
+            column: short_name
+        longName:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Par defaut, le long_name est identique aux noms des arrets le composant, il peut etre modifie pour developper les abbreviations du nom court.'
+            column: long_name
+        transferDuration:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: 'Temps en secondes de transfert entre deux arret de cette zone d''arrets.'
+            column: transfer_duration
+        theGeom:
+            type: geometry
+            nullable: true
+            comment: ''
+            requireSQLConversion: true
+            column: the_geom
+    manyToOne:
+        city:
+            targetEntity: City
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                city_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

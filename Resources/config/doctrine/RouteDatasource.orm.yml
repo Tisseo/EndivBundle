@@ -1,0 +1,49 @@
+Tisseo\EndivBundle\Entity\RouteDatasource:
+    type: entity
+    table: route_datasource
+    indexes:
+        route_datasource_code_idx:
+            columns:
+                - code
+        route_datasource_route_id_idx:
+            columns:
+                - route_id
+        IDX_957A9597712290DD:
+            columns:
+                - datasource_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        route:
+            targetEntity: Route
+            cascade: {  }
+            mappedBy: null
+            inversedBy: routeDatasources
+            joinColumns:
+                route_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

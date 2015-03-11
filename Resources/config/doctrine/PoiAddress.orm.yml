@@ -1,0 +1,45 @@
+Tisseo\EndivBundle\Entity\PoiAddress:
+    type: entity
+    table: poi_address
+    indexes:
+        poi_address_poi_id_idx:
+            columns:
+                - poi_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: "\n"
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        address:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: 'Adresse postale de la localisation du POI.'
+        isEntrance:
+            type: boolean
+            nullable: false
+            comment: 'Indique sil la localisation est une entree du POI ou le barycentre du POI.'
+            column: is_entrance
+        theGeom:
+            type: geometry
+            nullable: false
+            comment: ''
+            requireSQLConversion: true
+            column: the_geom
+    manyToOne:
+        poi:
+            targetEntity: Poi
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                poi_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
