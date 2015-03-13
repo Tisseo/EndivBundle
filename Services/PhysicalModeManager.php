@@ -5,7 +5,7 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\PhysicalMode;
 
-class PhysicalModeManager
+class PhysicalModeManager extends SortManager
 {
     private $om = null;
     private $repository = null;

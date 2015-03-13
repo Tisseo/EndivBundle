@@ -1,6 +1,11 @@
 parameters:
     tisseo_endiv.line_manager.class: Tisseo\EndivBundle\Services\LineManager
+    tisseo_endiv.agency_manager.class: Tisseo\EndivBundle\Services\AgencyManager
+    tisseo_endiv.datasource_manager.class: Tisseo\EndivBundle\Services\DatasourceManager
+    tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
+    tisseo_endiv.log_manager.class: Tisseo\EndivBundle\Services\LogManager
     tisseo_endiv.physical_mode_manager.class: Tisseo\EndivBundle\Services\PhysicalModeManager
+    tisseo_endiv.poi_type_manager.class: Tisseo\EndivBundle\Services\PoiTypeManager
     tisseo_endiv.line_version_manager.class: Tisseo\EndivBundle\Services\LineVersionManager
     tisseo_endiv.printing_manager.class: Tisseo\EndivBundle\Services\PrintingManager
     tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
@@ -14,8 +19,23 @@ services:
     tisseo_endiv.trip_manager:
         class: %tisseo_endiv.trip_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.agency_manager:
+        class: %tisseo_endiv.agency_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.datasource_manager:
+        class: %tisseo_endiv.datasource_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.exception_type_manager:
+        class: %tisseo_endiv.exception_type_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.log_manager:
+        class: %tisseo_endiv.log_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.physical_mode_manager:
         class: %tisseo_endiv.physical_mode_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.poi_type_manager:
+        class: %tisseo_endiv.poi_type_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
