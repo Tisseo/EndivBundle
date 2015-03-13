@@ -7,7 +7,7 @@ Tisseo\EndivBundle\Entity\City:
                 - the_geom
         city_main_stop_area_id_idx:
             columns:
-                - main_stop_area_id 
+                - main_stop_area_id
     id:
         id:
             type: integer

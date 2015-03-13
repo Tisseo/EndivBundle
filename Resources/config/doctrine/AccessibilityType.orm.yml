@@ -1,0 +1,57 @@
+Tisseo\EndivBundle\Entity\AccessibilityType:
+    type: entity
+    table: accessibility_type
+    indexes:
+        IDX_796C1E5B24441F6D:
+            columns:
+                - accessibility_mode_id
+        IDX_796C1E5BA40A2C8:
+            columns:
+                - calendar_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        startTime:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'Temps en seconde apres minuit de la date. Peut depasser 23h59. Explicite l''heure de départ de l''innaccessibilité du calendrier'
+            column: start_time
+        endTime:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'Temps en seconde apres minuit de la date. Peut depasser 23h59. Explicite l''heure de fin de l''innaccessibilité du calendrier'
+            column: end_time
+        isRecursive:
+            type: boolean
+            nullable: true
+            comment: 'Si vrai, les heures de departs et fin s''appliquent tous les jours du calendier. Sinon, l''heure de depart s''applique au premier jour du calendrier et l''heure de fin au dernier'
+            column: is_recursive
+    manyToOne:
+        accessibilityMode:
+            targetEntity: AccessibilityMode
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                accessibility_mode_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        calendar:
+            targetEntity: Calendar
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                calendar_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

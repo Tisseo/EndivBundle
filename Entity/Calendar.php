@@ -149,7 +149,7 @@ class Calendar
     /**
      * Add calendarDatasources
      *
-     * @param \Tisseo\EndivBundle\Entity\CalendarDatasource $calendarDatasources
+     * @param CalendarDatasource $calendarDatasources
      * @return Calendar
      */
     public function addCalendarDatasource(CalendarDatasource $calendarDatasources)
@@ -162,7 +162,7 @@ class Calendar
     /**
      * Remove calendarDatasources
      *
-     * @param \Tisseo\EndivBundle\Entity\CalendarDatasource $calendarDatasources
+     * @param CalendarDatasource $calendarDatasources
      */
     public function removeCalendarDatasource(CalendarDatasource $calendarDatasources)
     {
@@ -177,5 +177,71 @@ class Calendar
     public function getCalendarDatasources()
     {
         return $this->calendarDatasources;
+    }
+
+    /**
+     * Add periodTrips
+     *
+     * @param Trip $periodTrips
+     * @return Calendar
+     */
+    public function addPeriodTrip(Trip $periodTrips)
+    {
+        $this->periodTrips[] = $periodTrips;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodTrips
+     *
+     * @param Trip $periodTrips
+     */
+    public function removePeriodTrip(Trip $periodTrips)
+    {
+        $this->periodTrips->removeElement($periodTrips);
+    }
+
+    /**
+     * Get periodTrips
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeriodTrips()
+    {
+        return $this->periodTrips;
+    }
+
+    /**
+     * Add dayTrips
+     *
+     * @param Trip $dayTrips
+     * @return Calendar
+     */
+    public function addDayTrip(Trip $dayTrips)
+    {
+        $this->dayTrips[] = $dayTrips;
+
+        return $this;
+    }
+
+    /**
+     * Remove dayTrips
+     *
+     * @param Trip $dayTrips
+     */
+    public function removeDayTrip(Trip $dayTrips)
+    {
+        $this->dayTrips->removeElement($dayTrips);
+    }
+
+    /**
+     * Get dayTrips
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDayTrips()
+    {
+        return $this->dayTrips;
     }
 }

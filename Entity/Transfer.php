@@ -35,11 +35,6 @@ class Transfer
     private $accessibility;
 
     /**
-     * @var string
-     */
-    private $description;
-
-    /**
      * @var \Tisseo\EndivBundle\Entity\Stop
      */
     private $endStop;
@@ -150,29 +145,6 @@ class Transfer
     public function getAccessibility()
     {
         return $this->accessibility;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Transfer
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string 
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     /**

@@ -20,12 +20,12 @@ Tisseo\EndivBundle\Entity\Line:
             nullable: false
             length: 10
             fixed: false
-            comment: ''
+            comment: 'Numéro de la ligne. Peut ne pas etre numerique. Par exple : T1, A ou L16 sont des numeros.'
         priority:
             type: integer
             nullable: false
             unsigned: false
-            comment: ''
+            comment: 'Priorité de la ligne. Sert notamment a trier les lignes dans les listes de lignes.'
     oneToMany:
         lineDatasources:
             targetEntity: LineDatasource

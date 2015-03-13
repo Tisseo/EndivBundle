@@ -382,4 +382,50 @@ class Route
     {
         $this->routeDatasources->clear();
     }
+
+    /**
+     * Add routeDatasources
+     *
+     * @param \Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources
+     * @return Route
+     */
+    public function addRouteDatasource(\Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources)
+    {
+        $this->routeDatasources[] = $routeDatasources;
+
+        return $this;
+    }
+
+    /**
+     * Remove routeDatasources
+     *
+     * @param \Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources
+     */
+    public function removeRouteDatasource(\Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources)
+    {
+        $this->routeDatasources->removeElement($routeDatasources);
+    }
+
+    /**
+     * Add routeStops
+     *
+     * @param \Tisseo\EndivBundle\Entity\RouteStop $routeStops
+     * @return Route
+     */
+    public function addRouteStop(\Tisseo\EndivBundle\Entity\RouteStop $routeStops)
+    {
+        $this->routeStops[] = $routeStops;
+
+        return $this;
+    }
+
+    /**
+     * Remove routeStops
+     *
+     * @param \Tisseo\EndivBundle\Entity\RouteStop $routeStops
+     */
+    public function removeRouteStop(\Tisseo\EndivBundle\Entity\RouteStop $routeStops)
+    {
+        $this->routeStops->removeElement($routeStops);
+    }
 }

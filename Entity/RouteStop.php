@@ -337,4 +337,27 @@ class RouteStop
     {
         $this->stopTimes->removeElement($stopTime);
     }
+
+    /**
+     * Add stopTimes
+     *
+     * @param \Tisseo\EndivBundle\Entity\StopTime $stopTimes
+     * @return RouteStop
+     */
+    public function addStopTime(\Tisseo\EndivBundle\Entity\StopTime $stopTimes)
+    {
+        $this->stopTimes[] = $stopTimes;
+
+        return $this;
+    }
+
+    /**
+     * Remove stopTimes
+     *
+     * @param \Tisseo\EndivBundle\Entity\StopTime $stopTimes
+     */
+    public function removeStopTime(\Tisseo\EndivBundle\Entity\StopTime $stopTimes)
+    {
+        $this->stopTimes->removeElement($stopTimes);
+    }
 }

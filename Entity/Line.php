@@ -27,7 +27,7 @@ class Line
     private $priority;
 
     /**
-     * @var \Tisseo\EndivBundle\Entity\PhysicalMode
+     * @var PhysicalMode
      */
     private $physicalMode;
 
@@ -53,7 +53,7 @@ class Line
     /**
      * getLastLineVersion
      * 
-     * @return \Tisseo\EndivBundle\Entity\LineVersion
+     * @return LineVersion
      */
     public function getLastLineVersion()
     {
@@ -154,7 +154,7 @@ class Line
     /**
      * Set physicalMode
      *
-     * @param \Tisseo\EndivBundle\Entity\PhysicalMode $physicalMode
+     * @param PhysicalMode $physicalMode
      * @return Line
      */
     public function setPhysicalMode(PhysicalMode $physicalMode = null)
@@ -167,7 +167,7 @@ class Line
     /**
      * Get physicalMode
      *
-     * @return \Tisseo\EndivBundle\Entity\PhysicalMode 
+     * @return PhysicalMode 
      */
     public function getPhysicalMode()
     {
@@ -177,7 +177,7 @@ class Line
     /**
      * Get physicalMode
      *
-     * @return \Tisseo\EndivBundle\Entity\PhysicalMode 
+     * @return PhysicalMode 
      */
     public function getPhysicalModeId()
     {
@@ -212,7 +212,7 @@ class Line
     /**
      * Add lineDatasources
      *
-     * @param \Tisseo\EndivBundle\Entity\LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasources
      * @return Line
      */
     public function addLineDatasources(LineDatasource $lineDatasources)
@@ -225,7 +225,7 @@ class Line
     /**
      * Remove lineDatasources
      *
-     * @param \Tisseo\EndivBundle\Entity\LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasources
      */
     public function removeLineDatasources(LineDatasource $lineDatasources)
     {
@@ -260,7 +260,7 @@ class Line
     /**
      * Add lineVersions
      *
-     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     * @param LineVersion $lineVersion
      * @return Line
      */
     public function addLineVersions(LineVersion $lineVersion)
@@ -273,7 +273,7 @@ class Line
     /**
      * Remove lineVersions
      *
-     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     * @param LineVersion $lineVersion
      */
     public function removeLineVersions(LineVersion $lineVersion)
     {
@@ -283,10 +283,10 @@ class Line
     /**
      * Add lineDatasources
      *
-     * @param \Tisseo\EndivBundle\Entity\LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasources
      * @return Line
      */
-    public function addLineDatasource(\Tisseo\EndivBundle\Entity\LineDatasource $lineDatasources)
+    public function addLineDatasource(LineDatasource $lineDatasources)
     {
         $this->lineDatasources[] = $lineDatasources;
 
@@ -296,10 +296,33 @@ class Line
     /**
      * Remove lineDatasources
      *
-     * @param \Tisseo\EndivBundle\Entity\LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasources
      */
-    public function removeLineDatasource(\Tisseo\EndivBundle\Entity\LineDatasource $lineDatasources)
+    public function removeLineDatasource(LineDatasource $lineDatasources)
     {
         $this->lineDatasources->removeElement($lineDatasources);
+    }
+
+    /**
+     * Add lineVersions
+     *
+     * @param LineVersion $lineVersions
+     * @return Line
+     */
+    public function addLineVersion(LineVersion $lineVersions)
+    {
+        $this->lineVersions[] = $lineVersions;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineVersions
+     *
+     * @param LineVersion $lineVersions
+     */
+    public function removeLineVersion(LineVersion $lineVersions)
+    {
+        $this->lineVersions->removeElement($lineVersions);
     }
 }

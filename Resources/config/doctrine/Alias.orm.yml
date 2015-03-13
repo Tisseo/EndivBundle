@@ -17,7 +17,7 @@ Tisseo\EndivBundle\Entity\Alias:
     fields:
         name:
             type: string
-            nullable: true
+            nullable: false
             length: 255
             fixed: false
             comment: ''

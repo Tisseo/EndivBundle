@@ -45,10 +45,6 @@ Tisseo\EndivBundle\Entity\StopHistory:
             comment: ''
             requireSQLConversion: true
             column: the_geom
-        accessibility:
-            type: boolean
-            nullable: true
-            comment: 'Accessibilite de l''arret pour les UFR (fauteuil roulant) selon les releves du service accessibilite.'
     manyToOne:
         stop:
             targetEntity: Stop

@@ -65,4 +65,37 @@ class Modification
     {
         return $this->description;
     }
+
+    /**
+     * Add modificationLinks
+     *
+     * @param \Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks
+     * @return Modification
+     */
+    public function addModificationLink(\Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks)
+    {
+        $this->modificationLinks[] = $modificationLinks;
+
+        return $this;
+    }
+
+    /**
+     * Remove modificationLinks
+     *
+     * @param \Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks
+     */
+    public function removeModificationLink(\Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks)
+    {
+        $this->modificationLinks->removeElement($modificationLinks);
+    }
+
+    /**
+     * Get modificationLinks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getModificationLinks()
+    {
+        return $this->modificationLinks;
+    }
 }

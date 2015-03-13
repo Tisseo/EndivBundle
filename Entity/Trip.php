@@ -345,4 +345,27 @@ class Trip
     {
         $this->tripDatasources->removeElement($tripDatasource);
     }
+
+    /**
+     * Add tripDatasources
+     *
+     * @param \Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources
+     * @return Trip
+     */
+    public function addTripDatasource(\Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources)
+    {
+        $this->tripDatasources[] = $tripDatasources;
+
+        return $this;
+    }
+
+    /**
+     * Remove tripDatasources
+     *
+     * @param \Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources
+     */
+    public function removeTripDatasource(\Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources)
+    {
+        $this->tripDatasources->removeElement($tripDatasources);
+    }
 }

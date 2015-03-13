@@ -10,7 +10,7 @@ Tisseo\EndivBundle\Entity\PoiAddress:
             type: integer
             nullable: false
             unsigned: false
-            comment: "\n"
+            comment: ''
             id: true
             generator:
                 strategy: SEQUENCE

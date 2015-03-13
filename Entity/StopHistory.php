@@ -40,11 +40,6 @@ class StopHistory
     private $theGeom;
 
     /**
-     * @var boolean
-     */
-    private $accessibility;
-
-    /**
      * @var \Tisseo\EndivBundle\Entity\Stop
      */
     private $stop;
@@ -173,29 +168,6 @@ class StopHistory
     public function getTheGeom()
     {
         return $this->theGeom;
-    }
-
-    /**
-     * Set accessibility
-     *
-     * @param boolean $accessibility
-     * @return StopHistory
-     */
-    public function setAccessibility($accessibility)
-    {
-        $this->accessibility = $accessibility;
-
-        return $this;
-    }
-
-    /**
-     * Get accessibility
-     *
-     * @return boolean 
-     */
-    public function getAccessibility()
-    {
-        return $this->accessibility;
     }
 
     /**

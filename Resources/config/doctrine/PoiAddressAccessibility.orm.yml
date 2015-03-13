@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\PoiAddressAccessibility:
+    type: entity
+    table: poi_address_accessibility
+    indexes:
+        IDX_64F7410796ED16B4:
+            columns:
+                - accessibility_type_id
+        IDX_64F741075AD77D91:
+            columns:
+                - poi_address_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        accessibilityType:
+            targetEntity: AccessibilityType
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                accessibility_type_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        poiAddress:
+            targetEntity: PoiAddress
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                poi_address_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

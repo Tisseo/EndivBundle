@@ -13,7 +13,7 @@ Tisseo\EndivBundle\Entity\CalendarElement:
             type: integer
             nullable: false
             unsigned: false
-            comment: "\n"
+            comment: ''
             id: true
             generator:
                 strategy: SEQUENCE

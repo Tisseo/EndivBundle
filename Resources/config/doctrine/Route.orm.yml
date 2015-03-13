@@ -20,7 +20,7 @@ Tisseo\EndivBundle\Entity\Route:
     fields:
         way:
             type: string
-            nullable: false
+            nullable: true
             length: 10
             fixed: false
             comment: 'Aller ou retour.'

@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\TransferAccessibility:
+    type: entity
+    table: transfer_accessibility
+    indexes:
+        IDX_FBB9C6F96ED16B4:
+            columns:
+                - accessibility_type_id
+        IDX_FBB9C6F537048AF:
+            columns:
+                - transfer_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        accessibilityType:
+            targetEntity: AccessibilityType
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                accessibility_type_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        transfer:
+            targetEntity: Transfer
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                transfer_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

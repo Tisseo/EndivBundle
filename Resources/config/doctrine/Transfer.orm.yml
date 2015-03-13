@@ -37,12 +37,6 @@ Tisseo\EndivBundle\Entity\Transfer:
         accessibility:
             type: boolean
             nullable: true
-            comment: 'Accessibilite de la correspondance. Inutilise pour le moment.'
-        description:
-            type: text
-            nullable: true
-            length: null
-            fixed: false
             comment: ''
     manyToOne:
         endStop:

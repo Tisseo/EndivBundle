@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\TripAccessibility:
+    type: entity
+    table: trip_accessibility
+    indexes:
+        IDX_8446604196ED16B4:
+            columns:
+                - accessibility_type_id
+        IDX_84466041A5BC2E0E:
+            columns:
+                - trip_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        accessibilityType:
+            targetEntity: AccessibilityType
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                accessibility_type_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        trip:
+            targetEntity: Trip
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                trip_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

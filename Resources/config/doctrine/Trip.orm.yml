@@ -5,6 +5,9 @@ Tisseo\EndivBundle\Entity\Trip:
         trip_route_id_idx:
             columns:
                 - route_id
+        trip_day_calendar_id_idx:
+            columns:
+                - day_calendar_id
         trip_period_calendar_id_idx:
             columns:
                 - period_calendar_id
@@ -14,6 +17,12 @@ Tisseo\EndivBundle\Entity\Trip:
         IDX_7656F53BFE610542:
             columns:
                 - trip_calendar_id
+        IDX_7656F53BF734A20F:
+            columns:
+                - pattern_id
+        IDX_7656F53B6F658B27:
+            columns:
+                - trip_parent_id
     id:
         id:
             type: integer

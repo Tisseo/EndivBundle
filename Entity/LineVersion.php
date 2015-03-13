@@ -56,24 +56,14 @@ class LineVersion
     private $backwardDirection;
 
     /**
-     * @var string
+     * @var Color
      */
     private $bgColor;
 
     /**
-     * @var string
-     */
-    private $bgHexaColor;
-
-    /**
-     * @var string
+     * @var Color
      */
     private $fgColor;
-
-    /**
-     * @var string
-     */
-    private $fgHexaColor;
 
     /**
      * @var string
@@ -176,9 +166,7 @@ class LineVersion
             $this->forwardDirection = $previousLineVersion->getForwardDirection();
             $this->backwardDirection = $previousLineVersion->getBackwardDirection();
             $this->fgColor = $previousLineVersion->getFgColor();
-            $this->fgHexaColor = $previousLineVersion->getFgHexaColor();
             $this->bgColor = $previousLineVersion->getBgColor();
-            $this->bgHexaColor = $previousLineVersion->getBgHexaColor();
             $this->accessibility = $previousLineVersion->getAccessibility();
             $this->airConditioned = $previousLineVersion->getAirConditioned();
             $this->certified = $previousLineVersion->getCertified();
@@ -528,10 +516,10 @@ class LineVersion
     /**
      * Set bgColor
      *
-     * @param string $bgColor
+     * @param Color $bgColor
      * @return LineVersion
      */
-    public function setBgColor($bgColor)
+    public function setBgColor(Color $bgColor = null)
     {
         $this->bgColor = $bgColor;
 
@@ -541,7 +529,7 @@ class LineVersion
     /**
      * Get bgColor
      *
-     * @return string
+     * @return Color 
      */
     public function getBgColor()
     {
@@ -549,35 +537,12 @@ class LineVersion
     }
 
     /**
-     * Set bgHexaColor
-     *
-     * @param string $bgHexaColor
-     * @return LineVersion
-     */
-    public function setBgHexaColor($bgHexaColor)
-    {
-        $this->bgHexaColor = $bgHexaColor;
-
-        return $this;
-    }
-
-    /**
-     * Get bgHexaColor
-     *
-     * @return string
-     */
-    public function getBgHexaColor()
-    {
-        return $this->bgHexaColor;
-    }
-
-    /**
      * Set fgColor
      *
-     * @param string $fgColor
+     * @param Color $fgColor
      * @return LineVersion
      */
-    public function setFgColor($fgColor)
+    public function setFgColor(Color $fgColor = null)
     {
         $this->fgColor = $fgColor;
 
@@ -587,34 +552,11 @@ class LineVersion
     /**
      * Get fgColor
      *
-     * @return string
+     * @return Color 
      */
     public function getFgColor()
     {
         return $this->fgColor;
-    }
-
-    /**
-     * Set fgHexaColor
-     *
-     * @param string $fgHexaColor
-     * @return LineVersion
-     */
-    public function setFgHexaColor($fgHexaColor)
-    {
-        $this->fgHexaColor = $fgHexaColor;
-
-        return $this;
-    }
-
-    /**
-     * Get fgHexaColor
-     *
-     * @return string
-     */
-    public function getFgHexaColor()
-    {
-        return $this->fgHexaColor;
     }
 
     /**
@@ -1029,5 +971,74 @@ class LineVersion
     public function clearRoutes()
     {
         $this->routes->clear();
+    }
+
+    /**
+     * Add gridCalendars
+     *
+     * @param GridCalendar $gridCalendars
+     * @return LineVersion
+     */
+    public function addGridCalendar(GridCalendar $gridCalendars)
+    {
+        $this->gridCalendars[] = $gridCalendars;
+
+        return $this;
+    }
+
+    /**
+     * Remove gridCalendars
+     *
+     * @param GridCalendar $gridCalendars
+     */
+    public function removeGridCalendar(GridCalendar $gridCalendars)
+    {
+        $this->gridCalendars->removeElement($gridCalendars);
+    }
+
+    /**
+     * Add modificationLinks
+     *
+     * @param ModificationLink $modificationLinks
+     * @return LineVersion
+     */
+    public function addModificationLink(ModificationLink $modificationLinks)
+    {
+        $this->modificationLinks[] = $modificationLinks;
+
+        return $this;
+    }
+
+    /**
+     * Remove modificationLinks
+     *
+     * @param ModificationLink $modificationLinks
+     */
+    public function removeModificationLink(ModificationLink $modificationLinks)
+    {
+        $this->modificationLinks->removeElement($modificationLinks);
+    }
+
+    /**
+     * Add printings
+     *
+     * @param Printing $printings
+     * @return LineVersion
+     */
+    public function addPrinting(Printing $printings)
+    {
+        $this->printings[] = $printings;
+
+        return $this;
+    }
+
+    /**
+     * Remove printings
+     *
+     * @param Printing $printings
+     */
+    public function removePrinting(Printing $printings)
+    {
+        $this->printings->removeElement($printings);
     }
 }

@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\StopAccessibility:
+    type: entity
+    table: stop_accessibility
+    indexes:
+        IDX_91CDB4C996ED16B4:
+            columns:
+                - accessibility_type_id
+        IDX_91CDB4C93902063D:
+            columns:
+                - stop_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        accessibilityType:
+            targetEntity: AccessibilityType
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                accessibility_type_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        stop:
+            targetEntity: Stop
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                stop_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

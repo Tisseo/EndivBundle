@@ -1,0 +1,81 @@
+Tisseo\EndivBundle\Entity\Color:
+    type: entity
+    table: color
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        html:
+            type: string
+            nullable: false
+            length: 7
+            fixed: false
+            comment: 'Comprend le caractère # au debut.'
+        pantoneOc:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: pantone_oc
+        hoxis:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        cmykCyan:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cmyk_cyan
+        cmykMagenta:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cmyk_magenta
+        cmykYellow:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cmyk_yellow
+        cmykBlack:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cmyk_black
+        rgbRed:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: rgb_red
+        rgbGreen:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: rgb_green
+        rgbBlue:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: rgb_blue
+    lifecycleCallbacks: {  }
