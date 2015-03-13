@@ -5,7 +5,7 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\ExceptionType;
 
-class ExceptionTypeManager
+class ExceptionTypeManager extends SortManager
 {
     private $om = null;
     private $repository = null;
@@ -21,14 +21,14 @@ class ExceptionTypeManager
         return ($this->repository->findAll());
     }   
 
-    public function find($exceptionTypeId)
+    public function find($ExceptionTypeId)
     {   
-        return empty($exceptionTypeId) ? null : $this->repository->find($exceptionTypeId);
+        return empty($ExceptionTypeId) ? null : $this->repository->find($ExceptionTypeId);
     }
 
-    public function save(ExceptionType $exceptionType)
+    public function save(ExceptionType $ExceptionType)
     {
-        $this->om->persist($exceptionType);
+        $this->om->persist($ExceptionType);
         $this->om->flush();
     }
 }
