@@ -128,7 +128,7 @@ class LineVersion
     /**
      * @var Collection
      */
-    private $modificationLinks;
+    private $modifications;
 
     /**
      * @var Collection
@@ -148,7 +148,7 @@ class LineVersion
     {
         $this->gridCalendars = new ArrayCollection();
         $this->printings = new ArrayCollection();
-        $this->modificationLinks = new ArrayCollection();
+        $this->modifications = new ArrayCollection();
         $this->routes = new ArrayCollection();
         $this->startDate = new \Datetime();
 
@@ -799,58 +799,58 @@ class LineVersion
     }
 
     /**
-     * Set modificationLinks
+     * Set modifications
      *
-     * @param Collection $modificationLinks
+     * @param Collection $modifications
      * @return LineVersion
      */
-    public function setModificationLinks(Collection $modificationLinks)
+    public function setModifications(Collection $modifications)
     {
-        $this->modificationLinks = $modificationLinks;
+        $this->modifications = $modifications;
         return $this;
     }
 
     /**
-     * Get modificationLinks
+     * Get modifications
      *
      * @return Collection
      */
-    public function getModificationLinks()
+    public function getModifications()
     {
-        return $this->modificationLinks;
+        return $this->modifications;
     }
 
     /**
-     * Add modificationLinks
+     * Add modifications
      *
-     * @param ModificationLink $modificationLink
+     * @param Modification $modification
      * @return LineVersion
      */
-    public function addModificationLinks(ModificationLink $modificationLink)
+    public function addModifications(Modification $modification)
     {
-        $this->modificationLinks[] = $modificationLink;
-        $modificationLink->setLineVersion($this);
+        $this->modifications[] = $modification;
+        $modification->setLineVersion($this);
         return $this;
     }
 
     /**
-     * Remove modificationLinks
+     * Remove modifications
      *
-     * @param ModificationLink $modificationLink
+     * @param Modification $modification
      */
-    public function removeModificationLinks(ModificationLink $modificationLink)
+    public function removeModifications(Modification $modification)
     {
-        $this->modificationLinks->removeElement($modificationLink);
+        $this->modifications->removeElement($modification);
     }
 
     /**
-     * Clear modificationLinks
+     * Clear modifications
      *
      * @return LineVersion
      */
-    public function clearModificationLinks()
+    public function clearModifications()
     {
-        $this->modificationLinks->clear();
+        $this->modifications->clear();
         return $this;
     }
 
@@ -994,29 +994,6 @@ class LineVersion
     public function removeGridCalendar(GridCalendar $gridCalendars)
     {
         $this->gridCalendars->removeElement($gridCalendars);
-    }
-
-    /**
-     * Add modificationLinks
-     *
-     * @param ModificationLink $modificationLinks
-     * @return LineVersion
-     */
-    public function addModificationLink(ModificationLink $modificationLinks)
-    {
-        $this->modificationLinks[] = $modificationLinks;
-
-        return $this;
-    }
-
-    /**
-     * Remove modificationLinks
-     *
-     * @param ModificationLink $modificationLinks
-     */
-    public function removeModificationLink(ModificationLink $modificationLinks)
-    {
-        $this->modificationLinks->removeElement($modificationLinks);
     }
 
     /**

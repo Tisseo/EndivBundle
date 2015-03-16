@@ -145,8 +145,8 @@ Tisseo\EndivBundle\Entity\LineVersion:
             inversedBy: null
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
-        modificationLinks:
-            targetEntity: ModificationLink
+        modifications:
+            targetEntity: Modification
             cascade: ['persist', 'remove']
             mappedBy: lineVersion
             inversedBy: null
