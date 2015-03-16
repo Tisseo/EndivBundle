@@ -1,6 +1,8 @@
 parameters:
     tisseo_endiv.line_manager.class: Tisseo\EndivBundle\Services\LineManager
     tisseo_endiv.agency_manager.class: Tisseo\EndivBundle\Services\AgencyManager
+    tisseo_endiv.accessibility_mode_manager.class: Tisseo\EndivBundle\Services\AccessibilityModeManager
+    tisseo_endiv.color_manager.class: Tisseo\EndivBundle\Services\ColorManager
     tisseo_endiv.datasource_manager.class: Tisseo\EndivBundle\Services\DatasourceManager
     tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
     tisseo_endiv.log_manager.class: Tisseo\EndivBundle\Services\LogManager
@@ -19,8 +21,14 @@ services:
     tisseo_endiv.trip_manager:
         class: %tisseo_endiv.trip_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.accessibility_mode_manager:
+        class: %tisseo_endiv.accessibility_mode_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.agency_manager:
         class: %tisseo_endiv.agency_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.color_manager:
+        class: %tisseo_endiv.color_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.datasource_manager:
         class: %tisseo_endiv.datasource_manager.class%
