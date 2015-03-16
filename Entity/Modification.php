@@ -16,22 +16,29 @@ class Modification
     private $id;
 
     /**
+     * @var date
+     */
+    private $date;
+
+    /**
      * @var string
      */
     private $description;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string
      */
-    private $modificationLinks;
+    private $author;
 
     /**
-     * Constructor
+     * @var LineVersion
      */
-    public function __construct()
-    {
-        $this->modificationLinks = new ArrayCollection();
-    }
+    private $lineVersion;
+
+    /**
+     * @var LineVersion
+     */
+    private $resolvedIn;
 
     /**
      * Get id
@@ -41,6 +48,29 @@ class Modification
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set author
+     *
+     * @param string $author
+     * @return Modification
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return string 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 
     /**
@@ -67,35 +97,71 @@ class Modification
     }
 
     /**
-     * Add modificationLinks
+     * Set date
      *
-     * @param \Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks
-     * @return Modification
+     * @param \DateTime $date
+     * @return ModificationLink
      */
-    public function addModificationLink(\Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks)
+    public function setDate($date)
     {
-        $this->modificationLinks[] = $modificationLinks;
+        $this->date = $date;
 
         return $this;
     }
 
     /**
-     * Remove modificationLinks
+     * Get date
      *
-     * @param \Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks
+     * @return \DateTime 
      */
-    public function removeModificationLink(\Tisseo\EndivBundle\Entity\ModificationLink $modificationLinks)
+    public function getDate()
     {
-        $this->modificationLinks->removeElement($modificationLinks);
+        return $this->date;
     }
 
     /**
-     * Get modificationLinks
+     * Set lineVersion
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param LineVersion $lineVersion
+     * @return ModificationLink
      */
-    public function getModificationLinks()
+    public function setLineVersion(LineVersion $lineVersion = null)
     {
-        return $this->modificationLinks;
+        $this->lineVersion = $lineVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get lineVersion
+     *
+     * @return LineVersion 
+     */
+    public function getLineVersion()
+    {
+        return $this->lineVersion;
+    }
+
+    /**
+     * Set resolvedIn
+     *
+     * @param LineVersion $resolvedIn
+     * @return ModificationLink
+     */
+    public function setResolvedIn(LineVersion $resolvedIn = null)
+    {
+        $this->resolvedIn = $resolvedIn;
+
+        return $this;
+    }
+
+    /**
+     * Get resolvedIn
+     *
+     * @return LineVersion 
+     */
+    public function getResolvedIn()
+    {
+        return $this->resolvedIn;
     }
 }

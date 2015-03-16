@@ -1,6 +1,13 @@
 Tisseo\EndivBundle\Entity\Modification:
     type: entity
     table: modification
+    indexes:
+        modification_line_version_id_idx:
+            columns:
+                - line_version_id
+        modification_resolved_idx:
+            columns:
+                - resolved_in
     id:
         id:
             type: integer
@@ -11,18 +18,35 @@ Tisseo\EndivBundle\Entity\Modification:
             generator:
                 strategy: SEQUENCE
     fields:
+        date:
+            type: date
+            nullable: false
+            comment: 'Date de la prise d effet de la modification.'
         description:
             type: string
             nullable: true
             length: 255
             fixed: false
             comment: ''
-    oneToMany:
-        modificationLinks:
-            targetEntity: ModificationLink
-            cascade: {  }
-            mappedBy: modification
+        author:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        resolvedIn:
+            targetEntity: LineVersion
+            mappedBy: null
             inversedBy: null
-            orphanRemoval: false
-            fetch: 'EXTRA_LAZY'
+            joinColumns:
+                resolved_in:
+                    referencedColumnName: id
+        lineVersion:
+            targetEntity: LineVersion
+            mappedBy: null
+            inversedBy: modificationLinks
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
     lifecycleCallbacks: {  }
