@@ -40,11 +40,9 @@ Tisseo\EndivBundle\Entity\Line:
     manyToOne:
         physicalMode:
             targetEntity: PhysicalMode
-            cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
                 physical_mode_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

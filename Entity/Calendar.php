@@ -47,6 +47,11 @@ class Calendar
     private $calendarDatasources;
 
     /**
+     * @var LineVersion
+     */
+    private $lineVersion;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -243,5 +248,28 @@ class Calendar
     public function getDayTrips()
     {
         return $this->dayTrips;
+    }
+
+    /**
+     * Set lineVersion
+     *
+     * @param LineVersion $lineVersion
+     * @return Route
+     */
+    public function setLineVersion(LineVersion $lineVersion = null)
+    {
+        $this->lineVersion = $lineVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get lineVersion
+     *
+     * @return LineVersion 
+     */
+    public function getLineVersion()
+    {
+        return $this->lineVersion;
     }
 }

@@ -22,6 +22,14 @@ Tisseo\EndivBundle\Entity\Calendar:
             requireSQLConversion: true
             comment: ''
             column: calendar_type
+    manyToOne:
+        lineVersion:
+            targetEntity: LineVersion
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
     oneToMany:
         calendarElements:
             targetEntity: CalendarElement
