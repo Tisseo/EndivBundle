@@ -28,7 +28,12 @@ Tisseo\EndivBundle\Entity\CalendarElement:
             nullable: true
             comment: ''
             column: end_date
-        positive:
+        rank:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        operator:
             type: calendar_operator
             nullable: false
             length: 1

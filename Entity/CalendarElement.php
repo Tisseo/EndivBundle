@@ -25,9 +25,14 @@ class CalendarElement
     private $endDate;
 
     /**
+     * @var integer
+     */
+    private $rank;
+
+    /**
      * @var string
      */
-    private $positive;
+    private $operator;
 
     /**
      * @var integer
@@ -102,26 +107,49 @@ class CalendarElement
     }
 
     /**
-     * Set positive
+     * Set rank
      *
-     * @param string $positive
+     * @param string $rank
      * @return CalendarElement
      */
-    public function setPositive($positive)
+    public function setRank($rank)
     {
-        $this->positive = $positive;
+        $this->rank = $rank;
 
         return $this;
     }
 
     /**
-     * Get positive
+     * Get rank
      *
      * @return string 
      */
-    public function getPositive()
+    public function getRank()
     {
-        return $this->positive;
+        return $this->rank;
+    }
+
+    /**
+     * Set operator
+     *
+     * @param string $operator
+     * @return CalendarElement
+     */
+    public function setOperator($operator)
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Get operator
+     *
+     * @return string 
+     */
+    public function getOperator()
+    {
+        return $this->operator;
     }
 
     /**
@@ -153,7 +181,7 @@ class CalendarElement
      * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
      * @return CalendarElement
      */
-    public function setCalendar(\Tisseo\EndivBundle\Entity\Calendar $calendar = null)
+    public function setCalendar(Calendar $calendar = null)
     {
         $this->calendar = $calendar;
 
@@ -176,7 +204,7 @@ class CalendarElement
      * @param \Tisseo\EndivBundle\Entity\Calendar $includedCalendar
      * @return CalendarElement
      */
-    public function setIncludedCalendar(\Tisseo\EndivBundle\Entity\Calendar $includedCalendar = null)
+    public function setIncludedCalendar(Calendar $includedCalendar = null)
     {
         $this->includedCalendar = $includedCalendar;
 
@@ -191,5 +219,16 @@ class CalendarElement
     public function getIncludedCalendar()
     {
         return $this->includedCalendar;
+    }
+	
+    /**
+     * Get operator list value
+     *
+     * @return enum list
+	 * @todo bad bad bad must return the real enum value by native sql querying
+     */    
+	public static function getOperatorValues()
+    {
+        return array('+'=>'+', '-'=>'-', '&'=>'&');
     }
 }

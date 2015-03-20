@@ -38,6 +38,12 @@ Tisseo\EndivBundle\Entity\Calendar:
             inversedBy: null
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
+        includedCalendarElements:
+            targetEntity: CalendarElement
+            mappedBy: includedCalendar
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
         periodTrips:
             targetEntity: Trip
             mappedBy: periodCalendar
@@ -53,6 +59,12 @@ Tisseo\EndivBundle\Entity\Calendar:
         calendarDatasources:
             targetEntity: CalendarDatasource
             cascade: ['persist', 'remove']
+            mappedBy: calendar
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        accessibilityTypes:
+            targetEntity: AccessibilityType
             mappedBy: calendar
             inversedBy: null
             orphanRemoval: true

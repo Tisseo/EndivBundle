@@ -44,7 +44,17 @@ class Calendar
     /**
      * @var Collection
      */
+    private $includedCalendarElements;
+
+    /**
+     * @var Collection
+     */
     private $calendarDatasources;
+
+    /**
+     * @var Collection
+     */
+    private $accessibilityTypes;
 
     /**
      * @var LineVersion
@@ -57,9 +67,11 @@ class Calendar
     public function __construct()
     {
         $this->calendarElements = new ArrayCollection();
+        $this->includedCalendarElements = new ArrayCollection();
         $this->calendarDatasources = new ArrayCollection();
         $this->periodTrips = new ArrayCollection();
         $this->dayTrips = new ArrayCollection();
+        $this->accessibilityTypes = new ArrayCollection();
     }
 
     /**
@@ -118,6 +130,26 @@ class Calendar
         return $this->calendarType;
     }
     
+     /**
+     * set calendarElements
+     *
+     * @param Collection $calendarElements
+     */
+   public function setCalendarElements(Collection $calendarElements)
+    {
+		$this->calendarElements = $calendarElements;
+    }
+
+    /**
+     * Get calendarElements
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCalendarElements()
+    {
+        return $this->calendarElements;
+    }
+	
     /**
      * Add calendarElement
      *
@@ -127,6 +159,7 @@ class Calendar
     public function addCalendarElement(CalendarElement $calendarElement)
     {
         $this->calendarElements[] = $calendarElement;
+		$calendarElement->setCalendar($this);
 
         return $this;
     }
@@ -142,13 +175,47 @@ class Calendar
     }
 
     /**
-     * Get calendarElements
+     * Clear modifications
+     *
+     * @return LineVersion
+     */
+    public function clearCalendarElements()
+    {
+        $this->calendarElements->clear();
+        return $this;
+    }
+
+    /**
+     * Add includedCalendarElement
+     *
+     * @param CalendarElement $includedCalendarElement
+     * @return Calendar
+     */
+    public function addIncludedCalendarElement(CalendarElement $includedCalendarElement)
+    {
+        $this->inclueddCalendarElements[] = $includedCalendarElement;
+
+        return $this;
+    }
+
+    /**
+     * Remove includedCalendarElement
+     *
+     * @param CalendarElement $includedCalendarElement
+     */
+    public function removeIncludedCalendarElement(CalendarElement $includedCalendarElement)
+    {
+        $this->includedCalendarElements->removeElement($includedCalendarElement);
+    }
+
+    /**
+     * Get includedCalendarElement
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getCalendarElements()
+    public function getIncludedCalendarElements()
     {
-        return $this->calendarElements;
+        return $this->includedCalendarElements;
     }
 
     /**
@@ -184,7 +251,40 @@ class Calendar
         return $this->calendarDatasources;
     }
 
+   /**
+     * Add calendarDatasources
+     *
+     * @param CalendarDatasource $calendarDatasources
+     * @return Calendar
+     */
+    public function addAccessibilityType(AccessibilityType $accessibilityType)
+    {
+        $this->accessibilityTypes[] = $accessibilityType;
+
+        return $this;
+    }
+
     /**
+     * Remove calendarDatasources
+     *
+     * @param CalendarDatasource $calendarDatasources
+     */
+    public function removeAccessibilityType(AccessibilityType $accessibilityType)
+    {
+        $this->accessibilityTypes->removeElement($accessibilityType);
+    }
+
+    /**
+     * Get calendarDatasources
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccessibilityType()
+    {
+        return $this->accessibilityTypes;
+    }
+    
+	/**
      * Add periodTrips
      *
      * @param Trip $periodTrips
@@ -271,5 +371,16 @@ class Calendar
     public function getLineVersion()
     {
         return $this->lineVersion;
+    }
+	
+    /**
+     * Get calendar types
+     *
+     * @return enum list
+	 * @todo bad bad bad must return the real enum value by native sql querying
+     */    
+	public static function getCalendarTypes()
+    {
+        return array('jour'=>'jour', 'periode'=>'periode', 'mixte'=>'mixte', 'accessibilite'=>'accessibilite', 'brique'=>'brique');
     }
 }
