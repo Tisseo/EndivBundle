@@ -136,19 +136,45 @@ class LineVersionManager extends SortManager
     /*
      * findActiveLineVersions
      * @param Datetime $now
+     * @param boolean $havingCalendars
+     * @param boolean $havingTrips
      * @return Collection $lineVersions
      *
      * Find LineVersion which are considered as active according to the current 
      * date passed as parameter.
+     * If gridCalendars is true, search also for lineVersions linked to 
+     * gridCalendars only
      */
-    public function findActiveLineVersions(\Datetime $now)
+    public function findActiveLineVersions(\Datetime $now, $havingCalendars = false, $havingTrips = false)
     {
-        $query = $this->repository->createQueryBuilder('lv')
-            ->where('lv.endDate is null')
-            ->orWhere('lv.endDate > :now')
-            ->setParameter('now', $now)
-            ->getQuery();
-
+        if ($havingCalendars)
+        {
+            $query = $this->repository->createQueryBuilder('lv')
+                ->where('lv.endDate is null OR lv.endDate > :now')
+                ->join('lv.gridCalendars', 'gc')
+                ->having('count(gc.id) > 0')
+                ->groupBy('lv.id')
+                ->setParameter('now', $now)
+                ->getQuery();
+        }
+        else if($havingTrips)
+        {
+            $query = $this->repository->createQueryBuilder('lv')
+                ->where('lv.endDate is null OR lv.endDate > :now')
+                ->join('lv.routes', 'r')
+                ->join('r.trips', 't')
+                ->having('count(t.id) > 0')
+                ->groupBy('lv.id')
+                ->setParameter('now', $now)
+                ->getQuery();
+        }
+        else
+        {
+            $query = $this->repository->createQueryBuilder('lv')
+                ->where('lv.endDate is null OR lv.endDate > :now')
+                ->setParameter('now', $now)
+                ->getQuery();
+        }
         return $this->sortLineVersionsByNumber($query->getResult());
     }
 
