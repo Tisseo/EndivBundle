@@ -33,7 +33,7 @@ Tisseo\EndivBundle\Entity\Calendar:
     oneToMany:
         calendarElements:
             targetEntity: CalendarElement
-            cascade: ['persist', 'remove']
+            cascade: ['remove']
             mappedBy: calendar
             inversedBy: null
             orphanRemoval: true

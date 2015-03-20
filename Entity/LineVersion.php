@@ -1018,4 +1018,14 @@ class LineVersion
     {
         $this->printings->removeElement($printings);
     }
+	
+    /**
+     * Remove printings
+     *
+     * @param Printing $printings
+     */
+	public function getFormattedLineVersion()	
+	{
+		return $this->getLine()->getNumber() .'_'.$this->getVersion();
+	}
 }
