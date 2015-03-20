@@ -142,8 +142,8 @@ class LineVersionManager extends SortManager
      *
      * Find LineVersion which are considered as active according to the current 
      * date passed as parameter.
-     * If gridCalendars is true, search also for lineVersions linked to 
-     * gridCalendars only
+     * If havingCalendars is true, search only for lineVersions having GridCalendars
+     * If havingTrips is true, search only for lineVersions having Trips
      */
     public function findActiveLineVersions(\Datetime $now, $havingCalendars = false, $havingTrips = false)
     {
