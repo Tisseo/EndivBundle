@@ -29,11 +29,6 @@ class GridCalendarManager extends SortManager
         return empty($gridCalendarId) ? null : $this->repository->find($gridCalendarId);
     }
 
-    public function findOne($gridCalendarId)
-    {
-        return empty($gridCalendarId) ? null : $this->repository->findOne($gridCalendarId);
-    }
-
     /**
      * findRelatedGridMaskTypes
      * @param Collection $gridCalendars
@@ -138,6 +133,80 @@ class GridCalendarManager extends SortManager
             }
         }
         $this->om->flush();
+    }
+
+    /*
+     * Find trips
+     * @param Collection $gridCalendars
+     *
+     * Find all trips linked to each GridCalendar in collection.
+     */
+    public function findRelatedTrips(Collection $gridCalendars)
+    {
+        $result = array();
+        foreach ($gridCalendars as $gridCalendar)
+        {
+            $query = $this->om->createQuery("
+                SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
+                JOIN t.route r
+                JOIN Tisseo\EndivBundle\Entity\GridCalendar gc WITH gc.lineVersion = r.lineVersion
+                JOIN gc.gridLinkCalendarMaskTypes glcmt
+                JOIN Tisseo\EndivBundle\Entity\TripCalendar tc WITH t.tripCalendar = tc AND tc.gridMaskType = glcmt.gridMaskType
+                WHERE gc.id = ?1
+                ORDER BY t.id
+            ");
+            $query->setParameter(1, $gridCalendar->getId());
+            $data = $query->getResult();
+
+            $trips = array();
+            foreach($data as $trip)
+                $trips[$trip->getId()] = array("trip" => $trip);
+
+            $query = $this->om->createQuery("
+                SELECT t.id, rs.rank, sh.shortName, st.departureTime FROM Tisseo\EndivBundle\Entity\Trip t
+                JOIN t.stopTimes st
+                JOIN st.routeStop rs
+                JOIN Tisseo\EndivBundle\Entity\StopHistory sh WITH IDENTITY(sh.stop) = IDENTITY(rs.waypoint)
+                WHERE t.id IN (?1)
+                AND (rs.rank = (
+                    SELECT max(sub_rs.rank) FROM Tisseo\EndivBundle\Entity\RouteStop sub_rs
+                    WHERE sub_rs.route = rs.route
+                )
+                OR rs.rank = 1)
+                ORDER BY t.id, rs.rank
+            ");
+            $query->setParameter(1, array_keys($trips));
+            $data = $query->getResult();
+
+            foreach($data as $tripData)
+            {
+                if ($tripData['rank'] === 1)
+                {
+                    $trips[$tripData['id']]['start_name'] = $tripData['shortName'];
+                    $trips[$tripData['id']]['start_time'] = $this->secondsToTime(intval($tripData['departureTime']));
+                }
+                else
+                {
+                    $trips[$tripData['id']]['end_name'] = $tripData['shortName'];
+                    $trips[$tripData['id']]['end_time'] = $this->secondsToTime(intval($tripData['departureTime']));
+                }
+            }
+            
+            $result[] = array($gridCalendar, $trips);
+        }
+        return $result;
+    }
+
+    private function secondsToTime($seconds) {
+        $hours = (string)floor(($seconds % 86400) / 3600);
+        $minutes = (string)floor(($seconds % 86400 % 3600) / 60);
+
+        if (strlen($hours) === 1)
+            $hours = "0".$hours;
+        if (strlen($minutes) === 1)
+            $minutes = "0".$minutes;
+
+        return $hours.":".$minutes;
     }
 
     /*

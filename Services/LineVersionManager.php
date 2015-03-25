@@ -31,11 +31,6 @@ class LineVersionManager extends SortManager
         return empty($lineVersionId) ? null : $this->repository->find($lineVersionId);
     }
 
-    public function findOne($lineVersionId)
-    {
-        return empty($lineVersionId) ? null : $this->repository->findOne($lineVersionId);
-    }
-
     /**
      * findLastLineVersionOfLine
      * @param integer $lineId
@@ -152,6 +147,7 @@ class LineVersionManager extends SortManager
             $query = $this->repository->createQueryBuilder('lv')
                 ->where('lv.endDate is null OR lv.endDate > :now')
                 ->join('lv.gridCalendars', 'gc')
+                ->join('gc.gridLinkCalendarMaskTypes', 'glcmt')
                 ->having('count(gc.id) > 0')
                 ->groupBy('lv.id')
                 ->setParameter('now', $now)
