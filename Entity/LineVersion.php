@@ -826,7 +826,7 @@ class LineVersion
      * @param Modification $modification
      * @return LineVersion
      */
-    public function addModifications(Modification $modification)
+    public function addModification(Modification $modification)
     {
         $this->modifications[] = $modification;
         $modification->setLineVersion($this);
@@ -838,7 +838,7 @@ class LineVersion
      *
      * @param Modification $modification
      */
-    public function removeModifications(Modification $modification)
+    public function removeModification(Modification $modification)
     {
         $this->modifications->removeElement($modification);
     }
