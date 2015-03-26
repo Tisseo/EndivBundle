@@ -39,16 +39,6 @@ class Calendar
     /**
      * @var Collection
      */
-    private $calendarElements;
-
-    /**
-     * @var Collection
-     */
-    private $includedCalendarElements;
-
-    /**
-     * @var Collection
-     */
     private $calendarDatasources;
 
     /**
@@ -66,8 +56,6 @@ class Calendar
      */
     public function __construct()
     {
-        $this->calendarElements = new ArrayCollection();
-        $this->includedCalendarElements = new ArrayCollection();
         $this->calendarDatasources = new ArrayCollection();
         $this->periodTrips = new ArrayCollection();
         $this->dayTrips = new ArrayCollection();
@@ -130,94 +118,6 @@ class Calendar
         return $this->calendarType;
     }
     
-     /**
-     * set calendarElements
-     *
-     * @param Collection $calendarElements
-     */
-   public function setCalendarElements(Collection $calendarElements)
-    {
-		$this->calendarElements = $calendarElements;
-    }
-
-    /**
-     * Get calendarElements
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getCalendarElements()
-    {
-        return $this->calendarElements;
-    }
-	
-    /**
-     * Add calendarElement
-     *
-     * @param CalendarElement $calendarElement
-     * @return Calendar
-     */
-    public function addCalendarElement(CalendarElement $calendarElement)
-    {
-        $this->calendarElements[] = $calendarElement;
-		$calendarElement->setCalendar($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove calendarElement
-     *
-     * @param CalendarElement $calendarElement
-     */
-    public function removeCalendarElement(CalendarElement $calendarElement)
-    {
-        $this->calendarElements->removeElement($calendarElement);
-    }
-
-    /**
-     * Clear modifications
-     *
-     * @return LineVersion
-     */
-    public function clearCalendarElements()
-    {
-        $this->calendarElements->clear();
-        return $this;
-    }
-
-    /**
-     * Add includedCalendarElement
-     *
-     * @param CalendarElement $includedCalendarElement
-     * @return Calendar
-     */
-    public function addIncludedCalendarElement(CalendarElement $includedCalendarElement)
-    {
-        $this->inclueddCalendarElements[] = $includedCalendarElement;
-
-        return $this;
-    }
-
-    /**
-     * Remove includedCalendarElement
-     *
-     * @param CalendarElement $includedCalendarElement
-     */
-    public function removeIncludedCalendarElement(CalendarElement $includedCalendarElement)
-    {
-        $this->includedCalendarElements->removeElement($includedCalendarElement);
-    }
-
-    /**
-     * Get includedCalendarElement
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getIncludedCalendarElements()
-    {
-        return $this->includedCalendarElements;
-    }
-
     /**
      * Add calendarDatasources
      *

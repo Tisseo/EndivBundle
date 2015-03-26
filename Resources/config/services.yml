@@ -31,7 +31,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.calendar_manager:
         class: %tisseo_endiv.calendar_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager', '@doctrine.orm.entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.calendar_element_manager']
     tisseo_endiv.calendar_element_manager:
         class: %tisseo_endiv.calendar_element_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']

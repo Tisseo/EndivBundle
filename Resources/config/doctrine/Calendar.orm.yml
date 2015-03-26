@@ -31,19 +31,6 @@ Tisseo\EndivBundle\Entity\Calendar:
                 line_version_id:
                     referencedColumnName: id
     oneToMany:
-        calendarElements:
-            targetEntity: CalendarElement
-            cascade: ['remove']
-            mappedBy: calendar
-            inversedBy: null
-            orphanRemoval: true
-            fetch: 'EXTRA_LAZY'
-        includedCalendarElements:
-            targetEntity: CalendarElement
-            mappedBy: includedCalendar
-            inversedBy: null
-            orphanRemoval: true
-            fetch: 'EXTRA_LAZY'
         periodTrips:
             targetEntity: Trip
             mappedBy: periodCalendar
