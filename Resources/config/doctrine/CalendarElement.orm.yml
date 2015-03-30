@@ -46,13 +46,6 @@ Tisseo\EndivBundle\Entity\CalendarElement:
             unsigned: false
             comment: 'intervalle de repetition en cas de calendrier recurrent (lundi)'
     manyToOne:
-        # calendar:
-            # targetEntity: Calendar
-            # mappedBy: null
-            # inversedBy: calendarElements
-            # joinColumns:
-                # calendar_id:
-                    # referencedColumnName: id
         includedCalendar:
             targetEntity: Calendar
             mappedBy: null

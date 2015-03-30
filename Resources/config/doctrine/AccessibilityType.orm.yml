@@ -49,7 +49,7 @@ Tisseo\EndivBundle\Entity\AccessibilityType:
             targetEntity: Calendar
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: accessibilityTypes
             joinColumns:
                 calendar_id:
                     referencedColumnName: id
