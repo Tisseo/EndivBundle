@@ -24,4 +24,17 @@ Tisseo\EndivBundle\Entity\Comment:
             fixed: false
             comment: 'Description textuelle du commentaire.'
             column: comment_text
+    oneToMany:
+        trips:
+            targetEntity: Trip
+            cascade: ['persist']
+            mappedBy: comment
+            inversedBy: null
+            fetch: 'EXTRA_LAZY'
+        routes:
+            targetEntity: Route
+            cascade: ['persist']
+            mappedBy: comment
+            inversedBy: null
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

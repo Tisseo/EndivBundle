@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\LineVersion;
+use Tisseo\EndivBundle\Entity\Comment;
 
 class TripManager
 {
@@ -25,11 +26,6 @@ class TripManager
     public function find($tripId)
     {
         return empty($tripId) ? null : $this->repository->find($tripId);
-    }
-
-    public function findOne($tripId)
-    {
-        return empty($tripId) ? null : $this->repository->findOne($tripId);
     }
 
     public function deleteTrips(LineVersion $lineVersion)
@@ -65,6 +61,31 @@ class TripManager
             }
             else
                 break;
+        }
+        $this->om->flush();
+    }
+
+    public function updateComments(array $comments)
+    {
+        foreach($comments as $label => $content)
+        {
+            $query = $this->om->createQuery("
+                SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
+                WHERE c.label = ?1
+            ");
+            $query->setParameter(1, $label);
+            $result = $query->getResult();
+
+            if (empty($result))
+                $comment = new Comment($label, $content["comment"]);
+            else
+                $comment = $result[0];
+
+            $trips = $this->repository->findById($content["trips"]);
+            foreach($trips as $trip)
+                $comment->addTrip($trip);
+        
+            $this->om->persist($comment);
         }
         $this->om->flush();
     }
