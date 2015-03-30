@@ -22,6 +22,16 @@ Tisseo\EndivBundle\Entity\Calendar:
             requireSQLConversion: true
             comment: ''
             column: calendar_type
+        computedStartDate:
+            type: date
+            nullable: false
+            comment: ''
+            column: computed_start_date
+        computedEndDate:
+            type: date
+            nullable: false
+            comment: ''
+            column: computed_end_date
     manyToOne:
         lineVersion:
             targetEntity: LineVersion

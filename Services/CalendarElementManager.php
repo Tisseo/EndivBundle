@@ -35,8 +35,6 @@ class CalendarElementManager extends SortManager
 		$rsm->addFieldResult('ce','rank','rank');
 		$rsm->addFieldResult('ce','operator','operator');
 		$rsm->addFieldResult('ce','interval','interval');
-		//$rsm->addFieldResult('ce','included_calendar_id','includedCalendar');
-		//$rsm->addJoinedEntityResult('TisseoEndivBundle:Calendar', 'c', 'ce', 'calendar');
 		$rsm->addMetaResult('ce', 'included_calendar_id', 'included_calendar_id');
 		
 		$sql = "SELECT ce.id, ce.start_date, ce.end_date, ce.rank, ce.operator, ce.interval, ce.included_calendar_id
@@ -48,15 +46,6 @@ class CalendarElementManager extends SortManager
 		$query->setParameter('calendarId', $Calendar);
 
 		return $query->getResult();
-/*	
-        $query = $this->repository->createQueryBuilder('c')
-            ->where('c.calendar = :calendar')
-            ->setParameter('calendar', $Calendar)
-			->orderBy('c.rank', 'ASC')
-            ->getQuery();
-
-        return $query->getResult();
-*/			
     }	
 	
     public function find($CalendarElementId)
@@ -90,8 +79,8 @@ class CalendarElementManager extends SortManager
 		$stmt->bindValue(':startDate', $startDate);
 		$endDate = (!$CalendarElement->getEndDate() ? null : date_format($CalendarElement->getEndDate(), 'Y-m-d') );
 		$stmt->bindValue(':endDate', $endDate);
-		$interval = ($CalendarElement->getInterval() ? null : $CalendarElement->getInterval());
-		$stmt->bindValue(':interval', $interval, \PDO::PARAM_INT);
+		$interval = ($CalendarElement->getInterval() ? 1 : $CalendarElement->getInterval());
+		$stmt->bindValue(':interval', $CalendarElement->getInterval(), \PDO::PARAM_INT);
 		$stmt->bindValue(':operator', $CalendarElement->getOperator());
 		$includedCalendarId = (!$CalendarElement->getIncludedCalendar() ? null: $CalendarElement->getIncludedCalendar()->getId());
 		$stmt->bindValue(':includedCalendarId', $includedCalendarId, \PDO::PARAM_INT);

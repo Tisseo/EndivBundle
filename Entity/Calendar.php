@@ -50,6 +50,16 @@ class Calendar
      * @var LineVersion
      */
     private $lineVersion;
+	
+    /**
+     * @var computed_start_date
+     */
+	private $computedStartDate;
+
+    /**
+     * @var computed_end_date
+     */
+	private $computedEndDate;
 
     /**
      * Constructor
@@ -271,6 +281,52 @@ class Calendar
     public function getLineVersion()
     {
         return $this->lineVersion;
+    }
+
+   /**
+     * Set computedStartDate
+     *
+     * @param string $computedStartDate
+     * @return Calendar
+     */
+    public function setComputedStartDate($computedStartDate)
+    {
+        $this->computedStartDate = $computedStartDate;
+
+        return $this;
+    }
+
+    /**
+     * Get computedStartDate
+     *
+     * @return string 
+     */
+    public function getComputedStartDate()
+    {
+        return $this->computedStartDate;
+    }
+
+   /**
+     * Set computedEndDate
+     *
+     * @param string $computedEndDate
+     * @return Calendar
+     */
+    public function setComputedEndDate($computedEndDate)
+    {
+        $this->computedEndDate = $computedEndDate;
+
+        return $this;
+    }
+
+    /**
+     * Get computedEndDate
+     *
+     * @return string 
+     */
+    public function getComputedEndDate()
+    {
+        return $this->computedEndDate;
     }
 	
     /**
