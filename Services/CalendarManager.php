@@ -28,22 +28,30 @@ class CalendarManager extends SortManager
 
     public function findbyType($type)
     {
-		$calendars = $this->em
-			->createQuery('SELECT c FROM Tisseo\EndivBundle\Entity\Calendar c WHERE c.calendarType=:type')
-			->setParameter('type', $type);
-		return $calendars->getResult();
+		$query = $this->em->createQuery("
+			SELECT c FROM Tisseo\EndivBundle\Entity\Calendar c
+			WHERE c.calendarType=:type
+			AND c.id NOT IN (
+				SELECT DISTINCT IDENTITY(t.periodCalendar)
+				FROM Tisseo\EndivBundle\Entity\Trip t
+				WHERE  t.periodCalendar IS NOT NULL
+			)
+		")
+			->setParameter('type', $type);;
+		$calendars = $query->getResult();
 		
-/*
-		$qb = $this->repository->createQueryBuilder('c');
+		$result = array();
+		$connection = $this->em->getConnection()->getWrappedConnection();
+		foreach($calendars as $calendar) {
+			$stmt = $connection->prepare("select count(*) from calendar_element where calendar_id = :calendarId::int");
+			$stmt->bindValue(':calendarId', $calendar->getId(), \PDO::PARAM_INT);
+			$stmt->execute();
+			$nb = $stmt->fetchColumn();
+			
+			 $result[] = array("calendar" =>  $calendar, "nb_elements" => $nb);
+		}
 		
-		$calendars = $qb->select('c')
-            ->where($qb->expr()->eq('c.calendarType', ':type'))
-            ->setParameter('type', $type)
-            ->getQuery();
-*/
-		return $calendars->getResult();
-        
-
+		return $result;		
     }
 	
     public function find($CalendarId)
@@ -75,7 +83,7 @@ class CalendarManager extends SortManager
 		{
 			$array[] = array("name"=>$data['name'], "id"=>$data['id']);
 		}
-	 
+
 		return $array;
 	}	
 	
@@ -93,4 +101,16 @@ class CalendarManager extends SortManager
 		
 		return $result["getcalendarbitmask"];
 	}	
+	
+	
+	public function delete($CalendarId)
+	{
+		$calendar = $this->find($CalendarId);
+		if($calendar == null) return false;
+		
+		$this->em->remove($calendar);
+        $this->em->flush();
+		
+		return true;
+	}
 }
