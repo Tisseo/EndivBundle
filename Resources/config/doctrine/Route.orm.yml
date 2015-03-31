@@ -40,7 +40,7 @@ Tisseo\EndivBundle\Entity\Route:
         comment:
             targetEntity: Comment
             mappedBy: null
-            inversedBy: null
+            inversedBy: routes
             joinColumns:
                 comment_id:
                     referencedColumnName: id

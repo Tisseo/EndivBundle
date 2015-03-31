@@ -45,7 +45,7 @@ Tisseo\EndivBundle\Entity\Modification:
         lineVersion:
             targetEntity: LineVersion
             mappedBy: null
-            inversedBy: modificationLinks
+            inversedBy: modifications
             joinColumns:
                 line_version_id:
                     referencedColumnName: id

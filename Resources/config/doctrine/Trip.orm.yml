@@ -77,7 +77,7 @@ Tisseo\EndivBundle\Entity\Trip:
         comment:
             targetEntity: Comment
             mappedBy: null
-            inversedBy: null
+            inversedBy: trips
             joinColumns:
                 comment_id:
                     referencedColumnName: id
