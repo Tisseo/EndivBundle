@@ -31,4 +31,21 @@ abstract class SortManager
         });
         return $lines;
     }
+
+    protected function splitByPhysicalMode($data, $physicalModes)
+    {
+        if (empty($data) || !(method_exists($data[0], 'getPhysicalModeName')))
+            return null;
+
+        $sortedResult = array();
+        foreach($physicalModes as $physicalMode)
+        {
+            $sortedResult[$physicalMode['name']] = array();
+        }
+
+        foreach($data as $object)
+            $sortedResult[$object->getPhysicalModeName()][] = $object;
+        
+        return $sortedResult;
+    }
 }

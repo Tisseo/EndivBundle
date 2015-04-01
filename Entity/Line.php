@@ -51,6 +51,14 @@ class Line
     }
 
     /**
+     * Get PhysicalMode name
+     */
+    public function getPhysicalModeName()
+    {
+        return $this->getPhysicalMode()->getName();
+    }
+
+    /**
      * getLastLineVersion
      * 
      * @return LineVersion
