@@ -183,6 +183,14 @@ class LineVersion
     }
 
     /**
+     * Get PhysicalMode name
+     */
+    public function getPhysicalModeName()
+    {
+        return $this->getLine()->getPhysicalMode()->getName();
+    }
+
+    /**
      * Merge GridCalendars
      * @param LineVersion $lineVersion
      *

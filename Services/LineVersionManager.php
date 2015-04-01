@@ -131,18 +131,15 @@ class LineVersionManager extends SortManager
     /*
      * findActiveLineVersions
      * @param Datetime $now
-     * @param boolean $havingCalendars
-     * @param boolean $havingTrips
+     * @param string $filter
      * @return Collection $lineVersions
      *
      * Find LineVersion which are considered as active according to the current 
      * date passed as parameter.
-     * If havingCalendars is true, search only for lineVersions having GridCalendars
-     * If havingTrips is true, search only for lineVersions having Trips
      */
-    public function findActiveLineVersions(\Datetime $now, $havingCalendars = false, $havingTrips = false)
+    public function findActiveLineVersions(\Datetime $now, $filter = '')
     {
-        if ($havingCalendars)
+        if ($filter === 'gridCalendars')
         {
             $query = $this->repository->createQueryBuilder('lv')
                 ->where('lv.endDate is null OR lv.endDate > :now')
@@ -153,7 +150,7 @@ class LineVersionManager extends SortManager
                 ->setParameter('now', $now)
                 ->getQuery();
         }
-        else if($havingTrips)
+        else if ($filter === 'trips')
         {
             $query = $this->repository->createQueryBuilder('lv')
                 ->where('lv.endDate is null OR lv.endDate > :now')
@@ -165,13 +162,25 @@ class LineVersionManager extends SortManager
                 ->getQuery();
         }
         else
-        {
+        { 
             $query = $this->repository->createQueryBuilder('lv')
                 ->where('lv.endDate is null OR lv.endDate > :now')
                 ->setParameter('now', $now)
                 ->getQuery();
         }
-        return $this->sortLineVersionsByNumber($query->getResult());
+        $result = $this->sortLineVersionsByNumber($query->getResult());
+
+        if ($filter === 'physicalMode')
+        {
+            $query = $this->om->createQuery("
+                SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
+            ");
+            $physicalModes = $query->getResult();
+            
+            $result = $this->splitByPhysicalMode($result, $physicalModes);
+        }
+
+        return $result;
     }
 
     /*
