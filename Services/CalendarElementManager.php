@@ -79,8 +79,10 @@ class CalendarElementManager extends SortManager
 		$stmt->bindValue(':startDate', $startDate);
 		$endDate = (!$CalendarElement->getEndDate() ? null : date_format($CalendarElement->getEndDate(), 'Y-m-d') );
 		$stmt->bindValue(':endDate', $endDate);
-		$interval = ($CalendarElement->getInterval() ? 1 : $CalendarElement->getInterval());
-		$stmt->bindValue(':interval', $CalendarElement->getInterval(), \PDO::PARAM_INT);
+		
+		$interval = $CalendarElement->getInterval();
+		if(empty($interval)) $interval =1;
+		$stmt->bindValue(':interval', $interval, \PDO::PARAM_INT);
 		$stmt->bindValue(':operator', $CalendarElement->getOperator());
 		$includedCalendarId = (!$CalendarElement->getIncludedCalendar() ? null: $CalendarElement->getIncludedCalendar()->getId());
 		$stmt->bindValue(':includedCalendarId', $includedCalendarId, \PDO::PARAM_INT);

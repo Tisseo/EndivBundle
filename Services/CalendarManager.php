@@ -36,6 +36,7 @@ class CalendarManager extends SortManager
 				FROM Tisseo\EndivBundle\Entity\Trip t
 				WHERE  t.periodCalendar IS NOT NULL
 			)
+			ORDER BY c.name
 		")
 			->setParameter('type', $type);;
 		$calendars = $query->getResult();
@@ -70,7 +71,7 @@ class CalendarManager extends SortManager
 	 
 		$qb = $this->repository->createQueryBuilder('c');
 		$qb ->select('c.name, c.id')
-		->where('c.name LIKE :term')
+		->where('UPPER(c.name) LIKE UPPER(:term)')
 		->setParameter('term', '%'.$term.'%')
 		->setMaxResults($limit);
 	 
