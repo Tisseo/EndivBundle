@@ -12,13 +12,11 @@ class LineVersionManager extends SortManager
 {
     private $om = null;
     private $repository = null;
-    private $tripManager = null;
 
-    public function __construct(ObjectManager $om, TripManager $tripManager)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
-        $this->tripManager = $tripManager;
     }
 
     public function findAll()
@@ -340,25 +338,7 @@ class LineVersionManager extends SortManager
         $this->om->persist($lineVersion);
         $this->om->flush();
 
-        $this->tripManager->deleteTrips($oldLineVersion);
-
         return array(true,'line_version.persisted');
-    }
-
-    /*
-     * close
-     * @param LineVersion $lineVersion
-     * @return array(boolean, string)
-     * Save a LineVersion into database after all trips which don't belong to it 
-     * anymore have been deleted.
-     */
-    public function close(LineVersion $lineVersion)
-    {
-        $this->tripManager->deleteTrips($lineVersion);
-        $this->om->persist($lineVersion);
-        $this->om->flush();
-
-        return array(true,'line_version.closed');
     }
 
     /*
