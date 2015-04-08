@@ -329,12 +329,14 @@ class LineVersionManager extends SortManager
     public function create(LineVersion $lineVersion)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
-        if ($oldLineVersion->getEndDate() === null)
-            $oldLineVersion->closeDate($lineVersion->getStartDate());
-        else if ($oldLineVersion->getEndDate() > $lineVersion->getStartDate())
-            return array(false,'line_version.closure_error');
-
-        $this->om->persist($oldLineVersion);
+        if ($oldLineVersion)
+        {
+            if ($oldLineVersion->getEndDate() === null)
+                $oldLineVersion->closeDate($lineVersion->getStartDate());
+            else if ($oldLineVersion->getEndDate() > $lineVersion->getStartDate())
+                return array(false,'line_version.closure_error');
+            $this->om->persist($oldLineVersion);
+        }
         $this->om->persist($lineVersion);
         $this->om->flush();
 
