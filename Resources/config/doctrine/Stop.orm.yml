@@ -26,6 +26,22 @@ Tisseo\EndivBundle\Entity\Stop:
                 id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        stopDatasources:
+            targetEntity: StopDatasource
+            cascade: ['persist', 'remove']
+            mappedBy: stop
+            inversedBy: null
+        stopHistories:
+            targetEntity: StopHistory
+            cascade: ['persist', 'remove']
+            mappedBy: stop
+            inversedBy: null
+        stopAccessibilities:
+            targetEntity: StopAccessibility
+            cascade: ['persist', 'remove']
+            mappedBy: stop
+            inversedBy: null
     manyToOne:
         masterStop:
             targetEntity: Stop
