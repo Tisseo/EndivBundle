@@ -16,6 +16,7 @@ parameters:
     tisseo_endiv.grid_calendar_manager.class: Tisseo\EndivBundle\Services\GridCalendarManager
     tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
     tisseo_endiv.stored_procedure_manager.class: Tisseo\EndivBundle\Services\StoredProcedureManager
+    tisseo_endiv.route_manager.class: Tisseo\EndivBundle\Services\RouteManager
 
 services:
     tisseo_endiv.line_manager:
@@ -68,4 +69,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.stored_procedure_manager:
         class: %tisseo_endiv.stored_procedure_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.route_manager:
+        class: %tisseo_endiv.route_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
