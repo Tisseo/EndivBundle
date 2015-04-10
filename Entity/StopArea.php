@@ -164,4 +164,9 @@ class StopArea
     {
         return $this->city;
     }
+	
+    public function getNameLabel()
+    {
+        return $this->shortName.' '.$this->city->getName();
+    }	
 }
