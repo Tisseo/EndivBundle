@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Collection;
 class Stop
 {
     /**
-     * @var \Tisseo\EndivBundle\Entity\Waypoint
+     * @var integer
      */
     private $id;
 
@@ -42,6 +42,11 @@ class Stop
     private $stopAccessibilities;	
 	
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $phantoms;	
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -49,16 +54,17 @@ class Stop
         $this->stopDatasources = new ArrayCollection();
         $this->stopHistories = new ArrayCollection();
         $this->stopAccessibilities = new ArrayCollection();
+        $this->phantoms = new ArrayCollection();
     }
 	
 	
     /**
      * Set id
      *
-     * @param \Tisseo\EndivBundle\Entity\Waypoint $id
+     * @param integer $id
      * @return Stop
      */
-    public function setId(\Tisseo\EndivBundle\Entity\Waypoint $id = null)
+    public function setId($id)
     {
         $this->id = $id;
 
@@ -291,5 +297,53 @@ class Stop
     public function removeStopAccessibility(stopAccessibility $stopAccessibility)
     {
         $this->stopAccessibilities->removeElement($stopAccessibility);
+    }	
+	
+    /**
+     * Get phantoms
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPhantoms()
+    {
+        return $this->phantoms;
+    }
+
+    /**
+     * Set phantoms
+     *
+     * @param \Doctrine\Common\Collections\Collection $stopDatasources
+     * @return Line
+     */
+    public function setPhantoms(Collection $phantoms)
+    {
+        $this->phantoms = $phantoms;
+        foreach ($this->phantoms as $phantom) {
+            $phantom->setMasterStop($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Add phantom
+     *
+     * @param Stop $Phantom
+     * @return Line
+     */
+    public function addPhantom(Stop $phantom)
+    {
+        $this->phantoms[] = $phantom;
+        $phantom->setMasterStop($this);
+        return $this;
+    }
+
+    /**
+     * Remove Phantom
+     *
+     * @param Stop $Phantom
+     */
+    public function removePhantom(Stop $phantom)
+    {
+        $this->phantoms->removeElement($phantom);
     }	
 }

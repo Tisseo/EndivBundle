@@ -7,6 +7,8 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
 
 use Tisseo\EndivBundle\Entity\Stop;
+use Tisseo\EndivBundle\Entity\Waypoint;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
 
 class StopManager extends SortManager
@@ -32,8 +34,19 @@ class StopManager extends SortManager
 
     public function save(Stop $Stop)
     {
+		if(!$Stop->getId()) {
+			$waypoint=new Waypoint();
+			$this->om->persist($waypoint);
+			$this->om->flush();
+			$this->om->refresh($waypoint);
+			$newId = $waypoint->getId();
+			$Stop->setId($newId);
+			$Stop->getStopHistories()[0]->setTheGeom(new Point(1, 1, 3943));
+		}
+		
 		$this->om->persist($Stop);
         $this->om->flush();
+		$this->om->refresh($Stop);
     }
 	
 	public function findStopsLike( $term, $limit = 10 )

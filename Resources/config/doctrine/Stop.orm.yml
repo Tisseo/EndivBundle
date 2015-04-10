@@ -13,19 +13,19 @@ Tisseo\EndivBundle\Entity\Stop:
             type: integer
             nullable: false
             unsigned: false
-            id: true
-            generator:
-                strategy: SEQUENCE    
-    oneToOne:
-        waypoint:
-            targetEntity: Waypoint
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                id:
-                    referencedColumnName: id
-            orphanRemoval: false
+#            id: true
+#            generator:
+#                strategy: SEQUENCE    
+#    oneToOne:
+#        waypoint:
+#            targetEntity: Waypoint
+#            cascade: {  }
+#            mappedBy: null
+#            inversedBy: null
+#            joinColumns:
+#                id:
+#                    referencedColumnName: id
+#            orphanRemoval: false
     oneToMany:
         stopDatasources:
             targetEntity: StopDatasource
@@ -41,6 +41,11 @@ Tisseo\EndivBundle\Entity\Stop:
             targetEntity: StopAccessibility
             cascade: ['persist', 'remove']
             mappedBy: stop
+            inversedBy: null
+        phantoms:
+            targetEntity: Stop
+            cascade: []
+            mappedBy: masterStop
             inversedBy: null
     manyToOne:
         masterStop:
