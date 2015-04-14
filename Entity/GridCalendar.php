@@ -138,6 +138,26 @@ class GridCalendar
         return $sync;
     }
 
+    /*
+     * Set days
+     * @param array $days
+     * @return GridCalendar
+     *
+     * Set all days using an array of booleans.
+     */
+    public function setDays($days)
+    {
+        $this->monday = $days[0];
+        $this->tuesday = $days[1];
+        $this->wednesday = $days[2];
+        $this->thursday = $days[3];
+        $this->friday = $days[4];
+        $this->saturday = $days[5];
+        $this->sunday = $days[6];
+
+        return $this;
+    }
+
     /**
      * Get id
      *

@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Tisseo\EndivBundle\Entity\LineVersion;
+use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Services\TripManager;
 
 class LineVersionManager extends SortManager
@@ -27,32 +28,6 @@ class LineVersionManager extends SortManager
     public function find($lineVersionId)
     {
         return empty($lineVersionId) ? null : $this->repository->find($lineVersionId);
-    }
-
-    //select all lineVersions linked to a line with no end//
-    public function findLineVersions($now) {
-
-        $finalResult = null;
-        $time = new \DateTime('now');
-        $time = $time->format('Y-m-d H:i:s');
-
-        $query = $this->repository->createQueryBuilder('lv')
-
-                                  ->where('lv.endDate is null OR lv.endDate > :now')
-                                  ->setParameter('now',$time)
-                                  ->groupBy('lv.line, lv.id')
-                                  ->orderBy('lv.line')
-                                  ->getQuery();
-
-        try {
-            $finalResult = $query->getResult();
-
-        } catch(\Exception $e) {
-            var_dump($e);
-            return $finalResult;
-        }
-
-        return $finalResult;
     }
 
     /**
@@ -163,36 +138,14 @@ class LineVersionManager extends SortManager
      */
     public function findActiveLineVersions(\Datetime $now, $filter = '')
     {
-        if ($filter === 'gridCalendars')
-        {
-            $query = $this->repository->createQueryBuilder('lv')
-                ->where('lv.endDate is null OR lv.endDate > :now')
-                ->join('lv.gridCalendars', 'gc')
-                ->join('gc.gridLinkCalendarMaskTypes', 'glcmt')
-                ->having('count(gc.id) > 0')
-                ->groupBy('lv.id')
-                ->setParameter('now', $now)
-                ->getQuery();
-        }
-        else if ($filter === 'trips')
-        {
-            $query = $this->repository->createQueryBuilder('lv')
-                ->where('lv.endDate is null OR lv.endDate > :now')
-                ->join('lv.routes', 'r')
-                ->join('r.trips', 't')
-                ->having('count(t.id) > 0')
-                ->groupBy('lv.id')
-                ->setParameter('now', $now)
-                ->getQuery();
-        }
-        else
-        { 
-            $query = $this->repository->createQueryBuilder('lv')
-                ->where('lv.endDate is null OR lv.endDate > :now')
-                ->setParameter('now', $now)
-                ->getQuery();
-        }
-        $result = $this->sortLineVersionsByNumber($query->getResult());
+        $query = $this->repository->createQueryBuilder('lv')
+            ->where('lv.endDate is null OR lv.endDate > :now')
+            ->setParameter('now', $now);
+            
+        if ($filter === 'grouplines')
+            $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
+
+        $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
 
         if ($filter === 'physicalMode')
         {
@@ -299,47 +252,50 @@ class LineVersionManager extends SortManager
      *
      * Synchronize GridCalendars to a specific LineVersion according to values 
      * returned from calendars form view. (i.e. delete GridCalendars if their id 
-     * is not present in $gridCalendarsIds)
+     * is not present in $gridCalendarsIds and add new ones)
      */
-    public function updateGridCalendars($gridCalendarIds, $lineVersionId)
+    public function updateGridCalendars($gridCalendars, $lineVersionId)
     {
         $lineVersion = $this->find($lineVersionId);
         $sync = false;
+        $newGridCalendars = array();
+
+        // Detach removed GridCalendars
         foreach($lineVersion->getGridCalendars() as $gridCalendar)
         {
-            if (!in_array($gridCalendar->getId(), $gridCalendarIds))
+            if (!in_array($gridCalendar->getId(), array_keys($gridCalendars)))
             {
                 $sync = true;
                 $lineVersion->removeGridCalendar($gridCalendar);
             }
         }
 
-        if ($sync)
+        // Create new GridCalendars
+        foreach($gridCalendars as $id => $gridCalendarJson)
+        {
+            if (strpos($id, "new") !== false)
+            {
+                $sync = true;
+                $gridCalendar = new GridCalendar();
+                $gridCalendar->setDays($gridCalendarJson['days']);
+                $gridCalendar->setName($gridCalendarJson['name']);
+                $gridCalendar->setLineVersion($lineVersion);
+                $this->om->persist($gridCalendar);
+                $this->om->flush();
+
+                $newGridCalendars[$gridCalendar->getId()] = $gridCalendarJson['gmt'];
+            }
+            else
+            {
+                $newGridCalendars[$id] = $gridCalendarJson['gmt'];
+            }
+        }
+
+        if ($sync) {
             $this->om->persist($lineVersion);
-    }
+        }
 
-    /*
-     * find FH Trips
-     * @param integer $lineVersionId
-     * @param integer $routeId
-     *
-     * Select all trips related to this LineVersion with two conditions :
-     *  - $trip->periodCalendar == null
-     *  - $trip->dayCalendar == null
-     * .i.e. Select only exclusive FH related trips
-     */
-    private function findFHTrips($routeId)
-    {
-        $query = $this->om->createQuery("
-            SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
-            JOIN t.route r
-            WHERE r.id = ?1
-            AND t.dayCalendar IS NULL
-            AND t.periodCalendar IS NULL
-        ");
-        $query->setParameter(1, $routeId);
-
-        return new ArrayCollection($query->getResult());
+        return $newGridCalendars;
     }
 
     /*
@@ -382,46 +338,5 @@ class LineVersionManager extends SortManager
         $this->om->flush();
 
         return array(true,'line_version.persisted');
-    }
-
-    /*
-     * purge
-     * @param integer $lineVersionId
-     * @return boolean
-     *
-     * Purge all data related to the LineVersion.
-     */
-    public function purge($lineVersionId)
-    {
-        $lineVersion = $this->find($lineVersionId);
-        foreach ($lineVersion->getRoutes() as $route)
-        {
-            // find trips with periodCalendar == dayCalendar == NULL
-            $trips = $this->findFHTrips($route->getId());
-            // delete all stopTimes related to each trip found
-            // (cascade doesn't work)
-            foreach ($trips as $trip)
-            {
-                foreach($trip->getStopTimes() as $stopTime)
-                {
-                    $this->om->remove($stopTime);
-                }
-            }
-            $this->om->flush();
-
-            $route->removeTrips($trips);
-            $this->om->persist($route);
-            $this->om->flush();
-
-            if ($route->getTrips()->isEmpty())
-            {
-                $lineVersion->removeRoute($route);
-            }
-        }
-
-        $this->om->persist($lineVersion);
-        $this->om->flush();
-
-        return true;
     }
 }
