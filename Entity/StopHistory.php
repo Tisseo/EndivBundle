@@ -192,4 +192,15 @@ class StopHistory
     {
         return $this->stop;
     }
+	
+    /**
+     * Get available srid
+     *
+     * @return list
+	 * @todo bad bad bad => must return database available srid
+     */    
+	public static function getSridList()
+    {
+        return array('3943'=>'RGF93/CC43', '2154'=>'RGF93/Lambert-93', '4326'=>'WGS 84', '27672'=>'NTF(Paris) / Lambert zone II');
+    }
 }

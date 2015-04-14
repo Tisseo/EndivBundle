@@ -3,6 +3,9 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 
 /**
  * AccessibilityType
@@ -39,7 +42,19 @@ class AccessibilityType
      */
     private $calendar;
 
-
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stopAccessibilities;
+	
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->stopAccessibilities = new ArrayCollection();
+    }
+	
     /**
      * Get id
      *
@@ -164,4 +179,52 @@ class AccessibilityType
     {
         return $this->calendar;
     }
+	
+    /**
+     * Get getStopAccessibilities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStopAccessibilities()
+    {
+        return $this->stopAccessibilities;
+    }
+
+    /**
+     * Set StopAccessibilities
+     *
+     * @param \Doctrine\Common\Collections\Collection $stopAccessibilities
+     * @return Line
+     */
+    public function setStopAccessibilities(Collection $stopAccessibilities)
+    {
+        $this->stopAccessibilities = $stopAccessibilities;
+        foreach ($this->stopAccessibilities as $stopAccessibility) {
+            $stopAccessibility->setStop($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Add stopAccessibility
+     *
+     * @param stopAccessibility $stopAccessibility
+     * @return Line
+     */
+    public function addStopAccessibility(stopAccessibility $stopAccessibility)
+    {
+        $this->stopAccessibilities[] = $stopAccessibility;
+        $stopAccessibility->setStop($this);
+        return $this;
+    }
+
+    /**
+     * Remove stopAccessibility
+     *
+     * @param stopAccessibility $stopAccessibility
+     */
+    public function removeStopAccessibility(stopAccessibility $stopAccessibility)
+    {
+        $this->stopAccessibilities->removeElement($stopAccessibility);
+    }		
 }

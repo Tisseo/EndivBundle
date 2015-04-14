@@ -7,6 +7,8 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
 
 use Tisseo\EndivBundle\Entity\Stop;
+use Tisseo\EndivBundle\Entity\StopHistory;
+use Tisseo\EndivBundle\Entity\StopAccessibility;
 use Tisseo\EndivBundle\Entity\Waypoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
@@ -32,22 +34,69 @@ class StopManager extends SortManager
         return empty($StopId) ? null : $this->repository->find($StopId);
     }
 
-    public function save(Stop $Stop)
+    public function save(Stop $Stop, $x = null, $y = null, $srid = null)
     {
 		if(!$Stop->getId()) {
+			// new stop + new stop_history
 			$waypoint=new Waypoint();
 			$this->om->persist($waypoint);
 			$this->om->flush();
 			$this->om->refresh($waypoint);
 			$newId = $waypoint->getId();
 			$Stop->setId($newId);
-			$Stop->getStopHistories()[0]->setTheGeom(new Point(1, 1, 3943));
+			$Stop->getStopHistories()[0]->setTheGeom(new Point($x, $y, $srid));
 		}
 		
 		$this->om->persist($Stop);
         $this->om->flush();
 		$this->om->refresh($Stop);
     }
+	
+	public function addStopHistory(Stop $Stop, StopHistory $StopHistory, $x, $y, $srid)
+	{
+		$StopHistory->setStop($Stop);
+		$StopHistory->setTheGeom(new Point($x, $y, $srid));
+		$Stop->addStopHistory($StopHistory);
+		$this->om->persist($StopHistory);
+		$this->om->persist($Stop);
+		$this->om->flush();
+	}
+
+	
+	public function removeStopHistory(Stop $Stop, $StopHistoryId)
+	{
+		foreach ($Stop->getStopHistories() as $sh) {
+			if($sh->getId() == $StopHistoryId) {
+				$Stop->removeStopHistory($sh);
+				$this->om->remove($sh);
+				$this->om->persist($Stop);
+				$this->om->flush();
+				break;
+			}
+		}
+	}
+	
+	public function addAccessibility(Stop $Stop, StopAccessibility $StopAccessibility)
+	{
+		$StopAccessibility->setStop($Stop);
+		$Stop->addStopAccessibility($StopAccessibility);
+		$this->om->persist($StopAccessibility);
+		$this->om->persist($Stop);
+		$this->om->flush();
+	}
+
+	public function removeStopAccessibility(Stop $Stop, $StopAccessibilityId)
+	{
+		foreach ($Stop->getStopAccessibilities() as $sa) {
+			if($sa->getId() == $StopAccessibilityId) {
+				$Stop->removeStopAccessibility($sa);
+				$this->om->remove($sa);
+				$this->om->persist($Stop);
+				$this->om->flush();
+				break;
+			}			
+		}
+	}
 	
 	public function findStopsLike( $term, $limit = 10 )
 	{
@@ -76,7 +125,7 @@ class StopManager extends SortManager
 		return $array;
 	}	
 
-	public function getStopLabel( $stop )
+	public function getStopLabel( Stop $stop )
 	{
 		$query = $this->om->createQuery("
 			SELECT sh.shortName as name, c.name as city,  sd.code as code, s.id as id
@@ -94,4 +143,19 @@ class StopManager extends SortManager
 		$label = $sh[0]["name"]." ".$sh[0]["city"]." (".$sh[0]["code"].")";
 		return $label;
 	}	
+	
+	public function getCurrentStopHistory( $stop )
+	{
+		$query = $this->om->createQuery("
+			SELECT sh
+			FROM Tisseo\EndivBundle\Entity\StopHistory sh
+			JOIN sh.stop s
+			WHERE sh.stop = :stop
+			AND sh.startDate <= CURRENT_DATE()
+			AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE())
+		");
+		$query->setParameter('stop', $stop);
+		
+		return $query->getResult()[0];
+	}
 }

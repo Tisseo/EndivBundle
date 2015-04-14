@@ -66,13 +66,17 @@ class CalendarManager extends SortManager
         $this->em->flush();
     }
 	
-	public function findCalendarsLike( $term, $limit = 10 )
+	public function findCalendarsLike( $term, $CalendarType = null, $limit = 10 )
 	{
 	 
 		$qb = $this->repository->createQueryBuilder('c');
 		$qb ->select('c.name, c.id')
-		->where('UPPER(c.name) LIKE UPPER(:term)')
-		->setParameter('term', '%'.$term.'%')
+		->where('UPPER(c.name) LIKE UPPER(:term)');
+		if($CalendarType) {
+			$qb->andWhere('c.calendarType = :type')
+			->setParameter('type', $CalendarType);
+		}
+		$qb->setParameter('term', '%'.$term.'%')
 		->setMaxResults($limit);
 	 
 		$arrayAss= $qb->getQuery()

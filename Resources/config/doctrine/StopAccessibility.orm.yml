@@ -20,9 +20,9 @@ Tisseo\EndivBundle\Entity\StopAccessibility:
     manyToOne:
         accessibilityType:
             targetEntity: AccessibilityType
-            cascade: {  }
+            cascade: ['persist']
             mappedBy: null
-            inversedBy: null
+            inversedBy: stopAccessibilities
             joinColumns:
                 accessibility_type_id:
                     referencedColumnName: id
