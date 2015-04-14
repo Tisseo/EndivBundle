@@ -164,36 +164,14 @@ class LineVersionManager extends SortManager
      */
     public function findActiveLineVersions(\Datetime $now, $filter = '')
     {
-        if ($filter === 'gridCalendars')
-        {
-            $query = $this->repository->createQueryBuilder('lv')
-                ->where('lv.endDate is null OR lv.endDate > :now')
-                ->join('lv.gridCalendars', 'gc')
-                ->join('gc.gridLinkCalendarMaskTypes', 'glcmt')
-                ->having('count(gc.id) > 0')
-                ->groupBy('lv.id')
-                ->setParameter('now', $now)
-                ->getQuery();
-        }
-        else if ($filter === 'trips')
-        {
-            $query = $this->repository->createQueryBuilder('lv')
-                ->where('lv.endDate is null OR lv.endDate > :now')
-                ->join('lv.routes', 'r')
-                ->join('r.trips', 't')
-                ->having('count(t.id) > 0')
-                ->groupBy('lv.id')
-                ->setParameter('now', $now)
-                ->getQuery();
-        }
-        else
-        { 
-            $query = $this->repository->createQueryBuilder('lv')
-                ->where('lv.endDate is null OR lv.endDate > :now')
-                ->setParameter('now', $now)
-                ->getQuery();
-        }
-        $result = $this->sortLineVersionsByNumber($query->getResult());
+        $query = $this->repository->createQueryBuilder('lv')
+            ->where('lv.endDate is null OR lv.endDate > :now')
+            ->setParameter('now', $now);
+            
+        if ($filter === 'grouplines')
+            $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
+
+        $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
 
         if ($filter === 'physicalMode')
         {
