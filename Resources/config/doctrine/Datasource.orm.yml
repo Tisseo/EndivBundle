@@ -31,4 +31,5 @@ Tisseo\EndivBundle\Entity\Datasource:
                 agency_id:
                     referencedColumnName: id
             orphanRemoval: false
+            fetch: EAGER
     lifecycleCallbacks: {  }

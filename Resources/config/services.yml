@@ -17,6 +17,7 @@ parameters:
     tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
     tisseo_endiv.stored_procedure_manager.class: Tisseo\EndivBundle\Services\StoredProcedureManager
     tisseo_endiv.route_manager.class: Tisseo\EndivBundle\Services\RouteManager
+    tisseo_endiv.city_manager.class: Tisseo\EndivBundle\Services\CityManager
 
     tisseo_endiv.stop_manager.class: Tisseo\EndivBundle\Services\StopManager
     tisseo_endiv.stop_area_manager.class: Tisseo\EndivBundle\Services\StopAreaManager
@@ -81,4 +82,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.stop_area_manager:
         class: %tisseo_endiv.stop_area_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.city_manager:
+        class: %tisseo_endiv.city_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']

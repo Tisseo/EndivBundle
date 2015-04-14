@@ -41,6 +41,22 @@ Tisseo\EndivBundle\Entity\StopArea:
             comment: ''
             requireSQLConversion: true
             column: the_geom
+    oneToMany:
+        stopAreaDatasources:
+            targetEntity: StopAreaDatasource
+            cascade: ['persist', 'remove']
+            mappedBy: stopArea
+            inversedBy: null
+        stops:
+            targetEntity: Stop
+            cascade: {  }
+            mappedBy: stopArea
+            inversedBy: null
+        alias:
+            targetEntity: Alias
+            cascade: ['persist', 'remove']
+            mappedBy: stopArea
+            inversedBy: null
     manyToOne:
         city:
             targetEntity: City
