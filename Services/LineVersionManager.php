@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Tisseo\EndivBundle\Entity\LineVersion;
+use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Services\TripManager;
 
 class LineVersionManager extends SortManager
@@ -299,23 +300,50 @@ class LineVersionManager extends SortManager
      *
      * Synchronize GridCalendars to a specific LineVersion according to values 
      * returned from calendars form view. (i.e. delete GridCalendars if their id 
-     * is not present in $gridCalendarsIds)
+     * is not present in $gridCalendarsIds and add new ones)
      */
-    public function updateGridCalendars($gridCalendarIds, $lineVersionId)
+    public function updateGridCalendars($gridCalendars, $lineVersionId)
     {
         $lineVersion = $this->find($lineVersionId);
         $sync = false;
+        $newGridCalendars = array();
+
+        // Detach removed GridCalendars
         foreach($lineVersion->getGridCalendars() as $gridCalendar)
         {
-            if (!in_array($gridCalendar->getId(), $gridCalendarIds))
+            if (!in_array($gridCalendar->getId(), array_keys($gridCalendars)))
             {
                 $sync = true;
                 $lineVersion->removeGridCalendar($gridCalendar);
             }
         }
 
-        if ($sync)
+        // Create new GridCalendars
+        foreach($gridCalendars as $id => $gridCalendarJson)
+        {
+            if (strpos($id, "new") !== false)
+            {
+                $sync = true;
+                $gridCalendar = new GridCalendar();
+                $gridCalendar->setDays($gridCalendarJson['days']);
+                $gridCalendar->setName($gridCalendarJson['name']);
+                $gridCalendar->setLineVersion($lineVersion);
+                $this->om->persist($gridCalendar);
+                $this->om->flush();
+
+                $newGridCalendars[$gridCalendar->getId()] = $gridCalendarJson['gmt'];
+            }
+            else
+            {
+                $newGridCalendars[$id] = $gridCalendarJson['gmt'];
+            }
+        }
+
+        if ($sync) {
             $this->om->persist($lineVersion);
+        }
+
+        return $newGridCalendars;
     }
 
     /*
