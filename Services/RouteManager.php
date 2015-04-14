@@ -12,7 +12,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use Proxies\__CG__\Tisseo\EndivBundle\Entity\Route;
+use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Services\TripManager;
 

@@ -142,8 +142,22 @@ class StopManager extends SortManager
 		$sh = $query->getResult();
 		$label = $sh[0]["name"]." ".$sh[0]["city"]." (".$sh[0]["code"].")";
 		return $label;
-	}	
-	
+	}
+
+    public function getStopsByRoute($id) {
+        $query = $this->om->createQuery("
+               SELECT rs.id, rs.rank, wp.id as waypoint
+               FROM Tisseo\EndivBundle\Entity\RouteStop rs
+               JOIN rs.waypoint wp
+               WHERE rs.route = :id
+        ")->setParameter('id', $id);
+
+        return $query->getResult();
+
+    }
+
+
+
 	public function getCurrentStopHistory( $stop )
 	{
 		$query = $this->om->createQuery("

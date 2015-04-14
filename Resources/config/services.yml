@@ -75,6 +75,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.route_manager:
         class: %tisseo_endiv.route_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.stop_manager:
         class: %tisseo_endiv.stop_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
