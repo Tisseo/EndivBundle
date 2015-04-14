@@ -46,7 +46,17 @@ Tisseo\EndivBundle\Entity\StopArea:
             targetEntity: StopAreaDatasource
             cascade: ['persist', 'remove']
             mappedBy: stopArea
-            inversedBy: null            
+            inversedBy: null
+        stops:
+            targetEntity: Stop
+            cascade: {  }
+            mappedBy: stopArea
+            inversedBy: null
+        alias:
+            targetEntity: Alias
+            cascade: ['persist', 'remove']
+            mappedBy: stopArea
+            inversedBy: null
     manyToOne:
         city:
             targetEntity: City

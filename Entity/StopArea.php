@@ -45,13 +45,26 @@ class StopArea
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stopAreaDatasources;	
+	
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stops;	
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $alias;	
+
+	
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->stopAreaDatasources = new ArrayCollection();
+        $this->stops = new ArrayCollection();
+        $this->alias = new ArrayCollection();
     }
 
     /**
@@ -225,6 +238,102 @@ class StopArea
     public function removeStopAreaDatasources(StopAreaDatasource $stopAreaDatasources)
     {
         $this->stopAreaDatasources->removeElement($stopAreaDatasources);
+    }	
+
+    /**
+     * Get getStops
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStops()
+    {
+        return $this->stops;
+    }
+
+    /**
+     * Set stops
+     *
+     * @param \Doctrine\Common\Collections\Collection $stops
+     * @return Line
+     */
+    public function setStops(Collection $stops)
+    {
+        $this->stops = $stops;
+        foreach ($this->stops as $stop) {
+            $stop->setStopArea($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Add stop
+     *
+     * @param Stop $stop
+     * @return Line
+     */
+    public function addStop(Stop $stop)
+    {
+        $this->stops[] = $stop;
+        $stop->setStopArea($this);
+        return $this;
+    }
+
+    /**
+     * Remove stop
+     *
+     * @param Stop $stop
+     */
+    public function removeStop(Stop $stop)
+    {
+        $this->stops->removeElement($stop);
+    }	
+
+    /**
+     * Get getAlias
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * Set alias
+     *
+     * @param \Doctrine\Common\Collections\Collection $alias
+     * @return StopArea
+     */
+    public function setAlias(Collection $alias)
+    {
+        $this->alias = $alias;
+        foreach ($this->alias as $a) {
+            $a->setStopArea($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Add alias
+     *
+     * @param Alias $alias
+     * @return StopArea
+     */
+    public function addAlias(Alias $alias)
+    {
+        $this->alias[] = $alias;
+        $alias->setStopArea($this);
+        return $this;
+    }
+
+    /**
+     * Remove aslias
+     *
+     * @param Alias $alias
+     */
+    public function removeAlias(Alias $alias)
+    {
+        $this->alias->removeElement($alias);
     }	
 
     public function getNameLabel()
