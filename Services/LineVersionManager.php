@@ -30,32 +30,6 @@ class LineVersionManager extends SortManager
         return empty($lineVersionId) ? null : $this->repository->find($lineVersionId);
     }
 
-    //select all lineVersions linked to a line with no end//
-    public function findLineVersions($now) {
-
-        $finalResult = null;
-        $time = new \DateTime('now');
-        $time = $time->format('Y-m-d H:i:s');
-
-        $query = $this->repository->createQueryBuilder('lv')
-
-                                  ->where('lv.endDate is null OR lv.endDate > :now')
-                                  ->setParameter('now',$time)
-                                  ->groupBy('lv.line, lv.id')
-                                  ->orderBy('lv.line')
-                                  ->getQuery();
-
-        try {
-            $finalResult = $query->getResult();
-
-        } catch(\Exception $e) {
-            var_dump($e);
-            return $finalResult;
-        }
-
-        return $finalResult;
-    }
-
     /**
      * findLastLineVersionOfLine
      * @param integer $lineId
