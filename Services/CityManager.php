@@ -6,10 +6,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
 
-use Tisseo\EndivBundle\Entity\StopArea;
+use Tisseo\EndivBundle\Entity\City;
 
 
-class StopAreaManager extends SortManager
+class CityManager extends SortManager
 {
     private $om = null;
     private $repository = null;
@@ -17,7 +17,7 @@ class StopAreaManager extends SortManager
     public function __construct(ObjectManager $om)
     {   
         $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:StopArea');
+        $this->repository = $om->getRepository('TisseoEndivBundle:City');
     }   
 
     public function findAll()
@@ -25,26 +25,25 @@ class StopAreaManager extends SortManager
         return ($this->repository->findAll());
     }   
 
-    public function find($StopAreaId)
+    public function find($CityId)
     {   
-        return empty($StopAreaId) ? null : $this->repository->find($StopAreaId);
+        return empty($CityId) ? null : $this->repository->find($CityId);
     }
 
-    public function save(StopArea $StopArea)
+    public function save(City $City)
     {
-		$this->om->persist($StopArea);
+		$this->om->persist($City);
         $this->om->flush();
     }
 	
-	public function findStopAreasLike( $term, $limit = 10 )
+	public function findCityLike( $term )
 	{
 		$query = $this->om->createQuery("
-			SELECT sa.shortName as name, c.name as city, sa.id as id
-			FROM Tisseo\EndivBundle\Entity\StopArea sa
-			JOIN sa.city c
-			WHERE UPPER(sa.shortName) LIKE UPPER(:term)
-			OR UPPER(sa.longName) LIKE UPPER(:term)
-			ORDER BY sa.shortName, c.name
+			SELECT c.name as name, c.insee as insee, c.id as id
+			FROM Tisseo\EndivBundle\Entity\City c
+			WHERE UPPER(c.name) LIKE UPPER(:term)
+			OR UPPER(c.insee) LIKE UPPER(:term)
+			ORDER BY c.name
 		");
 	 
 		$query->setParameter('term', '%'.$term.'%');
@@ -52,7 +51,7 @@ class StopAreaManager extends SortManager
 		$shs = $query->getResult();
 		$array = array();
 		foreach($shs as $sh) {
-			$label = $sh["name"]." ".$sh["city"];
+			$label = $sh["name"]."(".$sh["insee"].")";
 			$array[] = array("name"=>$label, "id"=>$sh["id"]);
 		}
 		

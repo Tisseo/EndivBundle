@@ -3,6 +3,8 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * StopArea
@@ -39,6 +41,18 @@ class StopArea
      */
     private $city;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stopAreaDatasources;	
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->stopAreaDatasources = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -165,6 +179,54 @@ class StopArea
         return $this->city;
     }
 	
+    /**
+     * Get stopAreaDatasources
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStopAreaDatasources()
+    {
+        return $this->stopAreaDatasources;
+    }
+
+    /**
+     * Set stopAreaDatasources
+     *
+     * @param \Doctrine\Common\Collections\Collection $stopAreaDatasources
+     * @return Line
+     */
+    public function setStopAreaDatasources(Collection $stopAreaDatasources)
+    {
+        $this->stopAreaDatasources = $stopAreaDatasources;
+        foreach ($this->stopAreaDatasources as $stopAreaDatasource) {
+            $stopAreaDatasource->setStopArea($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Add stopAreaDatasource
+     *
+     * @param StopAreaDatasource $stopAreaDatasources
+     * @return Line
+     */
+    public function addStopAreaDatasources(StopAreaDatasource $stopAreaDatasource)
+    {
+        $this->stopAreaDatasources[] = $stopAreaDatasource;
+        $stopAreaDatasource->setStopArea($this);
+        return $this;
+    }
+
+    /**
+     * Remove stopAreaDatasources
+     *
+     * @param StopAreaDatasource $stopAreaDatasources
+     */
+    public function removeStopAreaDatasources(StopAreaDatasource $stopAreaDatasources)
+    {
+        $this->stopAreaDatasources->removeElement($stopAreaDatasources);
+    }	
+
     public function getNameLabel()
     {
         return $this->shortName.' '.$this->city->getName();

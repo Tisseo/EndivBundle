@@ -55,8 +55,7 @@ class Stop
         $this->stopHistories = new ArrayCollection();
         $this->stopAccessibilities = new ArrayCollection();
         $this->phantoms = new ArrayCollection();
-    }
-	
+    }	
 	
     /**
      * Set id
