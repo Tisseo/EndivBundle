@@ -13,13 +13,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Tisseo\EndivBundle\Entity\Route;
+
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Services\TripManager;
 
 class RouteManager extends SortManager {
 
-    private $om;
-    private $repository;
+    private $om= null;
+    private $repository= null;
 
     public function __construct(ObjectManager $om) {
 
@@ -36,11 +37,28 @@ class RouteManager extends SortManager {
 
         $query = $this->repository->createQueryBuilder('r')
                                    ->leftJoin("r.lineVersion","line")
-                                   ->where("line = :id")
+                                   ->where("line.id = :id")
                                    ->setParameter("id",$id)
                                    ->getQuery();
 
         return $query->getResult();
+    }
+
+    public function findById($id) {
+        return $this->repository->find($id);
+    }
+
+
+    public function save(Route $route)
+    {
+        $this->om->persist($route);
+        try{
+            $this->om->flush();
+
+        }
+        catch(\ErrorException $err) {
+            var_dump($err);
+        }
     }
 
     public function getTrips($id){
