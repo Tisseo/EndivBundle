@@ -325,30 +325,6 @@ class LineVersionManager extends SortManager
     }
 
     /*
-     * find FH Trips
-     * @param integer $lineVersionId
-     * @param integer $routeId
-     *
-     * Select all trips related to this LineVersion with two conditions :
-     *  - $trip->periodCalendar == null
-     *  - $trip->dayCalendar == null
-     * .i.e. Select only exclusive FH related trips
-     */
-    private function findFHTrips($routeId)
-    {
-        $query = $this->om->createQuery("
-            SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
-            JOIN t.route r
-            WHERE r.id = ?1
-            AND t.dayCalendar IS NULL
-            AND t.periodCalendar IS NULL
-        ");
-        $query->setParameter(1, $routeId);
-
-        return new ArrayCollection($query->getResult());
-    }
-
-    /*
      * create
      * @param LineVersion $lineVersion
      *
@@ -388,46 +364,5 @@ class LineVersionManager extends SortManager
         $this->om->flush();
 
         return array(true,'line_version.persisted');
-    }
-
-    /*
-     * purge
-     * @param integer $lineVersionId
-     * @return boolean
-     *
-     * Purge all data related to the LineVersion.
-     */
-    public function purge($lineVersionId)
-    {
-        $lineVersion = $this->find($lineVersionId);
-        foreach ($lineVersion->getRoutes() as $route)
-        {
-            // find trips with periodCalendar == dayCalendar == NULL
-            $trips = $this->findFHTrips($route->getId());
-            // delete all stopTimes related to each trip found
-            // (cascade doesn't work)
-            foreach ($trips as $trip)
-            {
-                foreach($trip->getStopTimes() as $stopTime)
-                {
-                    $this->om->remove($stopTime);
-                }
-            }
-            $this->om->flush();
-
-            $route->removeTrips($trips);
-            $this->om->persist($route);
-            $this->om->flush();
-
-            if ($route->getTrips()->isEmpty())
-            {
-                $lineVersion->removeRoute($route);
-            }
-        }
-
-        $this->om->persist($lineVersion);
-        $this->om->flush();
-
-        return true;
     }
 }
