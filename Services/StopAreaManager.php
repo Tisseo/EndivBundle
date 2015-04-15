@@ -6,6 +6,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use  Doctrine\Common\Collections\Collection;
+
 use Tisseo\EndivBundle\Entity\StopArea;
 
 
@@ -35,6 +38,27 @@ class StopAreaManager extends SortManager
 		$this->om->persist($StopArea);
         $this->om->flush();
     }
+
+    public function saveAliases(StopArea $StopArea)
+    {
+		$Aliases = new ArrayCollection();
+		foreach ($StopArea->getAlias() as $alias) {
+			$Aliases->add($alias);
+		}
+		
+		$emptyCollection = new ArrayCollection();
+		$StopArea->setAlias($emptyCollection);
+		$this->om->persist($StopArea);
+		$this->om->flush();
+		
+		foreach ($Aliases as $alias) {
+			$StopArea->addAlias($alias);
+		}
+		
+		$this->om->persist($StopArea);
+        $this->om->flush();
+    }
+
 	
 	public function findStopAreasLike( $term, $limit = 10 )
 	{

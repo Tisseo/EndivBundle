@@ -38,7 +38,7 @@ Tisseo\EndivBundle\Entity\StopAreaDatasource:
             targetEntity: StopArea
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: stopAreaDatasources
             joinColumns:
                 stop_area_id:
                     referencedColumnName: id

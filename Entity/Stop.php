@@ -345,4 +345,27 @@ class Stop
     {
         $this->phantoms->removeElement($phantom);
     }	
+
+    /**
+     * return masterStop Label
+     *
+     * @param Stop $Phantom
+     */
+    public function getMasterStopLabel()
+    {
+        if(!empty($this->masterStop)) {
+			foreach ($this->masterStop->getStopHistories() as $sh) {
+				if($sh->getStartDate()->format("Ymd") <= date("Ymd")) {
+					if(empty($sh->getEndDate)) {
+						return $sh->getShortName()."-".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()."(".$this->stopDatasources[0]->getCode().")";
+					} else {
+						if($sh->getStartDate()->format("Ymd") >= date("Ymd")) {	
+							return $sh->getShortName()."-".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()."(".$this->stopDatasources[0]->getCode().")";
+						}
+					}
+				}
+			}
+		}
+		return "VIDE";
+    }	
 }

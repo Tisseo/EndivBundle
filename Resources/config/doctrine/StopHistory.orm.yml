@@ -50,7 +50,7 @@ Tisseo\EndivBundle\Entity\StopHistory:
             targetEntity: Stop
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: stopHistories
             joinColumns:
                 stop_id:
                     referencedColumnName: id

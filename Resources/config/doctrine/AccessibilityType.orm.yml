@@ -35,6 +35,12 @@ Tisseo\EndivBundle\Entity\AccessibilityType:
             nullable: true
             comment: 'Si vrai, les heures de departs et fin s''appliquent tous les jours du calendier. Sinon, l''heure de depart s''applique au premier jour du calendrier et l''heure de fin au dernier'
             column: is_recursive
+    oneToMany:
+        stopAccessibilities:
+            targetEntity: StopAccessibility
+            cascade: ['persist', 'remove']
+            mappedBy: accessibilityType
+            inversedBy: null
     manyToOne:
         accessibilityMode:
             targetEntity: AccessibilityMode

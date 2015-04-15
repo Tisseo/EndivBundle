@@ -31,7 +31,7 @@ Tisseo\EndivBundle\Entity\StopAccessibility:
             targetEntity: Stop
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: stopAccessibilities
             joinColumns:
                 stop_id:
                     referencedColumnName: id
