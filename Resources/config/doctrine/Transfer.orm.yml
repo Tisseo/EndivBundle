@@ -34,6 +34,13 @@ Tisseo\EndivBundle\Entity\Transfer:
             comment: 'Trace de la correspondance. Inutilise pour le moment.'
             requireSQLConversion: true
             column: the_geom
+        longName:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: long_name            
         accessibility:
             type: boolean
             nullable: true

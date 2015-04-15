@@ -52,7 +52,7 @@ Tisseo\EndivBundle\Entity\Stop:
             targetEntity: Stop
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: phantoms
             joinColumns:
                 master_stop_id:
                     referencedColumnName: id
@@ -61,7 +61,7 @@ Tisseo\EndivBundle\Entity\Stop:
             targetEntity: StopArea
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: stops
             joinColumns:
                 stop_area_id:
                     referencedColumnName: id

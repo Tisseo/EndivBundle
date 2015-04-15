@@ -30,6 +30,11 @@ class Transfer
     private $theGeom;
 
     /**
+     * @var string
+     */
+    private $longName;
+
+    /**
      * @var boolean
      */
     private $accessibility;
@@ -124,7 +129,30 @@ class Transfer
         return $this->theGeom;
     }
 
+     /**
+     * Set longName
+     *
+     * @param string $longName
+     * @return StopHistory
+     */
+    public function setLongName($longName)
+    {
+        $this->longName = $longName;
+
+        return $this;
+    }
+
     /**
+     * Get longName
+     *
+     * @return string 
+     */
+    public function getLongName()
+    {
+        return $this->longName;
+    }
+
+	/**
      * Set accessibility
      *
      * @param boolean $accessibility

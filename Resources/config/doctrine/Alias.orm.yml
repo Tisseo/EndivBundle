@@ -26,7 +26,7 @@ Tisseo\EndivBundle\Entity\Alias:
             targetEntity: StopArea
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: alias
             joinColumns:
                 stop_area_id:
                     referencedColumnName: id
