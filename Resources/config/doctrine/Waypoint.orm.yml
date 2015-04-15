@@ -22,4 +22,12 @@ Tisseo\EndivBundle\Entity\Waypoint:
             joinColumns:
                 id:
                     referencedColumnName: id
+        area:
+            targetEntity: OdtArea
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id:
+                    referencedColumnName: id
+
     lifecycleCallbacks: {  }

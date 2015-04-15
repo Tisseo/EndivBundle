@@ -20,6 +20,11 @@ class Waypoint
     private $stop;
 
     /**
+     * @var \Tisseo\EndivBundle\Entity\OdtArea
+     */
+    private $area;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -50,5 +55,27 @@ class Waypoint
     public function getStop()
     {
         return $this->stop;
+    }
+
+    /**
+     * Get OdtArea
+     *
+     * @return \Tisseo\EndivBundle\Entity\OdtArea
+     */
+    public function getOdtArea()
+    {
+        return $this->area;
+
+    }
+
+    /**
+     * Get OdtArea
+     *
+     * @return Waypoint
+     */
+    public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $area = null)
+    {
+        $this->area = $area;
+        return $this;
     }
 }

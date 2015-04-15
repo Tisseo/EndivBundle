@@ -48,6 +48,16 @@ class RouteManager extends SortManager {
         return $this->repository->find($id);
     }
 
+    public function getWaypoints($id) {
+
+        $query = $this->om->createQuery("
+               SELECT rs.id, rs.rank, wp.id as waypoint
+               FROM Tisseo\EndivBundle\Entity\RouteStop rs
+               JOIN rs.waypoint wp
+               WHERE rs.route = :id
+        ");
+    }
+
 
     public function save(Route $route)
     {
