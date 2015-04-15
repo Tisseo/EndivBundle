@@ -61,6 +61,18 @@ class RouteManager extends SortManager {
         }
     }
 
+    public function removeRoute(Route $route) {
+
+        $this->om->remove($route);
+
+        try{
+            $this->om->flush();
+
+        }
+        catch(\ErrorException $err) {
+            var_dump($err);
+        }
+    }
     public function getTrips($id){
 
             $route = $this->om

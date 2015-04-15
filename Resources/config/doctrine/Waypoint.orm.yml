@@ -1,6 +1,10 @@
 Tisseo\EndivBundle\Entity\Waypoint:
     type: entity
     table: waypoint
+    indexes:
+        waypoint_id_idx:
+            columns:
+                - id
     id:
         id:
             type: integer
@@ -10,4 +14,12 @@ Tisseo\EndivBundle\Entity\Waypoint:
             id: true
             generator:
                 strategy: SEQUENCE
+    oneToOne:
+        stop:
+            targetEntity: Stop
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id:
+                    referencedColumnName: id
     lifecycleCallbacks: {  }

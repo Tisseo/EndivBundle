@@ -14,6 +14,10 @@ class Waypoint
      */
     private $id;
 
+    /**
+     * @var \Tisseo\EndivBundle\Entity\Stop
+     */
+    private $stop;
 
     /**
      * Get id
@@ -23,5 +27,28 @@ class Waypoint
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set stop
+     *
+     * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     * @return Waypoint
+     */
+    public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)
+    {
+        $this->stop = $stop;
+
+        return $this;
+    }
+
+    /**
+     * Get stop
+     *
+     * @return \Tisseo\EndivBundle\Entity\Stop
+     */
+    public function getStop()
+    {
+        return $this->stop;
     }
 }
