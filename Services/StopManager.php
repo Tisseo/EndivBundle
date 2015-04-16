@@ -159,20 +159,16 @@ class StopManager extends SortManager
 			JOIN sa.city c
 			JOIN s.stopDatasources sd
 			WHERE sh.stop = :stop
-		");
-	 
-		$query->setParameter('stop', $stop);
+		")
+		->setParameter('stop', $stop);
 	 
 		$sh = $query->getResult();
 		$label = $sh[0]["name"]." ".$sh[0]["city"]." (".$sh[0]["code"].")";
 		return $label;
 	}
 
-
-
-
 	public function getCurrentStopHistory( $stop )
-	{
+	{		
 		$query = $this->om->createQuery("
 			SELECT sh
 			FROM Tisseo\EndivBundle\Entity\StopHistory sh
@@ -183,6 +179,7 @@ class StopManager extends SortManager
 		");
 		$query->setParameter('stop', $stop);
 		
+		//stops have ONLY ONE stop history!
 		return $query->getResult()[0];
 	}
 }

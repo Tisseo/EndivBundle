@@ -41,10 +41,6 @@ Tisseo\EndivBundle\Entity\Transfer:
             fixed: false
             comment: ''
             column: long_name            
-        accessibility:
-            type: boolean
-            nullable: true
-            comment: ''
     manyToOne:
         endStop:
             targetEntity: Stop
