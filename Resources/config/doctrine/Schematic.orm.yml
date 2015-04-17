@@ -1,0 +1,46 @@
+Tisseo\EndivBundle\Entity\Schematic:
+    type: entity
+    table: schematic
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        comment:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        date:
+            type: date
+            nullable: false
+            comment: ''
+        filePath:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: file_path
+    manyToOne:
+        line:
+            targetEntity: Line
+            mappedBy: null
+            inversedBy: schematic
+            joinColumns:
+                line_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -19,6 +19,7 @@ parameters:
     tisseo_endiv.route_manager.class: Tisseo\EndivBundle\Services\RouteManager
     tisseo_endiv.city_manager.class: Tisseo\EndivBundle\Services\CityManager
     tisseo_endiv.transfer_manager.class: Tisseo\EndivBundle\Services\TransferManager
+    tisseo_endiv.schematic_manager.class: Tisseo\EndivBundle\Services\SchematicManager
     tisseo_endiv.stop_manager.class: Tisseo\EndivBundle\Services\StopManager
     tisseo_endiv.stop_area_manager.class: Tisseo\EndivBundle\Services\StopAreaManager
     tisseo_endiv.routestop_manager.class: Tisseo\EndivBundle\Services\RouteStopManager
@@ -86,6 +87,9 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.city_manager:
         class: %tisseo_endiv.city_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.schematic_manager:
+        class: %tisseo_endiv.schematic_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.transfer_manager:
         class: %tisseo_endiv.transfer_manager.class%
