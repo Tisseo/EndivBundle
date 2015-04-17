@@ -4,6 +4,9 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Line;
+use Tisseo\EndivBundle\Entity\LineVersion;
+use Tisseo\EndivBundle\Entity\Schematic;
+use Tisseo\TidBundle\Form\Type\LineSchemaType;
 
 
 class SchematicManager extends SortManager
@@ -29,9 +32,14 @@ class SchematicManager extends SortManager
         return empty($schematicId) ? null : $this->repository->find($schematicId);
     }
 
+    /**
+     * @param $lineId
+     * @param int $limit
+     * @return array Tisseo\EndivBundle\Entity\Schematic
+     */
     public function findLineSchematics($lineId, $limit=5)
     {
-        $finalResult = null;
+        $finalResult = array();
         if (empty($lineId)) return $finalResult;
 
         $query = $this->repository->createQueryBuilder('sc')
@@ -57,9 +65,9 @@ class SchematicManager extends SortManager
      *
      * Persist and save a Schematic into database.
      */
-    public function save(LineVersion $lineVersion)
+    public function save(Schematic $schematic)
     {
-        $this->om->persist($lineVersion);
+        $this->om->persist($schematic);
         $this->om->flush();
 
         return array(true,'schematic.persisted');
