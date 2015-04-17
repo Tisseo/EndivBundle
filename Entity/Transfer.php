@@ -35,11 +35,6 @@ class Transfer
     private $longName;
 
     /**
-     * @var boolean
-     */
-    private $accessibility;
-
-    /**
      * @var \Tisseo\EndivBundle\Entity\Stop
      */
     private $endStop;
@@ -150,29 +145,6 @@ class Transfer
     public function getLongName()
     {
         return $this->longName;
-    }
-
-	/**
-     * Set accessibility
-     *
-     * @param boolean $accessibility
-     * @return Transfer
-     */
-    public function setAccessibility($accessibility)
-    {
-        $this->accessibility = $accessibility;
-
-        return $this;
-    }
-
-    /**
-     * Get accessibility
-     *
-     * @return boolean 
-     */
-    public function getAccessibility()
-    {
-        return $this->accessibility;
     }
 
     /**

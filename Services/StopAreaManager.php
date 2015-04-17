@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use  Doctrine\Common\Collections\Collection;
 
 use Tisseo\EndivBundle\Entity\StopArea;
+use Tisseo\EndivBundle\Entity\Transfer;
 
 
 class StopAreaManager extends SortManager
@@ -69,9 +70,8 @@ class StopAreaManager extends SortManager
 			WHERE UPPER(sa.shortName) LIKE UPPER(:term)
 			OR UPPER(sa.longName) LIKE UPPER(:term)
 			ORDER BY sa.shortName, c.name
-		");
-	 
-		$query->setParameter('term', '%'.$term.'%');
+		")
+		->setParameter('term', '%'.$term.'%');
 	 
 		$shs = $query->getResult();
 		$array = array();
@@ -83,4 +83,41 @@ class StopAreaManager extends SortManager
 		return $array;
 	}	
 	
+    public function getStopsOrderedByCode($StopArea) {
+        $query = $this->om->createQuery("
+               SELECT s
+               FROM Tisseo\EndivBundle\Entity\Stop s
+			   JOIN s.stopDatasources sd
+               WHERE s.stopArea = :sa
+			   ORDER BY sd.code
+        ")
+		->setParameter('sa', $StopArea);
+
+        return $query->getResult();
+    }	
+	
+    /**
+     * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
+     */
+    public function getInternalTransfer($StopArea) {
+        $query = $this->om->createQuery("
+               SELECT t
+               FROM Tisseo\EndivBundle\Entity\Transfer t
+			   JOIN t.startStop ss
+			   JOIN t.endStop es			   
+               WHERE ss.stopArea = :sa
+			   AND es.stopArea = :sa
+        ")
+		->setParameter('sa', $StopArea);
+		
+		$transfers = $query->getResult();
+		
+		$result = array();
+		foreach($transfers as $transfer) {
+			$key = $transfer->getStartStop()->getId().".".$transfer->getEndStop()->getId() ;
+			$result[$key] = $transfer;
+		}
+		
+       return $result;
+    }	
 }

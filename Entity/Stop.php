@@ -348,8 +348,6 @@ class Stop
 
     /**
      * return masterStop Label
-     *
-     * @param Stop $Phantom
      */
     public function getMasterStopLabel()
     {
@@ -366,6 +364,25 @@ class Stop
 				}
 			}
 		}
-		return "VIDE";
+		return "";
+    }	
+	
+   /**
+     * return Stop Label
+     */
+    public function getStopLabel()
+    {
+		foreach ($this->getStopHistories() as $sh) {
+			if($sh->getStartDate()->format("Ymd") <= date("Ymd")) {
+				if(empty($sh->getEndDate)) {
+					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+				} else {
+					if($sh->getStartDate()->format("Ymd") >= date("Ymd")) {	
+						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+					}
+				}
+			}
+		}
+		return "";
     }	
 }
