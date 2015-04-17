@@ -95,29 +95,4 @@ class StopAreaManager extends SortManager
 
         return $query->getResult();
     }	
-	
-    /**
-     * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
-     */
-    public function getInternalTransfer($StopArea) {
-        $query = $this->om->createQuery("
-               SELECT t
-               FROM Tisseo\EndivBundle\Entity\Transfer t
-			   JOIN t.startStop ss
-			   JOIN t.endStop es			   
-               WHERE ss.stopArea = :sa
-			   AND es.stopArea = :sa
-        ")
-		->setParameter('sa', $StopArea);
-		
-		$transfers = $query->getResult();
-		
-		$result = array();
-		foreach($transfers as $transfer) {
-			$key = $transfer->getStartStop()->getId().".".$transfer->getEndStop()->getId() ;
-			$result[$key] = $transfer;
-		}
-		
-       return $result;
-    }	
 }
