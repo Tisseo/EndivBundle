@@ -116,6 +116,11 @@ class LineVersion
     private $childLine;
 
     /**
+     * @var Schematic
+     */
+    private $schematic;
+
+    /**
      * @var Collection
      */
     private $gridCalendars;
@@ -134,6 +139,8 @@ class LineVersion
      * @var Collection
      */
     private $routes;
+
+
 
     /**
      * Constructor
@@ -726,6 +733,29 @@ class LineVersion
     public function getLine()
     {
         return $this->line;
+    }
+
+    /**
+     * Set line
+     *
+     * @param Schematic $schematic
+     * @return LineVersion
+     */
+    public function setSchematic(Schematic $schematic = null)
+    {
+        $this->schematic = $schematic;
+
+        return $this;
+    }
+
+    /**
+     * Get Schematic
+     *
+     * @return Schematic
+     */
+    public function getSchematic()
+    {
+        return $this->schematic;
     }
 
     /**
