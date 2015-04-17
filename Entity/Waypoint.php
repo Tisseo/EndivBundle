@@ -69,8 +69,9 @@ class Waypoint
     }
 
     /**
-     * Get OdtArea
+     * set OdtArea
      *
+     * @param \Tisseo\EndivBundle\Entity\OdtArea $area
      * @return Waypoint
      */
     public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $area = null)

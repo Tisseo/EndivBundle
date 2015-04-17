@@ -58,6 +58,42 @@ class RouteManager extends SortManager {
         ");
     }
 
+    public function checkZoneStop(Route $route) {
+
+        $id = $route->getId();
+        $query = $this->om->createQuery("
+                SELECT wp.id as waypoint
+                FROM Tisseo\EndivBundle\Entity\RouteStop rs
+                JOIN rs.waypoint wp
+                WHERE rs.route = :id
+                ")
+                ->setParameter("id",$id)
+                ->setMaxResults(1);
+
+        foreach($query->getResult() as $result) {
+
+            $idWaypoint = $result["waypoint"];
+
+            $query = $this->om->createQuery('
+            SELECT COUNT(odt.id)
+            FROM Tisseo\EndivBundle\Entity\OdtArea odt
+            WHERE odt.id = :id
+            ')
+                ->setParameter('id',$idWaypoint)
+                ;
+
+            $area = $query->getResult();
+            $zoneWP = $area[0][1];
+            if($zoneWP === 0) {
+                return false;
+            }
+
+            else {
+                return true;
+            }
+        }
+    }
+
 
     public function save(Route $route)
     {
