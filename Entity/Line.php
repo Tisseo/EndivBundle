@@ -42,12 +42,19 @@ class Line
     private $lineVersions;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $schematic;
+
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->lineDatasources = new ArrayCollection();
         $this->lineVersions = new ArrayCollection();
+        $this->schematic = new ArrayCollection();
     }
 
     /**
@@ -332,5 +339,38 @@ class Line
     public function removeLineVersion(LineVersion $lineVersions)
     {
         $this->lineVersions->removeElement($lineVersions);
+    }
+
+    /**
+     * Add schematic
+     *
+     * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
+     * @return Line
+     */
+    public function addSchematic(\Tisseo\EndivBundle\Entity\Schematic $schematic)
+    {
+        $this->schematic[] = $schematic;
+
+        return $this;
+    }
+
+    /**
+     * Remove schematic
+     *
+     * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
+     */
+    public function removeSchematic(\Tisseo\EndivBundle\Entity\Schematic $schematic)
+    {
+        $this->schematic->removeElement($schematic);
+    }
+
+    /**
+     * Get schematic
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSchematic()
+    {
+        return $this->schematic;
     }
 }

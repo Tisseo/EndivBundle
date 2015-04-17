@@ -17,12 +17,6 @@ Tisseo\EndivBundle\Entity\Trip:
         IDX_7656F53BFE610542:
             columns:
                 - trip_calendar_id
-        IDX_7656F53BF734A20F:
-            columns:
-                - pattern_id
-        IDX_7656F53B6F658B27:
-            columns:
-                - trip_parent_id
     id:
         id:
             type: integer

@@ -68,9 +68,9 @@ Tisseo\EndivBundle\Entity\LineVersion:
             comment: ''
             column: backward_direction
         cartoFile:
-            type: text
+            type: string
             nullable: true
-            length: null
+            length: 80
             fixed: false
             comment: ''
             column: carto_file
@@ -136,6 +136,13 @@ Tisseo\EndivBundle\Entity\LineVersion:
             inversedBy: lineVersions
             joinColumns:
                 line_id:
+                    referencedColumnName: id
+        schematic:
+            targetEntity: Schematic
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                schematic_id:
                     referencedColumnName: id
     oneToMany:
         gridCalendars:
