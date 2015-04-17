@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Schematic
@@ -33,6 +34,11 @@ class Schematic
      * @var string
      */
     private $filePath;
+
+    /**
+     * @var string
+     */
+    public $file;
 
     /**
      * @var \Tisseo\EndivBundle\Entity\Line
@@ -142,6 +148,53 @@ class Schematic
         return $this->filePath;
     }
 
+    public function getAbsolutePath()
+    {
+        return null === $this->filePath ? null : $this->getUploadRootDir().'/'.$this->filePath;
+    }
+
+    public function getWebPath()
+    {
+        return null === $this->filePath ? null : $this->getUploadDir().'/'.$this->filePath;
+    }
+
+    protected function getUploadRootDir()
+    {
+        return __DIR__.'/../../../../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+        return 'uploads/schematics';
+    }
+
+    public function upload()
+    {
+        if (null === $this->file) {
+            return;
+        }
+
+        $this->file->move($this->getUploadRootDir(), $this->getFilePath());
+        unset($this->file);
+    }
+
+    /**
+     * Rename file
+     */
+    public function preUpload()
+    {
+        if (null !== $this->file) {
+            $this->setFilePath(
+                'L' . $this->getLine()->getId() .
+                '_' . date_format($this->getDate(), 'Ymd') .
+                '_' . sha1(uniqid(mt_rand(), true)) .
+                '.' . $this->file->guessExtension()
+            );
+        } else {
+            $this->setName(null);
+        }
+    }
+
     /**
      * Set line
      *
@@ -164,49 +217,5 @@ class Schematic
     {
         return $this->line;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $LineVersion;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->LineVersion = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add LineVersion
-     *
-     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
-     * @return Schematic
-     */
-    public function addLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion)
-    {
-        $this->LineVersion[] = $lineVersion;
-
-        return $this;
-    }
-
-    /**
-     * Remove LineVersion
-     *
-     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
-     */
-    public function removeLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion)
-    {
-        $this->LineVersion->removeElement($lineVersion);
-    }
-
-    /**
-     * Get LineVersion
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getLineVersion()
-    {
-        return $this->LineVersion;
-    }
 }

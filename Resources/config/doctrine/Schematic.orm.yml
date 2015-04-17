@@ -24,7 +24,7 @@ Tisseo\EndivBundle\Entity\Schematic:
             fixed: false
             comment: ''
         date:
-            type: date
+            type: datetime
             nullable: false
             comment: ''
         filePath:
@@ -43,4 +43,12 @@ Tisseo\EndivBundle\Entity\Schematic:
                 line_id:
                     referencedColumnName: id
             orphanRemoval: false
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks:
+        prePersist: [ preUpload ]
+        preUpdate: [ preUpload ]
+        postPersist: [ upload ]
+        postUpdate: [ upload ]
+    properties:
+        file:
+            - File:
+                maxSize: 2048k
