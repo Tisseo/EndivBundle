@@ -31,6 +31,62 @@ class TransferManager extends SortManager
         $this->om->persist($transfer);
         $this->om->flush();
     }
+
+    /**
+     * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
+     */
+    public function getInternalTransfer($StopArea, $startStop = null, $endStop = null) {
+        $sql = 
+			"SELECT
+				t.id,
+				ss.id as startStopId,
+				es.id as endStopId,
+				t.duration,
+				t.distance,
+				t.longName,
+				t.theGeom
+			FROM Tisseo\EndivBundle\Entity\Transfer t
+			JOIN t.startStop ss
+			JOIN t.endStop es			   
+			WHERE ss.stopArea = :sa
+			AND es.stopArea = :sa";
+			   
+		$query = $this->om->createQuery($sql)
+		->setParameter('sa', $StopArea);
+		$transfers = $query->getResult();
+		
+		$result = array();
+		foreach($transfers as $transfer) {
+			$key = $transfer["startStopId"].".".$transfer["endStopId"] ;
+			$result[$key] = $transfer;
+		}
+       return $result;
+    }	
+	
+    /**
+     * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
+     */
+    public function getExternalTransfer($StopArea) {
+        $query = $this->om->createQuery("
+               SELECT t
+               FROM Tisseo\EndivBundle\Entity\Transfer t
+			   JOIN t.startStop ss
+			   JOIN t.endStop es			   
+               WHERE (ss.stopArea = :sa AND es.stopArea != :sa)
+			   OR (ss.stopArea != :sa AND es.stopArea = :sa)
+        ")
+		->setParameter('sa', $StopArea);
+		
+		$transfers = $query->getResult();
+		
+		$result = array();
+		foreach($transfers as $transfer) {
+			$key = $transfer->getStartStop()->getId().".".$transfer->getEndStop()->getId() ;
+			$result[$key] = $transfer;
+		}
+		
+       return $result;
+    }	
 	
     public function saveTransfers($transfers) {	
 		$empty_transfert = function ($transfer) {
