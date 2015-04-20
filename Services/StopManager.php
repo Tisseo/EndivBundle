@@ -126,23 +126,44 @@ class StopManager extends SortManager
 	}
 
     public function getStopsByRoute($id) {
-        $query = $this->om->createQuery("
-               SELECT rs.id, rs.rank, wp.id as waypoint
+
+            $query = $this->om->createQuery("
+               SELECT rs.id, rs.rank, rs.pickup, rs.dropOff, wp.id as waypoint
                FROM Tisseo\EndivBundle\Entity\RouteStop rs
                JOIN rs.waypoint wp
                WHERE rs.route = :id
-        ")->setParameter('id', $id);
+               ORDER BY rs.rank
+        ")->setParameter('id' , $id);
+
 
         return $query->getResult();
 
     }
 
+
+
+    public function getStops($idWaypoint){
+
+        $query = $this->om->createQuery("
+               SELECT st.id, ar.shortName, ar.id as zone,  c.name as city
+               FROM Tisseo\EndivBundle\Entity\Stop st
+               JOIN st.stopArea ar
+               JOIN ar.city c
+               WHERE st.id = :id
+        ")->setParameter('id', $idWaypoint);
+
+
+        return $query->getResult();
+    }
+
+
     public function getStopArea($id) {
         $query = $this->om->createQuery("
-               SELECT rs.id, rs.rank, wp.id as waypoint
-               FROM Tisseo\EndivBundle\Entity\StopArea rs
-               JOIN rs.waypoint wp
-               WHERE rs.route = :id
+               SELECT ar.id, ar.rank, wp.id as waypoint, c.id as city
+               FROM Tisseo\EndivBundle\Entity\StopArea ar
+               JOIN ar.waypoint wp
+               JOIN ar.city c
+               WHERE ar.route = :id
         ")->setParameter('id', $id);
 
         return $query->getResult();
