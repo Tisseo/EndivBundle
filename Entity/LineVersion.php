@@ -66,11 +66,6 @@ class LineVersion
     private $fgColor;
 
     /**
-     * @var string
-     */
-    private $cartoFile;
-
-    /**
      * @var boolean
      */
     private $accessibility;
@@ -572,29 +567,6 @@ class LineVersion
     public function getFgColor()
     {
         return $this->fgColor;
-    }
-
-    /**
-     * Set cartoFile
-     *
-     * @param string $cartoFile
-     * @return LineVersion
-     */
-    public function setCartoFile($cartoFile)
-    {
-        $this->cartoFile = $cartoFile;
-
-        return $this;
-    }
-
-    /**
-     * Get cartoFile
-     *
-     * @return string
-     */
-    public function getCartoFile()
-    {
-        return $this->cartoFile;
     }
 
     /**
