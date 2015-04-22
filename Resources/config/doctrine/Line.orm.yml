@@ -37,7 +37,8 @@ Tisseo\EndivBundle\Entity\Line:
             cascade: ['persist', 'remove']
             mappedBy: line
             inversedBy: null
-        schematic:
+        schematics:
+            orderBy: { 'date': 'ASC' }
             targetEntity: Schematic
             cascade: ['persist', 'remove']
             mappedBy: line
