@@ -35,7 +35,7 @@ class TransferManager extends SortManager
     /**
      * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
      */
-    public function getInternalTransfer($StopArea, $startStop = null, $endStop = null) {
+    public function getInternalTransfer($StopArea) {
         $sql = 
 			"SELECT
 				t.id,
@@ -57,7 +57,7 @@ class TransferManager extends SortManager
 		
 		$result = array();
 		foreach($transfers as $transfer) {
-			$key = $transfer["startStopId"].".".$transfer["endStopId"] ;
+			$key = $transfer["startStopId"].".".$transfer["endStopId"];
 			$result[$key] = $transfer;
 		}
        return $result;
@@ -67,28 +67,39 @@ class TransferManager extends SortManager
      * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
      */
     public function getExternalTransfer($StopArea) {
-        $query = $this->om->createQuery("
-               SELECT t
-               FROM Tisseo\EndivBundle\Entity\Transfer t
-			   JOIN t.startStop ss
-			   JOIN t.endStop es			   
-               WHERE (ss.stopArea = :sa AND es.stopArea != :sa)
-			   OR (ss.stopArea != :sa AND es.stopArea = :sa)
+		$stopManager = $this->om->getRepository('TisseoEndivBundle:Stop');
+        $query = $this->om->createQuery(
+			"SELECT
+				t.id,
+				ss.id as startStopId,
+				es.id as endStopId,
+				t.duration,
+				t.distance,
+				t.longName,
+				t.theGeom			   
+			FROM Tisseo\EndivBundle\Entity\Transfer t
+			JOIN t.startStop ss
+			JOIN t.endStop es			   
+			WHERE (ss.stopArea = :sa AND es.stopArea != :sa)
+			OR (ss.stopArea != :sa AND es.stopArea = :sa)
         ")
-		->setParameter('sa', $StopArea);
-		
+		->setParameter('sa', $StopArea);		
 		$transfers = $query->getResult();
 		
 		$result = array();
 		foreach($transfers as $transfer) {
-			$key = $transfer->getStartStop()->getId().".".$transfer->getEndStop()->getId() ;
+			$key = $transfer["startStopId"].".".$transfer["endStopId"];
+			$startStop = $stopManager->find($transfer["startStopId"]);
+			$transfer["startStopLabel"] = $startStop->getStopLabel();
+			$endStop = $stopManager->find($transfer["endStopId"]);
+			$transfer["endStopLabel"] = $endStop->getStopLabel();
 			$result[$key] = $transfer;
 		}
 		
        return $result;
     }	
 	
-    public function saveTransfers($transfers) {	
+    public function saveInternalTransfers($transfers) {	
 		$empty_transfert = function ($transfer) {
 			return empty($transfer["duration"]) && empty($transfer["distance"]) &&
 				empty($transfer["longName"]);
@@ -115,19 +126,157 @@ class TransferManager extends SortManager
 				}
 				
 				if($persist) {
-					$startStop = $this->om->getRepository('TisseoEndivBundle:Stop')->find($transfer["startStopId"]);
-					$endStop = $this->om->getRepository('TisseoEndivBundle:Stop')->find($transfer["endStopId"]);
-					$transferEntity->setStartStop($startStop);
-					$transferEntity->setEndStop($endStop);
-					$transferEntity->setDuration($transfer["duration"]);
-					$transferEntity->setDistance($transfer["distance"]);
-					$transferEntity->setLongName($transfer["longName"]);
-					//$transferEntity->setTheGeom();
-					
-					$this->om->persist($transferEntity);
+					$this ->saveStopTransfer($transferEntity, $transfer);
 				}
 			}
 		}
 		$this->om->flush();
 	}	
+	
+    public function saveExternalTransfers($currentStopArea, $transfers) {	
+		$empty_transfert = function ($transfer) {
+			return empty($transfer["duration"]) && empty($transfer["distance"]) &&
+				empty($transfer["longName"]);
+		};
+		$empty_line = function ($transfer) use ($empty_transfert) {
+			return empty($transfer["id"]) && $empty_transfert($transfer);
+		};
+
+		//$stopManager = $this->om->getRepository('TisseoEndivBundle:Stop');
+		$stopAreaManager = $this->om->getRepository('TisseoEndivBundle:StopArea');
+		
+		$transfers_to_save = array();
+		foreach( $transfers as $transfer ) {
+			if( !$empty_line($transfer) ) {
+				if( empty($transfer["startStopId"]) ) {
+					if( $transfer["endStopType"] == "stop" ) {
+						//stop_area -> stop
+						foreach($currentStopArea->getStops() as $stop) {
+							$transfer_tmp = $transfer;
+							$transfer_tmp["startStopId"] = $stop->getId();
+							$transfers_to_save[] = $transfer_tmp;
+						}
+					} else {
+						//stop_area -> stop_area
+						foreach($currentStopArea->getStops() as $startStop) {
+							$endStopArea = $stopAreaManager->find($transfer["endStopId"]);
+							foreach($endStopArea->getStops() as $endStop) {
+								$transfer_tmp = $transfer;
+								$transfer_tmp["startStopId"] = $startStop->getId();
+								$transfer_tmp["endStopId"] = $endStop->getId();
+								$transfers_to_save[] = $transfer_tmp;
+							}
+						}
+					}
+				} else {
+					if( $transfer["endStopType"] != "stop" ) {
+						//stop -> stop_area
+						$stopArea = $stopAreaManager->find($transfer["endStopId"]);
+						foreach($stopArea->getStops() as $stop) {
+							$transfer_tmp = $transfer;
+							$transfer_tmp["endStopId"] = $endStop->getId();
+							$transfers_to_save[] = $transfer_tmp;
+						}
+					}
+				}
+			}
+		}
+		
+		foreach( $transfers_to_save as $transfer ) {
+			if( empty($transfer["id"]) ) {
+				$this ->saveNewExternalTransfer($transfer);
+			} else {
+				$entity = $this->find($transfer["id"]);
+				$this ->saveStopTransfer($entity, $transfer);
+			}
+		}
+		
+/*
+		foreach( $transfers as $transfer ) {
+			if( !$empty_line($transfer) ) {
+				if( empty($transfer["id"]) ) {
+					//new record(s)
+					if( empty($transfer["startStopId"]) ) {
+						if( $transfer["endStopType"] == "stop" ) {
+							//stop_area -> stop
+							foreach($currentStopArea->getStops() as $stop) {
+								$transfer["startStopId"] = $stop->getId();
+								$this ->saveNewExternalTransfer($transfer);
+							}
+						} else {
+							//stop_area -> stop_area
+							foreach($currentStopArea->getStops() as $startStop) {
+								$transfer["startStopId"] = $startStop->getId();
+								$endStopArea = $stopAreaManager->find($transfer["endStopId"]);
+								foreach($endStopArea->getStops() as $endStop) {
+									$transfer["endStopId"] = $endStop->getId();
+									$this ->saveNewExternalTransfer($transfer);
+								}
+							}
+						}
+					} else {
+						if( $transfer["endStopType"] == "stop" ) {
+							//stop -> stop
+							$this ->saveNewExternalTransfer($transfer);
+						} else {
+							//stop -> stop_area
+							$stopArea = $stopAreaManager->find($transfer["endStopId"]);
+							foreach($stopArea->getStops() as $stop) {
+								$transfer["endStopId"] = $stop->getId();
+								$this ->saveNewExternalTransfer($transfer);
+							}
+						}
+					}
+				} else {
+					//update record
+					$entity = $this->find($transfer["id"]);
+					$this ->saveStopTransfer($entity, $transfer);
+				}
+			}
+		}
+*/		
+		$this->om->flush();
+	}	
+	
+    /**
+     * saveNewExternalTransfer
+     * @param associative array $transfer => datas
+     *
+     * save a stop to stop transfer => save transfer in both direction
+	 * persist but doesn't flush
+     */
+    public function saveNewExternalTransfer($transfer) {
+		$transferAller = new Transfer();
+		$this ->saveStopTransfer($transferAller, $transfer);
+		
+		$transferRetour = new Transfer();
+		$tmp = $transfer["startStopId"];
+		$transfer["startStopId"] = $transfer["endStopId"];
+		$transfer["endStopId"] =$tmp;
+		$this ->saveStopTransfer($transferRetour, $transfer);
+	}
+	
+    /**
+     * saveStopTransfer
+     * @param entity $entity => Transfer entity to save
+     * @param associative array $transfer => datas
+     *
+     * save a stop to stop transfer
+	 * persist but doesn't flush
+     */
+	public function saveStopTransfer($entity, $transfer) {
+		$startStop = $this->om->getRepository('TisseoEndivBundle:Stop')->find($transfer["startStopId"]);
+		$endStop = $this->om->getRepository('TisseoEndivBundle:Stop')->find($transfer["endStopId"]);
+		$entity->setStartStop($startStop);
+		$entity->setEndStop($endStop);
+		
+		$transfer["duration"] ? $value = $transfer["duration"] : $value = null;
+		$entity->setDuration($value);
+		$transfer["distance"] ? $value = $transfer["distance"] : $value = null;
+		$entity->setDistance($value);
+		$entity->setLongName($transfer["longName"]);
+		//$entity->setTheGeom($transfer["theGeom"]);
+		
+		$this->om->persist($entity);		
+	}
 }

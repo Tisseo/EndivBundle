@@ -107,9 +107,11 @@ class StopManager extends SortManager
 			JOIN s.stopArea sa
 			JOIN sa.city c
 			JOIN s.stopDatasources sd
-			WHERE UPPER(sh.shortName) LIKE UPPER(:term)
+			WHERE (UPPER(sh.shortName) LIKE UPPER(:term)
 			OR UPPER(sh.longName) LIKE UPPER(:term)
-			OR UPPER(sd.code) LIKE UPPER(:term)
+			OR UPPER(sd.code) LIKE UPPER(:term))
+			AND sh.startDate <= CURRENT_DATE()
+			AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE())
 			ORDER BY sh.shortName, c.name, sd.code
 		");
 	 
@@ -159,6 +161,8 @@ class StopManager extends SortManager
 			JOIN sa.city c
 			JOIN s.stopDatasources sd
 			WHERE sh.stop = :stop
+			AND sh.startDate <= CURRENT_DATE()
+			AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE())
 		")
 		->setParameter('stop', $stop);
 	 
