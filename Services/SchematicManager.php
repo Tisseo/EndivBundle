@@ -43,7 +43,6 @@ class SchematicManager extends SortManager
         if (empty($lineId)) return $finalResult;
 
         $query = $this->repository->createQueryBuilder('sc')
-            //->leftJoin('Tisseo\EndivBundle\Entity\Line','line')
             ->where('sc.line = :lineId')
             ->orderBy('sc.date', 'DESC')
             ->setMaxResults((int) $limit)
