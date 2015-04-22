@@ -67,13 +67,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             fixed: false
             comment: ''
             column: backward_direction
-        cartoFile:
-            type: string
-            nullable: true
-            length: 80
-            fixed: false
-            comment: ''
-            column: carto_file
         accessibility:
             type: boolean
             nullable: true

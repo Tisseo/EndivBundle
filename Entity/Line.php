@@ -44,7 +44,7 @@ class Line
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $schematic;
+    private $schematics;
 
 
     /**
@@ -54,7 +54,7 @@ class Line
     {
         $this->lineDatasources = new ArrayCollection();
         $this->lineVersions = new ArrayCollection();
-        $this->schematic = new ArrayCollection();
+        $this->schematics = new ArrayCollection();
     }
 
     /**
@@ -347,30 +347,45 @@ class Line
      * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
      * @return Line
      */
-    public function addSchematic(\Tisseo\EndivBundle\Entity\Schematic $schematic)
+    public function addSchematics(Schematic $schematic)
     {
-        $this->schematic[] = $schematic;
+        $this->schematics[] = $schematic;
 
         return $this;
     }
 
     /**
-     * Remove schematic
+     * Set schematics
      *
-     * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
+     * @param \Doctrine\Common\Collections\Collection $schematics
+     * @return Line
      */
-    public function removeSchematic(\Tisseo\EndivBundle\Entity\Schematic $schematic)
+    public function setSchematics(Collection $schematics)
     {
-        $this->schematic->removeElement($schematic);
+        $this->$schematics = $schematics;
+        foreach ($this->$schematics as $schematic) {
+            $schematic->setLine($this);
+        }
+        return $this;
     }
 
     /**
-     * Get schematic
+     * Remove schematics
+     *
+     * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
+     */
+    public function removeSchematics(Schematic $schematic)
+    {
+        $this->schematics->removeElement($schematic);
+    }
+
+    /**
+     * Get schematics
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSchematic()
+    public function getSchematics()
     {
-        return $this->schematic;
+        return $this->schematics;
     }
 }

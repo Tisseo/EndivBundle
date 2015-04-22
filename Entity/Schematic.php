@@ -185,7 +185,7 @@ class Schematic
     {
         if (null !== $this->file) {
             $this->setFilePath(
-                'L' . $this->getLine()->getId() .
+                $this->getLine()->getNumber() .
                 '_' . date_format($this->getDate(), 'Ymd') .
                 '_' . sha1(uniqid(mt_rand(), true)) .
                 '.' . $this->file->guessExtension()
@@ -194,7 +194,7 @@ class Schematic
             $this->setName(null);
         }
     }
-
+    
     /**
      * Set line
      *

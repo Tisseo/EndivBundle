@@ -38,7 +38,7 @@ Tisseo\EndivBundle\Entity\Schematic:
         line:
             targetEntity: Line
             mappedBy: null
-            inversedBy: schematic
+            inversedBy: schematics
             joinColumns:
                 line_id:
                     referencedColumnName: id
