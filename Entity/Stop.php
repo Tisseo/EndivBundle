@@ -353,36 +353,41 @@ class Stop
     {
         if(!empty($this->masterStop)) {
 			return $this->masterStop->getStopLabel();
-/*			
-			foreach ($this->masterStop->getStopHistories() as $sh) {
-				if($sh->getStartDate()->format("Ymd") <= date("Ymd")) {
-					if(empty($sh->getEndDate)) {
-						return $sh->getShortName()."-".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-					} else {
-						if($sh->getStartDate()->format("Ymd") >= date("Ymd")) {	
-							
-							return $sh->getShortName()."-".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-						}
-					}
-				}
-			}
-*/			
 		}
 		return "";
     }	
 	
-   /**
-     * return Stop Label
+	/**
+     * return Stop Label ( current StopHistory.shortName - Datasource.Agency.name (Datasource.code)
      */
     public function getStopLabel()
     {
-		foreach ($this->getStopHistories() as $sh) {
-			if($sh->getStartDate()->format("Ymd") <= date("Ymd")) {
-				if(empty($sh->getEndDate)) {
+		foreach( $this->getStopHistories() as $sh ) {
+			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
+				if( !$sh->getEndDate() ) {
 					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
 				} else {
-					if($sh->getStartDate()->format("Ymd") >= date("Ymd")) {	
+					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
 						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+					}
+				}
+			}
+		}
+		return "";
+    }	
+
+	/**
+     * return current stop history short name
+     */
+    public function getShortLabel()
+    {
+		foreach( $this->getStopHistories() as $sh ) {
+			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
+				if( !$sh->getEndDate() ) {
+					return $sh->getShortName();
+				} else {
+					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
+						return $sh->getShortName();
 					}
 				}
 			}

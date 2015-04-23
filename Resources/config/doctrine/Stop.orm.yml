@@ -28,6 +28,7 @@ Tisseo\EndivBundle\Entity\Stop:
 #            orphanRemoval: false
     oneToMany:
         stopDatasources:
+            orderby: { 'startDate': 'ASC' }
             targetEntity: StopDatasource
             cascade: ['persist', 'remove']
             mappedBy: stop

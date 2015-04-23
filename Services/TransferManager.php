@@ -141,9 +141,9 @@ class TransferManager extends SortManager
 		$empty_line = function ($transfer) use ($empty_transfert) {
 			return empty($transfer["id"]) && $empty_transfert($transfer);
 		};
-
-		//$stopManager = $this->om->getRepository('TisseoEndivBundle:Stop');
 		$stopAreaManager = $this->om->getRepository('TisseoEndivBundle:StopArea');
+		
+		$existingTransfers = $this->getExternalTransfer($currentStopArea);
 		
 		$transfers_to_save = array();
 		foreach( $transfers as $transfer ) {
@@ -172,70 +172,38 @@ class TransferManager extends SortManager
 					if( $transfer["endStopType"] != "stop" ) {
 						//stop -> stop_area
 						$stopArea = $stopAreaManager->find($transfer["endStopId"]);
-						foreach($stopArea->getStops() as $stop) {
+						foreach($stopArea->getStops() as $endStop) {
 							$transfer_tmp = $transfer;
 							$transfer_tmp["endStopId"] = $endStop->getId();
 							$transfers_to_save[] = $transfer_tmp;
 						}
+					} else {
+						//stop -> stop
+						$transfer_tmp = $transfer;
+						$transfers_to_save[] = $transfer_tmp;
 					}
 				}
 			}
 		}
 		
+		$ignored_transfers = 0;
 		foreach( $transfers_to_save as $transfer ) {
 			if( empty($transfer["id"]) ) {
-				$this ->saveNewExternalTransfer($transfer);
+				//new transfer
+				if (array_key_exists($transfer["startStopId"].".".$transfer["endStopId"], $existingTransfers)) {
+					$ignored_transfers += 1;
+				} else {
+					$this ->saveNewExternalTransfer($transfer);
+				}
 			} else {
+				//updating existing transfer
 				$entity = $this->find($transfer["id"]);
 				$this ->saveStopTransfer($entity, $transfer);
 			}
 		}
 		
-/*
-		foreach( $transfers as $transfer ) {
-			if( !$empty_line($transfer) ) {
-				if( empty($transfer["id"]) ) {
-					//new record(s)
-					if( empty($transfer["startStopId"]) ) {
-						if( $transfer["endStopType"] == "stop" ) {
-							//stop_area -> stop
-							foreach($currentStopArea->getStops() as $stop) {
-								$transfer["startStopId"] = $stop->getId();
-								$this ->saveNewExternalTransfer($transfer);
-							}
-						} else {
-							//stop_area -> stop_area
-							foreach($currentStopArea->getStops() as $startStop) {
-								$transfer["startStopId"] = $startStop->getId();
-								$endStopArea = $stopAreaManager->find($transfer["endStopId"]);
-								foreach($endStopArea->getStops() as $endStop) {
-									$transfer["endStopId"] = $endStop->getId();
-									$this ->saveNewExternalTransfer($transfer);
-								}
-							}
-						}
-					} else {
-						if( $transfer["endStopType"] == "stop" ) {
-							//stop -> stop
-							$this ->saveNewExternalTransfer($transfer);
-						} else {
-							//stop -> stop_area
-							$stopArea = $stopAreaManager->find($transfer["endStopId"]);
-							foreach($stopArea->getStops() as $stop) {
-								$transfer["endStopId"] = $stop->getId();
-								$this ->saveNewExternalTransfer($transfer);
-							}
-						}
-					}
-				} else {
-					//update record
-					$entity = $this->find($transfer["id"]);
-					$this ->saveStopTransfer($entity, $transfer);
-				}
-			}
-		}
-*/		
 		$this->om->flush();
+		return $ignored_transfers;
 	}	
 	
     /**

@@ -95,4 +95,25 @@ class StopAreaManager extends SortManager
 
         return $query->getResult();
     }	
+	
+    /**
+     * getMainStopCityName
+     * @param entity $StopArea => stop_area to check
+     * @ return the name of the (first) city founded, an empty string if none
+     */
+    public function getMainStopCityName($StopArea) {
+		if( !$StopArea->getId() ) return "";
+		
+        $query = $this->om->createQuery("
+               SELECT c.name
+               FROM Tisseo\EndivBundle\Entity\City c
+               WHERE c.mainStopArea = :sa
+        ")
+		->setParameter('sa', $StopArea)
+		->setMaxResults(1);
+
+		$result = $query->getResult();
+		if( $result ) return $result[0]["name"];
+		return "";
+	}
 }
