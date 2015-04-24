@@ -194,7 +194,7 @@ class Schematic
             $this->setName(null);
         }
     }
-    
+
     /**
      * Set line
      *
