@@ -110,18 +110,35 @@ class StopManager extends SortManager
 			WHERE UPPER(sh.shortName) LIKE UPPER(:term)
 			OR UPPER(sh.longName) LIKE UPPER(:term)
 			OR UPPER(sd.code) LIKE UPPER(:term)
+
+
 			ORDER BY sh.shortName, c.name, sd.code
 		");
 	 
 		$query->setParameter('term', '%'.$term.'%');
-	 
+
+        $queryZone = $this->om->createQuery("
+			SELECT area.name, area.id
+			FROM Tisseo\EndivBundle\Entity\OdtArea area
+
+			WHERE UPPER(area.name) LIKE UPPER(:term)
+			ORDER BY area.name
+		");
+        $queryZone->setParameter('term', '%'.$term.'%');
 		$shs = $query->getResult();
+
+
+        $areas = $queryZone->getResult();
+
 		$array = array();
 		foreach($shs as $sh) {
 			$label = $sh["name"]." ".$sh["city"]." (".$sh["code"].")";
 			$array[] = array("name"=>$label, "id"=>$sh["id"]);
 		}
-		
+        foreach($areas as $area) {
+            $label = $area["name"];
+           array_push($array, array("name"=>$label, "id"=>$area["id"]));
+        }
 		return $array;
 	}
 
@@ -145,6 +162,21 @@ class StopManager extends SortManager
     public function getStops($idWaypoint){
 
         $query = $this->om->createQuery("
+               SELECT st.id, ar.shortName, ar.id as zone,  c.name as city, sd.code as code
+               FROM Tisseo\EndivBundle\Entity\Stop st
+               JOIN st.stopArea ar
+               JOIN ar.city c
+               JOIN st.stopDatasources sd
+               WHERE st.id = :id
+        ")->setParameter('id', $idWaypoint);
+
+
+        return $query->getResult();
+    }
+
+    public function getZonesByRoute($route){
+
+        $query = $this->om->createQuery("
                SELECT st.id, ar.shortName, ar.id as zone,  c.name as city
                FROM Tisseo\EndivBundle\Entity\Stop st
                JOIN st.stopArea ar
@@ -155,7 +187,6 @@ class StopManager extends SortManager
 
         return $query->getResult();
     }
-
 
     public function getStopArea($id) {
         $query = $this->om->createQuery("

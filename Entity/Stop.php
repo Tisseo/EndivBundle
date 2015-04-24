@@ -44,7 +44,12 @@ class Stop
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $phantoms;	
+    private $phantoms;
+
+    /**
+     * @var \Tisseo\EndivBundle\Entity\OdtStop
+     */
+    private $odtStop;
 
     /**
      * Constructor
@@ -71,9 +76,33 @@ class Stop
     }
 
     /**
+     * Set OdtStop
+     *
+     * @param \Tisseo\EndivBundle\Entity\OdtStop
+     * @return Stop
+     */
+    public function setOdtStop($odtstop)
+    {
+        $this->odtStop = $odtstop;
+
+        return $this;
+    }
+
+
+    /**
+     * Get OdtStop
+     *
+     * @return \Tisseo\EndivBundle\Entity\OdtStop
+     */
+    public function getOdtStop()
+    {
+        return $this->odtStop;
+    }
+
+    /**
      * Get id
      *
-     * @return \Tisseo\EndivBundle\Entity\Waypoint 
+     * @return \Tisseo\EndivBundle\Entity\Waypoint
      */
     public function getId()
     {
@@ -96,7 +125,7 @@ class Stop
     /**
      * Get masterStop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getMasterStop()
     {

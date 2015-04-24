@@ -53,6 +53,18 @@ class RouteStopManager extends SortManager {
 
     }
 
+    public function getStoptimes($routeStopId) {
+
+        $query = $this->om->createQuery("
+        SELECT st.departureTime, st.arrivalTime
+        FROM Tisseo\EndivBundle\Entity\StopTime st
+        WHERE st.routeStop =:routeStop")
+            ->setParameter("routeStop",$routeStopId);
+
+        return $query->getResult();
+
+    }
+
     public function save(RouteStop $Stop)
     {
         if(!$Stop->getId()) {
