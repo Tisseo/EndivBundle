@@ -41,12 +41,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             nullable: false
             comment: 'Date de fin previsionnelle d''offre.'
             column: planned_end_date
-        childLineId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: 'Ligne rattachee (ligne de soiree)'
-            column: child_line_id
         name:
             type: string
             nullable: false
@@ -97,15 +91,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             type: line_version_status
             requireSQLConversion: true
             comment: ''
-    oneToOne:
-        childLine:
-            targetEntity: Line
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                child_line_id:
-                    referencedColumnName: id
-            orphanRemoval: false
     manyToOne:
         bgColor:
             targetEntity: Color

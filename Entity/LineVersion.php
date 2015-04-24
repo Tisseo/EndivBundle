@@ -91,11 +91,6 @@ class LineVersion
     private $depot;
 
     /**
-     * @var integer
-     */
-    private $childLineId;
-
-    /**
      * @var status
      */
     private $status;
@@ -104,11 +99,6 @@ class LineVersion
      * @var Line
      */
     private $line;
-
-    /**
-     * @var Line
-     */
-    private $childLine;
 
     /**
      * @var Schematic
@@ -406,52 +396,6 @@ class LineVersion
     public function getPlannedEndDate()
     {
         return $this->plannedEndDate;
-    }
-
-    /**
-     * Set childLine
-     *
-     * @param Line $childLine
-     * @return LineVersion
-     */
-    public function setChildLine(Line $childLine = null)
-    {
-        $this->childLine = $childLine;
-
-        return $this;
-    }
-
-    /**
-     * Get childLine
-     *
-     * @return Line
-     */
-    public function getChildLine()
-    {
-        return $this->childLine;
-    }
-
-    /**
-     * Set childLineId
-     *
-     * @param integer $childLineId
-     * @return LineVersion
-     */
-    public function setChildLineId($childLineId)
-    {
-        $this->childLineId = $childLineId;
-
-        return $this;
-    }
-
-    /**
-     * Get childLineId
-     *
-     * @return integer
-     */
-    public function getChildLineId()
-    {
-        return $this->childLineId;
     }
 
     /**
