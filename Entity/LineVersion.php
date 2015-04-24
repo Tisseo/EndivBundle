@@ -125,7 +125,10 @@ class LineVersion
      */
     private $routes;
 
-
+    /**
+     * @var Collection
+     */
+    private $lineGroupContents;
 
     /**
      * Constructor
@@ -138,6 +141,7 @@ class LineVersion
      */
     public function __construct(LineVersion $previousLineVersion = null, Line $line = null)
     {
+        $this->lineGroupContents = new ArrayCollection();
         $this->gridCalendars = new ArrayCollection();
         $this->printings = new ArrayCollection();
         $this->modifications = new ArrayCollection();
@@ -981,5 +985,38 @@ class LineVersion
 	public function getFormattedLineVersion()	
 	{
 		return $this->getLine()->getNumber() .'_'.$this->getVersion();
-	}
+    }
+
+    /**
+     * Add lineGroupContents
+     *
+     * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     * @return LineGroup
+     */
+    public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    {
+        $this->lineGroupContents[] = $lineGroupContents;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineGroupContents
+     *
+     * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     */
+    public function removeLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    {
+        $this->lineGroupContents->removeElement($lineGroupContents);
+    }
+
+    /**
+     * Get lineGroupContents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLineGroupContents()
+    {
+        return $this->lineGroupContents;
+    }
 }

@@ -1,0 +1,41 @@
+Tisseo\EndivBundle\Entity\LineGroupContent:
+    type: entity
+    table: line_group_content
+    indexes:
+        IDX_E02E70CCF50734EE:
+            columns:
+                - line_version_id
+        IDX_E02E70CC2D37893D:
+            columns:
+                - line_group_id
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        isParent:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: is_parent
+    manyToOne:
+        lineVersion:
+            targetEntity: LineVersion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineGroupContents
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lineGroup:
+            targetEntity: LineGroup
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineGroupContents
+            joinColumns:
+                line_group_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

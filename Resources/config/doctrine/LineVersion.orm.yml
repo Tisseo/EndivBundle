@@ -123,6 +123,13 @@ Tisseo\EndivBundle\Entity\LineVersion:
                 schematic_id:
                     referencedColumnName: id
     oneToMany:
+        lineGroupContents:
+            targetEntity: LineGroupContent
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
         gridCalendars:
             targetEntity: GridCalendar
             cascade: ['persist', 'remove']
