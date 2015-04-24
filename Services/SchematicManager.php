@@ -69,6 +69,6 @@ class SchematicManager extends SortManager
         $this->om->persist($schematic);
         $this->om->flush();
 
-        return array(true,'schematic.persisted');
+        return array(true,'line_schema.persisted');
     }
 }
