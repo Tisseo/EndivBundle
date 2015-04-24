@@ -57,6 +57,7 @@ Tisseo\EndivBundle\Entity\StopArea:
             cascade: ['persist', 'remove']
             mappedBy: stopArea
             inversedBy: null
+            orphanRemoval: true
     manyToOne:
         city:
             targetEntity: City
