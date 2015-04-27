@@ -1,0 +1,36 @@
+Tisseo\EndivBundle\Entity\LineGroupGisContent:
+    type: entity
+    table: line_group_gis_content
+    indexes:
+        IDX_E02E70CCF507145C:
+            columns:
+                - line_id
+        IDX_E02E70CC2D372DE3:
+            columns:
+                - line_group_gis_id
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+
+    manyToOne:
+        line:
+            targetEntity: Line
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineGroupGisContents
+            joinColumns:
+                line_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lineGroupGis:
+            targetEntity: LineGroupGis
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineGroupGisContents
+            joinColumns:
+                line_group_gis_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

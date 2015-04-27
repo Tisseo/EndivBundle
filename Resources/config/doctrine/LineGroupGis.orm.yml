@@ -1,0 +1,28 @@
+Tisseo\EndivBundle\Entity\LineGroupGis:
+    type: entity
+    table: line_group_gis
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    oneToMany:
+        lineGroupGisContents:
+            targetEntity: LineGroupGisContent
+            cascade: ['persist', 'remove']
+            mappedBy: lineGroupGis
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }
