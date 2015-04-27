@@ -23,6 +23,7 @@ parameters:
     tisseo_endiv.stop_manager.class: Tisseo\EndivBundle\Services\StopManager
     tisseo_endiv.stop_area_manager.class: Tisseo\EndivBundle\Services\StopAreaManager
     tisseo_endiv.routestop_manager.class: Tisseo\EndivBundle\Services\RouteStopManager
+    tisseo_endiv.line_group_gis_manager.class: Tisseo\EndivBundle\Services\LineGroupGisManager
 
 services:
     tisseo_endiv.line_manager:
@@ -96,4 +97,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.routestop_manager:
         class: %tisseo_endiv.routestop_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_group_gis_manager:
+        class: %tisseo_endiv.line_group_gis_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
