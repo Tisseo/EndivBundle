@@ -96,9 +96,14 @@ class StopManager extends SortManager
 	
 	public function closeStopHistories(Stop $Stop, $closingDate)
 	{
+		
+		if( gettype($closingDate) == "string" )
+			$closingDateObject = \DateTime::createFromFormat('d/m/Y', $closingDate);
+		else
+			$closingDateObject = \DateTime::createFromFormat('d/m/Y', $closingDate->format('d/m/Y'));
+			
 		//"close" current stop_history
 		$currentStopHistory = $this->getCurrentStopHistory($Stop);
-		$closingDateObject = \DateTime::createFromFormat('d/m/Y', $closingDate->format('d/m/Y'));
 		$endDate = $currentStopHistory->getEndDate();
 		if( $endDate == null or strtotime($endDate->format('Ymd')) > strtotime($closingDateObject->format('Ymd')) ) {
 			$currentStopHistory->setEndDate($closingDateObject);

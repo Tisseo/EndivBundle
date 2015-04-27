@@ -42,13 +42,6 @@ class StopAreaManager extends SortManager
 
     public function saveAliases(StopArea $StopArea, $originalAliases)
     {
-/*		
-		$Aliases = new ArrayCollection();
-		foreach ($StopArea->getAlias() as $alias) {
-			$this->em->persist($alias);
-		}
-*/
-
 		foreach ($originalAliases as $alias) {
 			if (false === $StopArea->getAlias()->contains($alias)) {
 				$StopArea->removeAlias($alias);
@@ -97,6 +90,22 @@ class StopAreaManager extends SortManager
 
         return $query->getResult();
     }	
+
+    public function getCurrentStops($StopArea) {
+        $query = $this->em->createQuery("
+               SELECT s
+               FROM Tisseo\EndivBundle\Entity\Stop s
+			   JOIN s.stopDatasources sd
+			   JOIN s.stopHistories sh
+               WHERE s.stopArea = :sa
+			   AND (sh.startDate <= CURRENT_DATE()
+			   AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE()))
+			   ORDER BY sd.code
+        ")
+		->setParameter('sa', $StopArea);
+
+        return $query->getResult();
+    }	
 	
     /**
      * getMainStopCityName
@@ -117,5 +126,37 @@ class StopAreaManager extends SortManager
 		$result = $query->getResult();
 		if( $result ) return $result[0]["name"];
 		return "";
+	}
+	
+	public function getLines($stopArea)
+	{
+        $query = $this->em->createQuery("
+               SELECT l.number as number , bc.html as bgColor, fc.html as fgColor, s.id
+               FROM Tisseo\EndivBundle\Entity\LineVersion lv
+			   JOIN lv.line l
+			   JOIN lv.bgColor bc
+			   JOIN lv.fgColor fc
+			   JOIN lv.routes r
+			   JOIN r.routeStops rs
+			   JOIN rs.waypoint w
+			   JOIN w.stop s
+               WHERE (lv.endDate IS NULL or lv.endDate >= CURRENT_DATE())
+			   AND s.stopArea = :sa
+        ")
+		->setParameter('sa', $stopArea);
+		
+		$array = $query->getResult();
+		$result = array();
+		foreach($array as $item) {
+			$line = [
+					"number"=> $item["number"],
+					"bgColor" => $item["bgColor"],
+					"fgColor" => $item["fgColor"]
+			];
+			
+			if( !isset($result[$item["id"]]) || !in_array($line, $result[$item["id"]]) ) 
+				$result[$item["id"]][] = $line;
+		}
+		return $result;
 	}
 }
