@@ -10,7 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 class StopTime
 {
     /**
+     *
      * @var integer
+     *
      */
     private $id;
 
@@ -43,6 +45,19 @@ class StopTime
     {
         return $this->id;
     }
+
+    /**
+     * Get id
+     *
+     * @param integer $id
+     * @return StopTime
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
 
     /**
      * Set arrivalTime

@@ -85,6 +85,20 @@ class RouteStop
     }
 
     /**
+     * Set id
+     *
+     * @param integer $id
+     * @return RouteStop
+     */
+
+    public function setId($id){
+
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set rank
      *
      * @param integer $rank
