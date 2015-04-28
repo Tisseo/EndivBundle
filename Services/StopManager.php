@@ -126,6 +126,7 @@ class StopManager extends SortManager
 
 	public function addStopHistory(Stop $Stop, StopHistory $StopHistory, $x, $y, $srid)
 	{
+		//new stop history have no end_date
 		$currentStopHistory = $this->getCurrentStopHistory($Stop);
 		$lastDay = clone  $StopHistory->getStartDate();
 		$lastDay->sub(new \DateInterval('P1D'));
@@ -140,8 +141,13 @@ class StopManager extends SortManager
 		});
 		// update if necessary previous stop history (end date => previous day)
 		foreach ($iter as $sh) {
-			$startDate = $sh->getStartDate();
-			if( strtotime($startDate->format('Ymd')) <= strtotime($lastDay->format('Ymd')) ) {
+			$startDate = clone $sh->getStartDate();
+			if( strtotime($startDate->format('Ymd')) > strtotime($lastDay->format('Ymd')) ) {
+				//later stop history => put end date to new stop history
+				$startDate->sub(new \DateInterval('P1D'));	//get previous day
+				$StopHistory->setEndDate($startDate);
+			} else {
+				//put end date to previous stop history
 				$endDate = $sh->getEndDate();
 				if( $endDate == null ) {
 						$sh->setEndDate($lastDay);
