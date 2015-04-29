@@ -12,7 +12,6 @@ use Tisseo\EndivBundle\Entity\StopAccessibility;
 use Tisseo\EndivBundle\Entity\Waypoint;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
-
 class StopManager extends SortManager
 {
     private $em = null;
@@ -115,6 +114,14 @@ class StopManager extends SortManager
 		foreach($futureStopHistories as $sh) {
 			$this->em->remove($sh);
 		}
+		
+		$phantoms = $Stop->getPhantoms();
+		if( $phantoms ) {
+			//close phantoms stop histories
+			foreach( $phantoms as $phantom ) {
+				$this->closeStopHistories($phantom, $closingDate);
+			}
+		}
 	}
 
 	public function closeStop(Stop $Stop, $closingDate)
@@ -123,13 +130,19 @@ class StopManager extends SortManager
 		$this->em->flush();
 	}
 
-
 	public function addStopHistory(Stop $Stop, StopHistory $StopHistory, $x, $y, $srid)
 	{
 		//new stop history have no end_date
 		$currentStopHistory = $this->getCurrentStopHistory($Stop);
 		$lastDay = clone  $StopHistory->getStartDate();
 		$lastDay->sub(new \DateInterval('P1D'));
+
+		//remove future stop histories
+		$futureStopHistories = $this->getFutureStopHistories($Stop, $StopHistory->getStartDate()->format("Y-m-d H:i:s"));
+		foreach($futureStopHistories as $sh) {
+			$Stop->removeStopHistory($sh);
+			$this->em->remove($sh);
+		}
 
 		$stopHistories = $Stop->getStopHistories();
 		$iter = $stopHistories->getIterator();
@@ -139,14 +152,11 @@ class StopManager extends SortManager
 			$startDate_b = $b->getStartDate();
 			return $startDate_a == $startDate_b ? 0 : strtotime($startDate_a->format('Ymd')) < strtotime($startDate_b->format('Ymd')) ? 1 : - 1;
 		});
+
 		// update if necessary previous stop history (end date => previous day)
 		foreach ($iter as $sh) {
-			$startDate = clone $sh->getStartDate();
-			if( strtotime($startDate->format('Ymd')) > strtotime($lastDay->format('Ymd')) ) {
-				//later stop history => put end date to new stop history
-				$startDate->sub(new \DateInterval('P1D'));	//get previous day
-				$StopHistory->setEndDate($startDate);
-			} else {
+			$startDate = $sh->getStartDate();
+			if( strtotime($startDate->format('Ymd')) <= strtotime($lastDay->format('Ymd')) ) {
 				//put end date to previous stop history
 				$endDate = $sh->getEndDate();
 				if( $endDate == null ) {
@@ -166,24 +176,27 @@ class StopManager extends SortManager
 			}
 		}
 
-		//remove future stop_history
-		$futureStopHistories = $this->getFutureStopHistories($Stop, $StopHistory->getStartDate()->format("Y-m-d H:i:s"));
-		foreach($futureStopHistories as $sh) {
-			$this->em->remove($sh);
-		}
-
 		$StopHistory->setStop($Stop);
 		$StopHistory->setTheGeom(new Point($x, $y, $srid));
 		$Stop->addStopHistory($StopHistory);
 		$this->em->persist($StopHistory);
 		$this->em->persist($Stop);
 		$this->em->flush();
+		
+		//add stop history to phantoms
+		$phantoms = $Stop->getPhantoms();
+		foreach($phantoms as $phantom) {
+			$sh = new StopHistory();
+			$sh->setStartDate($StopHistory->getStartDate());
+			$sh->setShortName($StopHistory->getShortName());
+			$sh->setLongName($StopHistory->getLongName());
+			$this->addStopHistory($phantom, $sh, $x, $y, $srid);
+		}
 	}
 
 	
 	public function removeStopHistory(Stop $stop, $StopHistoryId)
 	{
-		
 		$query = $this->em->createQuery("
 			SELECT sh
 			FROM Tisseo\EndivBundle\Entity\StopHistory sh
@@ -194,6 +207,12 @@ class StopManager extends SortManager
 		if($datas) {
 			$stopHistory = $datas[0];
 			$newLastDate = clone $stopHistory->getStartDate();
+
+			$phantomStartDate = clone $stopHistory->getStartDate();
+			$phantomEndDate = null;
+			if( $stopHistory->getEndDate() )
+				$phantomEndDate = clone $stopHistory->getEndDate();
+
 			$newLastDate->sub(new \DateInterval('P1D'));	//get previous day
 			$stop->removeStopHistory($stopHistory);
 			$this->em->remove($stopHistory);
@@ -210,22 +229,44 @@ class StopManager extends SortManager
 			// update if necessary previous stop history (end date => null)
 			foreach ($iter as $sh) {
 				$startDate = $sh->getStartDate();
-				if( strtotime($startDate->format('Ymd')) <= strtotime($newLastDate->format('Ymd')) ) {
+				$nexStartDate = null;
+				if( strtotime($startDate->format('Ymd')) > strtotime($newLastDate->format('Ymd')) ) {
+					//later sh
+					$nexStartDate = clone $startDate;
+				} else {
+					//previous sh => update ?
 					$endDate = $sh->getEndDate();
-					if( $endDate !== null ) {
-						if( strtotime($endDate->format('Ymd')) <= strtotime($newLastDate->format('Ymd')) ) {
-							$sh->setEndDate(null);
+					if( $nexStartDate !== null ) {
+						$nexStartDate->sub(new \DateInterval('P1D'));
+						if( $endDate == null || strtotime($endDate->format('Ymd')) > strtotime($nexStartDate->format('Ymd')) ) {
+							$sh->setEndDate($nexStartDate);
 							$this->em->persist($sh);
 							break;
 						}
 					} else {
-						// stop history endDate already to null
-						break;
+						//no later stop history
+						if( $endDate !== null ) {
+							if( strtotime($endDate->format('Ymd')) <= strtotime($newLastDate->format('Ymd')) ) {
+								$sh->setEndDate(null);
+								$this->em->persist($sh);
+								break;
+							}
+						} else {
+							// stop history endDate already to null
+							break;
+						}
 					}
 				}
 			}
 			
 			$this->em->flush();
+			
+			//remove sh from phantoms
+			$phantoms = $stop->getPhantoms();
+			foreach($phantoms as $phantom) {
+				$sh = $this->getStopHistoryByDate($phantom, $phantomStartDate, $phantomEndDate);
+				$this->removeStopHistory($phantom, $sh->getId());
+			}
 		}
 	}
 	
@@ -253,6 +294,9 @@ class StopManager extends SortManager
 	
 	public function findStopsLike( $term, $limit = 10 )
 	{
+		$specials = array("-", " ", "'");
+		$cleanTerm = str_replace($specials, "_", $term);
+		
 		$connection = $this->em->getConnection()->getWrappedConnection();
 		$stmt = $connection->prepare("
 			SELECT sh.short_name as name, c.name as city,  sd.code as code, s.id as id
@@ -268,7 +312,7 @@ class StopManager extends SortManager
 			AND (sh.end_date IS NULL or sh.end_date >= current_date)
 			ORDER BY sh.short_name, c.name, sd.code		
 		");
-		$stmt->bindValue(':term', '%'.$term.'%');
+		$stmt->bindValue(':term', '%'.$cleanTerm.'%');
 		$stmt->execute();
 		$shs = $stmt->fetchAll();
 
@@ -309,7 +353,6 @@ class StopManager extends SortManager
 
         return $query->getResult();
     }
-
 
     public function getStopArea($id) {
         $query = $this->em->createQuery("
@@ -390,4 +433,29 @@ class StopManager extends SortManager
 		
 		return $query->getResult();
 	}	
+	
+	public function getStopHistoryByDate( $stop, $startDate, $endDate )
+	{		
+		$dql = "
+			SELECT sh
+			FROM Tisseo\EndivBundle\Entity\StopHistory sh
+			JOIN sh.stop s
+			WHERE sh.stop = :stop
+			AND sh.startDate = :startDate
+		";
+		if(!$endDate)
+			$dql .= "AND sh.endDate IS NULL";
+		else
+			$dql .= "AND sh.endDate = :endDate";
+
+		$query = $this->em->createQuery($dql)
+		->setParameter('stop', $stop)
+		->setParameter('startDate', $startDate);
+		if($endDate)
+			$query->setParameter('endDate', $endDate);
+		
+		$datas = $query->getResult();
+		if( !$datas ) return null;
+		return $datas[0];
+	}		
 }
