@@ -62,6 +62,12 @@ class Trip
     private $stopTimes;
 
     /**
+     * @var integer
+     */
+
+    private $parent;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -102,6 +108,31 @@ class Trip
     {
         return $this->name;
     }
+
+    /**
+     * Get parent
+     *
+     * @return integer
+     */
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set parent
+     *
+     * @return Trip
+     */
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
 
     /**
      * Set isPattern
@@ -274,7 +305,7 @@ class Trip
      */
     public function addStopTime(StopTime $stopTime)
     {
-        $this->stopTimes[] = $stopTimes;
+        $this->stopTimes[] = $stopTime;
 
         return $this;
     }
@@ -331,7 +362,7 @@ class Trip
      */
     public function addTripDatasources(TripDatasource $tripDatasource)
     {
-        $this->tripDatasources[] = $tripDatasources;
+        $this->tripDatasources[] = $tripDatasource;
 
         return $this;
     }

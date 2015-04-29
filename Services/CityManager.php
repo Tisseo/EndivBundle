@@ -51,7 +51,7 @@ class CityManager extends SortManager
 		$shs = $query->getResult();
 		$array = array();
 		foreach($shs as $sh) {
-			$label = $sh["name"]."(".$sh["insee"].")";
+			$label = $sh["name"]." (".$sh["insee"].")";
 			$array[] = array("name"=>$label, "id"=>$sh["id"]);
 		}
 		

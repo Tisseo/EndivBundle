@@ -4,7 +4,6 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Services\TripManager;
@@ -12,6 +11,7 @@ use Tisseo\EndivBundle\Services\TripManager;
 class LineVersionManager extends SortManager
 {
     private $om = null;
+    /** @var \Doctrine\ORM\EntityRepository $repository */
     private $repository = null;
 
     public function __construct(ObjectManager $om)
@@ -130,30 +130,34 @@ class LineVersionManager extends SortManager
     /*
      * findActiveLineVersions
      * @param Datetime $now
-     * @param string $filter
+     * @param string $filter default null
+     * @param Boolean $splitByPhysicalMode default false
      * @return Collection $lineVersions
      *
      * Find LineVersion which are considered as active according to the current 
      * date passed as parameter.
      */
-    public function findActiveLineVersions(\Datetime $now, $filter = '')
+    public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
     {
         $query = $this->repository->createQueryBuilder('lv')
             ->where('lv.endDate is null OR lv.endDate > :now')
             ->setParameter('now', $now);
-            
+
         if ($filter === 'grouplines')
             $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
 
+        if ($filter === 'schematic') {
+            $query->leftJoin('lv.schematic', 'sc');
+        }
+
         $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
 
-        if ($filter === 'physicalMode')
-        {
+        if ($splitByPhysicalMode) {
             $query = $this->om->createQuery("
-                SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
+                    SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
             ");
             $physicalModes = $query->getResult();
-            
+
             $result = $this->splitByPhysicalMode($result, $physicalModes);
         }
 

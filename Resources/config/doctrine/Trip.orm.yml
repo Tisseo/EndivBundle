@@ -17,12 +17,6 @@ Tisseo\EndivBundle\Entity\Trip:
         IDX_7656F53BFE610542:
             columns:
                 - trip_calendar_id
-        IDX_7656F53BF734A20F:
-            columns:
-                - pattern_id
-        IDX_7656F53B6F658B27:
-            columns:
-                - trip_parent_id
     id:
         id:
             type: integer
@@ -44,6 +38,11 @@ Tisseo\EndivBundle\Entity\Trip:
             nullable: true
             comment: ''
             column: is_pattern
+        parent:
+            type: integer
+            nullable: false
+            comment: 'si le service dépend d''un patron'
+            column: trip_parent_id
     oneToMany:
         stopTimes:
             targetEntity: StopTime

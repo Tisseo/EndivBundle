@@ -381,33 +381,42 @@ class Stop
     public function getMasterStopLabel()
     {
         if(!empty($this->masterStop)) {
-			foreach ($this->masterStop->getStopHistories() as $sh) {
-				if($sh->getStartDate()->format("Ymd") <= date("Ymd")) {
-					if(empty($sh->getEndDate)) {
-						return $sh->getShortName()."-".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()."(".$this->stopDatasources[0]->getCode().")";
-					} else {
-						if($sh->getStartDate()->format("Ymd") >= date("Ymd")) {	
-							return $sh->getShortName()."-".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()."(".$this->stopDatasources[0]->getCode().")";
-						}
+			return $this->masterStop->getStopLabel();
+		}
+		return "";
+    }	
+	
+	/**
+     * return Stop Label ( current StopHistory.shortName - Datasource.Agency.name (Datasource.code)
+     */
+    public function getStopLabel()
+    {
+		foreach( $this->getStopHistories() as $sh ) {
+			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
+				if( !$sh->getEndDate() ) {
+					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+				} else {
+					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
+						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
 					}
 				}
 			}
 		}
 		return "";
     }	
-	
-   /**
-     * return Stop Label
+
+	/**
+     * return current stop history short name
      */
-    public function getStopLabel()
+    public function getShortLabel()
     {
-		foreach ($this->getStopHistories() as $sh) {
-			if($sh->getStartDate()->format("Ymd") <= date("Ymd")) {
-				if(empty($sh->getEndDate)) {
-					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+		foreach( $this->getStopHistories() as $sh ) {
+			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
+				if( !$sh->getEndDate() ) {
+					return $sh->getShortName();
 				} else {
-					if($sh->getStartDate()->format("Ymd") >= date("Ymd")) {	
-						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
+						return $sh->getShortName();
 					}
 				}
 			}

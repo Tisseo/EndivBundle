@@ -66,11 +66,6 @@ class LineVersion
     private $fgColor;
 
     /**
-     * @var string
-     */
-    private $cartoFile;
-
-    /**
      * @var boolean
      */
     private $accessibility;
@@ -96,11 +91,6 @@ class LineVersion
     private $depot;
 
     /**
-     * @var integer
-     */
-    private $childLineId;
-
-    /**
      * @var status
      */
     private $status;
@@ -111,9 +101,9 @@ class LineVersion
     private $line;
 
     /**
-     * @var Line
+     * @var Schematic
      */
-    private $childLine;
+    private $schematic;
 
     /**
      * @var Collection
@@ -136,6 +126,11 @@ class LineVersion
     private $routes;
 
     /**
+     * @var Collection
+     */
+    private $lineGroupContents;
+
+    /**
      * Constructor
      * @param LineVersion $previousLineVersion = null
      * @param Line $line = null
@@ -146,6 +141,7 @@ class LineVersion
      */
     public function __construct(LineVersion $previousLineVersion = null, Line $line = null)
     {
+        $this->lineGroupContents = new ArrayCollection();
         $this->gridCalendars = new ArrayCollection();
         $this->printings = new ArrayCollection();
         $this->modifications = new ArrayCollection();
@@ -407,52 +403,6 @@ class LineVersion
     }
 
     /**
-     * Set childLine
-     *
-     * @param Line $childLine
-     * @return LineVersion
-     */
-    public function setChildLine(Line $childLine = null)
-    {
-        $this->childLine = $childLine;
-
-        return $this;
-    }
-
-    /**
-     * Get childLine
-     *
-     * @return Line
-     */
-    public function getChildLine()
-    {
-        return $this->childLine;
-    }
-
-    /**
-     * Set childLineId
-     *
-     * @param integer $childLineId
-     * @return LineVersion
-     */
-    public function setChildLineId($childLineId)
-    {
-        $this->childLineId = $childLineId;
-
-        return $this;
-    }
-
-    /**
-     * Get childLineId
-     *
-     * @return integer
-     */
-    public function getChildLineId()
-    {
-        return $this->childLineId;
-    }
-
-    /**
      * Set name
      *
      * @param string $name
@@ -565,29 +515,6 @@ class LineVersion
     public function getFgColor()
     {
         return $this->fgColor;
-    }
-
-    /**
-     * Set cartoFile
-     *
-     * @param string $cartoFile
-     * @return LineVersion
-     */
-    public function setCartoFile($cartoFile)
-    {
-        $this->cartoFile = $cartoFile;
-
-        return $this;
-    }
-
-    /**
-     * Get cartoFile
-     *
-     * @return string
-     */
-    public function getCartoFile()
-    {
-        return $this->cartoFile;
     }
 
     /**
@@ -726,6 +653,29 @@ class LineVersion
     public function getLine()
     {
         return $this->line;
+    }
+
+    /**
+     * Set line
+     *
+     * @param Schematic $schematic
+     * @return LineVersion
+     */
+    public function setSchematic(Schematic $schematic = null)
+    {
+        $this->schematic = $schematic;
+
+        return $this;
+    }
+
+    /**
+     * Get Schematic
+     *
+     * @return Schematic
+     */
+    public function getSchematic()
+    {
+        return $this->schematic;
     }
 
     /**
@@ -1035,5 +985,38 @@ class LineVersion
 	public function getFormattedLineVersion()	
 	{
 		return $this->getLine()->getNumber() .'_'.$this->getVersion();
-	}
+    }
+
+    /**
+     * Add lineGroupContents
+     *
+     * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     * @return LineGroup
+     */
+    public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    {
+        $this->lineGroupContents[] = $lineGroupContents;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineGroupContents
+     *
+     * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     */
+    public function removeLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    {
+        $this->lineGroupContents->removeElement($lineGroupContents);
+    }
+
+    /**
+     * Get lineGroupContents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLineGroupContents()
+    {
+        return $this->lineGroupContents;
+    }
 }

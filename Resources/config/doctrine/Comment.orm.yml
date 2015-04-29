@@ -31,10 +31,12 @@ Tisseo\EndivBundle\Entity\Comment:
             mappedBy: comment
             inversedBy: null
             fetch: 'EXTRA_LAZY'
+            orphanRemoval: false
         routes:
             targetEntity: Route
             cascade: ['persist']
             mappedBy: comment
             inversedBy: null
             fetch: 'EXTRA_LAZY'
+            orphanRemoval: false
     lifecycleCallbacks: {  }

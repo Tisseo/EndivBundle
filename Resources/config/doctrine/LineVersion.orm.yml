@@ -41,12 +41,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             nullable: false
             comment: 'Date de fin previsionnelle d''offre.'
             column: planned_end_date
-        childLineId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: 'Ligne rattachee (ligne de soiree)'
-            column: child_line_id
         name:
             type: string
             nullable: false
@@ -67,13 +61,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             fixed: false
             comment: ''
             column: backward_direction
-        cartoFile:
-            type: text
-            nullable: true
-            length: null
-            fixed: false
-            comment: ''
-            column: carto_file
         accessibility:
             type: boolean
             nullable: true
@@ -104,15 +91,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             type: line_version_status
             requireSQLConversion: true
             comment: ''
-    oneToOne:
-        childLine:
-            targetEntity: Line
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                child_line_id:
-                    referencedColumnName: id
-            orphanRemoval: false
     manyToOne:
         bgColor:
             targetEntity: Color
@@ -137,7 +115,21 @@ Tisseo\EndivBundle\Entity\LineVersion:
             joinColumns:
                 line_id:
                     referencedColumnName: id
+        schematic:
+            targetEntity: Schematic
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                schematic_id:
+                    referencedColumnName: id
     oneToMany:
+        lineGroupContents:
+            targetEntity: LineGroupContent
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
         gridCalendars:
             targetEntity: GridCalendar
             cascade: ['persist', 'remove']

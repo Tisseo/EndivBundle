@@ -28,6 +28,33 @@ class TripManager
         return empty($tripId) ? null : $this->repository->find($tripId);
     }
 
+    public function findByName($tripName)
+    {
+        return empty($tripName) ? null : $this->repository->findOneBy(array('name'=>$tripName));
+    }
+
+    public function hasTrips($id)
+    {
+        $query = $this->om->createQuery("
+             SELECT count(t.parent) FROM Tisseo\EndivBundle\Entity\Trip t
+             WHERE t.parent = :id
+        ")
+        ->setParameter("id",$id);
+
+        $res = $query->getResult();
+
+      
+        return $res[0][1] > 0 ? true : false;
+    }
+
+
+    public function deleteTrip(Trip $trip){
+
+        $this->om->remove($trip);
+        $this->om->flush();
+
+    }
+
     public function deleteTrips(LineVersion $lineVersion)
     {
         $query = $this->om->createQuery("
@@ -67,27 +94,60 @@ class TripManager
 
     public function updateComments(array $comments)
     {
+        $commentsToDelete = array();
+
         foreach($comments as $label => $content)
         {
-            $query = $this->om->createQuery("
-                SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
-                WHERE c.label = ?1
-            ");
-            $query->setParameter(1, $label);
-            $result = $query->getResult();
+            if ($content['comment'] === "none" || $label === "none")
+            {
+                $trips = $this->repository->findById($content["trips"]);
 
-            if (empty($result))
-                $comment = new Comment($label, $content["comment"]);
+                foreach($trips as $trip) {
+                    $commentsToDelete[] = $trip->getComment()->getId();
+                    $trip->setComment(null);
+                    $this->om->persist($trip);
+                }
+            }
             else
-                $comment = $result[0];
+            {
+                $query = $this->om->createQuery("
+                    SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
+                    WHERE c.label = ?1
+                ");
+                $query->setParameter(1, $label);
+                $result = $query->getResult();
 
-            $trips = $this->repository->findById($content["trips"]);
-            foreach($trips as $trip)
-                $comment->addTrip($trip);
-        
-            $this->om->persist($comment);
+                if (empty($result))
+                    $comment = new Comment($label, $content["comment"]);
+                else
+                    $comment = $result[0];
+
+                $trips = $this->repository->findById($content["trips"]);
+                foreach($trips as $trip)
+                    $comment->addTrip($trip);
+            
+                $this->om->persist($comment);
+            }
         }
         $this->om->flush();
+
+        if (count($commentsToDelete) > 0)
+        {
+            $commentsToDelete = array_unique($commentsToDelete);
+            $query = $this->om->createQuery("
+                SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
+                WHERE c.id IN (?1)
+            ");
+            $query->setParameter(1, $commentsToDelete);
+            $comments = $query->getResult();
+
+            foreach($comments as $comment)
+            {
+                if ($comment->getTrips()->isEmpty())
+                    $this->om->remove($comment);
+            }
+            $this->om->flush();
+        }
     }
 
     public function save(Trip $trip)

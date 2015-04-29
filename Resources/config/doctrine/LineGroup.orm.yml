@@ -1,0 +1,28 @@
+Tisseo\EndivBundle\Entity\LineGroup:
+    type: entity
+    table: line_group
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    oneToMany:
+        lineGroupContents:
+            targetEntity: LineGroupContent
+            cascade: ['persist', 'remove']
+            mappedBy: lineGroup
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+    lifecycleCallbacks: {  }

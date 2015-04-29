@@ -21,6 +21,7 @@ Tisseo\EndivBundle\Entity\Log:
             length: 30
             fixed: false
             comment: ''
+            column: table_logged
         action:
             type: string
             nullable: false
@@ -47,4 +48,5 @@ Tisseo\EndivBundle\Entity\Log:
             length: 30
             fixed: false
             comment: ''
+            column: user_logged
     lifecycleCallbacks: {  }

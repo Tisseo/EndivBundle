@@ -66,29 +66,20 @@ class CalendarManager extends SortManager
         $this->em->flush();
     }
 	
-	public function findCalendarsLike( $term, $CalendarType = null, $limit = 10 )
+	public function findCalendarsLike( $term, $CalendarType = null, $limit = 20 )
 	{
-	 
-		$qb = $this->repository->createQueryBuilder('c');
-		$qb ->select('c.name, c.id')
-		->where('UPPER(c.name) LIKE UPPER(:term)');
-		if($CalendarType) {
-			$qb->andWhere('c.calendarType = :type')
-			->setParameter('type', $CalendarType);
-		}
-		$qb->setParameter('term', '%'.$term.'%')
-		->setMaxResults($limit);
-	 
-		$arrayAss= $qb->getQuery()
-		->getArrayResult();
-	 
-		// Transformer le tableau associatif en un tableau standard
-		$array = array();
-		foreach($arrayAss as $data)
-		{
-			$array[] = array("name"=>$data['name'], "id"=>$data['id']);
-		}
+		$connection = $this->em->getConnection()->getWrappedConnection();
+		$sql = "
+			SELECT name, id 
+			FROM calendar 
+			WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
+		if( $CalendarType )
+			$sql .= "and calendar_type = '".$CalendarType."'";
+		$sql .= " LIMIT ".number_format($limit);
 
+		$stmt = $connection->prepare($sql);
+		$stmt->execute();
+		$array = $stmt->fetchAll();
 		return $array;
 	}	
 	

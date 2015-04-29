@@ -4,7 +4,7 @@ Tisseo\EndivBundle\Entity\CalendarElement:
     indexes:
         calendar_element_calendar_id_idx:
             columns:
-                - calendar_id
+                - included_calendar_id
         IDX_233725FE484DE9F9:
             columns:
                 - included_calendar_id

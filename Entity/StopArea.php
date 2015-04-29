@@ -29,7 +29,7 @@ class StopArea
     /**
      * @var integer
      */
-    private $transferDuration;
+    private $transferDuration = 3;
 
     /**
      * @var geometry
