@@ -2,6 +2,7 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +21,7 @@ class LineGroupGis
     private $name;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     private $lineGroupGisContents;
 
@@ -29,7 +30,7 @@ class LineGroupGis
      */
     public function __construct()
     {
-        $this->lineGroupGisContents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lineGroupGisContents = new ArrayCollection();
     }
 
     /**
@@ -71,10 +72,10 @@ class LineGroupGis
      * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
      * @return LineGroupGis
      */
-    public function addLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
+    public function addLineGroupGisContent(LineGroupGisContent $lineGroupGisContents)
     {
+        $this->setLineGroupGisContents($lineGroupGisContents);
         $this->lineGroupGisContents[] = $lineGroupGisContents;
-
         return $this;
     }
 
@@ -83,7 +84,7 @@ class LineGroupGis
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
      */
-    public function removeLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
+    public function removeLineGroupGisContent(LineGroupGisContent $lineGroupGisContents)
     {
         $this->lineGroupGisContents->removeElement($lineGroupGisContents);
     }
@@ -96,5 +97,10 @@ class LineGroupGis
     public function getLineGroupGisContents()
     {
         return $this->lineGroupGisContents;
+    }
+
+    public function setLineGroupGisContents(LineGroupGisContent $lineGroupGisContent)
+    {
+        $lineGroupGisContent->setLineGroupGis($this);
     }
 }

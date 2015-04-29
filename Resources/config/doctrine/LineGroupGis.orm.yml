@@ -24,5 +24,4 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
             mappedBy: lineGroupGis
             inversedBy: null
             orphanRemoval: true
-            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

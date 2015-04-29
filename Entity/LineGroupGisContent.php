@@ -67,7 +67,6 @@ class LineGroupGisContent
     public function setLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis = null)
     {
         $this->lineGroupGis = $lineGroupGis;
-
         return $this;
     }
 
