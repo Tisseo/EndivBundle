@@ -29,6 +29,17 @@ class LineGroupGisContentManager extends SortManager
         return empty($lineGroupGisContentId) ? null : $this->repository->find($lineGroupGisContentId);
     }
 
+    /**
+     * @param $lineId
+     * @return array
+     */
+    public function findLineGroup($lineId)
+    {
+        return $this->repository->findBy(array(
+           'line' => $lineId,
+        ));
+    }
+
 
     /**
      * save
