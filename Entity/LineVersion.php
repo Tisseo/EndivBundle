@@ -993,9 +993,10 @@ class LineVersion
      * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
      * @return LineGroup
      */
-    public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContent)
     {
-        $this->lineGroupContents[] = $lineGroupContents;
+        $this->lineGroupContents[] = $lineGroupContent;
+		$lineGroupContent->setLineVersion($this);
 
         return $this;
     }
@@ -1005,9 +1006,9 @@ class LineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
      */
-    public function removeLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    public function removeLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContent)
     {
-        $this->lineGroupContents->removeElement($lineGroupContents);
+        $this->lineGroupContents->removeElement($lineGroupContent);
     }
 
     /**
@@ -1018,5 +1019,22 @@ class LineVersion
     public function getLineGroupContents()
     {
         return $this->lineGroupContents;
+    }
+	
+    /**
+     * Set lineGroupContents
+     *
+     * @param Collection $lineGroupContents
+     * @return LineVersion
+     */
+    public function setLineGroupContents(Collection $lineGroupContents = null)
+    {
+        $this->lineGroupContents = $lineGroupContents;
+		if( $this->lineGroupContents ) {
+			foreach ($this->lineGroupContents as $lineGroupContent) {
+				$lineGroupContent->setLineVersion($this);
+			}
+		}
+        return $this;
     }
 }

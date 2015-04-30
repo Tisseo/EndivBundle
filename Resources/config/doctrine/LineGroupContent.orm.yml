@@ -9,10 +9,10 @@ Tisseo\EndivBundle\Entity\LineGroupContent:
             columns:
                 - line_group_id
     id:
-        id:
-            type: integer
-            generator:
-                strategy: AUTO
+        lineGroup:
+            associationKey: true
+        lineVersion:
+            associationKey: true
     fields:
         isParent:
             type: boolean
