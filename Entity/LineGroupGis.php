@@ -21,6 +21,16 @@ class LineGroupGis
     private $name;
 
     /**
+     * @var string
+     */
+    private $nbBus;
+
+    /**
+     * @var string
+     */
+    private $comment;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     private $lineGroupGisContents;
@@ -102,5 +112,51 @@ class LineGroupGis
     public function setLineGroupGisContents(LineGroupGisContent $lineGroupGisContent)
     {
         $lineGroupGisContent->setLineGroupGis($this);
+    }
+
+    /**
+     * Set nbBus
+     *
+     * @param string $nbBus
+     * @return LineGroupGis
+     */
+    public function setNbBus($nbBus)
+    {
+        $this->nbBus = $nbBus;
+
+        return $this;
+    }
+
+    /**
+     * Get nbBus
+     *
+     * @return string 
+     */
+    public function getNbBus()
+    {
+        return $this->nbBus;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param string $comment
+     * @return LineGroupGis
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string 
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 }
