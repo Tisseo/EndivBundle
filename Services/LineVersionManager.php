@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Services\TripManager;
+use Tisseo\EndivBundle\Entity\LineVersionDatasource;
 
 class LineVersionManager extends SortManager
 {
@@ -312,7 +313,7 @@ class LineVersionManager extends SortManager
      *  - deleting all trips which don't belong anymore to the previous 
      *  LineVersion
      */
-    public function create(LineVersion $lineVersion)
+    public function create(LineVersion $lineVersion, $username)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
         if ($oldLineVersion)
@@ -323,7 +324,24 @@ class LineVersionManager extends SortManager
                 return array(false,'line_version.closure_error');
             $this->om->persist($oldLineVersion);
         }
+        
         $this->om->persist($lineVersion);
+
+        $query = $this->om->createQuery("
+            SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
+            WHERE ds.name = ?1
+        ")->setParameter(1, 'Information Voyageurs');
+      
+        $datasource = $query->getOneOrNullResult();
+        if (!empty($datasource))
+        {
+           $lineVersionDatasource = new LineVersionDatasource();
+           $lineVersionDatasource->setDatasource($datasource);
+           $lineVersionDatasource->setLineVersion($lineVersion);
+           $lineVersionDatasource->setCode($username);
+        }
+
+        $this->om->persist($lineVersionDatasource);
         $this->om->flush();
 
         return array(true,'line_version.persisted');

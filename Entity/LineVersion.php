@@ -976,15 +976,15 @@ class LineVersion
     {
         $this->printings->removeElement($printings);
     }
-	
+    
     /**
      * Remove printings
      *
      * @param Printing $printings
      */
-	public function getFormattedLineVersion()	
-	{
-		return $this->getLine()->getNumber() .'_'.$this->getVersion();
+    public function getFormattedLineVersion()    
+    {
+        return $this->getLine()->getNumber() .'_'.$this->getVersion();
     }
 
     /**
@@ -996,7 +996,7 @@ class LineVersion
     public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContent)
     {
         $this->lineGroupContents[] = $lineGroupContent;
-		$lineGroupContent->setLineVersion($this);
+        $lineGroupContent->setLineVersion($this);
 
         return $this;
     }
@@ -1020,7 +1020,7 @@ class LineVersion
     {
         return $this->lineGroupContents;
     }
-	
+    
     /**
      * Set lineGroupContents
      *
@@ -1030,11 +1030,11 @@ class LineVersion
     public function setLineGroupContents(Collection $lineGroupContents = null)
     {
         $this->lineGroupContents = $lineGroupContents;
-		if( $this->lineGroupContents ) {
-			foreach ($this->lineGroupContents as $lineGroupContent) {
-				$lineGroupContent->setLineVersion($this);
-			}
-		}
+        if( $this->lineGroupContents ) {
+            foreach ($this->lineGroupContents as $lineGroupContent) {
+                $lineGroupContent->setLineVersion($this);
+            }
+        }
         return $this;
     }
 }
