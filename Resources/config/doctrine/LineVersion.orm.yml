@@ -61,20 +61,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             fixed: false
             comment: ''
             column: backward_direction
-        accessibility:
-            type: boolean
-            nullable: true
-            comment: ''
-        airConditioned:
-            type: boolean
-            nullable: true
-            comment: ''
-            column: air_conditioned
-        certified:
-            type: boolean
-            nullable: false
-            comment: ''
-            default: false
         comment:
             type: text
             nullable: true

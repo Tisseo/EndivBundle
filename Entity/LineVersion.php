@@ -66,21 +66,6 @@ class LineVersion
     private $fgColor;
 
     /**
-     * @var boolean
-     */
-    private $accessibility;
-
-    /**
-     * @var boolean
-     */
-    private $airConditioned;
-
-    /**
-     * @var boolean
-     */
-    private $certified;
-
-    /**
      * @var string
      */
     private $comment;
@@ -515,75 +500,6 @@ class LineVersion
     public function getFgColor()
     {
         return $this->fgColor;
-    }
-
-    /**
-     * Set accessibility
-     *
-     * @param boolean $accessibility
-     * @return LineVersion
-     */
-    public function setAccessibility($accessibility)
-    {
-        $this->accessibility = $accessibility;
-
-        return $this;
-    }
-
-    /**
-     * Get accessibility
-     *
-     * @return boolean
-     */
-    public function getAccessibility()
-    {
-        return $this->accessibility;
-    }
-
-    /**
-     * Set certified
-     *
-     * @param boolean $certified
-     * @return LineVersion
-     */
-    public function setCertified($certified)
-    {
-        $this->certified = $certified;
-
-        return $this;
-    }
-
-    /**
-     * Get certified
-     *
-     * @return boolean
-     */
-    public function getCertified()
-    {
-        return $this->certified;
-    }
-
-    /**
-     * Set airConditioned
-     *
-     * @param boolean $airConditioned
-     * @return LineVersion
-     */
-    public function setAirConditioned($airConditioned)
-    {
-        $this->airConditioned = $airConditioned;
-
-        return $this;
-    }
-
-    /**
-     * Get airConditioned
-     *
-     * @return boolean
-     */
-    public function getAirConditioned()
-    {
-        return $this->airConditioned;
     }
 
     /**

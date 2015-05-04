@@ -1,0 +1,31 @@
+Tisseo\EndivBundle\Entity\Property:
+    type: entity
+    table: property
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+        default:
+            type: integer
+            nullable: false
+            length: 1
+            fixed: false
+    oneToMany:
+        lineVersionProperties:
+            targetEntity: LineVersionProperty
+            cascade: ['persist', 'remove']
+            mappedBy: property
+            inversedBy: null
+            orphanRemoval: true
+    lifecycleCallbacks: {  }
