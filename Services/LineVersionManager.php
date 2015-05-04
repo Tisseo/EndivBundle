@@ -93,7 +93,7 @@ class LineVersionManager extends SortManager
         {
             if ($lv->getEndDate() === null)
                 continue;
-            if (($lineVersion->getEndDate() !== null && $lv->getEndDate > $lineVersion->getEndDate()) || (!empty($result) && $result->getEndDate() > $lv->getEndDate()))
+            if (($lineVersion->getEndDate() !== null && $lv->getEndDate() > $lineVersion->getEndDate()) || (!empty($result) && $result->getEndDate() > $lv->getEndDate()))
                 continue;
             $result = $lv;
         }
@@ -335,10 +335,10 @@ class LineVersionManager extends SortManager
         $datasource = $query->getOneOrNullResult();
         if (!empty($datasource))
         {
-           $lineVersionDatasource = new LineVersionDatasource();
-           $lineVersionDatasource->setDatasource($datasource);
-           $lineVersionDatasource->setLineVersion($lineVersion);
-           $lineVersionDatasource->setCode($username);
+            $lineVersionDatasource = new LineVersionDatasource();
+            $lineVersionDatasource->setDatasource($datasource);
+            $lineVersionDatasource->setLineVersion($lineVersion);
+            $lineVersionDatasource->setCode($username);
         }
 
         $this->om->persist($lineVersionDatasource);
