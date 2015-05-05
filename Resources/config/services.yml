@@ -68,7 +68,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@doctrine.orm.line_group_manager']
     tisseo_endiv.property_manager:
         class: %tisseo_endiv.property_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
