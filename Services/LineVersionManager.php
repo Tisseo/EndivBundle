@@ -15,10 +15,13 @@ class LineVersionManager extends SortManager
     /** @var \Doctrine\ORM\EntityRepository $repository */
     private $repository = null;
 
-    public function __construct(ObjectManager $om)
+    private $lineGroupManager;
+
+    public function __construct(ObjectManager $om, LineGroupManager $lineGroupManager)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
+        $this->lineGroupManager = $lineGroupManager;
     }
 
     public function findAll()
@@ -313,7 +316,7 @@ class LineVersionManager extends SortManager
      *  - deleting all trips which don't belong anymore to the previous 
      *  LineVersion
      */
-    public function create(LineVersion $lineVersion, $username)
+    public function create(LineVersion $lineVersion, $username, $childLine = null)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
         if ($oldLineVersion)
@@ -343,6 +346,8 @@ class LineVersionManager extends SortManager
 
         $this->om->persist($lineVersionDatasource);
         $this->om->flush();
+
+        $this->lineGroupManager->setChildLine($lineVersion, $childLine);
 
         return array(true,'line_version.persisted');
     }

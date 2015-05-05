@@ -54,6 +54,7 @@ class LineManager extends SortManager
     public function findAllLinesWithSchematic($splitByPhysicalMode = false) {
         $query = $this->repository->createQueryBuilder('l')
             ->leftJoin('l.schematics', 'sc')
+            ->leftJoin('l.lineGroupGisContents', 'lgc')
             ->getQuery();
 
         $result = $this->sortLinesByNumber($query->getResult());

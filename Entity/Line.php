@@ -46,6 +46,10 @@ class Line
      */
     private $schematics;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $lineGroupGisContents;
 
     /**
      * Constructor
@@ -55,6 +59,7 @@ class Line
         $this->lineDatasources = new ArrayCollection();
         $this->lineVersions = new ArrayCollection();
         $this->schematics = new ArrayCollection();
+        $this->lineGroupGisContents = new ArrayCollection();
     }
 
     /**
@@ -387,5 +392,38 @@ class Line
     public function getSchematics()
     {
         return $this->schematics;
+    }
+
+    /**
+     * Add lineGroupGisContents
+     *
+     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @return Line
+     */
+    public function addLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
+    {
+        $this->lineGroupGisContents[] = $lineGroupGisContents;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineGroupGisContents
+     *
+     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     */
+    public function removeLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
+    {
+        $this->lineGroupGisContents->removeElement($lineGroupGisContents);
+    }
+
+    /**
+     * Get lineGroupGisContents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLineGroupGisContents()
+    {
+        return $this->lineGroupGisContents;
     }
 }

@@ -26,6 +26,8 @@ parameters:
     tisseo_endiv.routestop_manager.class: Tisseo\EndivBundle\Services\RouteStopManager
     tisseo_endiv.line_group_gis_manager.class: Tisseo\EndivBundle\Services\LineGroupGisManager
     tisseo_endiv.line_group_gis_content_manager.class: Tisseo\EndivBundle\Services\LineGroupGisContentManager
+    tisseo_endiv.line_group_manager.class: Tisseo\EndivBundle\Services\LineGroupManager
+    tisseo_endiv.line_group_content_manager.class: Tisseo\EndivBundle\Services\LineGroupContentManager
 
 services:
     tisseo_endiv.line_manager:
@@ -108,4 +110,10 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_group_gis_content_manager:
         class: %tisseo_endiv.line_group_gis_content_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_group_manager:
+        class: %tisseo_endiv.line_group_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_group_content_manager:
+        class: %tisseo_endiv.line_group_content_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
