@@ -142,4 +142,11 @@ Tisseo\EndivBundle\Entity\LineVersion:
             inversedBy: null
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
+        lineVersionProperties:
+            targetEntity: LineVersionProperty
+            cascade: ['persist', 'remove']
+            mappedBy: lineVersion
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

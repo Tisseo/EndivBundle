@@ -9,10 +9,10 @@ Tisseo\EndivBundle\Entity\LineVersionProperty:
             columns:
                 - property_id
     id:
-        id:
-            type: integer
-            generator:
-                strategy: AUTO
+        property:
+            associationKey: true
+        lineVersion:
+            associationKey: true
     fields:
         value:
             type: integer
