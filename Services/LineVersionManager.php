@@ -4,9 +4,9 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use Tisseo\EndivBundle\Services\LineGroupManager;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
-use Tisseo\EndivBundle\Services\TripManager;
 use Tisseo\EndivBundle\Entity\LineVersionDatasource;
 
 class LineVersionManager extends SortManager
