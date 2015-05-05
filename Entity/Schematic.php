@@ -195,8 +195,6 @@ class Schematic
                 '_' . sha1(uniqid(mt_rand(), true)) .
                 '.' . $this->file->guessExtension()
             );
-        } else {
-            $this->setName(null);
         }
     }
 
