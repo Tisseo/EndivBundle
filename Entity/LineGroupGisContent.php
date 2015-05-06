@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class LineGroupGisContent
 {
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
      * @var \Tisseo\EndivBundle\Entity\Line
      */
     private $line;
@@ -23,17 +18,6 @@ class LineGroupGisContent
      * @var \Tisseo\EndivBundle\Entity\LineGroupGis
      */
     private $lineGroupGis;
-
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set line

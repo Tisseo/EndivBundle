@@ -40,6 +40,11 @@ class LineGroupGisManager extends SortManager
      */
     public function save(LineGroupGis $lineGroupGis)
     {
+        /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
+        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
+            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+        }
+
         $this->om->persist($lineGroupGis);
         $this->om->flush();
 
