@@ -8,6 +8,9 @@ use Tisseo\EndivBundle\Entity\LineGroupGisContent;
 
 class LineGroupGisContentManager extends SortManager
 {
+    /**
+     * @var ObjectManager $om
+     */
     private $om = null;
 
     /** @var \Doctrine\ORM\EntityRepository $repository */
