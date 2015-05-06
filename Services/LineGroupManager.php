@@ -61,7 +61,7 @@ class LineGroupManager extends SortManager
     }
 
     /*
-     * setChildLine
+     * Get ChildLine
      * @param LineVersion $lineVersion
      * @return LineVersion or NULL
      *
@@ -78,49 +78,5 @@ class LineGroupManager extends SortManager
         ->setParameter('lv', $lineVersion);
 
         return $query->getOneOrNullResult();
-    }
-
-    /*
-     * setChildLine
-     * @param LineVersion $lineVersion
-     * @param LineVersion $childLine
-     * @return array(boolean, string)
-     *
-     * !!! call only for creation !!!
-     * Persist and save child line into database.
-     */
-    public function setChildLine(LineVersion $lineVersion, $childLine = null) {
-        if( !$childLine ) {
-            return array(true,'line_group.nothing_to_save');
-        }
-         
-        //create a new line group
-        $lineGroupName = $lineVersion->getLine()->getNumber()."_".$childLine->getLine()->getNumber()."_".$lineVersion->getStartDate()->format("Ymd");
-        $lineGroup = new LineGroup();
-        $lineGroup->setName($lineGroupName);
-        $this->om->persist($lineGroup);
-
-        // create father line group content
-        $fatherLineGroupContent = new LineGroupContent();
-        $fatherLineGroupContent->setLineVersion($lineVersion);
-        $fatherLineGroupContent->setIsParent(true);
-        $fatherLineGroupContent->setLineGroup($lineGroup);
-        $lineGroup->addLineGroupContent($fatherLineGroupContent);
-        $lineVersion->addLineGroupContent($fatherLineGroupContent);
-        $this->om->persist($fatherLineGroupContent);
-        $this->om->persist($lineVersion);
-
-        // create child line group content
-        $childLineGroupContent = new LineGroupContent();
-        $childLineGroupContent->setLineVersion($childLine);
-        $childLineGroupContent->setIsParent(false);
-        $childLineGroupContent->setLineGroup($lineGroup);
-        $lineGroup->addLineGroupContent($childLineGroupContent);
-        $childLine->addLineGroupContent($childLineGroupContent);
-        $this->om->persist($childLineGroupContent);
-        $this->om->persist($childLine);  
-
-        $this->om->flush();
-        return array(true,'line_group.persisted');
     }
 }

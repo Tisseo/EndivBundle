@@ -28,6 +28,7 @@ parameters:
     tisseo_endiv.line_group_gis_content_manager.class: Tisseo\EndivBundle\Services\LineGroupGisContentManager
     tisseo_endiv.line_group_manager.class: Tisseo\EndivBundle\Services\LineGroupManager
     tisseo_endiv.line_group_content_manager.class: Tisseo\EndivBundle\Services\LineGroupContentManager
+    tisseo_endiv.modification_manager.class: Tisseo\EndivBundle\Services\ModificationManager
 
 services:
     tisseo_endiv.line_manager:
@@ -68,7 +69,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.line_group_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.property_manager:
         class: %tisseo_endiv.property_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
@@ -116,4 +117,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_group_content_manager:
         class: %tisseo_endiv.line_group_content_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.modification_manager:
+        class: %tisseo_endiv.modification_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']

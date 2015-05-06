@@ -26,7 +26,6 @@ class LineGroupContent
      */
     private $lineGroup;
 
-
     /**
      * Set isParent
      *

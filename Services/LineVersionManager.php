@@ -4,7 +4,6 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
-use Tisseo\EndivBundle\Services\LineGroupManager;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Entity\LineVersionDatasource;
@@ -15,13 +14,10 @@ class LineVersionManager extends SortManager
     /** @var \Doctrine\ORM\EntityRepository $repository */
     private $repository = null;
 
-    private $lineGroupManager;
-
-    public function __construct(ObjectManager $om, LineGroupManager $lineGroupManager)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
-        $this->lineGroupManager = $lineGroupManager;
     }
 
     public function findAll()
@@ -327,8 +323,29 @@ class LineVersionManager extends SortManager
                 return array(false,'line_version.closure_error');
             $this->om->persist($oldLineVersion);
         }
+
+        foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
+            $this->om->persist($lineGroupContent->getLineGroup());
         
+        $this->om->flush();
+
+        /* trick here, in order to resolve potential modifications
+         * stape1: get resolved modifications from the new LineVersion
+         * stape2: unlink these modifications from the new LineVersion
+         * stape3: resolve all modifications with the new LineVersion
+         */
+        $modifications = $lineVersion->getModifications();
+        $lineVersion->setModifications(new ArrayCollection());
         $this->om->persist($lineVersion);
+
+        foreach($modifications as $modification)
+        {
+            $modification->setResolvedIn($lineVersion);
+            $this->om->persist($modification->getLineVersion());
+        }
+        
+        foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
+            $this->om->persist($lineGroupContent);    
 
         $query = $this->om->createQuery("
             SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
@@ -347,9 +364,7 @@ class LineVersionManager extends SortManager
         $this->om->persist($lineVersionDatasource);
         $this->om->flush();
 
-        $this->lineGroupManager->setChildLine($lineVersion, $childLine);
-
-        return array(true,'line_version.persisted');
+        return array(true, 'line_version.persisted');
     }
 
     /*
@@ -364,6 +379,6 @@ class LineVersionManager extends SortManager
         $this->om->persist($lineVersion);
         $this->om->flush();
 
-        return array(true,'line_version.persisted');
+        return array(true, 'line_version.persisted');
     }
 }

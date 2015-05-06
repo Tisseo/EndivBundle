@@ -129,7 +129,7 @@ class LineVersion
      * Add information from $previousLineVersion if not null
      * Link to a specific Line if $line is not null
      */
-    public function __construct($properties, LineVersion $previousLineVersion = null, Line $line = null)
+    public function __construct($properties = null, LineVersion $previousLineVersion = null, Line $line = null)
     {
         $this->lineGroupContents = new ArrayCollection();
         $this->gridCalendars = new ArrayCollection();
@@ -162,11 +162,11 @@ class LineVersion
         {
             $this->setLine($line);
         }
-    
-        $this->synchronizeLineVersionProperties($properties);
+
+        if ($properties !== null) 
+            $this->synchronizeLineVersionProperties($properties);
 
         $this->processStatus();
-
     }
 
     public function getProperty()
@@ -190,6 +190,34 @@ class LineVersion
             else
                 $lineVersionProperty->setValue(false);
         }
+    }
+
+    public function setChildLine(LineVersion $childLine = null)
+    {
+        if (empty($childLine) || $childLine === $this)
+            return;
+
+        $lineGroup = new LineGroup();
+        $lineGroup->setName($this->getLine()->getNumber()."_".$childLine->getLine()->getNumber()."_".$this->getStartDate()->format("Ymd"));
+
+        $fatherLineGroupContent = new LineGroupContent();
+        $fatherLineGroupContent->setLineVersion($this);
+        $fatherLineGroupContent->setIsParent(true);
+        $fatherLineGroupContent->setLineGroup($lineGroup);
+
+        $this->addLineGroupContent($fatherLineGroupContent);
+
+        $childLineGroupContent = new LineGroupContent();
+        $childLineGroupContent->setLineVersion($childLine);
+        $childLineGroupContent->setIsParent(false);
+        $childLineGroupContent->setLineGroup($lineGroup);
+        
+        $childLine->addLineGroupContent($childLineGroupContent);
+    }
+
+    public function getChildLine()
+    {
+        return null;
     }
 
     public function synchronizeLineVersionProperties($properties)
@@ -714,6 +742,16 @@ class LineVersion
     {
         $this->gridCalendars->clear();
         return $this;
+    }
+
+    public function setResolvedModifications($modifications)
+    {
+        $this->modifications = $modifications;
+    }
+
+    public function getResolvedModifications()
+    {
+        return null;
     }
 
     /**
