@@ -14,7 +14,6 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
         name:
             type: string
             nullable: true
-            length: 20
             fixed: false
             comment: ''
         nbBus:
