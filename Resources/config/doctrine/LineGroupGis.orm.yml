@@ -32,7 +32,7 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
     oneToMany:
         lineGroupGisContents:
             targetEntity: LineGroupGisContent
-            cascade: ['persist', 'remove']
+            cascade: ['remove']
             mappedBy: lineGroupGis
             inversedBy: null
             orphanRemoval: true

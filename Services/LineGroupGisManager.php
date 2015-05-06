@@ -9,6 +9,9 @@ use Tisseo\EndivBundle\Entity\LineGroupGis;
 
 class LineGroupGisManager extends SortManager
 {
+    /**
+     * @var ObjectManager $om
+     */
     private $om = null;
 
     /** @var \Doctrine\ORM\EntityRepository $repository */
@@ -20,7 +23,7 @@ class LineGroupGisManager extends SortManager
         $this->repository = $om->getRepository('TisseoEndivBundle:LineGroupGis');
     }
 
-    public function findAll()
+    public function findAll()   
     {
         return ($this->repository->findAll());
     }
@@ -43,6 +46,14 @@ class LineGroupGisManager extends SortManager
         /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
         foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
             $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+        }
+
+        $this->om->persist($lineGroupGis);
+
+        /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
+        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
+            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+            $this->om->persist($lineGroupGisContent);
         }
 
         $this->om->persist($lineGroupGis);
