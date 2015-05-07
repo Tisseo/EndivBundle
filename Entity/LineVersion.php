@@ -143,10 +143,12 @@ class LineVersion
         if ($previousLineVersion !== null)
         {
             if ($previousLineVersion->getEndDate() !== null)
-            {
                 $this->startDate = $previousLineVersion->getEndDate();
-                $this->startDate->modify('+1 day');
-            }
+            else
+                $this->startDate = $previousLineVersion->getPlannedEndDate();
+
+            $this->startDate->modify('+1 day');
+
             $this->version = $previousLineVersion->getVersion() + 1;
             $this->name = $previousLineVersion->getName();
             $this->forwardDirection = $previousLineVersion->getForwardDirection();
@@ -155,7 +157,8 @@ class LineVersion
             $this->bgColor = $previousLineVersion->getBgColor();
             $this->depot = $previousLineVersion->getDepot();
             $this->setLine($previousLineVersion->getLine());
-            $this->setLineVersionProperties($previousLineVersion->getLineVersionProperties());
+            if (!$previousLineVersion->getLineVersionProperties()->isEmpty())
+                $this->setNewLineVersionProperties($previousLineVersion->getLineVersionProperties());
         }
 
         if ($line !== null)
@@ -192,6 +195,11 @@ class LineVersion
         }
     }
 
+    public function getChildLine()
+    {
+        return null;
+    }
+
     public function setChildLine(LineVersion $childLine = null)
     {
         if (empty($childLine) || $childLine === $this)
@@ -215,9 +223,29 @@ class LineVersion
         $childLine->addLineGroupContent($childLineGroupContent);
     }
 
-    public function getChildLine()
+    public function isParent()
     {
-        return null;
+        foreach($this->lineGroupContents as $lineGroupContent)
+        {
+            if ($lineGroupContent->getIsParent())
+                return true;
+        }
+
+        return false;
+    }
+
+    public function getChildLines()
+    {
+        $result = new ArrayCollection();
+
+        foreach($this->lineGroupContents as $lineGroupContent)
+        {
+            $childLines = $lineGroupContent->getChildLines();
+            if (!empty($childLines))
+               $result = array_merge($result->toArray(), $childLines->toArray());
+        }
+
+        return $result;
     }
 
     public function synchronizeLineVersionProperties($properties)
@@ -1078,4 +1106,22 @@ class LineVersion
     {
         $this->lineVersionProperties = $lineVersionProperties;
     }
+
+    /**
+     * Set newLineVersionProperties
+     *
+     * @return Collection 
+     */
+    public function setNewLineVersionProperties($lineVersionProperties)
+    {
+        foreach($lineVersionProperties as $lineVersionProperty)
+        {
+            $newLineVersionProperty = new LineVersionProperty();
+            $newLineVersionProperty->setValue($lineVersionProperty->getValue());
+            $newLineVersionProperty->setProperty($lineVersionProperty->getProperty());
+            $newLineVersionProperty->setLineVersion($this);
+            $this->addLineVersionProperty($newLineVersionProperty);
+        }
+    }
+
 }

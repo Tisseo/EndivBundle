@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * LineGroupContent
@@ -25,6 +26,24 @@ class LineGroupContent
      * @var \Tisseo\EndivBundle\Entity\LineGroup
      */
     private $lineGroup;
+
+    public function getChildLines()
+    {
+        if ($this->isParent)
+        {
+            $childLines = new ArrayCollection();
+
+            foreach($this->lineGroup->getLineGroupContents() as $otherGroupContent)
+            {
+                if ($otherGroupContent !== $this)
+                    $childLines[] = $otherGroupContent->getLineVersion();
+            }
+    
+            return $childLines;
+        }
+
+        return null;
+    }
 
     /**
      * Set isParent
