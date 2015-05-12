@@ -381,4 +381,28 @@ class LineVersionManager extends SortManager
 
         return array(true, 'line_version.persisted');
     }
+
+    /*
+     * delete
+     * @param integer $lineVersionId
+     *
+     * delete line version
+     */
+    public function delete($lineVersionId)
+    {
+        $lineVersion = $this->find($lineVersionId);
+        if($lineVersion == null) {
+            return null;
+        }
+
+        $previousLineVersion = $this->findPreviousLineVersion($lineVersion);
+        if( $previousLineVersion !== null ) {
+            $previousLineVersion->setEndDate(null);
+            $this->om->persist($previousLineVersion);
+        }
+        $this->om->remove($lineVersion);
+        $this->om->flush();
+
+        return array(true, 'line_version.deleted');
+    }    
 }
