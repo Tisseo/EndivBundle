@@ -38,6 +38,9 @@ class CityManager extends SortManager
 	
 	public function findCityLike( $term )
 	{
+		$specials = array("-", " ", "'");
+		$cleanTerm = str_replace($specials, "_", $term);
+		
 		$query = $this->om->createQuery("
 			SELECT c.name as name, c.insee as insee, c.id as id
 			FROM Tisseo\EndivBundle\Entity\City c
@@ -46,7 +49,7 @@ class CityManager extends SortManager
 			ORDER BY c.name
 		");
 	 
-		$query->setParameter('term', '%'.$term.'%');
+		$query->setParameter('term', '%'.$cleanTerm.'%');
 	 
 		$shs = $query->getResult();
 		$array = array();

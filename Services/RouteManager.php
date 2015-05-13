@@ -121,4 +121,24 @@ class RouteManager extends SortManager {
             return $trips;
     }
 
+    public function hasTrips($id){
+         $query = $this->om->createQuery('
+            SELECT COUNT(trip.route)
+            FROM Tisseo\EndivBundle\Entity\Trip trip
+            WHERE trip.route = :id
+            ')
+                ->setParameter('id',$id)
+                ;
+
+                $hasServices = $query->getResult();
+
+                if($hasServices[0][1] === 0) {
+                    return false;
+
+                }
+                else{
+                    return true;
+                }
+    }
+
 }

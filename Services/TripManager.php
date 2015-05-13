@@ -33,6 +33,11 @@ class TripManager
         return empty($tripName) ? null : $this->repository->findOneBy(array('name'=>$tripName));
     }
 
+    public function findByRoute($routeId)
+    {
+        return empty($routeId) ? null : $this->repository->findBy(array('route'=>$routeId));
+    }
+
     public function hasTrips($id)
     {
         $query = $this->om->createQuery("

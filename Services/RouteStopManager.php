@@ -82,6 +82,23 @@ class RouteStopManager extends SortManager {
         $this->om->refresh($Stop);
     }
 
+    public function remove(RouteStop $routestop)
+
+    {
+        if($routestop->getId()){
+            
+            $this->om->remove($routestop);
+        
+            try{
+                $this->om->flush();
+
+            }
+            catch(\ErrorException $err) {
+                var_dump($err);
+            }
+        }
+    }
+
 
 
 }

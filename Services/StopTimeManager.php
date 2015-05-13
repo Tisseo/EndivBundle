@@ -40,6 +40,7 @@ class StopTimeManager extends SortManager
             $this->om->flush();
             $this->om->refresh($Stop);
             $newId = $Stop->getId();
+
             $Stop->setId($newId);
 
         }

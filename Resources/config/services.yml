@@ -101,8 +101,8 @@ services:
         class: %tisseo_endiv.routestop_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.stoptime_manager:
-            class: %tisseo_endiv.stoptime_manager.class%
-            arguments: ['@doctrine.orm.endiv_entity_manager']
+        class: %tisseo_endiv.stoptime_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_group_gis_manager:
         class: %tisseo_endiv.line_group_gis_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']

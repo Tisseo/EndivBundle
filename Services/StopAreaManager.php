@@ -56,16 +56,21 @@ class StopAreaManager extends SortManager
 	
 	public function findStopAreasLike( $term, $limit = 10 )
 	{
+		$specials = array("-", " ", "'");
+		$cleanTerm = str_replace($specials, "_", $term);
+		
 		$connection = $this->em->getConnection()->getWrappedConnection();
 		$stmt = $connection->prepare("
-			SELECT sa.short_name as name, c.name as city, sa.id as id
+			SELECT DISTINCT sa.short_name as name, c.name as city, sa.id as id
 			FROM stop_area sa
 			JOIN city c on c.id = sa.city_id
+			LEFT JOIN alias a on a.stop_area_id = sa.id
 			WHERE UPPER(unaccent(sa.short_name)) LIKE UPPER(unaccent(:term))
 			OR UPPER(unaccent(sa.long_name)) LIKE UPPER(unaccent(:term))
+			OR UPPER(unaccent(a.name)) LIKE UPPER(unaccent(:term))
 			ORDER BY sa.short_name, c.name
 		");
-		$stmt->bindValue(':term', '%'.$term.'%');
+		$stmt->bindValue(':term', '%'.$cleanTerm.'%');
 		$stmt->execute();
 		$shs = $stmt->fetchAll();
 		

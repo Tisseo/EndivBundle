@@ -18,7 +18,8 @@ class LogManager extends SortManager
 
     public function findAll()
     {   
-        return ($this->repository->findAll());
+        //return ($this->repository->findAll());
+        return ($this->repository->findBy(array(), array('datetime' => 'asc')));
     }   
 
     public function find($LogId)
