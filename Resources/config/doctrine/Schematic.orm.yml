@@ -27,6 +27,10 @@ Tisseo\EndivBundle\Entity\Schematic:
             type: datetime
             nullable: false
             comment: ''
+        deprecated:
+            type: boolean
+            nullable: true
+            comment: ''
         filePath:
             type: text
             nullable: true

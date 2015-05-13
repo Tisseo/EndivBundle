@@ -14,15 +14,25 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
         name:
             type: string
             nullable: true
-            length: 20
+            fixed: false
+            comment: ''
+        nbBus:
+            column: nb_bus
+            type: string
+            nullable: true
+            fixed: false
+            comment: ''
+        comment:
+            type: text
+            nullable: true
+            length: null
             fixed: false
             comment: ''
     oneToMany:
         lineGroupGisContents:
             targetEntity: LineGroupGisContent
-            cascade: ['persist', 'remove']
+            cascade: ['remove']
             mappedBy: lineGroupGis
             inversedBy: null
             orphanRemoval: true
-            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

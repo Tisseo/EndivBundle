@@ -1,6 +1,6 @@
-Tisseo\EndivBundle\Entity\LineGroup:
+Tisseo\EndivBundle\Entity\Property:
     type: entity
-    table: line_group
+    table: property
     id:
         id:
             type: integer
@@ -13,16 +13,19 @@ Tisseo\EndivBundle\Entity\LineGroup:
     fields:
         name:
             type: string
-            nullable: true
-            length: 20
+            nullable: false
+            length: 255
             fixed: false
-            comment: ''
+        default:
+            type: integer
+            nullable: false
+            length: 1
+            fixed: false
     oneToMany:
-        lineGroupContents:
-            targetEntity: LineGroupContent
-            cascade: ['remove']
-            mappedBy: lineGroup
+        lineVersionProperties:
+            targetEntity: LineVersionProperty
+            cascade: ['persist', 'remove']
+            mappedBy: property
             inversedBy: null
             orphanRemoval: true
-            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

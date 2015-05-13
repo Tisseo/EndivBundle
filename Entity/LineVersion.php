@@ -66,21 +66,6 @@ class LineVersion
     private $fgColor;
 
     /**
-     * @var boolean
-     */
-    private $accessibility;
-
-    /**
-     * @var boolean
-     */
-    private $airConditioned;
-
-    /**
-     * @var boolean
-     */
-    private $certified;
-
-    /**
      * @var string
      */
     private $comment;
@@ -131,6 +116,11 @@ class LineVersion
     private $lineGroupContents;
 
     /**
+     * @var Collection
+     */
+    private $lineVersionProperties;
+
+    /**
      * Constructor
      * @param LineVersion $previousLineVersion = null
      * @param Line $line = null
@@ -139,35 +129,36 @@ class LineVersion
      * Add information from $previousLineVersion if not null
      * Link to a specific Line if $line is not null
      */
-    public function __construct(LineVersion $previousLineVersion = null, Line $line = null)
+    public function __construct($properties = null, LineVersion $previousLineVersion = null, Line $line = null)
     {
         $this->lineGroupContents = new ArrayCollection();
         $this->gridCalendars = new ArrayCollection();
         $this->printings = new ArrayCollection();
         $this->modifications = new ArrayCollection();
         $this->routes = new ArrayCollection();
+        $this->lineVersionProperties = new ArrayCollection();
         $this->startDate = new \Datetime();
-
         $this->version = 1;
 
         if ($previousLineVersion !== null)
         {
             if ($previousLineVersion->getEndDate() !== null)
-            {
                 $this->startDate = $previousLineVersion->getEndDate();
-                $this->startDate->modify('+1 day');
-            }
+            else
+                $this->startDate = $previousLineVersion->getPlannedEndDate();
+
+            $this->startDate->modify('+1 day');
+
             $this->version = $previousLineVersion->getVersion() + 1;
             $this->name = $previousLineVersion->getName();
             $this->forwardDirection = $previousLineVersion->getForwardDirection();
             $this->backwardDirection = $previousLineVersion->getBackwardDirection();
             $this->fgColor = $previousLineVersion->getFgColor();
             $this->bgColor = $previousLineVersion->getBgColor();
-            $this->accessibility = $previousLineVersion->getAccessibility();
-            $this->airConditioned = $previousLineVersion->getAirConditioned();
-            $this->certified = $previousLineVersion->getCertified();
             $this->depot = $previousLineVersion->getDepot();
             $this->setLine($previousLineVersion->getLine());
+            if (!$previousLineVersion->getLineVersionProperties()->isEmpty())
+                $this->setNewLineVersionProperties($previousLineVersion->getLineVersionProperties());
         }
 
         if ($line !== null)
@@ -175,7 +166,101 @@ class LineVersion
             $this->setLine($line);
         }
 
+        if ($properties !== null) 
+            $this->synchronizeLineVersionProperties($properties);
+
         $this->processStatus();
+    }
+
+    public function getProperty()
+    {
+        $properties = new ArrayCollection();
+
+        foreach($this->lineVersionProperties as $lineVersionProperty)
+        {
+            $properties[] = $lineVersionProperty->getProperty();
+        }
+
+        return $properties;
+    }
+
+    public function setProperty($properties)
+    {
+        foreach($this->lineVersionProperties as $lineVersionProperty)
+        {
+            if ($properties->contains($lineVersionProperty->getProperty()))
+                $lineVersionProperty->setValue(true);
+            else
+                $lineVersionProperty->setValue(false);
+        }
+    }
+
+    public function getChildLine()
+    {
+        return null;
+    }
+
+    public function setChildLine(LineVersion $childLine = null)
+    {
+        if (empty($childLine) || $childLine === $this)
+            return;
+
+        $lineGroup = new LineGroup();
+        $lineGroup->setName($this->getLine()->getNumber()."_".$childLine->getLine()->getNumber()."_".$this->getStartDate()->format("Ymd"));
+
+        $fatherLineGroupContent = new LineGroupContent();
+        $fatherLineGroupContent->setLineVersion($this);
+        $fatherLineGroupContent->setIsParent(true);
+        $fatherLineGroupContent->setLineGroup($lineGroup);
+
+        $this->addLineGroupContent($fatherLineGroupContent);
+
+        $childLineGroupContent = new LineGroupContent();
+        $childLineGroupContent->setLineVersion($childLine);
+        $childLineGroupContent->setIsParent(false);
+        $childLineGroupContent->setLineGroup($lineGroup);
+        
+        $childLine->addLineGroupContent($childLineGroupContent);
+    }
+
+    public function isParent()
+    {
+        foreach($this->lineGroupContents as $lineGroupContent)
+        {
+            if ($lineGroupContent->getIsParent())
+                return true;
+        }
+
+        return false;
+    }
+
+    public function getChildLines()
+    {
+        $result = new ArrayCollection();
+
+        foreach($this->lineGroupContents as $lineGroupContent)
+        {
+            $childLines = $lineGroupContent->getChildLines();
+            if (!empty($childLines))
+               $result = array_merge($result->toArray(), $childLines->toArray());
+        }
+
+        return $result;
+    }
+
+    public function synchronizeLineVersionProperties($properties)
+    {
+        foreach($properties as $property)
+        {
+            if (!($this->getProperty()->contains($property)))
+            {
+                $lineVersionProperty = new LineVersionProperty();
+                $lineVersionProperty->setProperty($property);
+                $lineVersionProperty->setLineVersion($this);
+                $lineVersionProperty->setValue($property->getDefault());
+                $this->addLineVersionProperty($lineVersionProperty);
+            }
+        }
     }
 
     /**
@@ -518,75 +603,6 @@ class LineVersion
     }
 
     /**
-     * Set accessibility
-     *
-     * @param boolean $accessibility
-     * @return LineVersion
-     */
-    public function setAccessibility($accessibility)
-    {
-        $this->accessibility = $accessibility;
-
-        return $this;
-    }
-
-    /**
-     * Get accessibility
-     *
-     * @return boolean
-     */
-    public function getAccessibility()
-    {
-        return $this->accessibility;
-    }
-
-    /**
-     * Set certified
-     *
-     * @param boolean $certified
-     * @return LineVersion
-     */
-    public function setCertified($certified)
-    {
-        $this->certified = $certified;
-
-        return $this;
-    }
-
-    /**
-     * Get certified
-     *
-     * @return boolean
-     */
-    public function getCertified()
-    {
-        return $this->certified;
-    }
-
-    /**
-     * Set airConditioned
-     *
-     * @param boolean $airConditioned
-     * @return LineVersion
-     */
-    public function setAirConditioned($airConditioned)
-    {
-        $this->airConditioned = $airConditioned;
-
-        return $this;
-    }
-
-    /**
-     * Get airConditioned
-     *
-     * @return boolean
-     */
-    public function getAirConditioned()
-    {
-        return $this->airConditioned;
-    }
-
-    /**
      * Set comment
      *
      * @param string $comment
@@ -754,6 +770,16 @@ class LineVersion
     {
         $this->gridCalendars->clear();
         return $this;
+    }
+
+    public function setResolvedModifications($modifications)
+    {
+        $this->modifications = $modifications;
+    }
+
+    public function getResolvedModifications()
+    {
+        return null;
     }
 
     /**
@@ -976,15 +1002,15 @@ class LineVersion
     {
         $this->printings->removeElement($printings);
     }
-	
+    
     /**
      * Remove printings
      *
      * @param Printing $printings
      */
-	public function getFormattedLineVersion()	
-	{
-		return $this->getLine()->getNumber() .'_'.$this->getVersion();
+    public function getFormattedLineVersion()    
+    {
+        return $this->getLine()->getNumber() .'_'.$this->getVersion();
     }
 
     /**
@@ -993,9 +1019,10 @@ class LineVersion
      * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
      * @return LineGroup
      */
-    public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContent)
     {
-        $this->lineGroupContents[] = $lineGroupContents;
+        $this->lineGroupContents[] = $lineGroupContent;
+        $lineGroupContent->setLineVersion($this);
 
         return $this;
     }
@@ -1005,9 +1032,9 @@ class LineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
      */
-    public function removeLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)
+    public function removeLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContent)
     {
-        $this->lineGroupContents->removeElement($lineGroupContents);
+        $this->lineGroupContents->removeElement($lineGroupContent);
     }
 
     /**
@@ -1019,4 +1046,82 @@ class LineVersion
     {
         return $this->lineGroupContents;
     }
+    
+    /**
+     * Set lineGroupContents
+     *
+     * @param Collection $lineGroupContents
+     * @return LineVersion
+     */
+    public function setLineGroupContents(Collection $lineGroupContents = null)
+    {
+        $this->lineGroupContents = $lineGroupContents;
+        if( $this->lineGroupContents ) {
+            foreach ($this->lineGroupContents as $lineGroupContent) {
+                $lineGroupContent->setLineVersion($this);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add lineVersionProperties
+     *
+     * @param LineVersionProperty $lineVersionProperties
+     * @return Property
+     */
+    public function addLineVersionProperty(LineVersionProperty $lineVersionProperties)
+    {
+        $this->lineVersionProperties[] = $lineVersionProperties;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineVersionProperties
+     *
+     * @param LineVersionProperty $lineVersionProperties
+     */
+    public function removeLineVersionProperty(LineVersionProperty $lineVersionProperties)
+    {
+        $this->lineVersionProperties->removeElement($lineVersionProperties);
+    }
+
+    /**
+     * Get lineVersionProperties
+     *
+     * @return Collection 
+     */
+    public function getLineVersionProperties()
+    {
+        return $this->lineVersionProperties;
+    }
+
+    /**
+     * Set lineVersionProperties
+     *
+     * @return Collection 
+     */
+    public function setLineVersionProperties($lineVersionProperties)
+    {
+        $this->lineVersionProperties = $lineVersionProperties;
+    }
+
+    /**
+     * Set newLineVersionProperties
+     *
+     * @return Collection 
+     */
+    public function setNewLineVersionProperties($lineVersionProperties)
+    {
+        foreach($lineVersionProperties as $lineVersionProperty)
+        {
+            $newLineVersionProperty = new LineVersionProperty();
+            $newLineVersionProperty->setValue($lineVersionProperty->getValue());
+            $newLineVersionProperty->setProperty($lineVersionProperty->getProperty());
+            $newLineVersionProperty->setLineVersion($this);
+            $this->addLineVersionProperty($newLineVersionProperty);
+        }
+    }
+
 }

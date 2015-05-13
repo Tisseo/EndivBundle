@@ -9,11 +9,10 @@ Tisseo\EndivBundle\Entity\LineGroupGisContent:
             columns:
                 - line_group_gis_id
     id:
-        id:
-            type: integer
-            generator:
-                strategy: AUTO
-
+        line:
+            associationKey: true
+        lineGroupGis:
+            associationKey: true
     manyToOne:
         line:
             targetEntity: Line

@@ -11,6 +11,7 @@ parameters:
     tisseo_endiv.physical_mode_manager.class: Tisseo\EndivBundle\Services\PhysicalModeManager
     tisseo_endiv.poi_type_manager.class: Tisseo\EndivBundle\Services\PoiTypeManager
     tisseo_endiv.line_version_manager.class: Tisseo\EndivBundle\Services\LineVersionManager
+    tisseo_endiv.property_manager.class: Tisseo\EndivBundle\Services\PropertyManager
     tisseo_endiv.printing_manager.class: Tisseo\EndivBundle\Services\PrintingManager
     tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
     tisseo_endiv.grid_calendar_manager.class: Tisseo\EndivBundle\Services\GridCalendarManager
@@ -25,7 +26,10 @@ parameters:
     tisseo_endiv.routestop_manager.class: Tisseo\EndivBundle\Services\RouteStopManager
     tisseo_endiv.stoptime_manager.class: Tisseo\EndivBundle\Services\StopTimeManager
     tisseo_endiv.line_group_gis_manager.class: Tisseo\EndivBundle\Services\LineGroupGisManager
-    tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
+    tisseo_endiv.line_group_gis_content_manager.class: Tisseo\EndivBundle\Services\LineGroupGisContentManager
+    tisseo_endiv.line_group_manager.class: Tisseo\EndivBundle\Services\LineGroupManager
+    tisseo_endiv.line_group_content_manager.class: Tisseo\EndivBundle\Services\LineGroupContentManager
+    tisseo_endiv.modification_manager.class: Tisseo\EndivBundle\Services\ModificationManager
 
 services:
     tisseo_endiv.line_manager:
@@ -67,6 +71,9 @@ services:
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.property_manager:
+        class: %tisseo_endiv.property_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.grid_calendar_manager:
         class: %tisseo_endiv.grid_calendar_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
@@ -105,5 +112,17 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.line_group_gis_manager:
         class: %tisseo_endiv.line_group_gis_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_group_gis_content_manager:
+        class: %tisseo_endiv.line_group_gis_content_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_group_manager:
+        class: %tisseo_endiv.line_group_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_group_content_manager:
+        class: %tisseo_endiv.line_group_content_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.modification_manager:
+        class: %tisseo_endiv.modification_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
 

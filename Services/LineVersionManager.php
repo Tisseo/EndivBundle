@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
-use Tisseo\EndivBundle\Services\TripManager;
+use Tisseo\EndivBundle\Entity\LineVersionDatasource;
 
 class LineVersionManager extends SortManager
 {
@@ -92,7 +92,7 @@ class LineVersionManager extends SortManager
         {
             if ($lv->getEndDate() === null)
                 continue;
-            if (($lineVersion->getEndDate() !== null && $lv->getEndDate > $lineVersion->getEndDate()) || (!empty($result) && $result->getEndDate() > $lv->getEndDate()))
+            if (($lineVersion->getEndDate() !== null && $lv->getEndDate() > $lineVersion->getEndDate()) || (!empty($result) && $result->getEndDate() > $lv->getEndDate()))
                 continue;
             $result = $lv;
         }
@@ -312,7 +312,7 @@ class LineVersionManager extends SortManager
      *  - deleting all trips which don't belong anymore to the previous 
      *  LineVersion
      */
-    public function create(LineVersion $lineVersion)
+    public function create(LineVersion $lineVersion, $username, $childLine = null)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
         if ($oldLineVersion)
@@ -323,10 +323,48 @@ class LineVersionManager extends SortManager
                 return array(false,'line_version.closure_error');
             $this->om->persist($oldLineVersion);
         }
-        $this->om->persist($lineVersion);
+
+        foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
+            $this->om->persist($lineGroupContent->getLineGroup());
+        
         $this->om->flush();
 
-        return array(true,'line_version.persisted');
+        /* trick here, in order to resolve potential modifications
+         * stape1: get resolved modifications from the new LineVersion
+         * stape2: unlink these modifications from the new LineVersion
+         * stape3: resolve all modifications with the new LineVersion
+         */
+        $modifications = $lineVersion->getModifications();
+        $lineVersion->setModifications(new ArrayCollection());
+        $this->om->persist($lineVersion);
+
+        foreach($modifications as $modification)
+        {
+            $modification->setResolvedIn($lineVersion);
+            $this->om->persist($modification->getLineVersion());
+        }
+        
+        foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
+            $this->om->persist($lineGroupContent);    
+
+        $query = $this->om->createQuery("
+            SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
+            WHERE ds.name = ?1
+        ")->setParameter(1, 'Information Voyageurs');
+      
+        $datasource = $query->getOneOrNullResult();
+        if (!empty($datasource))
+        {
+            $lineVersionDatasource = new LineVersionDatasource();
+            $lineVersionDatasource->setDatasource($datasource);
+            $lineVersionDatasource->setLineVersion($lineVersion);
+            $lineVersionDatasource->setCode($username);
+        }
+
+        $this->om->persist($lineVersionDatasource);
+        $this->om->flush();
+
+        return array(true, 'line_version.persisted');
     }
 
     /*
@@ -341,6 +379,30 @@ class LineVersionManager extends SortManager
         $this->om->persist($lineVersion);
         $this->om->flush();
 
-        return array(true,'line_version.persisted');
+        return array(true, 'line_version.persisted');
     }
+
+    /*
+     * delete
+     * @param integer $lineVersionId
+     *
+     * delete line version
+     */
+    public function delete($lineVersionId)
+    {
+        $lineVersion = $this->find($lineVersionId);
+        if($lineVersion == null) {
+            return null;
+        }
+
+        $previousLineVersion = $this->findPreviousLineVersion($lineVersion);
+        if( $previousLineVersion !== null ) {
+            $previousLineVersion->setEndDate(null);
+            $this->om->persist($previousLineVersion);
+        }
+        $this->om->remove($lineVersion);
+        $this->om->flush();
+
+        return array(true, 'line_version.deleted');
+    }    
 }

@@ -34,20 +34,31 @@ class SchematicManager extends SortManager
 
     /**
      * @param $lineId
-     * @param int $limit
+     * @param int $limit, if 0, no result limitation
+     * @param boolean $isFile default false
      * @return array Tisseo\EndivBundle\Entity\Schematic
      */
-    public function findLineSchematics($lineId, $limit=5)
+    public function findLineSchematics($lineId, $limit=5, $isFile = false)
     {
         $finalResult = array();
         if (empty($lineId)) return $finalResult;
 
-        $query = $this->repository->createQueryBuilder('sc')
-            ->where('sc.line = :lineId')
-            ->orderBy('sc.date', 'DESC')
-            ->setMaxResults((int) $limit)
-            ->setParameter('lineId', $lineId)
-            ->getQuery();
+        $qBuilder = $this->repository->createQueryBuilder('sc')
+            ->where('sc.line = :lineId');
+
+
+        if ($isFile == true) {
+            $qBuilder->andWhere("sc.filePath != '' ");
+        }
+
+        if ($limit != 0) {
+            $qBuilder->setMaxResults((int)$limit);
+        }
+
+        $qBuilder->setParameter('lineId', $lineId);
+        $qBuilder->orderBy('sc.date', 'DESC');
+
+        $query = $qBuilder->getQuery();
 
         try {
             $results = $query->getResult();
@@ -57,6 +68,7 @@ class SchematicManager extends SortManager
 
         return $results;
     }
+
     /*
      * save
      * @param Schematic $schematic
@@ -69,6 +81,6 @@ class SchematicManager extends SortManager
         $this->om->persist($schematic);
         $this->om->flush();
 
-        return array(true,'line_schema.persisted');
+        return array(true,'line_schema.persisted', $schematic);
     }
 }

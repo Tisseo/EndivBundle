@@ -9,10 +9,10 @@ Tisseo\EndivBundle\Entity\LineGroupContent:
             columns:
                 - line_group_id
     id:
-        id:
-            type: integer
-            generator:
-                strategy: AUTO
+        lineGroup:
+            associationKey: true
+        lineVersion:
+            associationKey: true
     fields:
         isParent:
             type: boolean
@@ -22,20 +22,18 @@ Tisseo\EndivBundle\Entity\LineGroupContent:
     manyToOne:
         lineVersion:
             targetEntity: LineVersion
-            cascade: {  }
+            cascade: { }
             mappedBy: null
             inversedBy: lineGroupContents
             joinColumns:
                 line_version_id:
                     referencedColumnName: id
-            orphanRemoval: false
         lineGroup:
             targetEntity: LineGroup
-            cascade: {  }
+            cascade: ['persist', 'remove']
             mappedBy: null
             inversedBy: lineGroupContents
             joinColumns:
                 line_group_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

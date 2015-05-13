@@ -40,6 +40,11 @@ class Modification
      */
     private $resolvedIn;
 
+    public function __toString()
+    {
+        return sprintf("%s / %s / %s version %s", $this->description, $this->author, $this->date->format('d/m/Y'), $this->lineVersion->getVersion());
+    }
+
     /**
      * Get id
      *

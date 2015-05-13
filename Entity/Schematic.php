@@ -41,6 +41,11 @@ class Schematic
     public $file;
 
     /**
+     * @var boolean
+     */
+    private $deprecated;
+
+    /**
      * @var \Tisseo\EndivBundle\Entity\Line
      */
     private $line;
@@ -190,8 +195,6 @@ class Schematic
                 '_' . sha1(uniqid(mt_rand(), true)) .
                 '.' . $this->file->guessExtension()
             );
-        } else {
-            $this->setName(null);
         }
     }
 
@@ -218,4 +221,26 @@ class Schematic
         return $this->line;
     }
 
+    /**
+     * Set deprecated
+     *
+     * @param boolean $deprecated
+     * @return Schematic
+     */
+    public function setDeprecated($deprecated)
+    {
+        $this->deprecated = $deprecated;
+
+        return $this;
+    }
+
+    /**
+     * Get deprecated
+     *
+     * @return boolean 
+     */
+    public function getDeprecated()
+    {
+        return $this->deprecated;
+    }
 }

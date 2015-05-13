@@ -1,0 +1,41 @@
+Tisseo\EndivBundle\Entity\LineVersionProperty:
+    type: entity
+    table: line_version_property
+    indexes:
+        IDX_E02E70CC2D37233E:
+            columns:
+                - line_version_id
+        IDX_E02E70CCF507144D:
+            columns:
+                - property_id
+    id:
+        property:
+            associationKey: true
+        lineVersion:
+            associationKey: true
+    fields:
+        value:
+            type: integer
+            length: 1
+            nullable: false
+            fixed: false
+    manyToOne:
+        lineVersion:
+            targetEntity: LineVersion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineVersionProperties
+            joinColumns:
+                line_version_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        property:
+            targetEntity: Property
+            cascade: {  }
+            mappedBy: null
+            inversedBy: lineVersionProperties
+            joinColumns:
+                property_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
