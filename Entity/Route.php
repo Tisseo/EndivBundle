@@ -428,4 +428,15 @@ class Route
     {
         $this->routeStops->removeElement($routeStops);
     }
+
+    /**
+     * Get way list values
+     *
+     * @return enum list
+     * @todo bad bad bad must return the real enum value by native sql querying
+     */    
+    public static function getWayValues()
+    {
+        return array('Aller'=>'Aller', 'Retour'=>'Retour', 'Zonal'=>'Zonal', 'Boucle'=>'Boucle');
+    }
 }

@@ -13,19 +13,11 @@ Tisseo\EndivBundle\Entity\Stop:
             type: integer
             nullable: false
             unsigned: false
-#            id: true
-#            generator:
-#                strategy: SEQUENCE    
-#    oneToOne:
-#        waypoint:
-#            targetEntity: Waypoint
-#            cascade: {  }
-#            mappedBy: null
-#            inversedBy: null
-#            joinColumns:
-#                id:
-#                    referencedColumnName: id
-#            orphanRemoval: false
+    oneToOne:
+        waypoint:
+            targetEntity: Waypoint
+            cascade: {  }
+            mappedBy: stop
     oneToMany:
         stopDatasources:
             orderby: { 'startDate': 'ASC' }

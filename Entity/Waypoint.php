@@ -17,12 +17,12 @@ class Waypoint
     /**
      * @var \Tisseo\EndivBundle\Entity\Stop
      */
-    private $stop;
+    private $stop = null;
 
     /**
      * @var \Tisseo\EndivBundle\Entity\OdtArea
      */
-    private $area;
+    private $area = null;
 
     /**
      * Get id

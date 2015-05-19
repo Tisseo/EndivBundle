@@ -26,10 +26,5 @@ Tisseo\EndivBundle\Entity\OdtArea:
         waypoint:
             targetEntity: Waypoint
             cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                id:
-                    referencedColumnName: id
-            orphanRemoval: false
+            mappedBy: area
     lifecycleCallbacks: {  }
