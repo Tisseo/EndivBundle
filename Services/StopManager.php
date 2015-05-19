@@ -294,37 +294,6 @@ class StopManager extends SortManager
 	
 	public function findStopsLike( $term, $limit = 10 )
 	{
-
-
-		$query = $this->em->createQuery("
-			SELECT sh.shortName as name, c.name as city,  sd.code as code, s.id as id
-			FROM Tisseo\EndivBundle\Entity\StopHistory sh
-			JOIN sh.stop s
-			JOIN s.stopArea sa
-			JOIN sa.city c
-			JOIN s.stopDatasources sd
-			WHERE UPPER(sh.shortName) LIKE UPPER(:term)
-			OR UPPER(sh.longName) LIKE UPPER(:term)
-			OR UPPER(sd.code) LIKE UPPER(:term)
-			ORDER BY sh.shortName, c.name, sd.code
-		");
-	 
-		$query->setParameter('term', '%'.$term.'%');
-
-        $queryZone = $this->em->createQuery("
-			SELECT area.name, area.id
-			FROM Tisseo\EndivBundle\Entity\OdtArea area
-
-			WHERE UPPER(area.name) LIKE UPPER(:term)
-			ORDER BY area.name
-		");
-        $queryZone->setParameter('term', '%'.$term.'%');
-		$shs = $query->getResult();
-
-
-        $areas = $queryZone->getResult();
-
-
 		$specials = array("-", " ", "'");
 		$cleanTerm = str_replace($specials, "_", $term);
 		
@@ -337,9 +306,9 @@ class StopManager extends SortManager
 			JOIN stop_area sa on sa.id = s.stop_area_id
 			JOIN city c on c.id = sa.city_id
 			JOIN stop_datasource sd on sd.stop_id = s.id
-			WHERE UPPER(unaccent(sh.short_name) LIKE UPPER(unaccent(:term))
-			OR UPPER (unaccent(sh.long_name)) LIKE UPPER (unaccent(:term))
-			OR UPPER (sd.code) LIKE UPPER (:term)
+			WHERE UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
+			OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
+			OR UPPER(sd.code) LIKE UPPER(:term)
 			AND sh.start_date <= current_date
 			AND (sh.end_date IS NULL or sh.end_date >= current_date)
 			ORDER BY sh.short_name, c.name, sd.code		
@@ -353,10 +322,7 @@ class StopManager extends SortManager
 			$label = $sh["name"]." ".$sh["city"]." (".$sh["code"].")";
 			$array[] = array("name"=>$label, "id"=>$sh["id"]);
 		}
-        foreach($areas as $area) {
-            $label = $area["name"];
-           array_push($array, array("name"=>$label, "id"=>$area["id"]));
-        }
+
 		return $array;
 	}
 
