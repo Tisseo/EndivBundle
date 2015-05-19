@@ -152,13 +152,7 @@ class RouteManager extends SortManager
     public function save(Route $route)
     {
         $this->om->persist($route);
-        try{
-            $this->om->flush();
-
-        }
-        catch(\ErrorException $err) {
-            var_dump($err);
-        }
+        $this->om->flush();
     }
 
     public function removeRoute(Route $route)

@@ -306,8 +306,6 @@ class StopManager extends SortManager
 			WHERE UPPER(sh.shortName) LIKE UPPER(:term)
 			OR UPPER(sh.longName) LIKE UPPER(:term)
 			OR UPPER(sd.code) LIKE UPPER(:term)
-
-
 			ORDER BY sh.shortName, c.name, sd.code
 		");
 	 
@@ -339,8 +337,8 @@ class StopManager extends SortManager
 			JOIN stop_area sa on sa.id = s.stop_area_id
 			JOIN city c on c.id = sa.city_id
 			JOIN stop_datasource sd on sd.stop_id = s.id
-			WHERE UPPER(sh.short_name) LIKE UPPER(:term)
-			OR UPPER (sh.long_name) LIKE UPPER (:term)
+			WHERE UPPER(unaccent(sh.short_name) LIKE UPPER(unaccent(:term))
+			OR UPPER (unaccent(sh.long_name)) LIKE UPPER (unaccent(:term))
 			OR UPPER (sd.code) LIKE UPPER (:term)
 			AND sh.start_date <= current_date
 			AND (sh.end_date IS NULL or sh.end_date >= current_date)
