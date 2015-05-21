@@ -79,7 +79,7 @@ class TripManager
         $flushSize = 100;
         $cpt = 0;
 
-        foreach($trips as $trip)
+        foreach ($trips as $trip)
         {
             if (strnatcmp($trip['min_start_date'], $lineVersion->getEndDate()->format('Y-m-d')) > 0)
             {
@@ -101,13 +101,14 @@ class TripManager
     {
         $commentsToDelete = array();
 
-        foreach($comments as $label => $content)
+        foreach ($comments as $label => $content)
         {
             if ($content['comment'] === "none" || $label === "none")
             {
                 $trips = $this->repository->findById($content["trips"]);
 
-                foreach($trips as $trip) {
+                foreach ($trips as $trip)
+                {
                     $commentsToDelete[] = $trip->getComment()->getId();
                     $trip->setComment(null);
                     $this->om->persist($trip);
@@ -118,8 +119,9 @@ class TripManager
                 $query = $this->om->createQuery("
                     SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
                     WHERE c.label = ?1
+                    AND c.commentText = ?2
                 ");
-                $query->setParameter(1, $label);
+                $query->setParameters(array(1 => $label, 2 => $content['comment']));
                 $result = $query->getResult();
 
                 if (empty($result))
@@ -128,7 +130,7 @@ class TripManager
                     $comment = $result[0];
 
                 $trips = $this->repository->findById($content["trips"]);
-                foreach($trips as $trip)
+                foreach ($trips as $trip)
                     $comment->addTrip($trip);
             
                 $this->om->persist($comment);
@@ -146,7 +148,7 @@ class TripManager
             $query->setParameter(1, $commentsToDelete);
             $comments = $query->getResult();
 
-            foreach($comments as $comment)
+            foreach ($comments as $comment)
             {
                 if ($comment->getTrips()->isEmpty())
                     $this->om->remove($comment);
