@@ -27,6 +27,12 @@ class Trip
     private $isPattern;
 
     /**
+     * @var Trip
+     */
+    private $pattern;
+
+
+    /**
      * @var Comment
      */
     private $comment;
@@ -168,6 +174,29 @@ class Trip
     public function getIsPattern()
     {
         return $this->isPattern;
+    }
+
+    /**
+     * Set pattern
+     *
+     * @param Trip $pattern
+     * @return Trip
+     */
+    public function setPattern($pattern)
+    {
+        $this->pattern = $pattern;
+
+        return $this;
+    }
+
+    /**
+     * Get pattern
+     *
+     * @return Trip 
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
     }
 
     /**

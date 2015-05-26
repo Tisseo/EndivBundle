@@ -59,6 +59,13 @@ Tisseo\EndivBundle\Entity\Trip:
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
     manyToOne:
+        pattern:
+            targetEntity: Trip
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pattern_id:
+                    referencedColumnName: id
         periodCalendar:
             targetEntity: Calendar
             mappedBy: null

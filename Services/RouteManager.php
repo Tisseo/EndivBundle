@@ -48,8 +48,17 @@ class RouteManager extends SortManager
         $this->om->flush();
     }
 
+    public function remove(Route $route)
+    {
+        $this->om->remove($route);
+        $this->om->flush();
+    }
+
+
     public function saveRouteStopsAndServices(Route $route, $route_stops, $services)
     {
+        if( !( isset($route) && isset($route_stops) && isset($services)) )  return;
+
         $rank = 1;
         $doctrine_route_stops = array();
         $route_stop_ids = array();
@@ -82,13 +91,16 @@ class RouteManager extends SortManager
             $rank += 1;
         }
 
+/*
         //deleted route stops case
         foreach ($route->getRouteStops() as $rs) {
             if( !in_array($rs->getId(), $route_stop_ids) ) {
+                fwrite($fp, "1.1\n");
                 $route->removeRouteStops($rs);
                 $this->om->remove($rs);
             }
         }
+*/
 
         $trip_ids = array();
         foreach ($services as $service) {
@@ -142,14 +154,18 @@ class RouteManager extends SortManager
             $this->om->persist($doctrine_trip);
         }
 
+/*
         //deleted trips case
         foreach ($route->getTrips() as $t) {
             if( !in_array($t->getId(), $trip_ids) ) {
+                fwrite($fp, "3.1\n");
                 $route->removeTrip($t);
                 $this->om->remove($t);
             }
         }
+*/
 
+        fclose($fp);
         $this->save($route);
     }
 
@@ -263,20 +279,6 @@ class RouteManager extends SortManager
         }
     }
 
-
-
-    public function removeRoute(Route $route)
-    {
-        $this->om->remove($route);
-
-        try{
-            $this->om->flush();
-
-        }
-        catch(\ErrorException $err) {
-            var_dump($err);
-        }
-    }
     public function getTrips($id)
     {
             $route = $this->om

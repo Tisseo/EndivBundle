@@ -38,6 +38,21 @@ class TripManager
         return empty($routeId) ? null : $this->repository->findBy(array('route'=>$routeId));
     }
 
+    public function getStopTimes($TripId)
+    {
+        $query = $this->om->createQuery("
+            SELECT st
+            FROM Tisseo\EndivBundle\Entity\StopTime st
+            WHERE st.trip = :id
+            ORDER BY st.arrivalTime
+        ")
+        ->setParameter("id", $TripId);
+
+        return $query->getResult();
+    }
+
+
+
     public function hasTrips($id)
     {
         $query = $this->om->createQuery("
