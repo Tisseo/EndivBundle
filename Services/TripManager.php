@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Comment;
+use Tisseo\EndivBundle\Entity\StopTime;
 
 class TripManager
 {
@@ -51,7 +52,32 @@ class TripManager
         return $query->getResult();
     }
 
+    public function getTripTemplates($term, $routeId)
+    {
+        $specials = array("-", " ", "'");
+        $cleanTerm = str_replace($specials, "_", $term);
 
+        $connection = $this->om->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare("
+            SELECT DISTINCT t.id, t.name
+            FROM trip t
+            WHERE UPPER(unaccent(t.name)) LIKE UPPER(unaccent(:term))
+            AND t.route_id = :routeId
+            AND t.is_pattern = TRUE
+            ORDER BY t.name
+        ");
+        $stmt->bindValue(':term', '%'.$cleanTerm.'%');
+        $stmt->bindValue(':routeId', $routeId);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+        
+        $array = array();
+        foreach($results as $t) {
+            $array[] = array("name"=>$t["name"], "id"=>$t["id"]);
+        }
+        
+        return $array;
+    }
 
     public function hasTrips($id)
     {
@@ -177,4 +203,32 @@ class TripManager
         $this->om->persist($trip);
         $this->om->flush();
     }
+
+    public function createTripAndStopTimes(Trip $trip, $stop_times, $route, $isPattern = false)
+    {
+        $trip->setRoute($route);
+        $trip->setIsPattern($isPattern);
+        
+        $pattern = $trip->getPattern();
+        $st_patterns = $pattern->getStopTimes();
+        foreach ($stop_times as $st) {
+            $tmp = explode(":", $st['start']);
+            $time = $tmp[0]*3600 + $tmp[1]*60;
+            $tmp = explode(":", $st['stop']);
+            $last_time = $tmp[0]*3600 + $tmp[1]*60;
+            while ( $time <= $last_time ) {
+                foreach ($st_patterns as $stp) {
+                    $new_stop_time = new StopTime();
+                    $new_stop_time->setTrip($trip);
+                    $new_stop_time->setRouteStop($stp->getRouteStop());
+                    $new_stop_time->setArrivalTime($time + $stp->getArrivalTime());
+                    $new_stop_time->setDepartureTime($time + $stp->getArrivalTime());
+                    $trip->addStopTime($new_stop_time);
+                }
+
+                $time += $st['frequency']*60;
+            }
+        }
+        $this->save($trip);
+    }    
 }

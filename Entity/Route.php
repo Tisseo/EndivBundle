@@ -52,7 +52,7 @@ class Route
 
     /**
      * @var Collection
-     * @ORM\OrderBy({"id" = "DESC"})
+     * @ORM\OrderBy({"rank" = "ASC"})
      */
     private $routeStops;
 
