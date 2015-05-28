@@ -154,16 +154,16 @@ class RouteManager extends SortManager
                 $this->om->persist($doctrine_trip);
                 $trip_ids[] = $doctrine_trip->getId();
             }
+        }
 
-            //deleted trips case
-            foreach ($route->getTrips() as $t) {
-                if( !in_array($t->getId(), $trip_ids) ) {
-                    fwrite($fp, "3.1\n");
-                    $route->removeTrip($t);
-                    $this->om->remove($t);
-                }
+        //deleted trips case
+        foreach ($route->getTrips() as $t) {
+            if( !in_array($t->getId(), $trip_ids) ) {
+                $route->removeTrip($t);
+                $this->om->remove($t);
             }
         }
+
 
         $this->save($route);
     }

@@ -33,4 +33,15 @@ class PropertyManager
 
         return $arrayProperties;
     }
+
+    public function find($propertyId)
+    {   
+        return empty($propertyId) ? null : $this->repository->find($propertyId);
+    }
+
+    public function save(Property $property)
+    {
+        $this->om->persist($property);
+        $this->om->flush();
+    }    
 }

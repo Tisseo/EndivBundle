@@ -98,6 +98,20 @@ class CalendarManager extends SortManager
 		return $result["getcalendarbitmask"];
 	}	
 	
+    public function getServiceCalendarsBitmask( $Calendar1Id, $Calendar2Id, $startDate, $endDate)
+    {
+        $connection = $this->em->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare("select public.getbitmaskbeetweencalendars(:calendar1Id::int, :calendar2Id::int, :startDate::date, :endDate::date)");
+        $stmt->bindValue(':calendar1Id', $Calendar1Id, \PDO::PARAM_INT);
+        $stmt->bindValue(':calendar2Id', $Calendar2Id, \PDO::PARAM_INT);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
+        
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        return $result["getbitmaskbeetweencalendars"];
+    }   
 	
 	public function delete($CalendarId)
 	{

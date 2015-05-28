@@ -16,8 +16,8 @@ Tisseo\EndivBundle\Entity\Property:
             nullable: false
             length: 255
             fixed: false
-        default:
-            type: integer
+        is_default:
+            type: boolean
             nullable: false
             length: 1
             fixed: false

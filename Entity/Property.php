@@ -20,9 +20,9 @@ class Property
     private $name;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $default;
+    private $is_default;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -78,7 +78,7 @@ class Property
      */
     public function setDefault($default)
     {
-        $this->default = $default;
+        $this->is_default = $default;
 
         return $this;
     }
@@ -90,7 +90,7 @@ class Property
      */
     public function getDefault()
     {
-        return $this->default;
+        return $this->is_default;
     }
 
     /**
