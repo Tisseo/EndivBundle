@@ -54,6 +54,111 @@ class RouteManager extends SortManager
         $this->om->flush();
     }
 
+    private function updateRouteSections($route_stops, $route)
+    {
+        $route_sections = $this->om
+                            ->getRepository('TisseoEndivBundle:RouteSection')
+                            ->findAll();
+        $tomorrow = (new \DateTime('tomorrow'))->format('Ymd');
+
+        for ($i=0; $i < count($route_stops); $i++) {
+            $rs = $route_stops[$i];
+
+            if( $i+1 < count($route_stops) ) {
+                $startStop = $rs->getWaypoint()->getStop();
+                $endStop = $route_stops[$i+1]->getWaypoint()->getStop();
+
+                $filtered_route_sections = array_filter($route_sections, 
+                    function($rs_filter)
+                    use ($startStop, $endStop, $tomorrow) {
+                        if( $rs_filter->getStartStop() != $startStop ) return false;
+                        if( $rs_filter->getEndStop() != $endStop ) return false;
+                        if( $rs_filter->getStartDate()->format('Ymd') > $tomorrow ) return false;
+                        if( !$rs_filter->getEndDate() ) {
+                            return true;
+                        } else {
+                            if( $rs_filter->getEndDate()->format('Ymd') <= $tomorrow ) return false;
+                        }
+                        return true;
+                    }
+                );
+                if(count($filtered_route_sections) > 0) {
+                    $route_section = reset($filtered_route_sections);
+                    $rs->setRouteSection($route_section);
+                    $this->om->persist($rs);
+                }
+            }
+        }
+    }
+
+    private function getRouteSectionLength($routeSectionId)
+    {
+        $connection = $this->om->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare("
+            select ST_Length(the_geom) from route_section where id = :rsId::int
+        ");
+        $stmt->bindValue(':rsId', $routeSectionId, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    private function getNotScheduledStopRatios($route_stops)
+    {
+        $notScheduledStops = array();
+        $tmp = array();
+        for ($i=0; $i < count($route_stops); $i++) {
+            $rs = $route_stops[$i];
+            if( $rs->getRouteSection() )
+                $rsLength = $this->getRouteSectionLength($rs->getRouteSection()->getId());
+            if($rs->getScheduledStop()) {
+                if(count($tmp) > 0) {
+                    foreach ($tmp as $key => $value) {
+                        $tmp[$key]['total'] = $total;
+                        $tmp[$key]['ratio'] = $tmp[$key]['length'] / $tmp[$key]['total'];
+                        unset($tmp[$key]['total']);
+                        unset($tmp[$key]['length']);
+                        $notScheduledStops[$key] = $tmp[$key];
+                    }
+                    $tmp = array();
+                }
+                $total = $rsLength;
+            } else {
+                $total += $rsLength;
+                $tmp[$rs->getId()] = array(
+                    'length' => $rsLength
+                );
+            }
+        }
+
+        return $notScheduledStops;
+    }
+
+    private function updateNotScheduledStopTimes($trips, $ratios)
+    {
+        $notScheduledStopTimes = array();
+
+        foreach ($trips as $trip) {
+            foreach ($trip->getStopTimes() as $st) {
+                if( array_key_exists ( $st->getRouteStop()->getId() , $ratios ) ) {
+                    $notScheduledStopTimes[] = $st;
+                } else {
+                    if( count($notScheduledStopTimes) > 0 ) {
+                        foreach ($notScheduledStopTimes as $notScheduledST) {
+                            $totalTime = $st->getArrivalTime();
+
+                            $time = (int)($ratios[$notScheduledST->getRouteStop()->getId()]['ratio'] * $totalTime);
+                            $time = $time - ($time % 60);
+                            $notScheduledST->setArrivalTime($time);
+                            $notScheduledST->setDepartureTime($time);
+                            $this->om->persist($notScheduledST);
+                        }
+                    }
+
+                    $notScheduledStopTimes = array();
+                }
+            }
+        }
+    }
 
     public function saveRouteStopsAndServices(Route $route, $route_stops, $services)
     {
@@ -69,27 +174,33 @@ class RouteManager extends SortManager
                 $filtered_collection = $route->getRouteStops()->filter( function($rs) use ($route_stop_id) {
                     return $rs->getId() == $route_stop_id;
                 });
-                $doctrine_route = $filtered_collection->first();
+                $doctrine_route_stop = $filtered_collection->first();
             } else {
                 //new route stop
-                $doctrine_route = new RouteStop();
+                $doctrine_route_stop = new RouteStop();
                 $waypoint = $this->om
                             ->getRepository('TisseoEndivBundle:Waypoint')
                             ->find($route_stop['waypoint_id']);
-                $doctrine_route->setWaypoint($waypoint);
-                $route->addRouteStops($doctrine_route);
+                $doctrine_route_stop->setWaypoint($waypoint);
+                $route->addRouteStops($doctrine_route_stop);
             }
-            $doctrine_route->setRank($rank);
-            $doctrine_route->setDropOff( isset($route_stop['dropOff']) );
-            $doctrine_route->setPickup( isset($route_stop['pickUp']) );
-            $doctrine_route->setScheduledStop( isset($route_stop['scheduled']) );
-            $doctrine_route->setInternalService( ( $route->getWay() == 'Zonal' && isset($route_stop['internal']) ) );
-            $this->om->persist($doctrine_route);
-            $route_stop_ids[] = $doctrine_route->getId();
-            $doctrine_route_stops[] = $doctrine_route;
+            $doctrine_route_stop->setRank($rank);
+            $doctrine_route_stop->setDropOff( isset($route_stop['dropOff']) );
+            $doctrine_route_stop->setPickup( isset($route_stop['pickUp']) );
+            $doctrine_route_stop->setScheduledStop( isset($route_stop['scheduled']) );
+            $doctrine_route_stop->setInternalService( ( $route->getWay() == 'Zonal' && isset($route_stop['internal']) ) );
+            $this->om->persist($doctrine_route_stop);
+            $route_stop_ids[] = $doctrine_route_stop->getId();
+            $doctrine_route_stops[] = $doctrine_route_stop;
 
             $rank += 1;
         }
+
+        //set route_section on route_stops
+        $this->updateRouteSections($doctrine_route_stops, $route);
+
+        //get ratios
+        $ratios = $this->getNotScheduledStopRatios($doctrine_route_stops);
 
         //deleted route stops case
         foreach ($route->getRouteStops() as $rs) {
@@ -122,7 +233,6 @@ class RouteManager extends SortManager
                 unset($service['name']);
                 $doctrine_trip->setName($trip_name);
                 $doctrine_trip->setIsPattern(true);
-
                 $stop_time_index = 0;
                 foreach ($service as $stop_time) {
 
@@ -149,21 +259,23 @@ class RouteManager extends SortManager
                     $this->om->persist($doctrine_stop_time);
 
                     $stop_time_index += 1;
-                }
 
+                }
                 $this->om->persist($doctrine_trip);
                 $trip_ids[] = $doctrine_trip->getId();
             }
+
         }
 
+        $this->updateNotScheduledStopTimes($route->getPatternTrips(), $ratios);
+
         //deleted trips case
-        foreach ($route->getTrips() as $t) {
+        foreach ($route->getPatternTrips() as $t) {
             if( !in_array($t->getId(), $trip_ids) ) {
                 $route->removeTrip($t);
                 $this->om->remove($t);
             }
         }
-
 
         $this->save($route);
     }
@@ -222,91 +334,4 @@ class RouteManager extends SortManager
 
         return $result;
     }
-
-
-
-
-
-/*
-    public function findAllByLine($id)
-    {
-        $query = $this->repository->createQueryBuilder('r')
-                                   ->leftJoin("r.lineVersion","line")
-                                   ->where("line.id = :id")
-                                   ->setParameter("id",$id)
-                                   ->getQuery();
-
-        return $query->getResult();
-    }
-
-
-
-
-    public function checkZoneStop(Route $route)
-    {
-        $id = $route->getId();
-        $query = $this->om->createQuery("
-                SELECT wp.id as waypoint
-                FROM Tisseo\EndivBundle\Entity\RouteStop rs
-                JOIN rs.waypoint wp
-                WHERE rs.route = :id
-                ")
-                ->setParameter("id",$id)
-                ->setMaxResults(1);
-
-        foreach($query->getResult() as $result) {
-
-            $idWaypoint = $result["waypoint"];
-
-            $query = $this->om->createQuery('
-            SELECT COUNT(odt.id)
-            FROM Tisseo\EndivBundle\Entity\OdtArea odt
-            WHERE odt.id = :id
-            ')
-                ->setParameter('id',$idWaypoint)
-                ;
-
-            $area = $query->getResult();
-            $zoneWP = $area[0][1];
-            if($zoneWP === 0) {
-                return false;
-            }
-
-            else {
-                return true;
-            }
-        }
-    }
-
-    public function getTrips($id)
-    {
-            $route = $this->om
-                ->getRepository('TisseoEndivBundle:Route')
-                ->find($id);
-
-            $trips = $route->getTrips();
-            return $trips;
-    }
-
-    public function hasTrips($id)
-    {
-         $query = $this->om->createQuery('
-            SELECT COUNT(trip.route)
-            FROM Tisseo\EndivBundle\Entity\Trip trip
-            WHERE trip.route = :id
-            ')
-                ->setParameter('id',$id)
-                ;
-
-                $hasServices = $query->getResult();
-
-                if($hasServices[0][1] === 0) {
-                    return false;
-
-                }
-                else{
-                    return true;
-                }
-    }
-*/
 }

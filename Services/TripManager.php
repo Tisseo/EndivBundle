@@ -204,31 +204,73 @@ class TripManager
         $this->om->flush();
     }
 
+    private function populateStopTimes($trip, $time)
+    {
+        foreach ($trip->getPattern()->getStopTimes() as $stp) {
+            if( $stp->getRouteStop()->getScheduledStop() ) {
+                if( empty($lastScheduledTime) ) {
+                    //first stop
+                    $lastScheduledTime = $time;
+                } else {
+                    $lastScheduledTime += $stp->getArrivalTime();
+                }
+                $time = $lastScheduledTime;
+            } else {
+                $time +=  $stp->getArrivalTime();
+            }
+            $new_stop_time = new StopTime();
+            $new_stop_time->setTrip($trip);
+            $new_stop_time->setRouteStop($stp->getRouteStop());
+            $new_stop_time->setArrivalTime($time);
+            $new_stop_time->setDepartureTime($time);
+            $trip->addStopTime($new_stop_time);
+        }
+    }
+
     public function createTripAndStopTimes(Trip $trip, $stop_times, $route, $isPattern = false)
     {
         $trip->setRoute($route);
         $trip->setIsPattern($isPattern);
-        
-        $pattern = $trip->getPattern();
-        $st_patterns = $pattern->getStopTimes();
-        foreach ($stop_times as $st) {
-            $tmp = explode(":", $st['start']);
-            $time = $tmp[0]*3600 + $tmp[1]*60;
-            $tmp = explode(":", $st['stop']);
-            $last_time = $tmp[0]*3600 + $tmp[1]*60;
-            while ( $time <= $last_time ) {
-                foreach ($st_patterns as $stp) {
-                    $new_stop_time = new StopTime();
-                    $new_stop_time->setTrip($trip);
-                    $new_stop_time->setRouteStop($stp->getRouteStop());
-                    $new_stop_time->setArrivalTime($time + $stp->getArrivalTime());
-                    $new_stop_time->setDepartureTime($time + $stp->getArrivalTime());
-                    $trip->addStopTime($new_stop_time);
-                }
 
-                $time += $st['frequency']*60;
+        $uniqueService = false;
+        if( count($stop_times) == 1 ) {
+            $uniqueService = ( empty($stop_times[0]['frequency']) || empty($stop_times[0]['stop']) );
+        }
+        
+        $st_patterns = $trip->getPattern()->getStopTimes();
+        foreach ($stop_times as $st) {
+            $time_array = explode(":", $st['start']);
+            $time = $time_array[0]*3600 + $time_array[1]*60;
+
+            if( empty($st['frequency']) || empty($st['stop']) ) {
+                $newTrip = clone $trip;
+                if(!$uniqueService) {
+                    $h = (int)($time/3600);
+                    $m = (int)(( $time - $h*3600 )/60);
+                    if( $h < 10 ) $h = '0'.$h;
+                    if( $m < 10 ) $m = '0'.$m;
+                    $newTrip->setName($h.$m.' '.$newTrip->getName());
+                }
+                $this->populateStopTimes($newTrip, $time);
+                $this->save($newTrip);
+            } else {
+                //loop
+                $time_array = explode(":", $st['stop']);
+                $last_time = $time_array[0]*3600 + $time_array[1]*60;
+                while ( $time <= $last_time ) {
+                    $h = (int)($time/3600);
+                    $m = (int)(( $time - $h*3600 )/60);
+                    if( $h < 10 ) $h = '0'.$h;
+                    if( $m < 10 ) $m = '0'.$m;
+
+                    $newTrip = clone $trip;
+                    $newTrip->setName($h.$m.' '.$newTrip->getName());
+                    $this->populateStopTimes($newTrip, $time);
+                    $this->save($newTrip);
+
+                    $time += $st['frequency']*60;
+                }
             }
         }
-        $this->save($trip);
     }    
 }

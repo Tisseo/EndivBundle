@@ -222,6 +222,19 @@ class Route
     }
 
     /**
+     * Get pattern trips
+     *
+     * @return Collection
+     */
+    public function getPatternTrips()
+    {
+        return $this->trips->filter( function($t) {
+            return $t->getIsPattern() == true;
+        });
+    }
+
+
+    /**
      * Add trips
      *
      * @param Trip $trip
