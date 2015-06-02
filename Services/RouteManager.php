@@ -364,7 +364,7 @@ class RouteManager extends SortManager
         $warnings = array();
         foreach ($routeStops as $rs) {
             if( !$rs->getRouteSection() ) {
-                if( $i < count($routeStops) ) {
+                if( $i+1 < count($routeStops) ) {
                     $stop = $rs->getWaypoint()->getStop()->getStopArea()->getShortName();
                     $stop .= ' ('.$rs->getWaypoint()->getStop()->getStopDatasources()[0]->getCode().')';
                     $warnings[] = $stop;
