@@ -38,7 +38,7 @@ Tisseo\EndivBundle\Entity\LineVersionDatasource:
             targetEntity: LineVersion
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: lineVersionDatasources
             joinColumns:
                 line_version_id:
                     referencedColumnName: id
