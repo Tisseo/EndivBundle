@@ -74,7 +74,11 @@ class CalendarManager extends SortManager
 			FROM calendar 
 			WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
 		if( $CalendarType )
-			$sql .= "and calendar_type = '".$CalendarType."'";
+            if(is_array($CalendarType)) {
+                $sql .= "and calendar_type in ('".implode("','",$CalendarType)."')";
+            } else {
+                $sql .= "and calendar_type in ('".$CalendarType."')";
+            }
 		$sql .= " LIMIT ".number_format($limit);
 
 		$stmt = $connection->prepare($sql);

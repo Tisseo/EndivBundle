@@ -121,6 +121,11 @@ class LineVersion
     private $lineVersionProperties;
 
     /**
+     * @var Collection
+     */
+    private $lineVersionDatasources;
+
+    /**
      * Constructor
      * @param LineVersion $previousLineVersion = null
      * @param Line $line = null
@@ -137,6 +142,7 @@ class LineVersion
         $this->modifications = new ArrayCollection();
         $this->routes = new ArrayCollection();
         $this->lineVersionProperties = new ArrayCollection();
+        $this->lineVersionDatasources = new ArrayCollection();
         $this->startDate = new \Datetime();
         $this->version = 1;
 
@@ -1124,4 +1130,44 @@ class LineVersion
         }
     }
 
+    /**
+     * Add lineVersionDatasource
+     *
+     * @param LineVersionDatasource $lineVersionDatasource
+     * @return LineVersion
+     */
+    public function addLineVersionDatasource(LineVersionDatasource $lineVersionDatasource)
+    {
+        $this->lineVersionDatasources[] = $lineVersionDatasource;
+
+        return $this;
+    }
+
+    /**
+     * Remove lineVersionDatasource
+     *
+     * @param LineVersionDatasource $lineVersionDatasource
+     */
+    public function removeLineVersionDatasource(LineVersionDatasource $lineVersionDatasource)
+    {
+        $this->lineVersionDatasources->removeElement($lineVersionDatasource);
+    }
+
+    /**
+     * Get lineVersionDatasources
+     *
+     * @return Collection 
+     */
+    public function getLineVersionDatasources()
+    {
+        return $this->lineVersionDatasources;
+    } 
+
+    /**
+     * Set lineVersionDatasources
+     */
+    public function setLineVersionDatasources($lineVersionDatasources)
+    {
+        $this->lineVersionDatasources = $lineVersionDatasources;
+    }       
 }

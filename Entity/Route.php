@@ -452,4 +452,17 @@ class Route
     {
         return array('Aller'=>'Aller', 'Retour'=>'Retour', 'Zonal'=>'Zonal', 'Boucle'=>'Boucle');
     }
+
+    /**
+     * Get usual services (not pattern)
+     *
+     * @return Collection
+     */
+     public function getServices()
+    {
+        return $filtered_collection = $this->getTrips()->filter( function($trip) {
+                    return !$trip->getIsPattern();
+                });
+
+    }
 }

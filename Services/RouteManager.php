@@ -50,6 +50,12 @@ class RouteManager extends SortManager
 
     public function remove(Route $route)
     {
+        // delete non pattern trips first to garanty referential integrity when deleting
+        foreach ($route->getTrips() as $trip) {
+            if(!$trip->getIsPattern())
+                $this->om->remove($trip);
+        }
+
         $this->om->remove($route);
         $this->om->flush();
     }
@@ -110,11 +116,16 @@ class RouteManager extends SortManager
             $rs = $route_stops[$i];
             if( $rs->getRouteSection() )
                 $rsLength = $this->getRouteSectionLength($rs->getRouteSection()->getId());
+            else
+                $rsLength = 0;
             if($rs->getScheduledStop()) {
                 if(count($tmp) > 0) {
                     foreach ($tmp as $key => $value) {
                         $tmp[$key]['total'] = $total;
-                        $tmp[$key]['ratio'] = $tmp[$key]['length'] / $tmp[$key]['total'];
+                        if( $tmp[$key]['total'] == 0 ) 
+                            $tmp[$key]['ratio'] = 0;
+                        else    
+                            $tmp[$key]['ratio'] = $tmp[$key]['length'] / $tmp[$key]['total'];
                         unset($tmp[$key]['total']);
                         unset($tmp[$key]['length']);
                         $notScheduledStops[$key] = $tmp[$key];
@@ -124,9 +135,7 @@ class RouteManager extends SortManager
                 $total = $rsLength;
             } else {
                 $total += $rsLength;
-                $tmp[$rs->getId()] = array(
-                    'length' => $rsLength
-                );
+                $tmp[$rs->getId()] = array('length' => $rsLength);
             }
         }
 
@@ -333,5 +342,37 @@ class RouteManager extends SortManager
         }
 
         return $result;
+    }
+
+    public function getInstantiatedServiceTemplates($route)
+    {
+        $query = $this->om->createQuery("
+            SELECT DISTINCT t1.id
+            FROM Tisseo\EndivBundle\Entity\Trip t
+            JOIN Tisseo\EndivBundle\Entity\Trip t1
+            WITH t.pattern = t1
+            WHERE t1.route = :route
+        ")
+        ->setParameter("route", $route);
+        //convert associative array of in to array of strings
+        $tmp = array_map('current', $query->getArrayResult());
+        return array_map('strval', $tmp);
+    }
+
+    public function getRouteStopsWithoutRouteSection($routeStops) {
+        $i = 0;
+        $warnings = array();
+        foreach ($routeStops as $rs) {
+            if( !$rs->getRouteSection() ) {
+                if( $i < count($routeStops) ) {
+                    $stop = $rs->getWaypoint()->getStop()->getStopArea()->getShortName();
+                    $stop .= ' ('.$rs->getWaypoint()->getStop()->getStopDatasources()[0]->getCode().')';
+                    $warnings[] = $stop;
+                }                
+            }
+            $i += 1;
+        }
+
+        return $warnings;
     }
 }

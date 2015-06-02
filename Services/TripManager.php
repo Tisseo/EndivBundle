@@ -204,6 +204,12 @@ class TripManager
         $this->om->flush();
     }
 
+    public function remove(Trip $trip)
+    {
+        $this->om->remove($trip);
+        $this->om->flush();
+    }
+
     private function populateStopTimes($trip, $time)
     {
         foreach ($trip->getPattern()->getStopTimes() as $stp) {
