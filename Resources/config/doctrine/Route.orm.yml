@@ -67,6 +67,7 @@ Tisseo\EndivBundle\Entity\Route:
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
         routeStops:
+            orderBy: { 'rank': 'ASC' }
             targetEntity: RouteStop
             cascade: ['persist', 'remove']
             mappedBy: route

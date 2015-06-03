@@ -169,54 +169,63 @@ class RouteManager extends SortManager
         }
     }
 
-    public function saveRouteStopsAndServices(Route $route, $route_stops, $services)
+    public function saveRouteStopsAndServices(Route $route, $route_stops, $services, $routeIsUpdatable)
     {
-        if( !( isset($route) && isset($route_stops)) )  return;
+/*
+        $fp = fopen('/tmp/rod.log', 'w');
+        fwrite($fp, \Doctrine\Common\Util\Debug::dump($route_stops)."\n");
+        fclose($fp);
+*/
+        if($routeIsUpdatable) {
+            $rank = 1;
+            $doctrine_route_stops = array();
+            $route_stop_ids = array();
+            foreach ($route_stops as $route_stop) {
+                if( isset($route_stop['id']) ) {
+                    //update existing route stop
+                    $route_stop_id = $route_stop['id'];
+                    $filtered_collection = $route->getRouteStops()->filter( function($rs) use ($route_stop_id) {
+                        return $rs->getId() == $route_stop_id;
+                    });
+                    $doctrine_route_stop = $filtered_collection->first();
+                } else {
+                    //new route stop
+                    $doctrine_route_stop = new RouteStop();
+                    $waypoint = $this->om
+                                ->getRepository('TisseoEndivBundle:Waypoint')
+                                ->find($route_stop['waypoint_id']);
+                    $doctrine_route_stop->setWaypoint($waypoint);
+                    $route->addRouteStops($doctrine_route_stop);
+                }
+                $doctrine_route_stop->setRank($rank);
+                $doctrine_route_stop->setDropOff( isset($route_stop['dropOff']) );
+                $doctrine_route_stop->setPickup( isset($route_stop['pickUp']) );
+                $doctrine_route_stop->setScheduledStop( isset($route_stop['scheduled']) );
+                $doctrine_route_stop->setInternalService( ( $route->getWay() == 'Zonal' && isset($route_stop['internal']) ) );
+                $this->om->persist($doctrine_route_stop);
+                $route_stop_ids[] = $doctrine_route_stop->getId();
+                $doctrine_route_stops[] = $doctrine_route_stop;
 
-        $rank = 1;
-        $doctrine_route_stops = array();
-        $route_stop_ids = array();
-        foreach ($route_stops as $route_stop) {
-            if( isset($route_stop['id']) ) {
-                //update existing route stop
-                $route_stop_id = $route_stop['id'];
-                $filtered_collection = $route->getRouteStops()->filter( function($rs) use ($route_stop_id) {
-                    return $rs->getId() == $route_stop_id;
-                });
-                $doctrine_route_stop = $filtered_collection->first();
-            } else {
-                //new route stop
-                $doctrine_route_stop = new RouteStop();
-                $waypoint = $this->om
-                            ->getRepository('TisseoEndivBundle:Waypoint')
-                            ->find($route_stop['waypoint_id']);
-                $doctrine_route_stop->setWaypoint($waypoint);
-                $route->addRouteStops($doctrine_route_stop);
+                $rank += 1;
             }
-            $doctrine_route_stop->setRank($rank);
-            $doctrine_route_stop->setDropOff( isset($route_stop['dropOff']) );
-            $doctrine_route_stop->setPickup( isset($route_stop['pickUp']) );
-            $doctrine_route_stop->setScheduledStop( isset($route_stop['scheduled']) );
-            $doctrine_route_stop->setInternalService( ( $route->getWay() == 'Zonal' && isset($route_stop['internal']) ) );
-            $this->om->persist($doctrine_route_stop);
-            $route_stop_ids[] = $doctrine_route_stop->getId();
-            $doctrine_route_stops[] = $doctrine_route_stop;
 
-            $rank += 1;
-        }
+            //set route_section on route_stops
+            $this->updateRouteSections($doctrine_route_stops, $route);
 
-        //set route_section on route_stops
-        $this->updateRouteSections($doctrine_route_stops, $route);
+            //get ratios
+            $ratios = $this->getNotScheduledStopRatios($doctrine_route_stops);
 
-        //get ratios
-        $ratios = $this->getNotScheduledStopRatios($doctrine_route_stops);
-
-        //deleted route stops case
-        foreach ($route->getRouteStops() as $rs) {
-            if( !in_array($rs->getId(), $route_stop_ids) ) {
-                $route->removeRouteStops($rs);
-                $this->om->remove($rs);
+            //deleted route stops case
+            foreach ($route->getRouteStops() as $rs) {
+                if( !in_array($rs->getId(), $route_stop_ids) ) {
+                    $route->removeRouteStops($rs);
+                    $this->om->remove($rs);
+                }
             }
+        } else {
+            $route_stops = $route->getRouteStops();
+            $doctrine_route_stops = $route_stops;
+            $ratios = $this->getNotScheduledStopRatios($route_stops);
         }
 
         $trip_ids = array();
@@ -225,7 +234,6 @@ class RouteManager extends SortManager
                 if( isset($service['id']) ) {
                     //update existing service
                     $trip_id = $service['id'];
-                    //$trip_ids[] = $trip_id;
                     unset($service['id']);
                     $filtered_route_trips = $route->getTrips()->filter( function($t) use ($trip_id) {
                         return $t->getId() == $trip_id;
@@ -273,7 +281,6 @@ class RouteManager extends SortManager
                 $this->om->persist($doctrine_trip);
                 $trip_ids[] = $doctrine_trip->getId();
             }
-
         }
 
         $this->updateNotScheduledStopTimes($route->getPatternTrips(), $ratios);
@@ -374,5 +381,20 @@ class RouteManager extends SortManager
         }
 
         return $warnings;
+    }
+
+    public function getCalendarFH($lineVersionId) {
+        $query = $this->om->createQuery("
+            SELECT DISTINCT IDENTITY(t.dayCalendar), IDENTITY(t.periodCalendar)
+            FROM Tisseo\EndivBundle\Entity\Trip t
+            JOIN t.route r
+            JOIN r.lineVersion lv
+            WHERE lv.id = :id
+            AND t.isPattern = false
+        ")
+        ->setParameter("id", $lineVersionId);
+
+        return $query->getResult();
+
     }
 }
