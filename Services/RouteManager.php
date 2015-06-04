@@ -16,6 +16,8 @@ use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\RouteStop;
 use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\StopTime;
+use Tisseo\EndivBundle\Entity\GridMaskType;
+use Tisseo\EndivBundle\Entity\TripCalendar;
 
 /*
 use Tisseo\EndivBundle\Entity\LineVersion;
@@ -44,7 +46,7 @@ class RouteManager extends SortManager
 
     public function save(Route $route)
     {
-        $this->om->persist($route);
+        
         $this->om->flush();
     }
 
@@ -171,11 +173,6 @@ class RouteManager extends SortManager
 
     public function saveRouteStopsAndServices(Route $route, $route_stops, $services, $routeIsUpdatable)
     {
-/*
-        $fp = fopen('/tmp/rod.log', 'w');
-        fwrite($fp, \Doctrine\Common\Util\Debug::dump($route_stops)."\n");
-        fclose($fp);
-*/
         if($routeIsUpdatable) {
             $rank = 1;
             $doctrine_route_stops = array();
@@ -383,18 +380,208 @@ class RouteManager extends SortManager
         return $warnings;
     }
 
-    public function getCalendarFH($lineVersionId) {
+    /*
+    return an array:
+    [route.way]
+    |_[trip.day_calendar.name#trip.period_calendar.name]
+      |_['calendars']
+      |  |_['day']
+      |  | |_trip.day_calendar
+      |  |_['period']
+      |    |_trip.period_calendar
+      |_['trips'] -> trip.isPattern = FALSE
+      | |_trip1
+      | |_trip2...
+      |_['objects']  
+        |_[grid_mask_type]
+        | |_id
+        |_[trip_calendar]
+          |_id
+    */
+    public function getCalendarFH($lineVersionId)
+    {
         $query = $this->om->createQuery("
-            SELECT DISTINCT IDENTITY(t.dayCalendar), IDENTITY(t.periodCalendar)
+            SELECT t
             FROM Tisseo\EndivBundle\Entity\Trip t
             JOIN t.route r
             JOIN r.lineVersion lv
             WHERE lv.id = :id
             AND t.isPattern = false
+            ORDER BY t.route
         ")
         ->setParameter("id", $lineVersionId);
 
-        return $query->getResult();
+        $trips = $query->getResult();
+        $result = array();
+        foreach ($trips as $t) {
+            $way = $t->getRoute()->getWay();
+            if( !array_key_exists($way, $result) ) $result[$way] = array();
+            if( $t->getDayCalendar() && $t->getPeriodCalendar() ) {
+                $calendar_key = $t->getDayCalendar()->getName().'#'.$t->getPeriodCalendar()->getName();
+                if( !array_key_exists($calendar_key, $result[$way]) ) $result[$way][$calendar_key] = array();
+                if( !array_key_exists('calendars', $result[$way][$calendar_key]) ) {
+                    $result[$way][$calendar_key]['calendars'] = array();
+                    $result[$way][$calendar_key]['calendars']['day'] = $t->getDayCalendar();
+                    $result[$way][$calendar_key]['calendars']['period'] = $t->getPeriodCalendar();
+                }
+                if( !array_key_exists('trips', $result[$way][$calendar_key]) ) $result[$way][$calendar_key]['trips'] = array();
+                $result[$way][$calendar_key]['trips'][] = $t;
 
+                if( !array_key_exists('objects', $result[$way][$calendar_key]) )
+                    $result[$way][$calendar_key]['objects'] = array();
+                if( $t->getTripCalendar() ) {
+                    if( !array_key_exists('grid_mask_type', $result[$way][$calendar_key]['objects']) )
+                        $result[$way][$calendar_key]['objects']['grid_mask_type'] = $t->getTripCalendar()->getGridMaskType();
+                    $result[$way][$calendar_key]['objects']['trip_calendar'] = $t->getTripCalendar();
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public function getFHCalendarTypeValues()
+    {
+        $result = array("Semaine", "Samedi", "Dimanche");
+        $query = $this->om->createQuery("
+            SELECT DISTINCT g.calendarType
+            FROM Tisseo\EndivBundle\Entity\GridMaskType g
+            WHERE g.calendarType NOT IN (:type)
+        ")
+        ->setParameter("type", $result);
+
+        foreach ($query->getResult() as $value) {
+            $result[] = $value['calendarType'];
+        }
+        return $result;
+    }
+
+    public function getFHCalendarPeriodValues()
+    {
+        $result = array("BASE", "Vacances", "Ete");
+        $query = $this->om->createQuery("
+            SELECT DISTINCT g.calendarPeriod
+            FROM Tisseo\EndivBundle\Entity\GridMaskType g
+            WHERE g.calendarPeriod NOT IN (:period)
+        ")
+        ->setParameter("period", $result);
+
+        foreach ($query->getResult() as $value) {
+            $result[] = $value['calendarPeriod'];
+        }
+        return $result;
+    }
+
+    private function gridIsEmpty($grid)
+    {
+        return (
+            empty($grid["grid_calendar_type"]) &&
+            empty($grid["grid_calendar_period"]) &&
+            empty($grid["monday"]) &&
+            empty($grid["tuesday"]) &&
+            empty($grid["wednesday"]) &&
+            empty($grid["thursday"]) &&
+            empty($grid["friday"]) &&
+            empty($grid["saturday"]) &&
+            empty($grid["sunday"])
+        );
+    }
+
+    public function saveFHCalendars($grids)
+    {
+        foreach ($grids as $grid) {
+            if( !$this->gridIsEmpty($grid) ) {
+                //get trip collection
+                $query = $this->om->createQuery("
+                    SELECT t
+                    FROM Tisseo\EndivBundle\Entity\Trip t
+                    JOIN t.dayCalendar dc
+                    JOIN t.periodCalendar pc
+                    WHERE dc.id = :day
+                    AND pc.id = :period
+                ")
+                ->setParameter("day", $grid["calendar_day"])
+                ->setParameter("period", $grid["calendar_period"]);
+                $trips = $query->getResult();
+
+                //get or create grid mask type
+                if( isset($grid["grid_calendar"]) ) {
+                    $query = $this->om->createQuery("
+                        SELECT g
+                        FROM Tisseo\EndivBundle\Entity\GridMaskType g
+                        WHERE g.id = :id
+                    ")
+                    ->setParameter("id", $grid["grid_calendar"]);
+                } else {
+                    //new record in form
+                    $query = $this->om->createQuery("
+                        SELECT g
+                        FROM Tisseo\EndivBundle\Entity\GridMaskType g
+                        WHERE g.calendarType = :type
+                        AND g.calendarPeriod = :period
+                    ")
+                    ->setParameter("type", $grid["grid_calendar_type"])
+                    ->setParameter("period", $grid["grid_calendar_period"]);
+                }
+
+
+
+                $gridMaskType = $query->getOneOrNullResult();
+                if( empty($gridMaskType) ) {
+                    $gridMaskType = new GridMaskType();
+                    $gridMaskType->setCalendarType($grid["grid_calendar_type"]);
+                    $gridMaskType->setCalendarPeriod($grid["grid_calendar_period"]);
+                    $this->om->persist($gridMaskType);
+                }
+
+                //create or update trip calendar
+                $query = $this->om->createQuery("
+                    SELECT tc
+                    FROM Tisseo\EndivBundle\Entity\TripCalendar tc
+                    WHERE tc.gridMaskType = :gridMaskType
+                    AND tc.monday = :monday
+                    AND tc.tuesday = :tuesday
+                    AND tc.wednesday = :wednesday
+                    AND tc.thursday = :thursday
+                    AND tc.friday = :friday
+                    AND tc.saturday = :saturday
+                    AND tc.sunday = :sunday
+                ")
+                ->setParameter("gridMaskType", $gridMaskType)
+                ->setParameter("monday", empty($grid["monday"]) ? false: true)
+                ->setParameter("tuesday", empty($grid["tuesday"]) ? false: true)
+                ->setParameter("wednesday", empty($grid["wednesday"]) ? false: true)
+                ->setParameter("thursday", empty($grid["thursday"]) ? false: true)
+                ->setParameter("friday", empty($grid["friday"]) ? false: true)
+                ->setParameter("saturday", empty($grid["saturday"]) ? false: true)
+                ->setParameter("sunday", empty($grid["sunday"]) ? false: true);
+                $tripCalendar = $query->getOneOrNullResult();
+                if( empty($tripCalendar) ) {
+                    $tripCalendar = new TripCalendar();
+                    $tripCalendar->setGridMaskType($gridMaskType);
+                    $tripCalendar->setMonday(empty($grid["monday"]) ? false: true);
+                    $tripCalendar->setTuesday(empty($grid["tuesday"]) ? false: true);
+                    $tripCalendar->setWednesday(empty($grid["wednesday"]) ? false: true);
+                    $tripCalendar->setThursday(empty($grid["thursday"]) ? false: true);
+                    $tripCalendar->setFriday(empty($grid["friday"]) ? false: true);
+                    $tripCalendar->setSaturday(empty($grid["saturday"]) ? false: true);
+                    $tripCalendar->setSunday(empty($grid["sunday"]) ? false: true);
+                    $gridMaskType->addTripCalendar($tripCalendar);
+                    $this->om->persist($tripCalendar);
+                    $this->om->persist($gridMaskType);
+                }
+
+                foreach ($trips as $trip) {
+                    if( $trip->getTripCalendar() != $tripCalendar ) {
+                        $trip->setTripCalendar($tripCalendar);
+                        $tripCalendar->addTrip($trip);
+                        $this->om->persist($trip);
+                    }
+                }
+                $this->om->persist($tripCalendar);
+                $this->om->persist($gridMaskType);
+            }
+        }
+        $this->om->flush();
     }
 }

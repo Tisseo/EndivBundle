@@ -268,29 +268,6 @@ class TripCalendar
     }
 
     /**
-     * Add trips
-     *
-     * @param \Tisseo\EndivBundle\Entity\Trip $trips
-     * @return TripCalendar
-     */
-    public function addTrip(Trip $trips)
-    {
-        $this->trips[] = $trips;
-
-        return $this;
-    }
-
-    /**
-     * Remove trips
-     *
-     * @param \Tisseo\EndivBundle\Entity\Trip $trips
-     */
-    public function removeTrip(Trip $trips)
-    {
-        $this->trips->removeElement($trips);
-    }
-
-    /**
      * Get trips
      *
      * @return \Doctrine\Common\Collections\Collection 
@@ -298,5 +275,45 @@ class TripCalendar
     public function getTrips()
     {
         return $this->trips;
+    }
+
+    /**
+     * Set trips
+     *
+     * @param \Tisseo\EndivBundle\Entity\Trip $trips
+     * @return TripCalendar
+     */
+    public function setTrips(Trip $trips)
+    {
+        $this->trips = $trips;
+        foreach ($this->trips as $trip) {
+            $trip->setTripCalendar($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add trip
+     *
+     * @param \Tisseo\EndivBundle\Entity\Trip $trip
+     * @return TripCalendar
+     */
+    public function addTrip(Trip $trip)
+    {
+        $this->trips[] = $trip;
+        $trip->setTripCalendar($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove trip
+     *
+     * @param \Tisseo\EndivBundle\Entity\Trip $trip
+     */
+    public function removeTrip(Trip $trip)
+    {
+        $this->trips->removeElement($trip);
     }
 }
