@@ -278,5 +278,31 @@ class TripManager
                 }
             }
         }
-    }    
+    }
+
+    public function getDateBounds($route)
+    {
+        $connection = $this->om->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare("
+            SELECT id, 
+                getdateboundsbeetweencalendars(day_calendar_id,period_calendar_id) as bounds
+            FROM trip
+            WHERE route_id = :routeId
+            AND day_calendar_id IS NOT NULL
+            AND period_calendar_id IS NOT NULL
+        ");
+        $stmt->bindValue(':routeId', $route->getId());
+        $stmt->execute();
+        $datas = $stmt->fetchAll();
+
+        $results = array();
+        foreach ($datas as $item) {
+            $data = explode(",", str_replace(")", "", str_replace("(", "", $item['bounds'])));
+            $results[$item['id']] = array();
+            $results[$item['id']]['start'] = \DateTime::createFromFormat('Y-m-d', $data[0]);
+            $results[$item['id']]['end'] = \DateTime::createFromFormat('Y-m-d', $data[1]);
+        }
+
+        return $results;
+    }
 }
