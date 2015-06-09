@@ -96,17 +96,19 @@ class StopAreaManager extends SortManager
         return $query->getResult();
     }	
 
+    //can get closed stops
     public function getCurrentStops($StopArea) {
-        $query = $this->em->createQuery("
-               SELECT s
-               FROM Tisseo\EndivBundle\Entity\Stop s
-			   JOIN s.stopDatasources sd
-			   JOIN s.stopHistories sh
-               WHERE s.stopArea = :sa
-			   AND (sh.startDate <= CURRENT_DATE()
-			   AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE()))
-			   ORDER BY sd.code
-        ")
+        $sql = "
+            SELECT s
+            FROM Tisseo\EndivBundle\Entity\Stop s
+            JOIN s.stopDatasources sd
+            JOIN s.stopHistories sh
+            WHERE s.stopArea = :sa
+            AND sh.startDate <= CURRENT_DATE()
+            ORDER BY sd.code";
+
+
+        $query = $this->em->createQuery($sql)
 		->setParameter('sa', $StopArea);
 
         return $query->getResult();

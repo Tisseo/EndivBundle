@@ -421,6 +421,7 @@ class Stop
 				}
 			}
 		}
-		return "";
+        //last stop history label for closed stops
+		return $this->getStopHistories()->last()->getShortName();
     }	
 }
