@@ -106,6 +106,23 @@ class Line
         return $result;
     }
 
+
+    /**
+     * getActiveLineVersions
+     * 
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getActiveLineVersions()
+    {
+        $filtered_collection = $this->lineVersions->filter( function($lv) {
+            $endDate = $lv->getEndDate();
+            $now = new \DateTime('NOW');
+            return (empty($endDate) || $endDate->format('Ymd') > $now->format('Ymd'));
+        }); 
+        return $filtered_collection;
+    }
+
+
     /**
      * Define priority
      */

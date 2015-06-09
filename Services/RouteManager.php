@@ -18,10 +18,8 @@ use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\StopTime;
 use Tisseo\EndivBundle\Entity\GridMaskType;
 use Tisseo\EndivBundle\Entity\TripCalendar;
-
-/*
-use Tisseo\EndivBundle\Entity\LineVersion;
-*/
+use Tisseo\EndivBundle\Entity\TripDatasource;
+use Tisseo\EndivBundle\Entity\RouteDatasource;
 
 class RouteManager extends SortManager 
 {
@@ -47,6 +45,7 @@ class RouteManager extends SortManager
     public function save(Route $route)
     {
         
+        $this->om->persist($route);
         $this->om->flush();
     }
 
@@ -584,4 +583,94 @@ class RouteManager extends SortManager
         }
         $this->om->flush();
     }
+
+    public function duplicate($route, $lineVersion, $userName)
+    {
+
+        $query = $this->om->createQuery("
+            SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
+            WHERE ds.name = ?1
+        ")->setParameter(1, "Service Données");
+
+        $datasource = $query->getOneOrNullResult();
+
+
+        $newRoute = new Route();
+        $newRoute->setWay($route->getWay());
+        $newRoute->setName($route->getName()." (Copie)");
+        $newRoute->setDirection($route->getDirection());
+        if( $route->getComment() ) {
+            $newRoute->setComment($route->getComment());
+        }
+        $newRoute->setLineVersion($lineVersion);
+        $newRoute->setWay($route->getWay());
+        $newRoute->setWay($route->getWay());
+        $newRoute->setWay($route->getWay());
+
+        $route_stops = array();
+        foreach ($route->getRouteStops() as $rs) {
+            $newRS = new RouteStop();
+            $newRS->setRank($rs->getRank());
+            $newRS->setScheduledStop($rs->getScheduledStop());
+            $newRS->setPickup($rs->getPickup());
+            $newRS->setDropOff($rs->getDropOff());
+            $newRS->setReservationRequired($rs->getReservationRequired());
+            $newRS->setInternalService($rs->getInternalService());
+            $newRS->setRoute($newRoute);
+            $newRS->setRouteSection($rs->getRouteSection());
+            $newRS->setWaypoint($rs->getWaypoint());
+            $this->om->persist($newRS);
+
+            $route_stops[$rs->getId()] = $newRS;
+        }
+
+        $services_patterns = $route->getTrips()->filter( function($t) {
+            return $t->getIsPattern() == true;
+        });
+
+        foreach ($services_patterns as $t) {
+            $newTrip = new Trip();
+            $newTrip->setName($t->getName());
+            $newTrip->setIsPattern($t->getIsPattern());
+            $newTrip->setPattern($t->getPattern());
+            $newTrip->setComment($t->getComment());
+            $newTrip->setRoute($newRoute);
+            $newTrip->setTripCalendar($t->getTripCalendar());
+            $newTrip->setPeriodCalendar($t->getPeriodCalendar());
+            $newTrip->setDayCalendar($t->getDayCalendar());
+            $newTrip->setParent($t->getParent());
+
+            foreach ($t->getStopTimes() as $st) {
+                $newST = new StopTime();
+                $newST->setArrivalTime($st->getArrivalTime());
+                $newST->setDepartureTime($st->getDepartureTime());
+
+                $newST->setRouteStop( $route_stops[ $st->getRouteStop()->getId() ] );
+                $newST->setTrip($newTrip);
+                $newTrip->addStopTime($newST);
+                $this->om->persist($newST);
+            }
+
+            if (!empty($datasource)) {
+                $tripDatasource = new TripDatasource();
+                $tripDatasource->setDatasource($datasource);
+                $tripDatasource->setTrip($newTrip);
+                $tripDatasource->setCode($userName);
+                $this->om->persist($tripDatasource);
+                $newTrip->addTripDatasources($tripDatasource);
+            }
+            $this->om->persist($newTrip);
+        }
+
+        if (!empty($datasource)) {
+            $routeDatasource = new RouteDatasource();
+            $routeDatasource->setDatasource($datasource);
+            $routeDatasource->setRoute($newRoute);
+            $routeDatasource->setCode($userName);
+            $this->om->persist($routeDatasource);
+            $newRoute->addRouteDatasource($routeDatasource);
+        }
+        $this->om->persist($newRoute);
+        $this->om->flush();
+    }    
 }

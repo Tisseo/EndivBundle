@@ -71,7 +71,6 @@ class LineManager extends SortManager
         return $result;
     }
 
-
     public function save(Line $line)
     {
         if ($line->getPriority() == null)

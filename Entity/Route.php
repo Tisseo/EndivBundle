@@ -368,7 +368,7 @@ class Route
      * @param RouteDatasource $routeDatasource
      * @return Route
      */
-    public function addRouteDatasources(RouteDatasource $routeDatasource)
+    public function addRouteDatasource(RouteDatasource $routeDatasource)
     {
         $this->routeDatasources[] = $routeDatasource;
         $routeDatasource->setRoute($this);
@@ -381,7 +381,7 @@ class Route
      *
      * @param RouteDatasource $routeDatasource
      */
-    public function removeRouteDatasources(RouteDatasource $routeDatasource)
+    public function removeRouteDatasource(RouteDatasource $routeDatasource)
     {
         $this->routeDatasources->removeElement($routeDatasource);
     }
@@ -394,29 +394,6 @@ class Route
     public function clearRouteDatasources()
     {
         $this->routeDatasources->clear();
-    }
-
-    /**
-     * Add routeDatasources
-     *
-     * @param \Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources
-     * @return Route
-     */
-    public function addRouteDatasource(\Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources)
-    {
-        $this->routeDatasources[] = $routeDatasources;
-
-        return $this;
-    }
-
-    /**
-     * Remove routeDatasources
-     *
-     * @param \Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources
-     */
-    public function removeRouteDatasource(\Tisseo\EndivBundle\Entity\RouteDatasource $routeDatasources)
-    {
-        $this->routeDatasources->removeElement($routeDatasources);
     }
 
     /**
