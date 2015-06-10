@@ -394,15 +394,15 @@ class Stop
 		foreach( $this->getStopHistories() as $sh ) {
 			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
 				if( !$sh->getEndDate() ) {
-					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
 				} else {
 					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
-						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().") ";
+						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
 					}
 				}
 			}
 		}
-		return "";
+		return $this->getStopHistories()->last()->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
     }	
 
 	/**
