@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Trip;
+use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Comment;
 use Tisseo\EndivBundle\Entity\StopTime;
@@ -233,7 +234,7 @@ class TripManager
         }
     }
 
-    public function createTripAndStopTimes(Trip $trip, $stop_times, $route, $isPattern = false)
+    public function createTripAndStopTimes(Trip $trip, $stop_times, $route, $datasource, $isPattern = false)
     {
         $trip->setRoute($route);
         $trip->setIsPattern($isPattern);
@@ -258,7 +259,13 @@ class TripManager
                     $newTrip->setName($h.$m.' '.$newTrip->getName());
                 }
                 $this->populateStopTimes($newTrip, $time);
-                $this->save($newTrip);
+
+                $tripDatasource = new TripDatasource();
+                $tripDatasource->setDatasource($datasource['datasource']);
+                $tripDatasource->setCode($datasource['code']);
+                $newTrip->addTripDatasource($tripDatasource);
+
+                $this->om->persist($newTrip);
             } else {
                 //loop
                 $time_array = explode(":", $st['stop']);
@@ -272,12 +279,18 @@ class TripManager
                     $newTrip = clone $trip;
                     $newTrip->setName($h.$m.' '.$newTrip->getName());
                     $this->populateStopTimes($newTrip, $time);
-                    $this->save($newTrip);
 
+                    $tripDatasource = new TripDatasource();
+                    $tripDatasource->setDatasource($datasource['datasource']);
+                    $tripDatasource->setCode($datasource['code']);
+                    $newTrip->addTripDatasource($tripDatasource);
+
+                    $this->om->persist($newTrip);
                     $time += $st['frequency']*60;
                 }
             }
         }
+        $this->om->flush();
     }
 
     public function getDateBounds($route)

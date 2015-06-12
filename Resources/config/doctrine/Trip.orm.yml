@@ -46,6 +46,7 @@ Tisseo\EndivBundle\Entity\Trip:
     oneToMany:
         stopTimes:
             targetEntity: StopTime
+            orderBy: { 'arrivalTime': 'ASC' }
             cascade: ['persist', 'remove']
             mappedBy: trip
             inversedBy: null

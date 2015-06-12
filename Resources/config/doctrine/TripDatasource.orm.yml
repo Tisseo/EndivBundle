@@ -37,6 +37,7 @@ Tisseo\EndivBundle\Entity\TripDatasource:
                     referencedColumnName: id
         trip:
             targetEntity: Trip
+            cascade: {  }
             mappedBy: null
             inversedBy: tripDatasources
             joinColumns:
