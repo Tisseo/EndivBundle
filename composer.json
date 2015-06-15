@@ -6,7 +6,15 @@
     "authors" : [
         {
             "name" : "Vincent Passama",
-            "email" : "vincent.passama@capgemini.com"
+            "email" : "vincent.passama@gmail.com"
+        },
+        {
+            "name" : "Rodolphe Duval",
+            "email" : "rdldvl@gmail.com"
+        },
+        {
+            "name" : "Pierre-Yves Claitte",
+            "email" : "pierre.cl@gmail.com"
         }
     ],
     "keywords" : [
