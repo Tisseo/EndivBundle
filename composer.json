@@ -28,5 +28,6 @@
     "autoload" : {
         "psr-0" : { "Tisseo\\EndivBundle\\" : "" }
     },
-    "target-dir" : "Tisseo/EndivBundle"
+    "target-dir" : "Tisseo/EndivBundle",
+    "version" : "1.0.0"
 }
