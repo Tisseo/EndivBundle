@@ -234,18 +234,18 @@ class TripManager
         }
     }
 
-    public function createTripAndStopTimes(Trip $trip, $stop_times, $route, $datasource, $isPattern = false)
+    public function createTripAndStopTimes(Trip $trip, $stopTimes, $route, $datasource, $isPattern = false)
     {
         $trip->setRoute($route);
         $trip->setIsPattern($isPattern);
 
         $uniqueService = false;
-        if( count($stop_times) == 1 ) {
-            $uniqueService = ( empty($stop_times[0]['frequency']) || empty($stop_times[0]['stop']) );
+        if( count($stopTimes) == 1 ) {
+            $uniqueService = ( empty($stopTimes[0]['frequency']) || empty($stopTimes[0]['stop']) );
         }
         
         $st_patterns = $trip->getPattern()->getStopTimes();
-        foreach ($stop_times as $st) {
+        foreach ($stopTimes as $st) {
             $time_array = explode(":", $st['start']);
             $time = $time_array[0]*3600 + $time_array[1]*60;
 
@@ -277,7 +277,7 @@ class TripManager
                     if( $m < 10 ) $m = '0'.$m;
 
                     $newTrip = clone $trip;
-                    $newTrip->setName($h.$m.' '.$newTrip->getName());
+                    $newTrip->setName($h.$m.'_'.$newTrip->getName());
                     $this->populateStopTimes($newTrip, $time);
 
                     $tripDatasource = new TripDatasource();
