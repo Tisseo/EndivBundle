@@ -37,7 +37,7 @@ class Poi
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -60,7 +60,7 @@ class Poi
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -83,7 +83,7 @@ class Poi
     /**
      * Get cityId
      *
-     * @return integer 
+     * @return integer
      */
     public function getCityId()
     {
@@ -106,7 +106,7 @@ class Poi
     /**
      * Get poiType
      *
-     * @return \Tisseo\EndivBundle\Entity\PoiType 
+     * @return \Tisseo\EndivBundle\Entity\PoiType
      */
     public function getPoiType()
     {
@@ -129,7 +129,7 @@ class Poi
     /**
      * Get priority
      *
-     * @return integer 
+     * @return integer
      */
     public function getPriority()
     {

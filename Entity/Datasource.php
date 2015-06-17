@@ -28,7 +28,7 @@ class Datasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class Datasource
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -74,7 +74,7 @@ class Datasource
     /**
      * Get agency
      *
-     * @return \Tisseo\EndivBundle\Entity\Agency 
+     * @return \Tisseo\EndivBundle\Entity\Agency
      */
     public function getAgency()
     {

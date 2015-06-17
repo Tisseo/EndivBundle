@@ -38,7 +38,7 @@ class LineGroupContent
                 if ($otherGroupContent !== $this)
                     $childLines[] = $otherGroupContent->getLineVersion();
             }
-    
+
             return $childLines;
         }
 
@@ -61,7 +61,7 @@ class LineGroupContent
     /**
      * Get isParent
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsParent()
     {
@@ -84,7 +84,7 @@ class LineGroupContent
     /**
      * Get lineVersion
      *
-     * @return \Tisseo\EndivBundle\Entity\LineVersion 
+     * @return \Tisseo\EndivBundle\Entity\LineVersion
      */
     public function getLineVersion()
     {
@@ -107,7 +107,7 @@ class LineGroupContent
     /**
      * Get lineGroup
      *
-     * @return \Tisseo\EndivBundle\Entity\LineGroup 
+     * @return \Tisseo\EndivBundle\Entity\LineGroup
      */
     public function getLineGroup()
     {

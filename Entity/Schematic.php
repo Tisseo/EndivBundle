@@ -54,7 +54,7 @@ class Schematic
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -77,7 +77,7 @@ class Schematic
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -100,7 +100,7 @@ class Schematic
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {
@@ -123,7 +123,7 @@ class Schematic
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -146,7 +146,7 @@ class Schematic
     /**
      * Get filePath
      *
-     * @return string 
+     * @return string
      */
     public function getFilePath()
     {
@@ -214,7 +214,7 @@ class Schematic
     /**
      * Get line
      *
-     * @return \Tisseo\EndivBundle\Entity\Line 
+     * @return \Tisseo\EndivBundle\Entity\Line
      */
     public function getLine()
     {
@@ -237,7 +237,7 @@ class Schematic
     /**
      * Get deprecated
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDeprecated()
     {

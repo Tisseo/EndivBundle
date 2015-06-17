@@ -18,7 +18,7 @@ class ExportPerso
     /**
      * Get tableName
      *
-     * @return string 
+     * @return string
      */
     public function getTableName()
     {

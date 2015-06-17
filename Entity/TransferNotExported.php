@@ -28,7 +28,7 @@ class TransferNotExported
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class TransferNotExported
     /**
      * Get exportDestination
      *
-     * @return \Tisseo\EndivBundle\Entity\ExportDestination 
+     * @return \Tisseo\EndivBundle\Entity\ExportDestination
      */
     public function getExportDestination()
     {
@@ -74,7 +74,7 @@ class TransferNotExported
     /**
      * Get transfer
      *
-     * @return \Tisseo\EndivBundle\Entity\Transfer 
+     * @return \Tisseo\EndivBundle\Entity\Transfer
      */
     public function getTransfer()
     {

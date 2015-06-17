@@ -56,7 +56,7 @@ class OdtStop
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -79,7 +79,7 @@ class OdtStop
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -102,7 +102,7 @@ class OdtStop
     /**
      * Get pickup
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPickup()
     {
@@ -125,7 +125,7 @@ class OdtStop
     /**
      * Get dropOff
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDropOff()
     {
@@ -148,7 +148,7 @@ class OdtStop
     /**
      * Get odtArea
      *
-     * @return \Tisseo\EndivBundle\Entity\OdtArea 
+     * @return \Tisseo\EndivBundle\Entity\OdtArea
      */
     public function getOdtArea()
     {
@@ -171,7 +171,7 @@ class OdtStop
     /**
      * Get stop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getStop()
     {

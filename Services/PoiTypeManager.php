@@ -11,18 +11,18 @@ class PoiTypeManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:PoiType');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($PoiTypeId)
-    {   
+    {
         return empty($PoiTypeId) ? null : $this->repository->find($PoiTypeId);
     }
 

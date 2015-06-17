@@ -11,19 +11,19 @@ class LogManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Log');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         //return ($this->repository->findAll());
         return ($this->repository->findBy(array(), array('datetime' => 'asc')));
-    }   
+    }
 
     public function find($LogId)
-    {   
+    {
         return empty($LogId) ? null : $this->repository->find($LogId);
     }
 

@@ -43,7 +43,7 @@ class RouteSection
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -66,7 +66,7 @@ class RouteSection
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -89,7 +89,7 @@ class RouteSection
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -112,7 +112,7 @@ class RouteSection
     /**
      * Get theGeom
      *
-     * @return geometry 
+     * @return geometry
      */
     public function getTheGeom()
     {
@@ -135,7 +135,7 @@ class RouteSection
     /**
      * Get endStop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getEndStop()
     {
@@ -158,7 +158,7 @@ class RouteSection
     /**
      * Get startStop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getStartStop()
     {

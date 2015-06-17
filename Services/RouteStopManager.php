@@ -86,9 +86,9 @@ class RouteStopManager extends SortManager {
 
     {
         if($routestop->getId()){
-            
+
             $this->om->remove($routestop);
-        
+
             try{
                 $this->om->flush();
 

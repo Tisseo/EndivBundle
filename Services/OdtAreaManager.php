@@ -11,18 +11,18 @@ class OdtAreaManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:OdtArea');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($OdtAreaId)
-    {   
+    {
         return empty($OdtAreaId) ? null : $this->repository->find($OdtAreaId);
     }
 

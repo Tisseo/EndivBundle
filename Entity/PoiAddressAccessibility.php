@@ -28,7 +28,7 @@ class PoiAddressAccessibility
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class PoiAddressAccessibility
     /**
      * Get accessibilityType
      *
-     * @return AccessibilityType 
+     * @return AccessibilityType
      */
     public function getAccessibilityType()
     {
@@ -74,7 +74,7 @@ class PoiAddressAccessibility
     /**
      * Get poiAddress
      *
-     * @return PoiAddress 
+     * @return PoiAddress
      */
     public function getPoiAddress()
     {

@@ -28,7 +28,7 @@ class LineVersionProperty
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class LineVersionProperty
     /**
      * Get lineVersion
      *
-     * @return \Tisseo\EndivBundle\Entity\LineVersion 
+     * @return \Tisseo\EndivBundle\Entity\LineVersion
      */
     public function getLineVersion()
     {
@@ -74,7 +74,7 @@ class LineVersionProperty
     /**
      * Get property
      *
-     * @return \Tisseo\EndivBundle\Entity\Property 
+     * @return \Tisseo\EndivBundle\Entity\Property
      */
     public function getProperty()
     {
@@ -102,7 +102,7 @@ class LineVersionProperty
     /**
      * Get value
      *
-     * @return integer 
+     * @return integer
      */
     public function getValue()
     {

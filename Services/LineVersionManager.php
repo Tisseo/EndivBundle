@@ -71,7 +71,7 @@ class LineVersionManager extends SortManager
      * @param LineVersion $lineVersion
      * @return LineVersion or null
      *
-     * Find an hypothetical previous version of the LineVersion passed in 
+     * Find an hypothetical previous version of the LineVersion passed in
      * parameter.
      */
     public function findPreviousLineVersion(LineVersion $lineVersion)
@@ -96,12 +96,12 @@ class LineVersionManager extends SortManager
                 continue;
             $result = $lv;
         }
-        
+
         return $result;
     }
 
     /**
-     * findWithPreviousCalendars 
+     * findWithPreviousCalendars
      * @param integer $lineVersionId
      * @return LineVersion
      *
@@ -134,7 +134,7 @@ class LineVersionManager extends SortManager
      * @param Boolean $splitByPhysicalMode default false
      * @return Collection $lineVersions
      *
-     * Find LineVersion which are considered as active according to the current 
+     * Find LineVersion which are considered as active according to the current
      * date passed as parameter.
      */
     public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
@@ -168,7 +168,7 @@ class LineVersionManager extends SortManager
      * findUnlinkedGridMaskTypes
      * @param LineVersion $lineVersion
      *
-     * Find GridMaskTypes and their TripCalendars/Trips related to one 
+     * Find GridMaskTypes and their TripCalendars/Trips related to one
      * LineVersion.
      */
     public function findUnlinkedGridMaskTypes(LineVersion $lineVersion)
@@ -223,7 +223,7 @@ class LineVersionManager extends SortManager
         foreach($gmts as $gmt)
         {
             $result[$cpt] = array($gmt, array());
-            
+
             $query = $this->om->createQuery("
                 SELECT tc, count(t) FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                 JOIN tc.trips t
@@ -234,7 +234,7 @@ class LineVersionManager extends SortManager
                 AND gmt.id = ?2
                 GROUP BY tc.id
             ");
-            
+
             $query->setParameter(1, $lineVersion->getId());
             $query->setParameter(2, $gmt->getId());
 
@@ -254,8 +254,8 @@ class LineVersionManager extends SortManager
      * @param array $gridCalendarIds
      * @param integer $lineVersionId
      *
-     * Synchronize GridCalendars to a specific LineVersion according to values 
-     * returned from calendars form view. (i.e. delete GridCalendars if their id 
+     * Synchronize GridCalendars to a specific LineVersion according to values
+     * returned from calendars form view. (i.e. delete GridCalendars if their id
      * is not present in $gridCalendarsIds and add new ones)
      */
     public function updateGridCalendars($gridCalendars, $lineVersionId)
@@ -307,9 +307,9 @@ class LineVersionManager extends SortManager
      * @param LineVersion $lineVersion
      *
      * Save a LineVersion after :
-     *  - closing previous LineVersion if it exists (using current LineVersion 
+     *  - closing previous LineVersion if it exists (using current LineVersion
      *  startDate
-     *  - deleting all trips which don't belong anymore to the previous 
+     *  - deleting all trips which don't belong anymore to the previous
      *  LineVersion
      */
     public function create(LineVersion $lineVersion, $username, $childLine = null)
@@ -326,7 +326,7 @@ class LineVersionManager extends SortManager
 
         foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
             $this->om->persist($lineGroupContent->getLineGroup());
-        
+
         $this->om->flush();
 
         /* trick here, in order to resolve potential modifications
@@ -343,15 +343,15 @@ class LineVersionManager extends SortManager
             $modification->setResolvedIn($lineVersion);
             $this->om->persist($modification->getLineVersion());
         }
-        
+
         foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
-            $this->om->persist($lineGroupContent);    
+            $this->om->persist($lineGroupContent);
 
         $query = $this->om->createQuery("
             SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
             WHERE ds.name = ?1
         ")->setParameter(1, 'Information Voyageurs');
-      
+
         $datasource = $query->getOneOrNullResult();
         if (!empty($datasource))
         {
@@ -404,5 +404,5 @@ class LineVersionManager extends SortManager
         $this->om->flush();
 
         return array(true, 'line_version.deleted');
-    }    
+    }
 }

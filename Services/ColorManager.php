@@ -11,18 +11,18 @@ class ColorManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Color');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($ColorId)
-    {   
+    {
         return empty($ColorId) ? null : $this->repository->find($ColorId);
     }
 

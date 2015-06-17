@@ -48,7 +48,7 @@ class StopHistory
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,7 +71,7 @@ class StopHistory
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -94,7 +94,7 @@ class StopHistory
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -117,7 +117,7 @@ class StopHistory
     /**
      * Get shortName
      *
-     * @return string 
+     * @return string
      */
     public function getShortName()
     {
@@ -140,7 +140,7 @@ class StopHistory
     /**
      * Get longName
      *
-     * @return string 
+     * @return string
      */
     public function getLongName()
     {
@@ -163,7 +163,7 @@ class StopHistory
     /**
      * Get theGeom
      *
-     * @return geometry 
+     * @return geometry
      */
     public function getTheGeom()
     {
@@ -186,20 +186,20 @@ class StopHistory
     /**
      * Get stop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getStop()
     {
         return $this->stop;
     }
-	
+
     /**
      * Get available srid
      *
      * @return list
-	 * @todo bad bad bad => must return database available srid
-     */    
-	public static function getSridList()
+     * @todo bad bad bad => must return database available srid
+     */
+    public static function getSridList()
     {
         return array('3943'=>'RGF93/CC43', '2154'=>'RGF93/Lambert-93', '4326'=>'WGS 84', '27672'=>'NTF(Paris) / Lambert zone II');
     }

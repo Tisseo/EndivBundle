@@ -33,7 +33,7 @@ class CalendarDatasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class CalendarDatasource
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -79,7 +79,7 @@ class CalendarDatasource
     /**
      * Get calendar
      *
-     * @return \Tisseo\EndivBundle\Entity\Calendar 
+     * @return \Tisseo\EndivBundle\Entity\Calendar
      */
     public function getCalendar()
     {
@@ -102,7 +102,7 @@ class CalendarDatasource
     /**
      * Get datasource
      *
-     * @return \Tisseo\EndivBundle\Entity\Datasource 
+     * @return \Tisseo\EndivBundle\Entity\Datasource
      */
     public function getDatasource()
     {

@@ -71,12 +71,12 @@ class TripManager
         $stmt->bindValue(':routeId', $routeId);
         $stmt->execute();
         $results = $stmt->fetchAll();
-        
+
         $array = array();
         foreach($results as $t) {
             $array[] = array("name"=>$t["name"], "id"=>$t["id"]);
         }
-        
+
         return $array;
     }
 
@@ -90,7 +90,7 @@ class TripManager
 
         $res = $query->getResult();
 
-      
+
         return $res[0][1] > 0 ? true : false;
     }
 
@@ -174,7 +174,7 @@ class TripManager
                 $trips = $this->repository->findById($content["trips"]);
                 foreach ($trips as $trip)
                     $comment->addTrip($trip);
-            
+
                 $this->om->persist($comment);
             }
         }
@@ -243,7 +243,7 @@ class TripManager
         if( count($stopTimes) == 1 ) {
             $uniqueService = ( empty($stopTimes[0]['frequency']) || empty($stopTimes[0]['stop']) );
         }
-        
+
         $st_patterns = $trip->getPattern()->getStopTimes();
         foreach ($stopTimes as $st) {
             $time_array = explode(":", $st['start']);
@@ -297,7 +297,7 @@ class TripManager
     {
         $connection = $this->om->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("
-            SELECT id, 
+            SELECT id,
                 getdateboundsbeetweencalendars(day_calendar_id,period_calendar_id) as bounds
             FROM trip
             WHERE route_id = :routeId

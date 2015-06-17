@@ -40,7 +40,7 @@ Tisseo\EndivBundle\Entity\Transfer:
             length: 255
             fixed: false
             comment: ''
-            column: long_name            
+            column: long_name
     manyToOne:
         endStop:
             targetEntity: Stop

@@ -11,13 +11,13 @@ class PropertyManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Property');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
     }
 
@@ -35,7 +35,7 @@ class PropertyManager
     }
 
     public function find($propertyId)
-    {   
+    {
         return empty($propertyId) ? null : $this->repository->find($propertyId);
     }
 
@@ -43,5 +43,5 @@ class PropertyManager
     {
         $this->om->persist($property);
         $this->om->flush();
-    }    
+    }
 }

@@ -44,19 +44,19 @@ class StopArea
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $stopAreaDatasources;	
-	
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $stops;	
+    private $stopAreaDatasources;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $alias;	
+    private $stops;
 
-	
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $alias;
+
+
     /**
      * Constructor
      */
@@ -70,7 +70,7 @@ class StopArea
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -93,7 +93,7 @@ class StopArea
     /**
      * Get shortName
      *
-     * @return string 
+     * @return string
      */
     public function getShortName()
     {
@@ -116,7 +116,7 @@ class StopArea
     /**
      * Get longName
      *
-     * @return string 
+     * @return string
      */
     public function getLongName()
     {
@@ -139,7 +139,7 @@ class StopArea
     /**
      * Get transferDuration
      *
-     * @return integer 
+     * @return integer
      */
     public function getTransferDuration()
     {
@@ -162,7 +162,7 @@ class StopArea
     /**
      * Get theGeom
      *
-     * @return geometry 
+     * @return geometry
      */
     public function getTheGeom()
     {
@@ -185,17 +185,17 @@ class StopArea
     /**
      * Get city
      *
-     * @return \Tisseo\EndivBundle\Entity\City 
+     * @return \Tisseo\EndivBundle\Entity\City
      */
     public function getCity()
     {
         return $this->city;
     }
-	
+
     /**
      * Get stopAreaDatasources
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStopAreaDatasources()
     {
@@ -238,12 +238,12 @@ class StopArea
     public function removeStopAreaDatasources(StopAreaDatasource $stopAreaDatasources)
     {
         $this->stopAreaDatasources->removeElement($stopAreaDatasources);
-    }	
+    }
 
     /**
      * Get getStops
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStops()
     {
@@ -286,12 +286,12 @@ class StopArea
     public function removeStop(Stop $stop)
     {
         $this->stops->removeElement($stop);
-    }	
+    }
 
     /**
      * Get getAlias
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAlias()
     {
@@ -334,10 +334,10 @@ class StopArea
     public function removeAlias(Alias $alias)
     {
         $this->alias->removeElement($alias);
-    }	
+    }
 
     public function getNameLabel()
     {
         return $this->shortName.' '.$this->city->getName();
-    }	
+    }
 }

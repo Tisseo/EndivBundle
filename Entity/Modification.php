@@ -48,7 +48,7 @@ class Modification
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,7 +71,7 @@ class Modification
     /**
      * Get author
      *
-     * @return string 
+     * @return string
      */
     public function getAuthor()
     {
@@ -94,7 +94,7 @@ class Modification
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -117,7 +117,7 @@ class Modification
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -140,7 +140,7 @@ class Modification
     /**
      * Get lineVersion
      *
-     * @return LineVersion 
+     * @return LineVersion
      */
     public function getLineVersion()
     {
@@ -163,7 +163,7 @@ class Modification
     /**
      * Get resolvedIn
      *
-     * @return LineVersion 
+     * @return LineVersion
      */
     public function getResolvedIn()
     {

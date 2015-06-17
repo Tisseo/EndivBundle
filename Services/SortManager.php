@@ -45,7 +45,7 @@ abstract class SortManager
 
         foreach($data as $object)
             $sortedResult[$object->getPhysicalModeName()][] = $object;
-        
+
         return $sortedResult;
     }
 }

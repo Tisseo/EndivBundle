@@ -28,7 +28,7 @@ class TransferAccessibility
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class TransferAccessibility
     /**
      * Get accessibilityType
      *
-     * @return AccessibilityType 
+     * @return AccessibilityType
      */
     public function getAccessibilityType()
     {
@@ -74,7 +74,7 @@ class TransferAccessibility
     /**
      * Get transfer
      *
-     * @return Transfer 
+     * @return Transfer
      */
     public function getTransfer()
     {

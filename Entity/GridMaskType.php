@@ -47,7 +47,7 @@ class GridMaskType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -70,7 +70,7 @@ class GridMaskType
     /**
      * Get calendarType
      *
-     * @return string 
+     * @return string
      */
     public function getCalendarType()
     {
@@ -93,7 +93,7 @@ class GridMaskType
     /**
      * Get calendarPeriod
      *
-     * @return string 
+     * @return string
      */
     public function getCalendarPeriod()
     {
@@ -126,7 +126,7 @@ class GridMaskType
     /**
      * Get gridLinkCalendarMaskTypes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getGridLinkCalendarMaskTypes()
     {
@@ -159,7 +159,7 @@ class GridMaskType
     /**
      * Get tripCalendars
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTripCalendars()
     {

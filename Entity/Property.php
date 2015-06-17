@@ -40,7 +40,7 @@ class Property
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +63,7 @@ class Property
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -86,7 +86,7 @@ class Property
     /**
      * Get default
      *
-     * @return integer 
+     * @return integer
      */
     public function getDefault()
     {
@@ -119,7 +119,7 @@ class Property
     /**
      * Get lineVersionProperties
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLineVersionProperties()
     {

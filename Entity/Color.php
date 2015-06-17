@@ -73,7 +73,7 @@ class Color
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -96,7 +96,7 @@ class Color
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -119,7 +119,7 @@ class Color
     /**
      * Get html
      *
-     * @return string 
+     * @return string
      */
     public function getHtml()
     {
@@ -142,7 +142,7 @@ class Color
     /**
      * Get pantoneOc
      *
-     * @return string 
+     * @return string
      */
     public function getPantoneOc()
     {
@@ -165,7 +165,7 @@ class Color
     /**
      * Get hoxis
      *
-     * @return string 
+     * @return string
      */
     public function getHoxis()
     {
@@ -188,7 +188,7 @@ class Color
     /**
      * Get cmykCyan
      *
-     * @return integer 
+     * @return integer
      */
     public function getCmykCyan()
     {
@@ -211,7 +211,7 @@ class Color
     /**
      * Get cmykMagenta
      *
-     * @return integer 
+     * @return integer
      */
     public function getCmykMagenta()
     {
@@ -234,7 +234,7 @@ class Color
     /**
      * Get cmykYellow
      *
-     * @return integer 
+     * @return integer
      */
     public function getCmykYellow()
     {
@@ -257,7 +257,7 @@ class Color
     /**
      * Get cmykBlack
      *
-     * @return integer 
+     * @return integer
      */
     public function getCmykBlack()
     {
@@ -280,7 +280,7 @@ class Color
     /**
      * Get rgbRed
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgbRed()
     {
@@ -303,7 +303,7 @@ class Color
     /**
      * Get rgbGreen
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgbGreen()
     {
@@ -326,7 +326,7 @@ class Color
     /**
      * Get rgbBlue
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgbBlue()
     {

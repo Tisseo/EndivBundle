@@ -28,7 +28,7 @@ class RouteNotExported
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class RouteNotExported
     /**
      * Get exportDestination
      *
-     * @return \Tisseo\EndivBundle\Entity\ExportDestination 
+     * @return \Tisseo\EndivBundle\Entity\ExportDestination
      */
     public function getExportDestination()
     {
@@ -74,7 +74,7 @@ class RouteNotExported
     /**
      * Get route
      *
-     * @return \Tisseo\EndivBundle\Entity\Route 
+     * @return \Tisseo\EndivBundle\Entity\Route
      */
     public function getRoute()
     {

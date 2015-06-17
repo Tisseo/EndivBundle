@@ -28,7 +28,7 @@ class Alias
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class Alias
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -74,7 +74,7 @@ class Alias
     /**
      * Get stopArea
      *
-     * @return \Tisseo\EndivBundle\Entity\StopArea 
+     * @return \Tisseo\EndivBundle\Entity\StopArea
      */
     public function getStopArea()
     {

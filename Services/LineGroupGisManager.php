@@ -23,7 +23,7 @@ class LineGroupGisManager extends SortManager
         $this->repository = $om->getRepository('TisseoEndivBundle:LineGroupGis');
     }
 
-    public function findAll()   
+    public function findAll()
     {
         return ($this->repository->findAll());
     }

@@ -21,12 +21,12 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 
-class RouteManager extends SortManager 
+class RouteManager extends SortManager
 {
     private $om= null;
     private $repository= null;
 
-    public function __construct(ObjectManager $om) 
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
         $this->repository = $om->getRepository("TisseoEndivBundle:Route");
@@ -44,7 +44,7 @@ class RouteManager extends SortManager
 
     public function save(Route $route)
     {
-        
+
         $this->om->persist($route);
         $this->om->flush();
     }
@@ -75,7 +75,7 @@ class RouteManager extends SortManager
                 $startStop = $rs->getWaypoint()->getStop();
                 $endStop = $route_stops[$i+1]->getWaypoint()->getStop();
 
-                $filtered_route_sections = array_filter($route_sections, 
+                $filtered_route_sections = array_filter($route_sections,
                     function($rs_filter)
                     use ($startStop, $endStop, $tomorrow) {
                         if( $rs_filter->getStartStop() != $startStop ) return false;
@@ -123,9 +123,9 @@ class RouteManager extends SortManager
                 if(count($tmp) > 0) {
                     foreach ($tmp as $key => $value) {
                         $tmp[$key]['total'] = $total;
-                        if( $tmp[$key]['total'] == 0 ) 
+                        if( $tmp[$key]['total'] == 0 )
                             $tmp[$key]['ratio'] = 0;
-                        else    
+                        else
                             $tmp[$key]['ratio'] = $tmp[$key]['length'] / $tmp[$key]['total'];
                         unset($tmp[$key]['total']);
                         unset($tmp[$key]['length']);
@@ -321,11 +321,11 @@ class RouteManager extends SortManager
     public function getServiceTemplates($RouteId)
     {
         $query = $this->om->createQuery("
-            SELECT t.id as trip_id, 
-                t.name as name, 
-                rs.id as route_stop_id, 
-                st.id as stop_time_id, 
-                st.arrivalTime, 
+            SELECT t.id as trip_id,
+                t.name as name,
+                rs.id as route_stop_id,
+                st.id as stop_time_id,
+                st.arrivalTime,
                 st.departureTime
             FROM Tisseo\EndivBundle\Entity\Trip t
             JOIN t.stopTimes st
@@ -371,7 +371,7 @@ class RouteManager extends SortManager
                     $stop = $rs->getWaypoint()->getStop()->getStopArea()->getShortName();
                     $stop .= ' ('.$rs->getWaypoint()->getStop()->getStopDatasources()[0]->getCode().')';
                     $warnings[] = $stop;
-                }                
+                }
             }
             $i += 1;
         }
@@ -391,7 +391,7 @@ class RouteManager extends SortManager
       |_['trips'] -> trip.isPattern = FALSE
       | |_trip1
       | |_trip2...
-      |_['objects']  
+      |_['objects']
         |_[grid_mask_type]
         | |_id
         |_[trip_calendar]
@@ -672,5 +672,5 @@ class RouteManager extends SortManager
         }
         $this->om->persist($newRoute);
         $this->om->flush();
-    }    
+    }
 }

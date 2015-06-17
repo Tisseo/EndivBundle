@@ -50,16 +50,16 @@ class Calendar
      * @var LineVersion
      */
     private $lineVersion;
-	
+
     /**
      * @var computed_start_date
      */
-	private $computedStartDate;
+    private $computedStartDate;
 
     /**
      * @var computed_end_date
      */
-	private $computedEndDate;
+    private $computedEndDate;
 
     /**
      * Constructor
@@ -75,7 +75,7 @@ class Calendar
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -98,7 +98,7 @@ class Calendar
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -121,13 +121,13 @@ class Calendar
     /**
      * Get calendarType
      *
-     * @return string 
+     * @return string
      */
     public function getCalendarType()
     {
         return $this->calendarType;
     }
-    
+
     /**
      * Add calendarDatasources
      *
@@ -154,7 +154,7 @@ class Calendar
     /**
      * Get calendarDatasources
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCalendarDatasources()
     {
@@ -187,14 +187,14 @@ class Calendar
     /**
      * Get calendarDatasources
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccessibilityType()
     {
         return $this->accessibilityTypes;
     }
-    
-	/**
+
+    /**
      * Add periodTrips
      *
      * @param Trip $periodTrips
@@ -220,7 +220,7 @@ class Calendar
     /**
      * Get periodTrips
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPeriodTrips()
     {
@@ -253,7 +253,7 @@ class Calendar
     /**
      * Get dayTrips
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDayTrips()
     {
@@ -276,7 +276,7 @@ class Calendar
     /**
      * Get lineVersion
      *
-     * @return LineVersion 
+     * @return LineVersion
      */
     public function getLineVersion()
     {
@@ -299,7 +299,7 @@ class Calendar
     /**
      * Get computedStartDate
      *
-     * @return string 
+     * @return string
      */
     public function getComputedStartDate()
     {
@@ -322,20 +322,20 @@ class Calendar
     /**
      * Get computedEndDate
      *
-     * @return string 
+     * @return string
      */
     public function getComputedEndDate()
     {
         return $this->computedEndDate;
     }
-	
+
     /**
      * Get calendar types
      *
      * @return enum list
-	 * @todo bad bad bad must return the real enum value by native sql querying
-     */    
-	public static function getCalendarTypes()
+     * @todo bad bad bad must return the real enum value by native sql querying
+     */
+    public static function getCalendarTypes()
     {
         return array('jour'=>'jour', 'periode'=>'periode', 'mixte'=>'mixte', 'accessibilite'=>'accessibilite', 'brique'=>'brique');
     }

@@ -72,7 +72,7 @@ class Line
 
     /**
      * getLastLineVersion
-     * 
+     *
      * @return LineVersion
      */
     public function getLastLineVersion()
@@ -91,7 +91,7 @@ class Line
 
     /**
      * getHistoryLineVersions
-     * 
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getHistoryLineVersions()
@@ -109,7 +109,7 @@ class Line
 
     /**
      * getActiveLineVersions
-     * 
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getActiveLineVersions()
@@ -118,7 +118,7 @@ class Line
             $endDate = $lv->getEndDate();
             $now = new \DateTime('NOW');
             return (empty($endDate) || $endDate->format('Ymd') > $now->format('Ymd'));
-        }); 
+        });
         return $filtered_collection;
     }
 
@@ -135,7 +135,7 @@ class Line
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -158,7 +158,7 @@ class Line
     /**
      * Get number
      *
-     * @return string 
+     * @return string
      */
     public function getNumber()
     {
@@ -181,7 +181,7 @@ class Line
     /**
      * Get priority
      *
-     * @return integer 
+     * @return integer
      */
     public function getPriority()
     {
@@ -204,7 +204,7 @@ class Line
     /**
      * Get physicalMode
      *
-     * @return PhysicalMode 
+     * @return PhysicalMode
      */
     public function getPhysicalMode()
     {
@@ -214,7 +214,7 @@ class Line
     /**
      * Get physicalMode
      *
-     * @return PhysicalMode 
+     * @return PhysicalMode
      */
     public function getPhysicalModeId()
     {
@@ -224,7 +224,7 @@ class Line
     /**
      * Get lineDatasources
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLineDatasources()
     {
@@ -272,7 +272,7 @@ class Line
     /**
      * Get lineVersions
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLineVersions()
     {
@@ -404,7 +404,7 @@ class Line
     /**
      * Get schematics
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSchematics()
     {
@@ -437,7 +437,7 @@ class Line
     /**
      * Get lineGroupGisContents
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLineGroupGisContents()
     {

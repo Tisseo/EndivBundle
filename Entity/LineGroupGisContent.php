@@ -35,7 +35,7 @@ class LineGroupGisContent
     /**
      * Get line
      *
-     * @return \Tisseo\EndivBundle\Entity\Line 
+     * @return \Tisseo\EndivBundle\Entity\Line
      */
     public function getLine()
     {
@@ -57,7 +57,7 @@ class LineGroupGisContent
     /**
      * Get lineGroupGis
      *
-     * @return \Tisseo\EndivBundle\Entity\LineGroupGis 
+     * @return \Tisseo\EndivBundle\Entity\LineGroupGis
      */
     public function getLineGroupGis()
     {
