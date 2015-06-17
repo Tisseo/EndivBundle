@@ -70,17 +70,21 @@ class SchematicManager extends SortManager
     }
 
     /*
-     * save
+     * Save
      * @param Schematic $schematic
-     * @return array(boolean, string)
+     * @return array(boolean, string, Schematic)
      *
      * Persist and save a Schematic into database.
      */
     public function save(Schematic $schematic)
     {
-        $this->om->persist($schematic);
-        $this->om->flush();
+        try {
+            $this->om->persist($schematic);
+            $this->om->flush();
+        } catch(\Exception $e) {
+            return array($schematic, 'line_schema.error_persist', $e->getMessage());
+        }
 
-        return array(true,'line_schema.persisted', $schematic);
+        return array($schematic, 'line_schema.persisted', null);
     }
 }

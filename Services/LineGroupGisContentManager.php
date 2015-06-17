@@ -36,13 +36,12 @@ class LineGroupGisContentManager extends SortManager
      * @param $lineId
      * @return array
      */
-    public function findLineGroup($lineId)
+    public function findByLine($lineId)
     {
         return $this->repository->findBy(array(
            'line' => $lineId,
         ));
     }
-
 
     /**
      * save
@@ -53,9 +52,13 @@ class LineGroupGisContentManager extends SortManager
      */
     public function save(LineGroupGisContent $lineGroupGisContent)
     {
-        $this->om->persist($lineGroupGisContent);
-        $this->om->flush();
+        try {
+            $this->om->persist($lineGroupGisContent);
+            $this->om->flush();
+        } catch(\Exception $e) {
+            return array($lineGroupGisContent, 'line_group_gis_content.error_persist', $e->getMessage());
+        }
 
-        return array(true,'line_group_gis_content.persisted', $lineGroupGisContent);
+        return array($lineGroupGisContent, 'line_group_gis_content.persisted', null);
     }
 }
