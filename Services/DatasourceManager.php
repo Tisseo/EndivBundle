@@ -26,6 +26,11 @@ class DatasourceManager extends SortManager
         return empty($DatasourceId) ? null : $this->repository->find($DatasourceId);
     }
 
+    public function findByName($name)
+    {
+        return $this->repository->findBy(array('name' => $name));
+    }
+
     public function save(Datasource $Datasource)
     {
         $this->om->persist($Datasource);
