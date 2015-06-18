@@ -178,6 +178,11 @@ class LineVersion
         $this->processStatus();
     }
 
+    public function getNumberAndVersion()
+    {
+        return $this->getLine()->getNumber()." - v".$this->getVersion();
+    }
+
     public function getProperty()
     {
         $properties = new ArrayCollection();
