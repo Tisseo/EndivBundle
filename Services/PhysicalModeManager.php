@@ -11,18 +11,18 @@ class PhysicalModeManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:PhysicalMode');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($physicalModeId)
-    {   
+    {
         return empty($physicalModeId) ? null : $this->repository->find($physicalModeId);
     }
 

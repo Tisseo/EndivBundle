@@ -23,7 +23,7 @@ class LineGroupGisManager extends SortManager
         $this->repository = $om->getRepository('TisseoEndivBundle:LineGroupGis');
     }
 
-    public function findAll()   
+    public function findAll()
     {
         return ($this->repository->findAll());
     }
@@ -43,23 +43,27 @@ class LineGroupGisManager extends SortManager
      */
     public function save(LineGroupGis $lineGroupGis)
     {
-        /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
-        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
-            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+        try {
+            /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
+            foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
+                $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+            }
+
+            $this->om->persist($lineGroupGis);
+
+            /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
+            foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
+                $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+                $this->om->persist($lineGroupGisContent);
+            }
+
+            $this->om->persist($lineGroupGis);
+            $this->om->flush();
+        } catch(\Exception $e) {
+            return array($lineGroupGis, 'line_group_gis.error_persist', $e->getMessage());
         }
 
-        $this->om->persist($lineGroupGis);
-
-        /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
-        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
-            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-            $this->om->persist($lineGroupGisContent);
-        }
-
-        $this->om->persist($lineGroupGis);
-        $this->om->flush();
-
-        return array(true,'line_group_gis.persisted', $lineGroupGis);
+        return array($lineGroupGis, 'line_group_gis.persisted', null);
     }
 
     /**
@@ -70,9 +74,13 @@ class LineGroupGisManager extends SortManager
      */
     public function remove(LineGroupGis $lineGroupGis)
     {
-        $this->om->remove($lineGroupGis);
-        $this->om->flush();
+        try {
+            $this->om->remove($lineGroupGis);
+            $this->om->flush();
+        } catch(\Exception $e) {
+            return array('line_group_gis.error_remove', $e->getMessage());
+        }
 
-        return array(true,'line_group_gis.removed');
+        return array('line_group_gis.removed', null);
     }
 }

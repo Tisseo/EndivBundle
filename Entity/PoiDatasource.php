@@ -33,7 +33,7 @@ class PoiDatasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class PoiDatasource
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -79,7 +79,7 @@ class PoiDatasource
     /**
      * Get datasource
      *
-     * @return \Tisseo\EndivBundle\Entity\Datasource 
+     * @return \Tisseo\EndivBundle\Entity\Datasource
      */
     public function getDatasource()
     {
@@ -102,7 +102,7 @@ class PoiDatasource
     /**
      * Get poi
      *
-     * @return \Tisseo\EndivBundle\Entity\Poi 
+     * @return \Tisseo\EndivBundle\Entity\Poi
      */
     public function getPoi()
     {

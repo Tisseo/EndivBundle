@@ -28,7 +28,7 @@ class ExportDestination
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class ExportDestination
     /**
      * Get nom
      *
-     * @return string 
+     * @return string
      */
     public function getNom()
     {
@@ -74,7 +74,7 @@ class ExportDestination
     /**
      * Get url
      *
-     * @return string 
+     * @return string
      */
     public function getUrl()
     {

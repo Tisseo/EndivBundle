@@ -37,7 +37,7 @@ class City
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -60,7 +60,7 @@ class City
     /**
      * Get insee
      *
-     * @return integer 
+     * @return integer
      */
     public function getInsee()
     {
@@ -83,7 +83,7 @@ class City
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -106,7 +106,7 @@ class City
     /**
      * Get theGeom
      *
-     * @return geometry 
+     * @return geometry
      */
     public function getTheGeom()
     {
@@ -129,7 +129,7 @@ class City
     /**
      * Get mainStopArea
      *
-     * @return \Tisseo\EndivBundle\Entity\StopArea 
+     * @return \Tisseo\EndivBundle\Entity\StopArea
      */
     public function getMainStopArea()
     {

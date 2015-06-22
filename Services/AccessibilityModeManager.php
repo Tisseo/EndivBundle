@@ -11,18 +11,18 @@ class AccessibilityModeManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:AccessibilityMode');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($AccessibilityModeId)
-    {   
+    {
         return empty($AccessibilityModeId) ? null : $this->repository->find($AccessibilityModeId);
     }
 

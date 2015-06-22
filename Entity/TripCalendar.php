@@ -76,7 +76,7 @@ class TripCalendar
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -99,7 +99,7 @@ class TripCalendar
     /**
      * Get monday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMonday()
     {
@@ -122,7 +122,7 @@ class TripCalendar
     /**
      * Get tuesday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getTuesday()
     {
@@ -145,7 +145,7 @@ class TripCalendar
     /**
      * Get wednesday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWednesday()
     {
@@ -168,7 +168,7 @@ class TripCalendar
     /**
      * Get thursday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getThursday()
     {
@@ -191,7 +191,7 @@ class TripCalendar
     /**
      * Get friday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getFriday()
     {
@@ -214,7 +214,7 @@ class TripCalendar
     /**
      * Get saturday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSaturday()
     {
@@ -237,7 +237,7 @@ class TripCalendar
     /**
      * Get sunday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSunday()
     {
@@ -260,7 +260,7 @@ class TripCalendar
     /**
      * Get gridMaskType
      *
-     * @return \Tisseo\EndivBundle\Entity\GridMaskType 
+     * @return \Tisseo\EndivBundle\Entity\GridMaskType
      */
     public function getGridMaskType()
     {
@@ -270,7 +270,7 @@ class TripCalendar
     /**
      * Get trips
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTrips()
     {

@@ -28,7 +28,7 @@ class LineVersionNotExported
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class LineVersionNotExported
     /**
      * Get exportDestination
      *
-     * @return \Tisseo\EndivBundle\Entity\ExportDestination 
+     * @return \Tisseo\EndivBundle\Entity\ExportDestination
      */
     public function getExportDestination()
     {
@@ -74,7 +74,7 @@ class LineVersionNotExported
     /**
      * Get lineVersion
      *
-     * @return \Tisseo\EndivBundle\Entity\LineVersion 
+     * @return \Tisseo\EndivBundle\Entity\LineVersion
      */
     public function getLineVersion()
     {

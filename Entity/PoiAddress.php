@@ -38,7 +38,7 @@ class PoiAddress
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -61,7 +61,7 @@ class PoiAddress
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -84,7 +84,7 @@ class PoiAddress
     /**
      * Get isEntrance
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsEntrance()
     {
@@ -107,7 +107,7 @@ class PoiAddress
     /**
      * Get theGeom
      *
-     * @return geometry 
+     * @return geometry
      */
     public function getTheGeom()
     {
@@ -130,7 +130,7 @@ class PoiAddress
     /**
      * Get poi
      *
-     * @return \Tisseo\EndivBundle\Entity\Poi 
+     * @return \Tisseo\EndivBundle\Entity\Poi
      */
     public function getPoi()
     {

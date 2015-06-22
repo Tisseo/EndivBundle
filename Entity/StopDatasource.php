@@ -33,7 +33,7 @@ class StopDatasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class StopDatasource
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -79,7 +79,7 @@ class StopDatasource
     /**
      * Get datasource
      *
-     * @return \Tisseo\EndivBundle\Entity\Datasource 
+     * @return \Tisseo\EndivBundle\Entity\Datasource
      */
     public function getDatasource()
     {
@@ -102,7 +102,7 @@ class StopDatasource
     /**
      * Get stop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getStop()
     {

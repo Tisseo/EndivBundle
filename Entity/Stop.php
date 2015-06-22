@@ -30,7 +30,7 @@ class Stop
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stopDatasources;
-	
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -39,8 +39,8 @@ class Stop
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $stopAccessibilities;	
-	
+    private $stopAccessibilities;
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -60,8 +60,8 @@ class Stop
         $this->stopHistories = new ArrayCollection();
         $this->stopAccessibilities = new ArrayCollection();
         $this->phantoms = new ArrayCollection();
-    }	
-	
+    }
+
     /**
      * Set id
      *
@@ -148,7 +148,7 @@ class Stop
     /**
      * Get stopArea
      *
-     * @return \Tisseo\EndivBundle\Entity\StopArea 
+     * @return \Tisseo\EndivBundle\Entity\StopArea
      */
     public function getStopArea()
     {
@@ -176,17 +176,17 @@ class Stop
     /**
      * Get waypoint
      *
-     * @return \Tisseo\EndivBundle\Entity\Waypoint 
+     * @return \Tisseo\EndivBundle\Entity\Waypoint
      */
     public function getWaypoint()
     {
         return $this->waypoint;
     }
-	
+
     /**
      * Get stopDatasources
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStopDatasources()
     {
@@ -229,12 +229,12 @@ class Stop
     public function removeStopDatasources(StopDatasource $stopDatasources)
     {
         $this->stopDatasources->removeElement($stopDatasources);
-    }	
+    }
 
     /**
      * Get getStopHistories
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStopHistories()
     {
@@ -277,12 +277,12 @@ class Stop
     public function removeStopHistory(stopHistory $stopHistory)
     {
         $this->stopHistories->removeElement($stopHistory);
-    }	
-	
+    }
+
     /**
      * Get getStopAccessibilities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStopAccessibilities()
     {
@@ -325,12 +325,12 @@ class Stop
     public function removeStopAccessibility(stopAccessibility $stopAccessibility)
     {
         $this->stopAccessibilities->removeElement($stopAccessibility);
-    }	
-	
+    }
+
     /**
      * Get phantoms
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhantoms()
     {
@@ -373,7 +373,7 @@ class Stop
     public function removePhantom(Stop $phantom)
     {
         $this->phantoms->removeElement($phantom);
-    }	
+    }
 
     /**
      * return masterStop Label
@@ -381,47 +381,47 @@ class Stop
     public function getMasterStopLabel()
     {
         if(!empty($this->masterStop)) {
-			return $this->masterStop->getStopLabel();
-		}
-		return "";
-    }	
-	
-	/**
+            return $this->masterStop->getStopLabel();
+        }
+        return "";
+    }
+
+    /**
      * return Stop Label ( current StopHistory.shortName - Datasource.Agency.name (Datasource.code)
      */
     public function getStopLabel()
     {
-		foreach( $this->getStopHistories() as $sh ) {
-			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
-				if( !$sh->getEndDate() ) {
-					return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-				} else {
-					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
-						return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-					}
-				}
-			}
-		}
-		return $this->getStopHistories()->last()->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-    }	
+        foreach( $this->getStopHistories() as $sh ) {
+            if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
+                if( !$sh->getEndDate() ) {
+                    return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
+                } else {
+                    if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {
+                        return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
+                    }
+                }
+            }
+        }
+        return $this->getStopHistories()->last()->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
+    }
 
-	/**
+    /**
      * return current stop history short name
      */
     public function getShortLabel()
     {
-		foreach( $this->getStopHistories() as $sh ) {
-			if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
-				if( !$sh->getEndDate() ) {
-					return $sh->getShortName();
-				} else {
-					if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {	
-						return $sh->getShortName();
-					}
-				}
-			}
-		}
+        foreach( $this->getStopHistories() as $sh ) {
+            if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
+                if( !$sh->getEndDate() ) {
+                    return $sh->getShortName();
+                } else {
+                    if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {
+                        return $sh->getShortName();
+                    }
+                }
+            }
+        }
         //last stop history label for closed stops
-		return $this->getStopHistories()->last()->getShortName();
-    }	
+        return $this->getStopHistories()->last()->getShortName();
+    }
 }

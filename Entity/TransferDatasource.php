@@ -33,7 +33,7 @@ class TransferDatasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class TransferDatasource
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -79,7 +79,7 @@ class TransferDatasource
     /**
      * Get datasource
      *
-     * @return \Tisseo\EndivBundle\Entity\Datasource 
+     * @return \Tisseo\EndivBundle\Entity\Datasource
      */
     public function getDatasource()
     {
@@ -102,7 +102,7 @@ class TransferDatasource
     /**
      * Get transfer
      *
-     * @return \Tisseo\EndivBundle\Entity\Transfer 
+     * @return \Tisseo\EndivBundle\Entity\Transfer
      */
     public function getTransfer()
     {

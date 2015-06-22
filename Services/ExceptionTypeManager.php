@@ -11,18 +11,18 @@ class ExceptionTypeManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:ExceptionType');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($ExceptionTypeId)
-    {   
+    {
         return empty($ExceptionTypeId) ? null : $this->repository->find($ExceptionTypeId);
     }
 

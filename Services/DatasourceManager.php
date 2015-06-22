@@ -11,19 +11,24 @@ class DatasourceManager extends SortManager
     private $repository = null;
 
     public function __construct(ObjectManager $om)
-    {   
+    {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Datasource');
-    }   
+    }
 
     public function findAll()
-    {   
+    {
         return ($this->repository->findAll());
-    }   
+    }
 
     public function find($DatasourceId)
-    {   
+    {
         return empty($DatasourceId) ? null : $this->repository->find($DatasourceId);
+    }
+
+    public function findByName($name)
+    {
+        return $this->repository->findBy(array('name' => $name));
     }
 
     public function save(Datasource $Datasource)

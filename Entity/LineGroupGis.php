@@ -46,7 +46,7 @@ class LineGroupGis
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -69,7 +69,7 @@ class LineGroupGis
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -102,7 +102,7 @@ class LineGroupGis
     /**
      * Get lineGroupGisContents
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLineGroupGisContents()
     {
@@ -130,7 +130,7 @@ class LineGroupGis
     /**
      * Get nbBus
      *
-     * @return string 
+     * @return string
      */
     public function getNbBus()
     {
@@ -153,7 +153,7 @@ class LineGroupGis
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {

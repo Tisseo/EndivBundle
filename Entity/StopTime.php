@@ -39,7 +39,7 @@ class StopTime
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -75,7 +75,7 @@ class StopTime
     /**
      * Get arrivalTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getArrivalTime()
     {
@@ -98,7 +98,7 @@ class StopTime
     /**
      * Get departureTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getDepartureTime()
     {
@@ -121,7 +121,7 @@ class StopTime
     /**
      * Get trip
      *
-     * @return Trip 
+     * @return Trip
      */
     public function getTrip()
     {
@@ -131,12 +131,12 @@ class StopTime
     /**
      * Get trip
      *
-     * @return StopTime 
+     * @return StopTime
      */
     public function removeTrip()
     {
         $this->trip = null;
-        
+
         return $this;
     }
 
@@ -156,7 +156,7 @@ class StopTime
     /**
      * Get routeStop
      *
-     * @return RouteStop 
+     * @return RouteStop
      */
     public function getRouteStop()
     {

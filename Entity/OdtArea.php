@@ -41,7 +41,7 @@ class OdtArea
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -64,7 +64,7 @@ class OdtArea
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {
@@ -87,7 +87,7 @@ class OdtArea
     /**
      * Get id
      *
-     * @return \Tisseo\EndivBundle\Entity\Waypoint 
+     * @return \Tisseo\EndivBundle\Entity\Waypoint
      */
     public function getId()
     {
@@ -115,7 +115,7 @@ class OdtArea
     /**
      * Get waypoint
      *
-     * @return \Tisseo\EndivBundle\Entity\Waypoint 
+     * @return \Tisseo\EndivBundle\Entity\Waypoint
      */
     public function getWaypoint()
     {

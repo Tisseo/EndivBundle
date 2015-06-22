@@ -28,7 +28,7 @@ class StopAccessibility
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class StopAccessibility
     /**
      * Get accessibilityType
      *
-     * @return AccessibilityType 
+     * @return AccessibilityType
      */
     public function getAccessibilityType()
     {
@@ -74,7 +74,7 @@ class StopAccessibility
     /**
      * Get stop
      *
-     * @return Stop 
+     * @return Stop
      */
     public function getStop()
     {

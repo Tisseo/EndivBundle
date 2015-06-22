@@ -77,7 +77,7 @@ class RouteStop
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -114,7 +114,7 @@ class RouteStop
     /**
      * Get rank
      *
-     * @return integer 
+     * @return integer
      */
     public function getRank()
     {
@@ -137,7 +137,7 @@ class RouteStop
     /**
      * Get scheduledStop
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getScheduledStop()
     {
@@ -160,7 +160,7 @@ class RouteStop
     /**
      * Get pickup
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPickup()
     {
@@ -183,7 +183,7 @@ class RouteStop
     /**
      * Get dropOff
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDropOff()
     {
@@ -206,7 +206,7 @@ class RouteStop
     /**
      * Get reservationRequired
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getReservationRequired()
     {
@@ -229,7 +229,7 @@ class RouteStop
     /**
      * Get route
      *
-     * @return Route 
+     * @return Route
      */
     public function getRoute()
     {
@@ -252,7 +252,7 @@ class RouteStop
     /**
      * Get routeSection
      *
-     * @return RouteSection 
+     * @return RouteSection
      */
     public function getRouteSection()
     {
@@ -275,7 +275,7 @@ class RouteStop
     /**
      * Get waypoint
      *
-     * @return Waypoint 
+     * @return Waypoint
      */
     public function getWaypoint()
     {
@@ -298,7 +298,7 @@ class RouteStop
     /**
      * Get internalService
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getInternalService()
     {
@@ -321,7 +321,7 @@ class RouteStop
     /**
      * Get stopTimes
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getStopTimes()
     {

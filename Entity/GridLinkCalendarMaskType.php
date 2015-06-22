@@ -50,7 +50,7 @@ class GridLinkCalendarMaskType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -73,7 +73,7 @@ class GridLinkCalendarMaskType
     /**
      * Get active
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getActive()
     {
@@ -96,7 +96,7 @@ class GridLinkCalendarMaskType
     /**
      * Get gridCalendar
      *
-     * @return \Tisseo\EndivBundle\Entity\GridCalendar 
+     * @return \Tisseo\EndivBundle\Entity\GridCalendar
      */
     public function getGridCalendar()
     {
@@ -119,7 +119,7 @@ class GridLinkCalendarMaskType
     /**
      * Get gridMaskType
      *
-     * @return \Tisseo\EndivBundle\Entity\GridMaskType 
+     * @return \Tisseo\EndivBundle\Entity\GridMaskType
      */
     public function getGridMaskType()
     {

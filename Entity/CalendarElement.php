@@ -53,7 +53,7 @@ class CalendarElement
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -76,7 +76,7 @@ class CalendarElement
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -99,7 +99,7 @@ class CalendarElement
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -122,7 +122,7 @@ class CalendarElement
     /**
      * Get rank
      *
-     * @return string 
+     * @return string
      */
     public function getRank()
     {
@@ -145,7 +145,7 @@ class CalendarElement
     /**
      * Get operator
      *
-     * @return string 
+     * @return string
      */
     public function getOperator()
     {
@@ -168,7 +168,7 @@ class CalendarElement
     /**
      * Get interval
      *
-     * @return integer 
+     * @return integer
      */
     public function getInterval()
     {
@@ -191,7 +191,7 @@ class CalendarElement
     // /**
      // * Get calendar
      // *
-     // * @return \Tisseo\EndivBundle\Entity\Calendar 
+     // * @return \Tisseo\EndivBundle\Entity\Calendar
      // */
     // public function getCalendar()
     // {
@@ -214,20 +214,20 @@ class CalendarElement
     /**
      * Get includedCalendar
      *
-     * @return \Tisseo\EndivBundle\Entity\Calendar 
+     * @return \Tisseo\EndivBundle\Entity\Calendar
      */
     public function getIncludedCalendar()
     {
         return $this->includedCalendar;
     }
-	
+
     /**
      * Get operator list value
      *
      * @return enum list
-	 * @todo bad bad bad must return the real enum value by native sql querying
-     */    
-	public static function getOperatorValues()
+     * @todo bad bad bad must return the real enum value by native sql querying
+     */
+    public static function getOperatorValues()
     {
         return array('+'=>'+', '-'=>'-', '&'=>'&');
     }

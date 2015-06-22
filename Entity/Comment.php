@@ -51,7 +51,7 @@ class Comment
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -74,7 +74,7 @@ class Comment
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
@@ -97,7 +97,7 @@ class Comment
     /**
      * Get commentText
      *
-     * @return string 
+     * @return string
      */
     public function getCommentText()
     {
@@ -122,7 +122,7 @@ class Comment
     /**
      * Get trips
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getTrips()
     {
@@ -171,7 +171,7 @@ class Comment
     /**
      * Get routes
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getRoutes()
     {

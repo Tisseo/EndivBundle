@@ -22,7 +22,7 @@ class StoredProcedureManager
      */
     public function cleanLineVersion($lineVersionId)
     {
-		$rsm = new ResultSetMapping();
+        $rsm = new ResultSetMapping();
         $query = $this->em->createNativeQuery('SELECT purge_fh_data(?)', $rsm);
         $query->setParameter(1, intval($lineVersionId));
 

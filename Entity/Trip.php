@@ -85,7 +85,7 @@ class Trip
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -121,7 +121,7 @@ class Trip
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -169,7 +169,7 @@ class Trip
     /**
      * Get isPattern
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsPattern()
     {
@@ -192,7 +192,7 @@ class Trip
     /**
      * Get pattern
      *
-     * @return Trip 
+     * @return Trip
      */
     public function getPattern()
     {
@@ -215,7 +215,7 @@ class Trip
     /**
      * Get comment
      *
-     * @return Comment 
+     * @return Comment
      */
     public function getComment()
     {
@@ -238,7 +238,7 @@ class Trip
     /**
      * Get route
      *
-     * @return Route 
+     * @return Route
      */
     public function getRoute()
     {
@@ -261,7 +261,7 @@ class Trip
     /**
      * Get tripCalendar
      *
-     * @return TripCalendar 
+     * @return TripCalendar
      */
     public function getTripCalendar()
     {
@@ -284,7 +284,7 @@ class Trip
     /**
      * Get periodCalendar
      *
-     * @return Calendar 
+     * @return Calendar
      */
     public function getPeriodCalendar()
     {
@@ -307,7 +307,7 @@ class Trip
     /**
      * Get dayCalendar
      *
-     * @return Calendar 
+     * @return Calendar
      */
     public function getDayCalendar()
     {
@@ -332,7 +332,7 @@ class Trip
     /**
      * Get stopTimes
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getStopTimes()
     {
@@ -389,7 +389,7 @@ class Trip
     /**
      * Get tripDatasources
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getTripDatasources()
     {

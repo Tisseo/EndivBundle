@@ -48,7 +48,7 @@ class Log
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,7 +71,7 @@ class Log
     /**
      * Get datetime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatetime()
     {
@@ -94,7 +94,7 @@ class Log
     /**
      * Get table
      *
-     * @return string 
+     * @return string
      */
     public function getTable()
     {
@@ -117,7 +117,7 @@ class Log
     /**
      * Get action
      *
-     * @return string 
+     * @return string
      */
     public function getAction()
     {
@@ -140,7 +140,7 @@ class Log
     /**
      * Get previousData
      *
-     * @return string 
+     * @return string
      */
     public function getPreviousData()
     {
@@ -163,7 +163,7 @@ class Log
     /**
      * Get insertedData
      *
-     * @return string 
+     * @return string
      */
     public function getInsertedData()
     {
@@ -186,7 +186,7 @@ class Log
     /**
      * Get user
      *
-     * @return string 
+     * @return string
      */
     public function getUser()
     {

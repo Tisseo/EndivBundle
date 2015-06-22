@@ -23,7 +23,7 @@ class PoiType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -46,7 +46,7 @@ class PoiType
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {

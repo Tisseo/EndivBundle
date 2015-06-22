@@ -74,7 +74,7 @@ class Route
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -97,7 +97,7 @@ class Route
     /**
      * Get way
      *
-     * @return string 
+     * @return string
      */
     public function getWay()
     {
@@ -120,7 +120,7 @@ class Route
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -143,7 +143,7 @@ class Route
     /**
      * Get direction
      *
-     * @return string 
+     * @return string
      */
     public function getDirection()
     {
@@ -166,7 +166,7 @@ class Route
     /**
      * Get comment
      *
-     * @return Comment 
+     * @return Comment
      */
     public function getComment()
     {
@@ -189,7 +189,7 @@ class Route
     /**
      * Get lineVersion
      *
-     * @return LineVersion 
+     * @return LineVersion
      */
     public function getLineVersion()
     {
@@ -259,7 +259,7 @@ class Route
     }
 
     /** Remove trips
-     * 
+     *
      * @param Collection $trips
      */
     public function removeTrips(Collection $trips)
@@ -424,7 +424,7 @@ class Route
      *
      * @return enum list
      * @todo bad bad bad must return the real enum value by native sql querying
-     */    
+     */
     public static function getWayValues()
     {
         return array('Aller'=>'Aller', 'Retour'=>'Retour', 'Zonal'=>'Zonal', 'Boucle'=>'Boucle');

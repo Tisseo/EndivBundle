@@ -172,10 +172,15 @@ class LineVersion
             $this->setLine($line);
         }
 
-        if ($properties !== null) 
+        if ($properties !== null)
             $this->synchronizeLineVersionProperties($properties);
 
         $this->processStatus();
+    }
+
+    public function getNumberAndVersion()
+    {
+        return $this->getLine()->getNumber()." - v".$this->getVersion();
     }
 
     public function getProperty()
@@ -225,7 +230,7 @@ class LineVersion
         $childLineGroupContent->setLineVersion($childLine);
         $childLineGroupContent->setIsParent(false);
         $childLineGroupContent->setLineGroup($lineGroup);
-        
+
         $childLine->addLineGroupContent($childLineGroupContent);
     }
 
@@ -578,7 +583,7 @@ class LineVersion
     /**
      * Get bgColor
      *
-     * @return Color 
+     * @return Color
      */
     public function getBgColor()
     {
@@ -601,7 +606,7 @@ class LineVersion
     /**
      * Get fgColor
      *
-     * @return Color 
+     * @return Color
      */
     public function getFgColor()
     {
@@ -1008,13 +1013,13 @@ class LineVersion
     {
         $this->printings->removeElement($printings);
     }
-    
+
     /**
      * Remove printings
      *
      * @param Printing $printings
      */
-    public function getFormattedLineVersion()    
+    public function getFormattedLineVersion()
     {
         return $this->getLine()->getNumber() .'_'.$this->getVersion();
     }
@@ -1046,13 +1051,13 @@ class LineVersion
     /**
      * Get lineGroupContents
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLineGroupContents()
     {
         return $this->lineGroupContents;
     }
-    
+
     /**
      * Set lineGroupContents
      *
@@ -1096,7 +1101,7 @@ class LineVersion
     /**
      * Get lineVersionProperties
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getLineVersionProperties()
     {
@@ -1106,7 +1111,7 @@ class LineVersion
     /**
      * Set lineVersionProperties
      *
-     * @return Collection 
+     * @return Collection
      */
     public function setLineVersionProperties($lineVersionProperties)
     {
@@ -1116,7 +1121,7 @@ class LineVersion
     /**
      * Set newLineVersionProperties
      *
-     * @return Collection 
+     * @return Collection
      */
     public function setNewLineVersionProperties($lineVersionProperties)
     {
@@ -1156,12 +1161,12 @@ class LineVersion
     /**
      * Get lineVersionDatasources
      *
-     * @return Collection 
+     * @return Collection
      */
     public function getLineVersionDatasources()
     {
         return $this->lineVersionDatasources;
-    } 
+    }
 
     /**
      * Set lineVersionDatasources
@@ -1169,5 +1174,5 @@ class LineVersion
     public function setLineVersionDatasources($lineVersionDatasources)
     {
         $this->lineVersionDatasources = $lineVersionDatasources;
-    }       
+    }
 }

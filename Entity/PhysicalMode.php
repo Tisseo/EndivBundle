@@ -28,7 +28,7 @@ class PhysicalMode
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class PhysicalMode
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -74,7 +74,7 @@ class PhysicalMode
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {

@@ -46,7 +46,7 @@ class Printing
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -69,7 +69,7 @@ class Printing
     /**
      * Get quantity
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuantity()
     {
@@ -92,7 +92,7 @@ class Printing
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -115,7 +115,7 @@ class Printing
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {
@@ -138,7 +138,7 @@ class Printing
     /**
      * Get lineVersion
      *
-     * @return \Tisseo\EndivBundle\Entity\LineVersion 
+     * @return \Tisseo\EndivBundle\Entity\LineVersion
      */
     public function getLineVersion()
     {

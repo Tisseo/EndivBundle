@@ -14,7 +14,7 @@ Requirements
 
 - PHP 5.4.3
 - https://github.com/djlambert/doctrine2-spatial
-- https://github.com/Tisseo/TID 
+- https://github.com/Tisseo/TID
 
 Installation
 ------------
@@ -23,7 +23,7 @@ Installation
 
 '''
     "repositories": [
-        {   
+        {
             "type": "git",
             "url": "https://github.com/Tisseo/EndivBundle.git"
         },
@@ -67,7 +67,7 @@ parameters:
     endiv_database_password:                ''
 '''
 
-In config.yml file, you must provide the configuration for the specific 
+In config.yml file, you must provide the configuration for the specific
 connection to ENDIV database and some mapping types information.
 
 - config.yml
@@ -103,7 +103,7 @@ doctrine:
                 connection:                             %endiv_database_connection%
                 mappings:
                     TisseoEndivBundle:                  ~
-        
+
 '''
 
 Contributing

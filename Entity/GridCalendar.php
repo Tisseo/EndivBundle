@@ -97,8 +97,8 @@ class GridCalendar
      * hasLinkToGridMaskType
      * @param integer $gridMaskTypeId
      * @return boolean
-     * 
-     * Check this GridCalendar is linked to a GridMaskType using GMT's id passed 
+     *
+     * Check this GridCalendar is linked to a GridMaskType using GMT's id passed
      * as parameter and checking it is present in its GLCMTs.
      *
      * return true if linked, false otherwise.
@@ -118,8 +118,8 @@ class GridCalendar
      * @param array $gridMaskTypesIds
      * @return boolean
      *
-     * Synchronize relation between the GridCalendar and its 
-     * GridLinkCalendarMaskTypes. (i.e. delete GLCMT which aren't present in the 
+     * Synchronize relation between the GridCalendar and its
+     * GridLinkCalendarMaskTypes. (i.e. delete GLCMT which aren't present in the
      * array passed as parameter)
      *
      * return true if some GLCMT have been deleted, false otherwise.
@@ -161,7 +161,7 @@ class GridCalendar
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -184,7 +184,7 @@ class GridCalendar
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -207,7 +207,7 @@ class GridCalendar
     /**
      * Get monday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMonday()
     {
@@ -230,7 +230,7 @@ class GridCalendar
     /**
      * Get tuesday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getTuesday()
     {
@@ -253,7 +253,7 @@ class GridCalendar
     /**
      * Get wednesday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWednesday()
     {
@@ -276,7 +276,7 @@ class GridCalendar
     /**
      * Get thursday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getThursday()
     {
@@ -299,7 +299,7 @@ class GridCalendar
     /**
      * Get friday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getFriday()
     {
@@ -322,7 +322,7 @@ class GridCalendar
     /**
      * Get saturday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSaturday()
     {
@@ -345,7 +345,7 @@ class GridCalendar
     /**
      * Get sunday
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSunday()
     {
@@ -368,7 +368,7 @@ class GridCalendar
     /**
      * Get lineVersion
      *
-     * @return LineVersion 
+     * @return LineVersion
      */
     public function getLineVersion()
     {
@@ -378,7 +378,7 @@ class GridCalendar
     /**
      * Get gridLinkCalendarMaskTypes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getGridLinkCalendarMaskTypes()
     {

@@ -38,7 +38,7 @@ class ExceptionType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -61,7 +61,7 @@ class ExceptionType
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
@@ -84,7 +84,7 @@ class ExceptionType
     /**
      * Get exceptionText
      *
-     * @return string 
+     * @return string
      */
     public function getExceptionText()
     {
@@ -107,7 +107,7 @@ class ExceptionType
     /**
      * Get gridCalendarPattern
      *
-     * @return string 
+     * @return string
      */
     public function getGridCalendarPattern()
     {
@@ -130,7 +130,7 @@ class ExceptionType
     /**
      * Get tripCalendarPattern
      *
-     * @return string 
+     * @return string
      */
     public function getTripCalendarPattern()
     {

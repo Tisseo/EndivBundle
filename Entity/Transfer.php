@@ -48,7 +48,7 @@ class Transfer
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,7 +71,7 @@ class Transfer
     /**
      * Get duration
      *
-     * @return integer 
+     * @return integer
      */
     public function getDuration()
     {
@@ -94,7 +94,7 @@ class Transfer
     /**
      * Get distance
      *
-     * @return integer 
+     * @return integer
      */
     public function getDistance()
     {
@@ -117,7 +117,7 @@ class Transfer
     /**
      * Get theGeom
      *
-     * @return geometry 
+     * @return geometry
      */
     public function getTheGeom()
     {
@@ -140,7 +140,7 @@ class Transfer
     /**
      * Get longName
      *
-     * @return string 
+     * @return string
      */
     public function getLongName()
     {
@@ -163,7 +163,7 @@ class Transfer
     /**
      * Get endStop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getEndStop()
     {
@@ -186,7 +186,7 @@ class Transfer
     /**
      * Get startStop
      *
-     * @return \Tisseo\EndivBundle\Entity\Stop 
+     * @return \Tisseo\EndivBundle\Entity\Stop
      */
     public function getStartStop()
     {

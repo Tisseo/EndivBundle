@@ -35,7 +35,7 @@ class GridCalendarManager extends SortManager
      * @param inetger $lineVersionId
      * @return array()
      *
-     * Retrieve all GridMaskType linked to a specific LineVersion and 
+     * Retrieve all GridMaskType linked to a specific LineVersion and
      * GridCalendars.
      */
     public function findRelatedGridMaskTypes(Collection $gridCalendars, $lineVersionId)
@@ -77,7 +77,7 @@ class GridCalendarManager extends SortManager
                     AND gmt.id = ?3
                     GROUP BY tc.id
                 ");
-                
+
                 $query->setParameter(1, $lineVersionId);
                 $query->setParameter(2, $gridCalendar->getId());
                 $query->setParameter(3, $gmt->getId());
@@ -98,7 +98,7 @@ class GridCalendarManager extends SortManager
      * attachGridCalendars
      * @param array $data
      *
-     * Link all GridCalendar to their GridMaskType according to data passed as 
+     * Link all GridCalendar to their GridMaskType according to data passed as
      * parameter which contains all ids.
      */
     public function attachGridCalendars($data)
@@ -129,7 +129,7 @@ class GridCalendarManager extends SortManager
                     $gridMaskType = $gridMaskTypeRepository->find($gridMaskTypeId);
                     $gridLinkCalendarMaskType = new GridLinkCalendarMaskType($gridCalendar, $gridMaskType, true);
                     $this->om->persist($gridLinkCalendarMaskType);
-                } 
+                }
             }
         }
         $this->om->flush();
@@ -191,7 +191,7 @@ class GridCalendarManager extends SortManager
                     $trips[$tripData['id']]['end_time'] = $this->secondsToTime(intval($tripData['departureTime']));
                 }
             }
-            
+
             $result[] = array($gridCalendar, $trips);
         }
         return $result;

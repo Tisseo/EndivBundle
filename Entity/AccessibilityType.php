@@ -46,7 +46,7 @@ class AccessibilityType
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stopAccessibilities;
-	
+
     /**
      * Constructor
      */
@@ -54,11 +54,11 @@ class AccessibilityType
     {
         $this->stopAccessibilities = new ArrayCollection();
     }
-	
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -81,7 +81,7 @@ class AccessibilityType
     /**
      * Get startTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getStartTime()
     {
@@ -104,7 +104,7 @@ class AccessibilityType
     /**
      * Get endTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getEndTime()
     {
@@ -127,7 +127,7 @@ class AccessibilityType
     /**
      * Get isRecursive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsRecursive()
     {
@@ -150,7 +150,7 @@ class AccessibilityType
     /**
      * Get accessibilityMode
      *
-     * @return AccessibilityMode 
+     * @return AccessibilityMode
      */
     public function getAccessibilityMode()
     {
@@ -173,17 +173,17 @@ class AccessibilityType
     /**
      * Get calendar
      *
-     * @return Calendar 
+     * @return Calendar
      */
     public function getCalendar()
     {
         return $this->calendar;
     }
-	
+
     /**
      * Get getStopAccessibilities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStopAccessibilities()
     {
@@ -226,5 +226,5 @@ class AccessibilityType
     public function removeStopAccessibility(stopAccessibility $stopAccessibility)
     {
         $this->stopAccessibilities->removeElement($stopAccessibility);
-    }		
+    }
 }

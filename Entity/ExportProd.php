@@ -18,7 +18,7 @@ class ExportProd
     /**
      * Get tableName
      *
-     * @return string 
+     * @return string
      */
     public function getTableName()
     {
