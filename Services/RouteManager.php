@@ -397,7 +397,7 @@ class RouteManager extends SortManager
         |_[trip_calendar]
           |_id
     */
-    public function getCalendarFH($lineVersionId)
+    public function getTimetableCalendars($lineVersionId)
     {
         $query = $this->om->createQuery("
             SELECT t
@@ -412,26 +412,34 @@ class RouteManager extends SortManager
 
         $trips = $query->getResult();
         $result = array();
-        foreach ($trips as $t) {
-            $way = $t->getRoute()->getWay();
-            if( !array_key_exists($way, $result) ) $result[$way] = array();
-            if( $t->getDayCalendar() && $t->getPeriodCalendar() ) {
-                $calendar_key = $t->getDayCalendar()->getName().'#'.$t->getPeriodCalendar()->getName();
-                if( !array_key_exists($calendar_key, $result[$way]) ) $result[$way][$calendar_key] = array();
-                if( !array_key_exists('calendars', $result[$way][$calendar_key]) ) {
-                    $result[$way][$calendar_key]['calendars'] = array();
-                    $result[$way][$calendar_key]['calendars']['day'] = $t->getDayCalendar();
-                    $result[$way][$calendar_key]['calendars']['period'] = $t->getPeriodCalendar();
-                }
-                if( !array_key_exists('trips', $result[$way][$calendar_key]) ) $result[$way][$calendar_key]['trips'] = array();
-                $result[$way][$calendar_key]['trips'][] = $t;
 
-                if( !array_key_exists('objects', $result[$way][$calendar_key]) )
-                    $result[$way][$calendar_key]['objects'] = array();
-                if( $t->getTripCalendar() ) {
-                    if( !array_key_exists('grid_mask_type', $result[$way][$calendar_key]['objects']) )
-                        $result[$way][$calendar_key]['objects']['grid_mask_type'] = $t->getTripCalendar()->getGridMaskType();
-                    $result[$way][$calendar_key]['objects']['trip_calendar'] = $t->getTripCalendar();
+        foreach ($trips as $t)
+        {
+            $way = $t->getRoute()->getWay();
+            if (!array_key_exists($way, $result))
+                $result[$way] = array();
+
+            if ($t->getDayCalendar() && $t->getPeriodCalendar())
+            {
+                $calendarKey = $t->getDayCalendar()->getName().'#'.$t->getPeriodCalendar()->getName();
+
+                if (!array_key_exists($calendarKey, $result[$way]))
+                {
+                    $result[$way][$calendarKey] = array();
+                    $result[$way][$calendarKey]['calendars'] = array();
+                    $result[$way][$calendarKey]['calendars']['day'] = $t->getDayCalendar();
+                    $result[$way][$calendarKey]['calendars']['period'] = $t->getPeriodCalendar();
+                    $result[$way][$calendarKey]['trips'] = array();
+                    $result[$way][$calendarKey]['objects'] = array();
+                }
+
+                $result[$way][$calendarKey]['trips'][] = $t;
+
+                if ($t->getTripCalendar())
+                {
+                    if (!array_key_exists('grid_mask_type', $result[$way][$calendarKey]['objects']))
+                        $result[$way][$calendarKey]['objects']['grid_mask_type'] = $t->getTripCalendar()->getGridMaskType();
+                    $result[$way][$calendarKey]['objects']['trip_calendar'] = $t->getTripCalendar();
                 }
             }
         }
@@ -439,7 +447,7 @@ class RouteManager extends SortManager
         return $result;
     }
 
-    public function getFHCalendarTypeValues()
+    public function getSortedTypesOfGridMaskType()
     {
         $result = array("Semaine", "Samedi", "Dimanche");
         $query = $this->om->createQuery("
@@ -455,9 +463,9 @@ class RouteManager extends SortManager
         return $result;
     }
 
-    public function getFHCalendarPeriodValues()
+    public function getSortedPeriodsOfGridMaskType()
     {
-        $result = array("BASE", "Vacances", "Ete");
+        $result = array("Base", "Vacances", "Ete");
         $query = $this->om->createQuery("
             SELECT DISTINCT g.calendarPeriod
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
