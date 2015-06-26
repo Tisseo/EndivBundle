@@ -151,9 +151,12 @@ class TripManager
 
                 foreach ($trips as $trip)
                 {
-                    $commentsToDelete[] = $trip->getComment()->getId();
-                    $trip->setComment(null);
-                    $this->om->persist($trip);
+                    if ($trip->getComment() !== null)
+                    {
+                        $commentsToDelete[] = $trip->getComment()->getId();
+                        $trip->setComment(null);
+                        $this->om->persist($trip);
+                    }
                 }
             }
             else
@@ -244,7 +247,6 @@ class TripManager
             $uniqueService = ( empty($stopTimes[0]['frequency']) || empty($stopTimes[0]['stop']) );
         }
 
-        $st_patterns = $trip->getPattern()->getStopTimes();
         foreach ($stopTimes as $st) {
             $time_array = explode(":", $st['start']);
             $time = $time_array[0]*3600 + $time_array[1]*60;
