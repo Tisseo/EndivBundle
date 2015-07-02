@@ -35,7 +35,7 @@ class StopHistory
     private $longName;
 
     /**
-     * @var geometry
+     * @var point
      */
     private $theGeom;
 
@@ -44,6 +44,21 @@ class StopHistory
      */
     private $stop;
 
+
+    public function __construct(StopHistory $stopHistory = null)
+    {
+        $this->startDate = new \Datetime('now');
+
+        if ($stopHistory !== null)
+        {
+            $stopHistory->getEndDate() !== null ? $this->startDate = $stopHistory->getEndDate() : $this->startDate = $stopHistory->getStartDate();
+            $this->startDate->modify('+1 day');
+            $this->shortName = $stopHistory->getShortName();
+            $this->longName = $stopHistory->getLongName();
+            $this->theGeom = $stopHistory->getTheGeom();
+            $this->stop = $stopHistory->getStop();
+        }
+    }
 
     /**
      * Get id
@@ -194,13 +209,14 @@ class StopHistory
     }
 
     /**
-     * Get available srid
+     * Close Date
+     * @param Datetime $date
      *
-     * @return list
-     * @todo bad bad bad => must return database available srid
+     * Set the endDate with the date passed as parameter
      */
-    public static function getSridList()
+    public function closeDate(\Datetime $date)
     {
-        return array('3943'=>'RGF93/CC43', '2154'=>'RGF93/Lambert-93', '4326'=>'WGS 84', '27672'=>'NTF(Paris) / Lambert zone II');
+        $this->endDate = new \Datetime($date->format('Y-m-d'));
+        $this->endDate->modify('-1 day');
     }
 }

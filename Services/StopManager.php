@@ -28,353 +28,73 @@ class StopManager extends SortManager
         return ($this->repository->findAll());
     }
 
-    public function find($StopId)
+    public function find($stopId)
     {
-        return empty($StopId) ? null : $this->repository->find($StopId);
+        return empty($stopId) ? null : $this->repository->find($stopId);
     }
 
-    public function save(Stop $Stop, $x = null, $y = null, $srid = null)
+    public function create(Stop $stop)
     {
-        if( !$Stop->getId() ) {
-            // new waypoint + new stop + new stop_history
-            $connection = $this->em->getConnection()->getWrappedConnection();
-            $stmt = $connection->prepare("
-                INSERT INTO waypoint(id) VALUES (nextval('waypoint_id_seq')) RETURNING waypoint.id
-            ");
-            $stmt->execute();
-            $newId = $stmt->fetch(\PDO::FETCH_ASSOC)["id"];
-
-            $Stop->setId($newId);
-            $Stop->getStopHistories()[0]->setTheGeom(new Point($x, $y, $srid));
-        }
-
-        $masterStop = $Stop->getMasterStop();
-        if( $masterStop && $Stop->getId() ) {
-            // supprimer les stop_accessibility
-            foreach($Stop->getStopAccessibilities() as $sa) {
-                $this->em->remove($sa);
-            }
-            // close stop histories
-            $date = new \DateTime('NOW');
-            $this->closeStopHistories($Stop, $date);
-            //clone current master stop stop history
-            $currentSH = $this->getCurrentStopHistory($masterStop);
-            if ( $currentSH ) {
-                $newStartDate = clone $date;
-                $newStartDate->add(new \DateInterval('P1D'));
-
-                $newSH = new StopHistory();
-                $newSH->setStartDate($newStartDate);
-                $newSH->setEndDate($currentSH->getEndDate());
-                $newSH->setShortName($currentSH->getShortName());
-                $newSH->setLongName($currentSH->getLongName());
-                $newSH->setTheGeom($currentSH->getTheGeom());
-                $newSH->setStop($Stop);
-                $Stop->addStopHistory($newSH);
-                $this->em->persist($newSH);
-            }
-
-            //clone master stop future stop histories
-            $futureStopHistories = $this->getFutureStopHistories($masterStop, $date);
-            foreach($futureStopHistories as $sh) {
-                $newSH = new StopHistory();
-                $newSH->setStartDate($sh->getStartDate());
-                $newSH->setEndDate($sh->getEndDate());
-                $newSH->setShortName($sh->getShortName());
-                $newSH->setLongName($sh->getLongName());
-                $newSH->setTheGeom($sh->getTheGeom());
-                $newSH->setStop($Stop);
-                $Stop->addStopHistory($newSH);
-                $this->em->persist($newSH);
-            }
-        }
-
-        $this->em->persist($Stop);
-        $this->em->flush();
-    }
-
-    public function closeStopHistories(Stop $Stop, $closingDate)
-    {
-
-        if( gettype($closingDate) == "string" )
-            $closingDateObject = \DateTime::createFromFormat('d/m/Y', $closingDate);
-        else
-            $closingDateObject = \DateTime::createFromFormat('d/m/Y', $closingDate->format('d/m/Y'));
-
-        //"close" current stop_history
-        $currentStopHistory = $this->getCurrentStopHistory($Stop);
-        $endDate = $currentStopHistory->getEndDate();
-        if( $endDate == null or strtotime($endDate->format('Ymd')) > strtotime($closingDateObject->format('Ymd')) ) {
-            $currentStopHistory->setEndDate($closingDateObject);
-            $this->em->persist($currentStopHistory);
-        }
-
-        //remove future stop_history
-        $futureStopHistories = $this->getFutureStopHistories($Stop, $closingDateObject->format("Y-m-d H:i:s"));
-        foreach($futureStopHistories as $sh) {
-            $this->em->remove($sh);
-        }
-
-        $phantoms = $Stop->getPhantoms();
-        if( $phantoms ) {
-            //close phantoms stop histories
-            foreach( $phantoms as $phantom ) {
-                $this->closeStopHistories($phantom, $closingDate);
-            }
-        }
-    }
-
-    public function closeStop(Stop $Stop, $closingDate)
-    {
-        $this->closeStopHistories($Stop, $closingDate);
-        $this->em->flush();
-    }
-
-    public function addStopHistory(Stop $Stop, StopHistory $StopHistory, $x, $y, $srid)
-    {
-        //new stop history have no end_date
-        $currentStopHistory = $this->getCurrentStopHistory($Stop);
-        $lastDay = clone  $StopHistory->getStartDate();
-        $lastDay->sub(new \DateInterval('P1D'));
-
-        //remove future stop histories
-        $futureStopHistories = $this->getFutureStopHistories($Stop, $StopHistory->getStartDate()->format("Y-m-d H:i:s"));
-        foreach($futureStopHistories as $sh) {
-            $Stop->removeStopHistory($sh);
-            $this->em->remove($sh);
-        }
-
-        $stopHistories = $Stop->getStopHistories();
-        $iter = $stopHistories->getIterator();
-        //reverse sort for iteration
-        $iter->uasort(function($a, $b) {
-            $startDate_a = $a->getStartDate();
-            $startDate_b = $b->getStartDate();
-            return $startDate_a == $startDate_b ? 0 : strtotime($startDate_a->format('Ymd')) < strtotime($startDate_b->format('Ymd')) ? 1 : - 1;
-        });
-
-        // update if necessary previous stop history (end date => previous day)
-        foreach ($iter as $sh) {
-            $startDate = $sh->getStartDate();
-            if( strtotime($startDate->format('Ymd')) <= strtotime($lastDay->format('Ymd')) ) {
-                //put end date to previous stop history
-                $endDate = $sh->getEndDate();
-                if( $endDate == null ) {
-                        $sh->setEndDate($lastDay);
-                        $this->em->persist($sh);
-                        break;
-                } else {
-                    if( strtotime($endDate->format('Ymd')) >= strtotime($lastDay->format('Ymd')) ) {
-                        $sh->setEndDate($lastDay);
-                        $this->em->persist($sh);
-                        break;
-                    } else {
-                        // end date already lower
-                        break;
-                    }
-                }
-            }
-        }
-
-        $StopHistory->setStop($Stop);
-        $StopHistory->setTheGeom(new Point($x, $y, $srid));
-        $Stop->addStopHistory($StopHistory);
-        $this->em->persist($StopHistory);
-        $this->em->persist($Stop);
-        $this->em->flush();
-
-        //add stop history to phantoms
-        $phantoms = $Stop->getPhantoms();
-        foreach($phantoms as $phantom) {
-            $sh = new StopHistory();
-            $sh->setStartDate($StopHistory->getStartDate());
-            $sh->setShortName($StopHistory->getShortName());
-            $sh->setLongName($StopHistory->getLongName());
-            $this->addStopHistory($phantom, $sh, $x, $y, $srid);
-        }
-    }
-
-
-    public function removeStopHistory(Stop $stop, $StopHistoryId)
-    {
-        $query = $this->em->createQuery("
-            SELECT sh
-            FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            WHERE sh.id = :id
-        ")
-        ->setParameter('id', $StopHistoryId);
-        $datas = $query->getResult();
-        if($datas) {
-            $stopHistory = $datas[0];
-            $newLastDate = clone $stopHistory->getStartDate();
-
-            $phantomStartDate = clone $stopHistory->getStartDate();
-            $phantomEndDate = null;
-            if( $stopHistory->getEndDate() )
-                $phantomEndDate = clone $stopHistory->getEndDate();
-
-            $newLastDate->sub(new \DateInterval('P1D'));    //get previous day
-            $stop->removeStopHistory($stopHistory);
-            $this->em->remove($stopHistory);
-
-            $stopHistories = $stop->getStopHistories();
-            $iter = $stopHistories->getIterator();
-            //reverse sort for iteration
-            $iter->uasort(function($a, $b) {
-                $startDate_a = $a->getStartDate();
-                $startDate_b = $b->getStartDate();
-                return $startDate_a == $startDate_b ? 0 : strtotime($startDate_a->format('Ymd')) < strtotime($startDate_b->format('Ymd')) ? 1 : - 1;
-            });
-
-            // update if necessary previous stop history (end date => null)
-            foreach ($iter as $sh) {
-                $startDate = $sh->getStartDate();
-                $nexStartDate = null;
-                if( strtotime($startDate->format('Ymd')) > strtotime($newLastDate->format('Ymd')) ) {
-                    //later sh
-                    $nexStartDate = clone $startDate;
-                } else {
-                    //previous sh => update ?
-                    $endDate = $sh->getEndDate();
-                    if( $nexStartDate !== null ) {
-                        $nexStartDate->sub(new \DateInterval('P1D'));
-                        if( $endDate == null || strtotime($endDate->format('Ymd')) > strtotime($nexStartDate->format('Ymd')) ) {
-                            $sh->setEndDate($nexStartDate);
-                            $this->em->persist($sh);
-                            break;
-                        }
-                    } else {
-                        //no later stop history
-                        if( $endDate !== null ) {
-                            if( strtotime($endDate->format('Ymd')) <= strtotime($newLastDate->format('Ymd')) ) {
-                                $sh->setEndDate(null);
-                                $this->em->persist($sh);
-                                break;
-                            }
-                        } else {
-                            // stop history endDate already to null
-                            break;
-                        }
-                    }
-                }
-            }
-
-            $this->em->flush();
-
-            //remove sh from phantoms
-            $phantoms = $stop->getPhantoms();
-            foreach($phantoms as $phantom) {
-                $sh = $this->getStopHistoryByDate($phantom, $phantomStartDate, $phantomEndDate);
-                $this->removeStopHistory($phantom, $sh->getId());
-            }
-        }
-    }
-
-    public function addAccessibility(Stop $Stop, StopAccessibility $StopAccessibility)
-    {
-        $StopAccessibility->setStop($Stop);
-        $Stop->addStopAccessibility($StopAccessibility);
-        $this->em->persist($StopAccessibility);
-        $this->em->persist($Stop);
-        $this->em->flush();
-    }
-
-    public function removeStopAccessibility(Stop $Stop, $StopAccessibilityId)
-    {
-        foreach ($Stop->getStopAccessibilities() as $sa) {
-            if($sa->getId() == $StopAccessibilityId) {
-                $Stop->removeStopAccessibility($sa);
-                $this->em->remove($sa);
-                $this->em->persist($Stop);
-                $this->em->flush();
-                break;
-            }
-        }
-    }
-
-    public function findStopsLike( $term, $limit = 10 )
-    {
-        $specials = array("-", " ", "'");
-        $cleanTerm = str_replace($specials, "_", $term);
-
-
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("
-            SELECT sh.short_name as name, c.name as city,  sd.code as code, s.id as id
-            FROM stop_history sh
-            JOIN stop s on sh.stop_id = s.id
-            JOIN stop_area sa on sa.id = s.stop_area_id
-            JOIN city c on c.id = sa.city_id
-            JOIN stop_datasource sd on sd.stop_id = s.id
-            WHERE UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(sd.code) LIKE UPPER(:term)
-            AND sh.start_date <= current_date
-            AND (sh.end_date IS NULL or sh.end_date >= current_date)
-            ORDER BY sh.short_name, c.name, sd.code
-        ");
-        $stmt->bindValue(':term', '%'.$cleanTerm.'%');
+        $stmt = $connection->prepare("INSERT INTO waypoint(id) VALUES (nextval('waypoint_id_seq')) RETURNING waypoint.id");
         $stmt->execute();
-        $shs = $stmt->fetchAll();
+        $stop->setId($stmt->fetch(\PDO::FETCH_ASSOC)["id"]);
 
-        $array = array();
-        foreach($shs as $sh) {
-            $label = $sh["name"]." ".$sh["city"]." (".$sh["code"].")";
-            $array[] = array("name"=>$label, "id"=>$sh["id"]);
-        }
+        $this->em->persist($stop);
+        $this->em->flush();
 
-        return $array;
+        return $stop->getId();
     }
 
-    public function getStopsByRoute($id) {
-
-            $query = $this->em->createQuery("
-               SELECT rs.id, rs.rank, rs.pickup, rs.dropOff, wp.id as waypoint
-               FROM Tisseo\EndivBundle\Entity\RouteStop rs
-               JOIN rs.waypoint wp
-               WHERE rs.route = :id
-               ORDER BY rs.rank
-        ")->setParameter('id' , $id);
-
-
-        return $query->getResult();
-
+    public function save(Stop $stop)
+    {
+        $this->em->persist($stop);
+        $this->em->flush();
     }
 
-    public function getStops($idWaypoint){
-
-
+    // TODO: Does this belong here ?
+    public function getRouteStopsByRoute($routeId) {
         $query = $this->em->createQuery("
-               SELECT st.id, ar.shortName, ar.id as zone,  c.name as city,  sd.code as code
-               FROM Tisseo\EndivBundle\Entity\Stop st
-               JOIN st.stopArea ar
-               JOIN ar.city c
-               JOIN st.stopDatasources sd
-               WHERE st.id = :id
-        ")->setParameter('id', $idWaypoint);
-
+            SELECT rs.id, rs.rank, rs.pickup, rs.dropOff, wp.id as waypoint
+            FROM Tisseo\EndivBundle\Entity\RouteStop rs
+            JOIN rs.waypoint wp
+            WHERE rs.route = :id
+            ORDER BY rs.rank
+        ")
+        ->setParameter('id', $routeId);
 
         return $query->getResult();
     }
 
+    // TODO: Investigate this function
+    public function getStops($waypointId) {
+        $query = $this->em->createQuery("
+            SELECT st.id, ar.shortName, ar.id as zone, c.name as city, sd.code as code
+            FROM Tisseo\EndivBundle\Entity\Stop st
+            JOIN st.stopArea ar
+            JOIN ar.city c
+            JOIN st.stopDatasources sd
+            WHERE st.id = :id
+        ")
+        ->setParameter('id', $waypointId);
 
+        return $query->getResult();
+    }
 
-
+    // TODO: WTF ?? route ??
     public function getStopArea($route) {
         $query = $this->em->createQuery("
-               SELECT st.id, ar.shortName, ar.id as zone,  c.name as city
-               FROM Tisseo\EndivBundle\Entity\Stop st
-               JOIN st.stopArea ar
-               JOIN ar.city c
-               WHERE st.id = :id
+            SELECT st.id, ar.shortName, ar.id as zone,  c.name as city
+            FROM Tisseo\EndivBundle\Entity\Stop st
+            JOIN st.stopArea ar
+            JOIN ar.city c
+            WHERE st.id = :id
         ")->setParameter('id', $route);
-
 
         return $query->getResult();
     }
 
-
-
+    // TODO: AAAAAAAAAAAAH !!
     public function getStopLabel( Stop $stop )
     {
         $query = $this->em->createQuery("
@@ -397,73 +117,292 @@ class StopManager extends SortManager
         return $label;
     }
 
-    public function getCurrentStopHistory( $stop )
+    //
+    // VERIFIED USEFUL FUNCTIONS
+    //
+
+    /**
+     * Get latest StopHistory
+     * @param integer $stopId
+     *
+     * Returning the latest stopHistory attached to a Stop.
+     * @return StopHistory or null
+     */
+    public function getLatestStopHistory($stopId)
     {
         $query = $this->em->createQuery("
-            SELECT sh
-            FROM Tisseo\EndivBundle\Entity\StopHistory sh
+            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
+            JOIN sh.stop s
+            WHERE sh.stop = :stop
+            ORDER BY sh.startDate DESC
+        ")
+        ->setParameter('stop', $stopId)
+        ->setMaxResults(1);
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * Get current StopHistory
+     * @param integer $stopId
+     *
+     * Returning the current stopHistory attached to a Stop.
+     * @return StopHistory or null
+     */
+    public function getCurrentStopHistory($stopId)
+    {
+        $query = $this->em->createQuery("
+            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
             JOIN sh.stop s
             WHERE sh.stop = :stop
             AND sh.startDate <= CURRENT_DATE()
             AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE())
-        ");
-        $query->setParameter('stop', $stop);
+        ")
+        ->setParameter('stop', $stopId);
 
-        //stops have ONLY ONE current stop history!
-        return $query->getResult()[0];
+        return $query->getOneOrNullResult();
     }
 
-    public function getFutureStopHistories( $stop, $startDate )
+    /**
+     * TODO: COMMENT
+     */
+    public function getCurrentOrLatestStopHistory($stopId)
+    {
+        $currentStopHistory = $this->getCurrentStopHistory($stopId);
+
+        return ($currentStopHistory === null ? $this->getLatestStopHistory($stopId) : $currentStopHistory);
+    }
+
+    /**
+     * TODO: COMMENT
+     */
+    public function isClosable($stopId)
+    {
+        $stopHistory = $this->getLatestStopHistory($stopId);
+
+        if (empty($stopHistory) || $stopHistory->getEndDate() !== null)
+            return false;
+
+        return true;
+    }
+
+    /**
+     * TODO: COMMENT
+     */
+    public function getOrderedStopHistories($stop)
     {
         $query = $this->em->createQuery("
-            SELECT sh
-            FROM Tisseo\EndivBundle\Entity\StopHistory sh
+            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
             JOIN sh.stop s
             WHERE sh.stop = :stop
-            AND sh.startDate > :date
+            ORDER BY sh.startDate DESC
         ");
         $query->setParameter('stop', $stop);
-        $query->setParameter('date', $startDate);
 
         return $query->getResult();
     }
 
-    public function getStopHistoriesOrderByDate( $stop )
+    /**
+     * TODO: COMMENT
+     * TODO: Investigate why use of connection + is this function good ?
+     * TODO: THERE IS A JSONCONTROLLER WHICH CALL FUNCTIONS LIKE THIS ONE:
+     *       JSONMANAGER CENTRALIZATION THEN ? CAPSLOCK IS GOOD.
+     */
+    public function findStopsLike($term)
     {
-        $query = $this->em->createQuery("
-            SELECT sh
-            FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            JOIN sh.stop s
-            WHERE sh.stop = :stop
-            ORDER BY sh.startDate
-        ");
-        $query->setParameter('stop', $stop);
+        $specials = array("-", " ", "'");
+        $cleanTerm = str_replace($specials, "_", $term);
 
-        return $query->getResult();
+        $connection = $this->em->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare("
+            SELECT sh.short_name as name, c.name as city, sd.code as code, s.id as id
+            FROM stop_history sh
+            JOIN stop s on sh.stop_id = s.id
+            JOIN stop_area sa on sa.id = s.stop_area_id
+            JOIN city c on c.id = sa.city_id
+            JOIN stop_datasource sd on sd.stop_id = s.id
+            WHERE UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
+            OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
+            OR UPPER(sd.code) LIKE UPPER(:term)
+            AND sh.start_date <= current_date
+            AND (sh.end_date IS NULL or sh.end_date >= current_date)
+            ORDER BY sh.short_name, c.name, sd.code
+        ");
+        $stmt->bindValue(':term', '%'.$cleanTerm.'%');
+        $stmt->execute();
+        $stopHistories = $stmt->fetchAll();
+
+        $result = array();
+        foreach ($stopHistories as $stopHistory) {
+            $result[] = array(
+                "name" => $stopHistory["name"]." ".$stopHistory["city"]." (".$stopHistory["code"].")",
+                "id" => $stopHistory["id"]
+            );
+        }
+
+        return $result;
     }
 
-    public function getStopHistoryByDate( $stop, $startDate, $endDate )
+    /**
+     * TODO: CREATE A NEW SPECIFIC MANAGER ?
+     * StopAccessibility functions below
+     */
+
+    /**
+     * Save
+     * @param integer $stopId
+     * @param StopAccessibility $stopAccessibility
+     *
+     * TODO: COMMENT
+     */
+    public function saveStopAccessibility($stopId, StopAccessibility $stopAccessibility)
     {
-        $dql = "
-            SELECT sh
-            FROM Tisseo\EndivBundle\Entity\StopHistory sh
+        $stop = $this->find($stopId);
+
+        if (empty($stop))
+            throw new \Exception("Can't save accessibility for the related stop with ID: ".$stopId." because it doesn't exist.");
+
+        $stopAccessibility->setStop($stop);
+        $stop->addStopAccessibility($stopAccessibility);
+
+        $this->em->persist($stopAccessibility);
+        $this->em->persist($stop);
+        $this->em->flush();
+    }
+
+    /**
+     * Delete
+     * @param integer $stopId
+     * @param integer $stopAccessibilityId
+     *
+     * TODO: COMMENT
+     */
+    public function deleteStopAccessibility($stopId, $stopAccessibilityId)
+    {
+        $stop = $this->find($stopId);
+
+        if (empty($stop))
+            throw new \Exception("Can't delete accessibility for the related stop with ID: ".$stopId." because it doesn't exist.");
+
+        $stopAccessibility = $stop->findStopAccessibility($stopAccessibilityId);
+
+        if (empty($stopAccessibility))
+            throw new \Exception("Can't delete accessibility with ID: ".$stopAccessibilityId." because it doesn't exist.");
+
+        $stop->removeStopAccessibility($stopAccessibility);
+        $this->em->remove($stopAccessibility);
+        $this->em->persist($stop);
+        $this->em->flush();
+    }
+
+    /**
+     * TODO: CREATE A NEW SPECIFIC MANAGER ?
+     * StopHistory functions below
+     */
+
+    /**
+     * Save
+     * @param StopHistory $stopHistory
+     * @param StopHistory $latestStopHistory
+     *
+     * TODO: COMMENT
+     */
+    public function createStopHistory(StopHistory $stopHistory, StopHistory $latestStopHistory)
+    {
+        // the new startDate is before some StopHistories startDate, delete them
+        if ($latestStopHistory->getStartDate() >= $stopHistory->getStartDate())
+        {
+            $youngerStopHistories = $this->findYoungerStopHistories($stopHistory->getStop()->getId(), $stopHistory->getStartDate());
+            foreach ($youngerStopHistories as $youngerStopHistory)
+                $this->em->remove($youngerStopHistory);
+        }
+        else if ($latestStopHistory->getEndDate() === null)
+        {
+            $latestStopHistory->closeDate($stopHistory->getStartDate());
+            $this->em->persist($latestStopHistory);
+        }
+
+        $this->em->persist($stopHistory);
+        $this->em->persist($stopHistory->getStop());
+        $this->em->flush();
+
+        $phantoms = $stopHistory->getStop()->getPhantoms();
+
+        foreach ($phantoms as $phantom) {
+            $phantomHistory = clone $stopHistory;
+            $phantomHistory->setStop($phantom);
+            $this->createStopHistory($phantomHistory, $this->getLatestStopHistory($phantom->getId()));
+        }
+    }
+
+    /**
+     * Close
+     * @param StopHistory $stopHistory
+     *
+     * TODO: COMMENT
+     */
+    public function closeStopHistory(StopHistory $stopHistory)
+    {
+         $this->em->persist($stopHistory);
+
+         $phantoms = $stopHistory->getStop()->getPhantoms();
+
+         foreach ($phantoms as $phantom) {
+             $phantomHistory = $this->getLatestStopHistory($phantom->getId());
+             $phantomHistory->setEndDate($stopHistory->getEndDate());
+             $this->em->persist($phantomHistory);
+         }
+
+         $this->em->flush();
+    }
+
+    /**
+     * Delete
+     * @param StopHistory $stopHistory
+     *
+     * TODO: COMMENT
+     */
+    public function deleteStopHistory(StopHistory $stopHistory)
+    {
+        $phantoms = $stopHistory->getStop()->getPhantoms();
+
+        foreach ($phantoms as $phantom) {
+             $phantomHistory = $this->getLatestStopHistory($phantom->getId());
+             $this->em->remove($phantomHistory);
+        }
+
+        $this->em->remove($stopHistory);
+        $this->em->flush();
+    }
+
+    /**
+     * TODO: COMMENT + BELONG STOPHISTORYMANAGER
+     */
+    public function findStopHistory($stopHistoryId)
+    {
+        $query = $this->em->createQuery("
+            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
+            WHERE sh.id = :id
+        ")
+        ->setParameter('id', $stopHistoryId);
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * TODO: COMMENT + BELONG STOPHISTORYMANAGER
+     */
+    public function findYoungerStopHistories($stopId, $startDate)
+    {
+        $query = $this->em->createQuery("
+            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
             JOIN sh.stop s
-            WHERE sh.stop = :stop
-            AND sh.startDate = :startDate
-        ";
-        if(!$endDate)
-            $dql .= "AND sh.endDate IS NULL";
-        else
-            $dql .= "AND sh.endDate = :endDate";
+            WHERE IDENTITY(sh.stop) = :id
+            AND sh.startDate >= :date
+        ")
+        ->setParameter('id', $stopId)
+        ->setParameter('date', $startDate);
 
-        $query = $this->em->createQuery($dql)
-        ->setParameter('stop', $stop)
-        ->setParameter('startDate', $startDate);
-        if($endDate)
-            $query->setParameter('endDate', $endDate);
-
-        $datas = $query->getResult();
-        if( !$datas ) return null;
-        return $datas[0];
+        return $query->getResult();
     }
 }

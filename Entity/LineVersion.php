@@ -711,7 +711,7 @@ class LineVersion
      * @param string
      * @return LineVersion
      */
-    public function setStatus($satus)
+    public function setStatus($status)
     {
         $this->status = $status;
 

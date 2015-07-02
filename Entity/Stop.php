@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Stop
@@ -325,6 +326,18 @@ class Stop
     public function removeStopAccessibility(stopAccessibility $stopAccessibility)
     {
         $this->stopAccessibilities->removeElement($stopAccessibility);
+    }
+
+    /**
+     * Find stopAccessibility
+     *
+     * @param integer $stopAccessibilityId
+     */
+    public function findStopAccessibility($stopAccessibilityId)
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->in('id', $stopAccessibilityId));
+
+        return $this->getStopAccessibilities()->matching($criteria);
     }
 
     /**
