@@ -40,7 +40,7 @@ Tisseo\EndivBundle\Entity\StopHistory:
             comment: 'Champ inutile pour le moment. Laisser vide.'
             column: long_name
         theGeom:
-            type: geometry
+            type: point
             nullable: false
             comment: ''
             requireSQLConversion: true
