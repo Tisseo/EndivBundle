@@ -47,17 +47,20 @@ Tisseo\EndivBundle\Entity\StopArea:
             cascade: ['persist', 'remove']
             mappedBy: stopArea
             inversedBy: null
+            fetch: 'EXTRA_LAZY'
         stops:
             targetEntity: Stop
             cascade: {  }
             mappedBy: stopArea
             inversedBy: null
-        alias:
+            fetch: 'EXTRA_LAZY'
+        aliases:
             targetEntity: Alias
             cascade: ['persist', 'remove']
             mappedBy: stopArea
             inversedBy: null
             orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
     manyToOne:
         city:
             targetEntity: City

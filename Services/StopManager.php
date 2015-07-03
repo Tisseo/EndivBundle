@@ -174,20 +174,7 @@ class StopManager extends SortManager
     }
 
     /**
-     * TODO: COMMENT
-     */
-    public function isClosable($stopId)
-    {
-        $stopHistory = $this->getLatestStopHistory($stopId);
-
-        if (empty($stopHistory) || $stopHistory->getEndDate() !== null)
-            return false;
-
-        return true;
-    }
-
-    /**
-     * TODO: COMMENT
+     * TODO: REPLACE BY CRITERIA IN STOP ENTITY
      */
     public function getOrderedStopHistories($stop)
     {
@@ -312,9 +299,11 @@ class StopManager extends SortManager
         // the new startDate is before some StopHistories startDate, delete them
         if ($latestStopHistory->getStartDate() >= $stopHistory->getStartDate())
         {
-            $youngerStopHistories = $this->findYoungerStopHistories($stopHistory->getStop()->getId(), $stopHistory->getStartDate());
+            $youngerStopHistories = $stopHistory->getStop()->getYoungerStopHistories($stopHistory->getStartDate());
             foreach ($youngerStopHistories as $youngerStopHistory)
                 $this->em->remove($youngerStopHistory);
+
+            $this->em->flush();
         }
         else if ($latestStopHistory->getEndDate() === null)
         {
@@ -387,22 +376,5 @@ class StopManager extends SortManager
         ->setParameter('id', $stopHistoryId);
 
         return $query->getOneOrNullResult();
-    }
-
-    /**
-     * TODO: COMMENT + BELONG STOPHISTORYMANAGER
-     */
-    public function findYoungerStopHistories($stopId, $startDate)
-    {
-        $query = $this->em->createQuery("
-            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            JOIN sh.stop s
-            WHERE IDENTITY(sh.stop) = :id
-            AND sh.startDate >= :date
-        ")
-        ->setParameter('id', $stopId)
-        ->setParameter('date', $startDate);
-
-        return $query->getResult();
     }
 }

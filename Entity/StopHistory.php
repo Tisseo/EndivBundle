@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * StopHistory
@@ -48,15 +49,45 @@ class StopHistory
     public function __construct(StopHistory $stopHistory = null)
     {
         $this->startDate = new \Datetime('now');
+        $this->startDate->modify('+1 day');
 
         if ($stopHistory !== null)
         {
-            $stopHistory->getEndDate() !== null ? $this->startDate = $stopHistory->getEndDate() : $this->startDate = $stopHistory->getStartDate();
-            $this->startDate->modify('+1 day');
             $this->shortName = $stopHistory->getShortName();
             $this->longName = $stopHistory->getLongName();
             $this->theGeom = $stopHistory->getTheGeom();
             $this->stop = $stopHistory->getStop();
+        }
+    }
+
+    public function minStartDate(ExecutionContextInterface $context)
+    {
+        $currentStopHistory = $this->getStop()->getCurrentStopHistory();
+        $today = new \Datetime();
+
+        if (!empty($currentStopHistory) && $currentStopHistory->getEndDate() !== null)
+        {
+            if ($this->getStartDate() <= $latestStopHistory->getEndDate())
+            {
+                 $context->addViolationAt(
+                    'startDate',
+                    'stop_history.errors.min_date_end',
+                    array('%date%' => $latestStopHistory->getEndDate()->format('d/m/Y')),
+                    null
+                );
+            }
+        }
+        else 
+        {
+            if ($this->getStartDate() <= $today)
+            {
+                $context->addViolationAt(
+                    'startDate',
+                    'stop_history.errors.min_date',
+                    array('%date%' => $today->format('d/m/Y')),
+                    null
+                );
+            }
         }
     }
 

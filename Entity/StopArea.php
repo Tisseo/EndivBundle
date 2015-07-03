@@ -54,7 +54,7 @@ class StopArea
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $alias;
+    private $aliases;
 
 
     /**
@@ -64,7 +64,7 @@ class StopArea
     {
         $this->stopAreaDatasources = new ArrayCollection();
         $this->stops = new ArrayCollection();
-        $this->alias = new ArrayCollection();
+        $this->aliases = new ArrayCollection();
     }
 
     /**
@@ -289,51 +289,51 @@ class StopArea
     }
 
     /**
-     * Get getAlias
+     * Get getAliases
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAlias()
+    public function getAliases()
     {
-        return $this->alias;
+        return $this->aliases;
     }
 
     /**
-     * Set alias
+     * Set aliases
      *
-     * @param \Doctrine\Common\Collections\Collection $alias
+     * @param \Doctrine\Common\Collections\Collection $aliases
      * @return StopArea
      */
-    public function setAlias(Collection $alias)
+    public function setAliases(Collection $aliases)
     {
-        $this->alias = $alias;
-        foreach ($this->alias as $a) {
+        $this->aliases = $aliases;
+        foreach ($this->aliases as $a) {
             $a->setStopArea($this);
         }
         return $this;
     }
 
     /**
-     * Add alias
+     * Add aliases
      *
-     * @param Alias $alias
+     * @param Alias $aliases
      * @return StopArea
      */
-    public function addAlias(Alias $alias)
+    public function addAliases(Alias $aliases)
     {
-        $this->alias[] = $alias;
-        $alias->setStopArea($this);
+        $this->aliases[] = $aliases;
+        $aliases->setStopArea($this);
         return $this;
     }
 
     /**
      * Remove aslias
      *
-     * @param Alias $alias
+     * @param Alias $aliases
      */
-    public function removeAlias(Alias $alias)
+    public function removeAliases(Alias $aliases)
     {
-        $this->alias->removeElement($alias);
+        $this->aliases->removeElement($aliases);
     }
 
     public function getNameLabel()
