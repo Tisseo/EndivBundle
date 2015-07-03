@@ -53,7 +53,6 @@ class StopAreaManager extends SortManager
         $this->em->flush();
     }
 
-
     public function findStopAreasLike( $term, $limit = 10 )
     {
         $specials = array("-", " ", "'");
@@ -117,7 +116,7 @@ class StopAreaManager extends SortManager
     /**
      * getMainStopCityName
      * @param entity $StopArea => stop_area to check
-     * @ return the name of the (first) city founded, an empty string if none
+     * @return the name of the (first) city found, an empty string if none
      */
     public function getMainStopCityName($StopArea) {
         if( !$StopArea->getId() ) return "";
@@ -135,37 +134,6 @@ class StopAreaManager extends SortManager
         return "";
     }
 
-    public function getLines($stopArea)
-    {
-        $query = $this->em->createQuery("
-               SELECT l.number as number , bc.html as bgColor, fc.html as fgColor, s.id
-               FROM Tisseo\EndivBundle\Entity\LineVersion lv
-               JOIN lv.line l
-               JOIN lv.bgColor bc
-               JOIN lv.fgColor fc
-               JOIN lv.routes r
-               JOIN r.routeStops rs
-               JOIN rs.waypoint w
-               JOIN w.stop s
-               WHERE (lv.endDate IS NULL or lv.endDate >= CURRENT_DATE())
-               AND s.stopArea = :sa
-        ")
-        ->setParameter('sa', $stopArea);
-
-        $array = $query->getResult();
-        $result = array();
-        foreach($array as $item) {
-            $line = [
-                    "number"=> $item["number"],
-                    "bgColor" => $item["bgColor"],
-                    "fgColor" => $item["fgColor"]
-            ];
-
-            if( !isset($result[$item["id"]]) || !in_array($line, $result[$item["id"]]) )
-                $result[$item["id"]][] = $line;
-        }
-        return $result;
-    }
 
     public function getStopArea($id) {
         $query = $this->em->createQuery("
@@ -179,5 +147,31 @@ class StopAreaManager extends SortManager
         return $query->getResult();
     }
 
+    //
+    // VERIFIED FUNCTION
+    //
 
+    public function getLineVersions($stopAreaId)
+    {
+        $query = $this->em->createQuery("
+           SELECT s.id, lv
+           FROM Tisseo\EndivBundle\Entity\LineVersion lv
+           JOIN lv.line l
+           JOIN lv.routes r
+           JOIN r.routeStops rs
+           JOIN rs.waypoint w
+           JOIN w.stop s
+           WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
+           AND s.stopArea = :sa
+        ")
+        ->setParameter('sa', $stopAreaId);
+
+        $array = $query->getResult();
+        $result = array();
+
+        foreach ($array as $item)
+            $result[$item['id']][] = $item[0];
+
+        return $result;
+    }
 }

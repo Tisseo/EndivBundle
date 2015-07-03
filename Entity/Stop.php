@@ -335,9 +335,11 @@ class Stop
      */
     public function findStopAccessibility($stopAccessibilityId)
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->in('id', $stopAccessibilityId));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $stopAccessibilityId))
+        ;
 
-        return $this->getStopAccessibilities()->matching($criteria);
+        return $this->stopAccessibilities()->matching($criteria);
     }
 
     /**
@@ -389,52 +391,100 @@ class Stop
     }
 
     /**
-     * return masterStop Label
+     * CUSTOM FUNCTIONS MOST USING CRITERIA FOR SIMPLE DB REQUESTS
      */
-    public function getMasterStopLabel()
+
+    /**
+     * Latest StopHistory
+     */
+    public function getLatestStopHistory()
     {
-        if(!empty($this->masterStop)) {
-            return $this->masterStop->getStopLabel();
-        }
-        return "";
+        $criteria = Criteria::create()
+            ->orderBy(array('startDate' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        return $this->stopHistories->matching($criteria)->first();
+    }
+
+    public function getYoungerStopHistories(\Datetime $date)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->gte('startDate', $date))
+            ->orderBy(array('startDate' => Criteria::DESC))
+        ;
+
+        return $this->stopHistories->matching($criteria);
     }
 
     /**
-     * return Stop Label ( current StopHistory.shortName - Datasource.Agency.name (Datasource.code)
+     * Current StopHistory
+     *
+     * @param \Datetime $date
+     */
+    public function getCurrentStopHistory($date)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->lte('startDate', $date))
+            ->andWhere(
+                Criteria::expr()->orX(
+                    Criteria::expr()->isNull('endDate'),
+                    Criteria::expr()->gt('endDate', $date)
+                )
+            )
+            ->setMaxResults(1)
+        ;
+
+        return $this->stopHistories->matching($criteria)->first();
+    }
+
+    /**
+     * Current or Latest StopHistory
+     *
+     * @param \Datetime $date
+     */
+    public function getCurrentOrLatestStopHistory($date)
+    {
+        $stopHistory = $this->getCurrentStopHistory($date);
+
+        return (empty($stopHistory) ? $this->getLatestStopHistory() : $stopHistory);
+    }
+
+    /**
+     * Stop label
+     *
+     * Custom function to request a Stop "name" looking at its StopHistories and 
+     * StopDatasources.
+     * {StopHistory.shortName} - {stopDatasource.agency.name} ({stopDatasource.code})
+     * TODO: The Datetime is instanciated each time this function is called
+     * Investigate in possibility to pass $date as a parameter in a Symfony Form entity 
+     * field in the option 'property' (cf. Tisseo/BoaBundle/Form/Type/StopEditType.php)
      */
     public function getStopLabel()
     {
-        foreach( $this->getStopHistories() as $sh ) {
-            if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
-                if( !$sh->getEndDate() ) {
-                    return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-                } else {
-                    if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {
-                        return $sh->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
-                    }
-                }
-            }
-        }
-        return $this->getStopHistories()->last()->getShortName()." - ".$this->stopDatasources[0]->getDatasource()->getAgency()->getName()." (".$this->stopDatasources[0]->getCode().")";
+        $stopHistory = $this->getCurrentOrLatestStopHistory(new \Datetime());
+        if (empty($stopHistory))
+            return "";
+
+        $result = $stopHistory->getShortName();
+        foreach ($this->stopDatasources as $stopDatasource)
+            $result .= " - ".$stopDatasource->getDatasource()->getAgency()->getName()." (".$stopDatasource->getCode().") ";
+
+        return $result;
     }
 
     /**
-     * return current stop history short name
+     * Closable
+     *
+     * Checking an older StopHistory exists and its endDate is null.
      */
-    public function getShortLabel()
+    public function closable()
     {
-        foreach( $this->getStopHistories() as $sh ) {
-            if( $sh->getStartDate()->format("Ymd") <= date("Ymd") ) {
-                if( !$sh->getEndDate() ) {
-                    return $sh->getShortName();
-                } else {
-                    if( $sh->getEndDate()->format("Ymd") >= date("Ymd") ) {
-                        return $sh->getShortName();
-                    }
-                }
-            }
-        }
-        //last stop history label for closed stops
-        return $this->getStopHistories()->last()->getShortName();
+        $stopHistory = $this->getLatestStopHistory();
+
+        if (empty($stopHistory) || $stopHistory->getEndDate() !== null)
+            return false;
+
+        return true;
     }
 }

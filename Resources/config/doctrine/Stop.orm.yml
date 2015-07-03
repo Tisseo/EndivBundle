@@ -25,21 +25,25 @@ Tisseo\EndivBundle\Entity\Stop:
             cascade: ['persist', 'remove']
             mappedBy: stop
             inversedBy: null
+            fetch: 'EXTRA_LAZY'
         stopHistories:
             targetEntity: StopHistory
             cascade: ['persist', 'remove']
             mappedBy: stop
             inversedBy: null
+            fetch: 'EXTRA_LAZY'
         stopAccessibilities:
             targetEntity: StopAccessibility
             cascade: ['persist', 'remove']
             mappedBy: stop
             inversedBy: null
+            fetch: 'EXTRA_LAZY'
         phantoms:
             targetEntity: Stop
             cascade: []
             mappedBy: masterStop
             inversedBy: null
+            fetch: 'EXTRA_LAZY'
     manyToOne:
         masterStop:
             targetEntity: Stop
