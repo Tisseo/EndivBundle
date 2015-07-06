@@ -67,6 +67,7 @@ Tisseo\EndivBundle\Entity\RouteStop:
                     referencedColumnName: id
         waypoint:
             targetEntity: Waypoint
+            cascade: ['persist','merge']
             mappedBy: null
             inversedBy: null
             joinColumns:

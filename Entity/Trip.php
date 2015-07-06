@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Trip
@@ -30,7 +31,6 @@ class Trip
      * @var Trip
      */
     private $pattern;
-
 
     /**
      * @var Comment
@@ -70,7 +70,6 @@ class Trip
     /**
      * @var integer
      */
-
     private $parent;
 
     /**
@@ -418,5 +417,25 @@ class Trip
     public function removeTripDatasource(\Tisseo\EndivBundle\Entity\TripDatasource $tripDatasource)
     {
         $this->tripDatasources->removeElement($tripDatasource);
+    }
+
+    public function getStopTime(RouteStop $routeStop)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('routeStop',$routeStop))
+            ->setMaxResults(1)
+        ;
+
+        return $this->stopTimes->matching($criteria)->first();
+    }
+
+    public function getFirstStopTime()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(array('arrivalTime' => Criteria::ASC))
+            ->setMaxResults(1)
+        ;
+
+        return $this->stopTimes->matching($criteria)->first();
     }
 }

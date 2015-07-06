@@ -3,34 +3,29 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Serializer;
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use Tisseo\EndivBundle\Entity\Route;
-
 use Tisseo\EndivBundle\Entity\RouteStop;
-
 
 class RouteStopManager extends SortManager {
 
-    private $om= null;
-    private $repository= null;
+    private $om = null;
+    private $repository = null;
+    private $serializer = null;
 
-    public function __construct(ObjectManager $om) {
-
+    public function __construct(ObjectManager $om, Serializer $serializer) {
         $this->om = $om;
         $this->repository = $om->getRepository("TisseoEndivBundle:RouteStop");
+        $this->serializer = $serializer;
     }
 
-    public function findAll(){
-
+    public function findAll() {
         return $this->repository->findAll();
     }
 
-
-
-    public function findById($id) {
-        return $this->repository->find($id);
+    public function find($routeStopId) {
+        return empty($routeStopId) ? null : $this->repository->find($routeStopId);
     }
 
     public function findByWaypoint($waypoint,$idRoute) {
@@ -60,7 +55,7 @@ class RouteStopManager extends SortManager {
 
     public function save(RouteStop $Stop)
     {
-        if(!$Stop->getId()) {
+        if (!$Stop->getId()) {
             // new stop + new stop_history
            // $routeStop=new RouteStop();
             $this->om->persist($Stop);
@@ -93,6 +88,101 @@ class RouteStopManager extends SortManager {
         }
     }
 
+    /**
+     * VERIFIED USEFUL FUNCTIONS
+     */
 
+    /**
+     * Update RouteStops
+     * @param array $routeStops
+     * @param Route $route
+     *
+     * Creating, updating, deleting RouteStop entities.
+     * @usedBy BOABundle
+     */
+    public function updateRouteStops($routeStops, Route $route)
+    {
+        $sync = false;
+        foreach ($route->getRouteStops() as $routeStop)
+        {
 
+            $existing = array_filter(
+                $routeStops,
+                function ($object) use ($routeStop) {
+                    return ($object['id'] == $routeStop->getId());
+                }
+            );
+
+            if (empty($existing))
+            {
+                $sync = true;
+                $route->removeRouteStop($routeStop);
+            }
+        }
+
+        foreach ($routeStops as $routeStop)
+        {
+            if (empty($routeStop['id']))
+            {
+                $sync = true;
+                $routeStop = $this->serializer->deserialize(json_encode($routeStop), 'Tisseo\EndivBundle\Entity\RouteStop', 'json');
+                $waypoint = $this->om->createQuery("
+                    SELECT w FROM Tisseo\EndivBundle\Entity\Waypoint w
+                    WHERE w.id = :waypoint
+                ")
+                ->setParameter('waypoint', $routeStop->getWaypoint()->getId())
+                ->getOneOrNullResult();
+
+                if ($waypoint === null)
+                    throw new \Exception("Can't create a new RouteStop because provided Waypoint with id: ".$routeStop->getWaypoint()->getId()." can't be found.");
+
+                $routeStop->setWaypoint($waypoint);
+                $routeStop->setRoute($route);
+                $this->om->persist($routeStop);
+            }
+            // TODO: that's ugly, try using serializer in a better way
+            else
+            {
+                $realRouteStop = $this->find($routeStop['id']);
+
+                if ($this->updateRouteStop($realRouteStop, $routeStop))
+                {
+                    $sync = true;
+                    $this->om->merge($realRouteStop);
+                }
+            }
+        }
+
+        if ($sync)
+            $this->om->flush();
+    }
+
+    // TODO: find something better, this is really bad
+    private function updateRouteStop(RouteStop $routeStop, $data)
+    {
+        $merged = false;
+
+        if ($routeStop->getRank() !== $data['rank'])
+        {
+            $routeStop->setRank($data['rank']);
+            $merged = true;
+        }
+        if ($routeStop->getScheduledStop() !== $data['scheduledStop'])
+        {
+            $routeStop->setScheduledStop($data['scheduledStop']);
+            $merged = true;
+        }
+        if ($routeStop->getPickup() !== $data['pickup'])
+        {
+            $routeStop->setPickup($data['pickup']);
+            $merged = true;
+        }
+        if ($routeStop->getDropOff() !== $data['dropOff'])
+        {
+            $routeStop->setDropOff($data['dropOff']);
+            $merged = true;
+        }
+
+        return $merged;
+    }
 }

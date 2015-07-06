@@ -106,7 +106,7 @@ services:
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.routestop_manager:
         class: %tisseo_endiv.routestop_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@jms_serializer']
     tisseo_endiv.stoptime_manager:
         class: %tisseo_endiv.stoptime_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
