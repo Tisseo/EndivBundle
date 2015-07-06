@@ -37,9 +37,9 @@ class RouteManager extends SortManager
         return $this->repository->findAll();
     }
 
-    public function findById($id)
+    public function find($routeId)
     {
-        return $this->repository->find($id);
+        return empty($routeId) ? null : $this->repository->find($routeId);
     }
 
     public function save(Route $route)
@@ -49,16 +49,25 @@ class RouteManager extends SortManager
         $this->om->flush();
     }
 
-    public function remove(Route $route)
+    public function remove($routeId)
     {
-        // delete non pattern trips first to garanty referential integrity when deleting
-        foreach ($route->getTrips() as $trip) {
-            if(!$trip->getIsPattern())
-                $this->om->remove($trip);
-        }
+        $route = $this->find($routeId);
+
+        if (empty($route))
+            throw new \Exception("Can't find the route with ID: ".$routeId);
+
+        $trips = $route->getTripsNotPattern();
+
+        // TODO: Later, condition is if ACTIVE (calendar_start_date > now > calendar_end_date) trips found, can't delete
+        if ($trips->count() > 0)
+            throw new \Exception("Can't delete this route because it has ".$trips." trips.");
+
+        $lineVersionId = $route->getLineVersion()->getId();
 
         $this->om->remove($route);
         $this->om->flush();
+
+        return $lineVersionId;
     }
 
     private function updateRouteSections($route_stops, $route)
@@ -170,183 +179,6 @@ class RouteManager extends SortManager
         }
     }
 
-    public function saveRouteStopsAndServices(Route $route, $route_stops, $services, $routeIsUpdatable)
-    {
-        if($routeIsUpdatable) {
-            $rank = 1;
-            $doctrine_route_stops = array();
-            $route_stop_ids = array();
-            foreach ($route_stops as $route_stop) {
-                if( isset($route_stop['id']) ) {
-                    //update existing route stop
-                    $route_stop_id = $route_stop['id'];
-                    $filtered_collection = $route->getRouteStops()->filter( function($rs) use ($route_stop_id) {
-                        return $rs->getId() == $route_stop_id;
-                    });
-                    $doctrine_route_stop = $filtered_collection->first();
-                } else {
-                    //new route stop
-                    $doctrine_route_stop = new RouteStop();
-                    $waypoint = $this->om
-                                ->getRepository('TisseoEndivBundle:Waypoint')
-                                ->find($route_stop['waypoint_id']);
-                    $doctrine_route_stop->setWaypoint($waypoint);
-                    $route->addRouteStops($doctrine_route_stop);
-                }
-                $doctrine_route_stop->setRank($rank);
-                $doctrine_route_stop->setDropOff( isset($route_stop['dropOff']) );
-                $doctrine_route_stop->setPickup( isset($route_stop['pickUp']) );
-                $doctrine_route_stop->setScheduledStop( isset($route_stop['scheduled']) );
-                $doctrine_route_stop->setInternalService( ( $route->getWay() == 'Zonal' && isset($route_stop['internal']) ) );
-                $this->om->persist($doctrine_route_stop);
-                $route_stop_ids[] = $doctrine_route_stop->getId();
-                $doctrine_route_stops[] = $doctrine_route_stop;
-
-                $rank += 1;
-            }
-
-            //set route_section on route_stops
-            $this->updateRouteSections($doctrine_route_stops, $route);
-
-            //get ratios
-            $ratios = $this->getNotScheduledStopRatios($doctrine_route_stops);
-
-            //deleted route stops case
-            foreach ($route->getRouteStops() as $rs) {
-                if( !in_array($rs->getId(), $route_stop_ids) ) {
-                    $route->removeRouteStops($rs);
-                    $this->om->remove($rs);
-                }
-            }
-        } else {
-            $route_stops = $route->getRouteStops();
-            $doctrine_route_stops = $route_stops;
-            $ratios = $this->getNotScheduledStopRatios($route_stops);
-        }
-
-        $trip_ids = array();
-        if( $services ) {
-            foreach ($services as $service) {
-                if( isset($service['id']) ) {
-                    //update existing service
-                    $trip_id = $service['id'];
-                    unset($service['id']);
-                    $filtered_route_trips = $route->getTrips()->filter( function($t) use ($trip_id) {
-                        return $t->getId() == $trip_id;
-                    });
-                    $doctrine_trip = $filtered_route_trips->first();
-                } else {
-                    //new service
-                    $doctrine_trip = new Trip();
-                    $doctrine_trip->setRoute($route);
-                    $route->addTrip($doctrine_trip);
-                }
-
-                $trip_name = $service['name'];
-                unset($service['name']);
-                $doctrine_trip->setName($trip_name);
-                $doctrine_trip->setIsPattern(true);
-                $stop_time_index = 0;
-                foreach ($service as $stop_time) {
-
-                    if( isset($stop_time['stop_time_id']) ) {
-                        //update stop time
-                        $stop_time_id = $stop_time['stop_time_id'];
-                        $filtered_trip_stop_time = $doctrine_trip->getStopTimes()->filter( function($st) use ($stop_time_id) {
-                            return $st->getId() == $stop_time_id;
-                        });
-                        $doctrine_stop_time = $filtered_trip_stop_time->first();
-                    } else {
-                        //new stop time
-                        $doctrine_stop_time = new StopTime();
-                        $doctrine_trip->addStopTime($doctrine_stop_time);
-                    }
-
-                    $time_array = explode(":", $stop_time['time']);
-                    $time = $time_array[0]*3600 + $time_array[1]*60;
-
-                    $doctrine_stop_time->setRouteStop($doctrine_route_stops[$stop_time_index]);
-                    $doctrine_stop_time->setTrip($doctrine_trip);
-                    $doctrine_stop_time->setArrivalTime($time);
-                    $doctrine_stop_time->setDepartureTime($time);
-                    $this->om->persist($doctrine_stop_time);
-
-                    $stop_time_index += 1;
-
-                }
-                $this->om->persist($doctrine_trip);
-                $trip_ids[] = $doctrine_trip->getId();
-            }
-        }
-
-        $this->updateNotScheduledStopTimes($route->getPatternTrips(), $ratios);
-
-        //deleted trips case
-        foreach ($route->getPatternTrips() as $t) {
-            if( !in_array($t->getId(), $trip_ids) ) {
-                $route->removeTrip($t);
-                $this->om->remove($t);
-            }
-        }
-
-        $this->save($route);
-    }
-
-    public function getRoutesByLine($lineVersionId)
-    {
-        $query = $this->om->createQuery("
-            SELECT r
-            FROM Tisseo\EndivBundle\Entity\Route r
-            JOIN r.lineVersion lv
-            WHERE lv.id = :id
-        ")
-        ->setParameter("id", $lineVersionId);
-
-        return $query->getResult();
-    }
-
-    public function getRouteStops($RouteId)
-    {
-        $query = $this->om->createQuery("
-            SELECT rs
-            FROM Tisseo\EndivBundle\Entity\RouteStop rs
-            WHERE rs.route = :id
-            ORDER BY rs.rank
-        ")
-        ->setParameter("id", $RouteId);
-
-        return $query->getResult();
-    }
-
-    public function getServiceTemplates($RouteId)
-    {
-        $query = $this->om->createQuery("
-            SELECT t.id as trip_id,
-                t.name as name,
-                rs.id as route_stop_id,
-                st.id as stop_time_id,
-                st.arrivalTime,
-                st.departureTime
-            FROM Tisseo\EndivBundle\Entity\Trip t
-            JOIN t.stopTimes st
-            JOIN st.routeStop rs
-            WHERE t.route = :id
-            AND t.isPattern = TRUE
-            ORDER BY t.id, rs.rank
-        ")
-        ->setParameter("id", $RouteId);
-        $datas = $query->getResult();
-
-        $result = array();
-        foreach ($datas as $data) {
-            if( !array_key_exists($data["trip_id"], $result) )
-                $result[ $data["trip_id"] ] = array();
-            $result[ $data["trip_id"] ][] = array_slice($data, -5, 5, true);
-        }
-
-        return $result;
-    }
-
     public function getInstantiatedServiceTemplates($route)
     {
         $query = $this->om->createQuery("
@@ -360,23 +192,6 @@ class RouteManager extends SortManager
         //convert associative array of in to array of strings
         $tmp = array_map('current', $query->getArrayResult());
         return array_map('strval', $tmp);
-    }
-
-    public function getRouteStopsWithoutRouteSection($routeStops) {
-        $i = 0;
-        $warnings = array();
-        foreach ($routeStops as $rs) {
-            if( !$rs->getRouteSection() ) {
-                if( $i+1 < count($routeStops) ) {
-                    $stop = $rs->getWaypoint()->getStop()->getStopArea()->getShortName();
-                    $stop .= ' ('.$rs->getWaypoint()->getStop()->getStopDatasources()[0]->getCode().')';
-                    $warnings[] = $stop;
-                }
-            }
-            $i += 1;
-        }
-
-        return $warnings;
     }
 
     /*
@@ -531,8 +346,6 @@ class RouteManager extends SortManager
                     ->setParameter("period", $grid["grid_calendar_period"]);
                 }
 
-
-
                 $gridMaskType = $query->getOneOrNullResult();
                 if( empty($gridMaskType) ) {
                     $gridMaskType = new GridMaskType();
@@ -611,9 +424,6 @@ class RouteManager extends SortManager
             $newRoute->setComment($route->getComment());
         }
         $newRoute->setLineVersion($lineVersion);
-        $newRoute->setWay($route->getWay());
-        $newRoute->setWay($route->getWay());
-        $newRoute->setWay($route->getWay());
 
         $route_stops = array();
         foreach ($route->getRouteStops() as $rs) {

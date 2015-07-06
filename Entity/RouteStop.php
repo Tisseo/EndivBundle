@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * RouteStop
@@ -373,5 +374,25 @@ class RouteStop
     public function removeStopTime(\Tisseo\EndivBundle\Entity\StopTime $stopTimes)
     {
         $this->stopTimes->removeElement($stopTimes);
+    }
+
+    public function isFirst()
+    {
+        return $this->rank === 1;
+    }
+
+    public function isLast()
+    {
+        return $this !== $this->route->getLastRouteStop();
+    }
+
+    public function getStopTime($stopTimeId)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('id',$stopTimeId))
+            ->setMaxResults(1)
+        ;
+
+        return $this->stopTimes->matching($criteria)->first();
     }
 }

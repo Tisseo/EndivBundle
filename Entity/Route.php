@@ -5,6 +5,8 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+
 /**
  * Route
  */
@@ -419,27 +421,75 @@ class Route
         $this->routeStops->removeElement($routeStops);
     }
 
-    /**
-     * Get way list values
-     *
-     * @return enum list
-     * @todo bad bad bad must return the real enum value by native sql querying
-     */
-    public static function getWayValues()
+    public function getTripsPattern()
     {
-        return array('Aller'=>'Aller', 'Retour'=>'Retour', 'Zonal'=>'Zonal', 'Boucle'=>'Boucle');
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('isPattern', true))
+        ;
+
+        return $this->trips->matching($criteria);
     }
 
-    /**
-     * Get usual services (not pattern)
-     *
-     * @return Collection
-     */
-     public function getServices()
+    public function getTripsNotPattern()
     {
-        return $filtered_collection = $this->getTrips()->filter( function($trip) {
-                    return !$trip->getIsPattern();
-                });
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('isPattern', true))
+        ;
 
+        return $this->trips->matching($criteria);
+    }
+
+    public function hasTrips()
+    {
+        return ($this->trips->count() > 0);
+    }
+
+    public function hasTripsNotPattern()
+    {
+        return ($this->getTripsNotPattern()->count() > 0);
+    }
+
+    public function getLastRouteStop()
+    {
+        if ($this->routeStops->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->orderBy(array('rank' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        return $this->routeStops->matching($criteria)->first();
+    }
+
+    public function getOrderedRouteStops()
+    {
+        if ($this->routeStops->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->orderBy(array('rank' => Criteria::ASC))
+        ;
+
+        return $this->routeStops->matching($criteria);
+    }
+
+    public function getTrip($tripId)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('id', $tripId))
+            ->setMaxResults(1)
+        ;
+
+        return $this->trips->matching($criteria)->first();
+    }
+
+    public function IsPatternLocked(Trip $pattern)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('pattern', $pattern))
+        ;
+
+        return $this->trips->matching($criteria)->count() > 0;
     }
 }

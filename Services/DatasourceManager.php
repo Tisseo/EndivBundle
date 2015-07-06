@@ -36,4 +36,16 @@ class DatasourceManager extends SortManager
         $this->om->persist($Datasource);
         $this->om->flush();
     }
+
+    // TODO: This is ugly, change it
+    // MAYBE ADD CONFIG PARAMETERS FOR DEFAULT AGENCY/DATASOURCE
+    public function findDefaultDatasource()
+    {
+        $query = $this->repository->createQueryBuilder('d')
+            ->where('d.name = :datasource')
+            ->setParameter('datasource', 'Service Données')
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
+    }
 }

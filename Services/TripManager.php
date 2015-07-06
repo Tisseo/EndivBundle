@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\TripDatasource;
+use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Comment;
 use Tisseo\EndivBundle\Entity\StopTime;
@@ -40,19 +41,6 @@ class TripManager
         return empty($routeId) ? null : $this->repository->findBy(array('route'=>$routeId));
     }
 
-    public function getStopTimes($TripId)
-    {
-        $query = $this->om->createQuery("
-            SELECT st
-            FROM Tisseo\EndivBundle\Entity\StopTime st
-            WHERE st.trip = :id
-            ORDER BY st.arrivalTime
-        ")
-        ->setParameter("id", $TripId);
-
-        return $query->getResult();
-    }
-
     public function getTripTemplates($term, $routeId)
     {
         $specials = array("-", " ", "'");
@@ -86,20 +74,17 @@ class TripManager
              SELECT count(t.parent) FROM Tisseo\EndivBundle\Entity\Trip t
              WHERE t.parent = :id
         ")
-        ->setParameter("id",$id);
+        ->setParameter("id", $id);
 
         $res = $query->getResult();
-
 
         return $res[0][1] > 0 ? true : false;
     }
 
 
-    public function deleteTrip(Trip $trip){
-
+    public function deleteTrip(Trip $trip) {
         $this->om->remove($trip);
         $this->om->flush();
-
     }
 
     public function deleteTrips(LineVersion $lineVersion)
@@ -214,85 +199,135 @@ class TripManager
         $this->om->flush();
     }
 
-    private function populateStopTimes($trip, $time)
+    /**
+     * VERIFIED USEFUL FUNCTIONS
+     */
+
+    /**
+     * Update Trip patterns
+     * @param array $tripPatterns
+     * @param Route $route
+     * @param TripDatasource $tripDatasource
+     *
+     * Creating, updating, deleting Trip entities and their StopTimes/TripDatasources.
+     * @usedBy BOABundle
+     */
+    public function updateTripPatterns($tripPatterns, Route $route, TripDatasource $tripDatasource)
     {
-        foreach ($trip->getPattern()->getStopTimes() as $stp) {
-            if( $stp->getRouteStop()->getScheduledStop() ) {
-                if( empty($lastScheduledTime) ) {
-                    //first stop
-                    $lastScheduledTime = $time;
-                } else {
-                    $lastScheduledTime += $stp->getArrivalTime();
-                }
-                $time = $lastScheduledTime;
-            } else {
-                $time +=  $stp->getArrivalTime();
+        $sync = false;
+
+        // Checking data first
+        foreach ($tripPatterns as $tripPattern)
+        {
+            if (empty($tripPattern['name']))
+                throw new \Exception((empty($tripPattern['id']) ? "A new trip pattern" : "Trip pattern with id : ".$tripPattern['id'])." has an empty name");
+
+            foreach ($tripPattern['stopTimes'] as $index => $dataStopTime)
+            {
+                if ($index > 0 && $dataStopTime['time'] <= 0)
+                    throw new \Exception((empty($dataStopTime['id']) ? "A new StopTime" : "StopTime with id: ".$dataStopTime['id'])." has a bad time value : ".$dataStopTime['time']);
             }
-            $new_stop_time = new StopTime();
-            $new_stop_time->setTrip($trip);
-            $new_stop_time->setRouteStop($stp->getRouteStop());
-            $new_stop_time->setArrivalTime($time);
-            $new_stop_time->setDepartureTime($time);
-            $trip->addStopTime($new_stop_time);
+
         }
+
+        // Deleting Trips
+        foreach ($route->getTripsPattern() as $tripPattern)
+        {
+            $existing = array_filter(
+                $tripPatterns,
+                function ($object) use ($tripPattern) {
+                    return ($object['id'] == $tripPattern->getId());
+                }
+            );
+
+            if (empty($existing))
+            {
+                if (!$this->patternIsUsed($tripPattern->getId()))
+                {
+                    $sync = true;
+                    $this->om->remove($tripPattern);
+                }
+                else
+                    throw new \Exception("Can't remove trip pattern with id: ".$tripPattern->getId()." because it is used by other trips");
+            }
+        }
+
+        $routeStops = $route->getOrderedRouteStops();
+
+        // Creating/updating Trips
+        foreach ($tripPatterns as $tripPattern)
+        {
+            if (empty($tripPattern['id']))
+            {
+                $sync = true;
+
+                $trip = new Trip();
+                $trip->setName($tripPattern['name']);
+                $trip->setRoute($route);
+                $trip->setIsPattern(true);
+                $newTripDatasource = clone $tripDatasource;
+                $trip->addTripDatasource($newTripDatasource);
+
+                $this->om->persist($trip);
+            }
+            else
+                $trip = $route->getTrip($tripPattern['id']);
+
+            $totalTime = 0;
+            foreach ($tripPattern['stopTimes'] as $key => $jsonStopTime)
+            {
+                $time = intVal($jsonStopTime['time'])*60;
+                $totalTime += $time;
+
+                if (empty($jsonStopTime['id']))
+                {
+                    $sync = true;
+
+                    $stopTime = new StopTime();
+                    $stopTime->setRouteStop($routeStops[$key]);
+                    $stopTime->setTrip($trip);
+                    $stopTime->setDepartureTime($totalTime);
+                    $stopTime->setArrivalTime($totalTime);
+
+                    $this->om->persist($stopTime);
+                }
+                else
+                {
+                    $stopTime = $routeStops[$key]->getStopTime($jsonStopTime['id']);
+                    if ($stopTime->getDepartureTime() !== $totalTime)
+                    {
+                        $sync = true;
+                        $stopTime->setDepartureTime($totalTime);
+                        $stopTime->setArrivalTime($totalTime);
+
+                        $this->om->merge($stopTime);
+                    }
+                }
+            }
+        }
+
+        if ($sync)
+            $this->om->flush();
     }
 
-    public function createTripAndStopTimes(Trip $trip, $stopTimes, $route, $datasource, $isPattern = false)
+    /**
+     * Pattern is used
+     * @param Trip $tripPattern
+     * @return boolean
+     *
+     * Checking wether a pattern is linked to trips or not
+     */
+    public function patternIsUsed($tripPattern)
     {
-        $trip->setRoute($route);
-        $trip->setIsPattern($isPattern);
+        $result = $this->repository->createQueryBuilder('t')
+            ->select('count(t)')
+            ->where('t.pattern = :pattern')
+            ->setParameter('pattern', $tripPattern)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
 
-        $uniqueService = false;
-        if( count($stopTimes) == 1 ) {
-            $uniqueService = ( empty($stopTimes[0]['frequency']) || empty($stopTimes[0]['stop']) );
-        }
-
-        foreach ($stopTimes as $st) {
-            $time_array = explode(":", $st['start']);
-            $time = $time_array[0]*3600 + $time_array[1]*60;
-
-            if( empty($st['frequency']) || empty($st['stop']) ) {
-                $newTrip = clone $trip;
-                if(!$uniqueService) {
-                    $h = (int)($time/3600);
-                    $m = (int)(( $time - $h*3600 )/60);
-                    if( $h < 10 ) $h = '0'.$h;
-                    if( $m < 10 ) $m = '0'.$m;
-                    $newTrip->setName($h.$m.' '.$newTrip->getName());
-                }
-                $this->populateStopTimes($newTrip, $time);
-
-                $tripDatasource = new TripDatasource();
-                $tripDatasource->setDatasource($datasource['datasource']);
-                $tripDatasource->setCode($datasource['code']);
-                $newTrip->addTripDatasource($tripDatasource);
-
-                $this->om->persist($newTrip);
-            } else {
-                //loop
-                $time_array = explode(":", $st['stop']);
-                $last_time = $time_array[0]*3600 + $time_array[1]*60;
-                while ( $time <= $last_time ) {
-                    $h = (int)($time/3600);
-                    $m = (int)(( $time - $h*3600 )/60);
-                    if( $h < 10 ) $h = '0'.$h;
-                    if( $m < 10 ) $m = '0'.$m;
-
-                    $newTrip = clone $trip;
-                    $newTrip->setName($h.$m.'_'.$newTrip->getName());
-                    $this->populateStopTimes($newTrip, $time);
-
-                    $tripDatasource = new TripDatasource();
-                    $tripDatasource->setDatasource($datasource['datasource']);
-                    $tripDatasource->setCode($datasource['code']);
-                    $newTrip->addTripDatasource($tripDatasource);
-
-                    $this->om->persist($newTrip);
-                    $time += $st['frequency']*60;
-                }
-            }
-        }
-        $this->om->flush();
+        return ($result > 0);
     }
 
     public function getDateBounds($route)
@@ -300,7 +335,7 @@ class TripManager
         $connection = $this->om->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("
             SELECT id,
-                getdateboundsbeetweencalendars(day_calendar_id,period_calendar_id) as bounds
+                getdateboundsbeetweencalendars(day_calendar_id, period_calendar_id) as bounds
             FROM trip
             WHERE route_id = :routeId
             AND day_calendar_id IS NOT NULL
@@ -311,13 +346,100 @@ class TripManager
         $datas = $stmt->fetchAll();
 
         $results = array();
-        foreach ($datas as $item) {
+        foreach ($datas as $item)
+        {
             $data = explode(",", str_replace(")", "", str_replace("(", "", $item['bounds'])));
-            $results[$item['id']] = array();
-            $results[$item['id']]['start'] = \DateTime::createFromFormat('Y-m-d', $data[0]);
-            $results[$item['id']]['end'] = \DateTime::createFromFormat('Y-m-d', $data[1]);
+            $results[$item['id']] = array('start' => $data[0], 'end' => $data[1]);
         }
 
         return $results;
+    }
+
+    /**
+     * Create Trip and StopTimes
+     * @param Trip $trip
+     * @param array $stopTimes
+     * 
+     * Creating new Trip entities and their StopTimes using a Trip 'pattern' and its RouteStops.
+     */
+    public function createTripAndStopTimes(Trip $trip, $stopTimes)
+    {
+        // Checking data
+        if (empty($stopTimes))
+            throw new \Exception('StopTimes are empty, please provide at least one row');
+
+        foreach ($stopTimes as $stopTime)
+        {
+            if (empty($stopTime['begin']))
+                throw new \Exception('Start StopTime field is empty');
+            if ((empty($stopTime['frequency']) && !empty($stopTime['end'])) ||
+                (!empty($stopTime['frequency']) && empty($stopTime['end'])))
+                throw new \Exception('Frequency and end fields have to be filled');
+        }
+
+        $tripDatasource = clone $trip->getTripDatasources()->first();
+        $trip->getTripDatasources()->clear();
+
+        foreach ($stopTimes as $jsonStopTime)
+        {
+            $beginTimings = explode(":", $jsonStopTime['begin']);
+            $beginTime = $beginTimings[0]*3600 + $beginTimings[1]*60;
+
+            if (empty($jsonStopTime['frequency']))
+            {
+                $newTrip = clone $trip;
+                $newTripDatasource = clone $tripDatasource;
+
+                $newTrip->setName($beginTimings[0].$beginTimings[1].'_'.$newTrip->getName());
+                $newTrip->addTripDatasource($newTripDatasource);
+
+                $this->createStopTimes($newTrip, $beginTime);
+                $this->om->persist($newTrip);
+            }
+            else
+            {
+                $endTimings = explode(":", $jsonStopTime['end']);
+                $endTime = $endTimings[0]*3600 + $endTimings[1]*60;
+        
+                while ($beginTime <= $endTime)
+                {
+                    $hour = (int)($beginTime/3600);
+                    $minute = (int)(($beginTime - $hour*3600)/60);
+                    if ($hour < 10)
+                        $hour = '0'.$hour;
+                    if ($minute < 10)
+                        $minute = '0'.$minute;
+
+                    $newTrip = clone $trip;
+                    $newTripDatasource = clone $tripDatasource;
+
+                    $newTrip->setName($hour.$minute.'_'.$newTrip->getName());
+                    $newTrip->addTripDatasource($newTripDatasource);
+
+                    $this->createStopTimes($newTrip, $beginTime);
+
+                    $this->om->persist($newTrip);
+                    $beginTime += $stopTime['frequency']*60;
+                }
+            }
+        }
+
+        $this->om->flush();
+    }
+
+    private function createStopTimes(Trip $trip, $time)
+    {
+        foreach ($trip->getPattern()->getStopTimes() as $stopTime)
+        {
+            $newTime = $time + $stopTime->getDepartureTime();
+
+            $newStopTime = new StopTime();
+            $newStopTime->setTrip($trip);
+            $newStopTime->setRouteStop($stopTime->getRouteStop());
+            $newStopTime->setArrivalTime($newTime);
+            $newStopTime->setDepartureTime($newTime);
+            
+            $trip->addStopTime($newStopTime);
+        }
     }
 }

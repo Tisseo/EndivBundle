@@ -66,25 +66,37 @@ class CalendarManager extends SortManager
         $this->em->flush();
     }
 
-    public function findCalendarsLike( $term, $CalendarType = null, $limit = 20 )
+    public function findCalendarsLike($term, $calendarType = null, $limit = 0)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $sql = "
             SELECT name, id
             FROM calendar
             WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
-        if( $CalendarType )
-            if(is_array($CalendarType)) {
-                $sql .= "and calendar_type in ('".implode("','",$CalendarType)."')";
-            } else {
-                $sql .= "and calendar_type in ('".$CalendarType."')";
-            }
-        $sql .= " LIMIT ".number_format($limit);
+        if ($calendarType)
+        {
+            if (is_array($calendarType))
+                $sql .= "and calendar_type in ('".implode("','",$calendarType)."')";
+            else
+                $sql .= "and calendar_type in ('".$calendarType."')";
+        }
+        if ($limit > 0)
+            $sql .= " LIMIT ".number_format($limit);
 
         $stmt = $connection->prepare($sql);
         $stmt->execute();
-        $array = $stmt->fetchAll();
-        return $array;
+        $calendars = $stmt->fetchAll();
+
+        $result = array();
+        foreach ($calendars as $calendar)
+        {
+            $result[] = array(
+                "name" => $calendar["name"],
+                "id" => $calendar["id"]
+            );
+        }
+
+        return $result;
     }
 
 
