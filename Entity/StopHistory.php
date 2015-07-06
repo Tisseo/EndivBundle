@@ -62,29 +62,29 @@ class StopHistory
 
     public function minStartDate(ExecutionContextInterface $context)
     {
-        $currentStopHistory = $this->getStop()->getCurrentStopHistory();
-        $today = new \Datetime();
+        $now = new \Datetime();
+        $currentStopHistory = $this->getStop()->getCurrentStopHistory($now);
 
         if (!empty($currentStopHistory) && $currentStopHistory->getEndDate() !== null)
         {
-            if ($this->getStartDate() <= $latestStopHistory->getEndDate())
+            if ($this->getStartDate() <= $currentStopHistory->getEndDate())
             {
                  $context->addViolationAt(
                     'startDate',
                     'stop_history.errors.min_date_end',
-                    array('%date%' => $latestStopHistory->getEndDate()->format('d/m/Y')),
+                    array('%date%' => $currentStopHistory->getEndDate()->format('d/m/Y')),
                     null
                 );
             }
         }
         else 
         {
-            if ($this->getStartDate() <= $today)
+            if ($this->getStartDate() <= $now)
             {
                 $context->addViolationAt(
                     'startDate',
                     'stop_history.errors.min_date',
-                    array('%date%' => $today->format('d/m/Y')),
+                    array('%date%' => $now->format('d/m/Y')),
                     null
                 );
             }

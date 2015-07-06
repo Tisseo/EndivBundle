@@ -468,7 +468,7 @@ class Stop
 
         $result = $stopHistory->getShortName();
         foreach ($this->stopDatasources as $stopDatasource)
-            $result .= " - ".$stopDatasource->getDatasource()->getAgency()->getName()." (".$stopDatasource->getCode().") ";
+            $result .= " - ".$stopDatasource->getDatasource()->getAgency()->getName()." (".$stopDatasource->getCode().")";
 
         return $result;
     }
