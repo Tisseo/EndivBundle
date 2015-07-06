@@ -336,8 +336,18 @@ class StopArea
         $this->aliases->removeElement($aliases);
     }
 
+    /**
+     * Name label
+     *
+     * @return $string custom label
+     */
     public function getNameLabel()
     {
         return $this->shortName.' '.$this->city->getName();
+    }
+
+    public function isMainOfCity()
+    {
+        return ($this === $this->getCity()->getMainStopArea());
     }
 }

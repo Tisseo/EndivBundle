@@ -135,4 +135,14 @@ class City
     {
         return $this->mainStopArea;
     }
+
+    /**
+     * Get Name label
+     *
+     * @return customized name (name+insee)
+     */
+    public function getNameLabel()
+    {
+        return $this->getName()." (".$this->getInsee().")";
+    }
 }

@@ -122,58 +122,6 @@ class StopManager extends SortManager
     //
 
     /**
-     * Get latest StopHistory
-     * @param integer $stopId
-     *
-     * Returning the latest stopHistory attached to a Stop.
-     * @return StopHistory or null
-     */
-    public function getLatestStopHistory($stopId)
-    {
-        $query = $this->em->createQuery("
-            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            JOIN sh.stop s
-            WHERE sh.stop = :stop
-            ORDER BY sh.startDate DESC
-        ")
-        ->setParameter('stop', $stopId)
-        ->setMaxResults(1);
-
-        return $query->getOneOrNullResult();
-    }
-
-    /**
-     * Get current StopHistory
-     * @param integer $stopId
-     *
-     * Returning the current stopHistory attached to a Stop.
-     * @return StopHistory or null
-     */
-    public function getCurrentStopHistory($stopId)
-    {
-        $query = $this->em->createQuery("
-            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            JOIN sh.stop s
-            WHERE sh.stop = :stop
-            AND sh.startDate <= CURRENT_DATE()
-            AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE())
-        ")
-        ->setParameter('stop', $stopId);
-
-        return $query->getOneOrNullResult();
-    }
-
-    /**
-     * TODO: COMMENT
-     */
-    public function getCurrentOrLatestStopHistory($stopId)
-    {
-        $currentStopHistory = $this->getCurrentStopHistory($stopId);
-
-        return ($currentStopHistory === null ? $this->getLatestStopHistory($stopId) : $currentStopHistory);
-    }
-
-    /**
      * TODO: REPLACE BY CRITERIA IN STOP ENTITY
      */
     public function getOrderedStopHistories($stop)
@@ -304,6 +252,14 @@ class StopManager extends SortManager
                 $this->em->remove($youngerStopHistory);
 
             $this->em->flush();
+
+            // updating end date
+            $latestStopHistory = $stopHistory->getStop()->getLatestStopHistory();
+            if ($latestStopHistory && $latestStopHistory->getEndDate() >= $stopHistory->getStartDate())
+            {
+                $latestStopHistory->closeDate($stopHistory->getStartDate());
+                $this->em->persist($latestStopHistory);
+            }
         }
         else if ($latestStopHistory->getEndDate() === null)
         {
@@ -365,16 +321,35 @@ class StopManager extends SortManager
     }
 
     /**
-     * TODO: COMMENT + BELONG STOPHISTORYMANAGER
+     * Detach
+     * @param integer $stopId
+     *
+     * Close last Stop's history and delete its link with its StopArea.
      */
-    public function findStopHistory($stopHistoryId)
+    public function detach($stopId)
     {
-        $query = $this->em->createQuery("
-            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            WHERE sh.id = :id
-        ")
-        ->setParameter('id', $stopHistoryId);
+        $stop = $this->find($stopId);
 
-        return $query->getOneOrNullResult();
+        if (empty($stop))
+            throw new \Exception("Can't find the stop with ID: ".$stopId);
+
+        $now = new \Datetime();
+
+        $youngerStopHistories = $stop->getYoungerStopHistories($now);
+        foreach ($youngerStopHistories as $youngerStopHistory)
+            $this->em->remove($youngerStopHistory);
+
+        $this->em->flush();
+
+        $stopHistory = $stop->getLatestStopHistory();
+        $stopHistory->closeDate(new \Datetime());
+        $this->em->persist($stopHistory);
+
+        $stopAreaId = $stop->getStopArea()->getId();
+        $stop->setStopArea();
+        $this->em->persist($stop);
+        $this->em->flush();
+
+        return $stopAreaId;
     }
 }
