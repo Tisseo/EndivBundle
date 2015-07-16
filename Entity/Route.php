@@ -439,6 +439,17 @@ class Route
         return $this->trips->matching($criteria);
     }
 
+    public function getTripsNotPatternWithCalendars()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('isPattern', true))
+            ->andWhere(Criteria::expr()->neq('dayCalendar', null))
+            ->andWhere(Criteria::expr()->neq('periodCalendar', null))
+        ;
+
+        return $this->trips->matching($criteria);
+    }
+
     public function hasTrips()
     {
         return ($this->trips->count() > 0);
