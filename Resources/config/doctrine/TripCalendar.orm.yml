@@ -46,7 +46,7 @@ Tisseo\EndivBundle\Entity\TripCalendar:
     manyToOne:
         gridMaskType:
             targetEntity: GridMaskType
-            cascade: {  }
+            cascade: ['persist']
             mappedBy: null
             inversedBy: tripCalendars
             joinColumns:
