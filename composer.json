@@ -30,5 +30,5 @@
         "psr-0" : { "Tisseo\\EndivBundle\\" : "" }
     },
     "target-dir" : "Tisseo/EndivBundle",
-    "version" : "1.0.4"
+    "version" : "1.0.5"
 }
