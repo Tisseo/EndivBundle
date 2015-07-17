@@ -224,7 +224,7 @@ class TripManager
 
             foreach ($tripPattern['stopTimes'] as $index => $dataStopTime)
             {
-                if ($index > 0 && $dataStopTime['time'] <= 0)
+                if ($index > 0 && $dataStopTime['time'] < 0)
                     throw new \Exception((empty($dataStopTime['id']) ? "A new StopTime" : "StopTime with id: ".$dataStopTime['id'])." has a bad time value : ".$dataStopTime['time']);
             }
 
