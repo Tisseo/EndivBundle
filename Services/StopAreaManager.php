@@ -53,7 +53,7 @@ class StopAreaManager extends SortManager
         $this->em->flush();
     }
 
-    public function findStopAreasLike( $term, $limit = 10 )
+    public function findStopAreasLike($term)
     {
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);

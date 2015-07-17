@@ -123,6 +123,7 @@ class StopManager extends SortManager
 
     /**
      * TODO: REPLACE BY CRITERIA IN STOP ENTITY
+     * OR USE A DOCTRINE RULE IN MAPPING FILE
      */
     public function getOrderedStopHistories($stop)
     {
@@ -153,14 +154,12 @@ class StopManager extends SortManager
             SELECT sh.short_name as name, c.name as city, sd.code as code, s.id as id
             FROM stop_history sh
             JOIN stop s on sh.stop_id = s.id
-            JOIN stop_area sa on sa.id = s.stop_area_id
-            JOIN city c on c.id = sa.city_id
+            LEFT JOIN stop_area sa on sa.id = s.stop_area_id
+            LEFT JOIN city c on c.id = sa.city_id
             JOIN stop_datasource sd on sd.stop_id = s.id
-            WHERE UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
+            WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(sd.code) LIKE UPPER(:term)
-            AND sh.start_date <= current_date
-            AND (sh.end_date IS NULL or sh.end_date >= current_date)
+            OR UPPER(sd.code) LIKE UPPER(:term))
             ORDER BY sh.short_name, c.name, sd.code
         ");
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
