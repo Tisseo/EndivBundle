@@ -126,6 +126,11 @@ class LineVersion
     private $lineVersionDatasources;
 
     /**
+     * @var Collection
+     */
+    private $calendars;
+
+    /**
      * Constructor
      * @param LineVersion $previousLineVersion = null
      * @param Line $line = null
@@ -141,6 +146,7 @@ class LineVersion
         $this->printings = new ArrayCollection();
         $this->modifications = new ArrayCollection();
         $this->routes = new ArrayCollection();
+        $this->calendars = new ArrayCollection();
         $this->lineVersionProperties = new ArrayCollection();
         $this->lineVersionDatasources = new ArrayCollection();
         $this->startDate = new \Datetime();
@@ -1174,5 +1180,27 @@ class LineVersion
     public function setLineVersionDatasources($lineVersionDatasources)
     {
         $this->lineVersionDatasources = $lineVersionDatasources;
+    }
+
+    /**
+     * Set calendars
+     *
+     * @param Collection $calendars
+     * @return LineVersion
+     */
+    public function setCalendars(Collection $calendars)
+    {
+        $this->calendars = $calendars;
+        return $this;
+    }
+
+    /**
+     * Get calendars
+     *
+     * @return Collection
+     */
+    public function getCalendars()
+    {
+        return $this->calendars;
     }
 }
