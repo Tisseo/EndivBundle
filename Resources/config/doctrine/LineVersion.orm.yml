@@ -155,4 +155,10 @@ Tisseo\EndivBundle\Entity\LineVersion:
             mappedBy: lineVersion
             inversedBy: null
             orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
+        calendars:
+            targetEntity: Calendar
+            mappedBy: lineVersion
+            inversedBy: null
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

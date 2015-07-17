@@ -36,7 +36,7 @@ Tisseo\EndivBundle\Entity\Calendar:
         lineVersion:
             targetEntity: LineVersion
             mappedBy: null
-            inversedBy: null
+            inversedBy: calendars
             joinColumns:
                 line_version_id:
                     referencedColumnName: id

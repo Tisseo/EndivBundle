@@ -67,11 +67,11 @@ class LineVersionManager extends SortManager
     }
 
     /**
-     * findPreviousLineVersion
+     * Find Previous LineVersion
      * @param LineVersion $lineVersion
      * @return LineVersion or null
      *
-     * Find an hypothetical previous version of the LineVersion passed in
+     * Finding an hypothetical previous version of the LineVersion passed in
      * parameter.
      */
     public function findPreviousLineVersion(LineVersion $lineVersion)
@@ -88,12 +88,16 @@ class LineVersionManager extends SortManager
         $lineVersions = $query->getResult();
 
         $result = null;
-        foreach($lineVersions as $lv)
+        foreach ($lineVersions as $lv)
         {
             if ($lv->getEndDate() === null)
                 continue;
-            if (($lineVersion->getEndDate() !== null && $lv->getEndDate() > $lineVersion->getEndDate()) || (!empty($result) && $result->getEndDate() > $lv->getEndDate()))
+
+            if (($lineVersion->getEndDate() !== null && $lv->getEndDate() > $lineVersion->getEndDate()) ||
+                (!empty($result) && $result->getEndDate() > $lv->getEndDate())
+            )
                 continue;
+
             $result = $lv;
         }
 
@@ -391,18 +395,41 @@ class LineVersionManager extends SortManager
     public function delete($lineVersionId)
     {
         $lineVersion = $this->find($lineVersionId);
-        if($lineVersion == null) {
-            return null;
-        }
+
+        if (empty($lineVersion))
+            throw new \Exception("The LineVersion with id: ".$lineVersionId." can't be found.");
 
         $previousLineVersion = $this->findPreviousLineVersion($lineVersion);
-        if( $previousLineVersion !== null ) {
+
+        if ($previousLineVersion !== null)
+        {
             $previousLineVersion->setEndDate(null);
             $this->om->persist($previousLineVersion);
         }
-        $this->om->remove($lineVersion);
+
+        /** Calendars are just isolated not deleted */
+        foreach ($lineVersion->getCalendars() as $calendar)
+        {
+            $calendar->setLineVersion(null);
+            $this->om->persist($calendar);
+        }
         $this->om->flush();
 
-        return array(true, 'line_version.deleted');
+        /* Doctrine won't delete trips in a good way if parent/pattern relations exist
+         * TODO: See if Doctrine can be configured to detect priority in Trip deletion
+         * in order to avoid this kind of actions
+         */
+        foreach ($lineVersion->getRoutes() as $route)
+        {
+            foreach ($route->getTripsHavingParent() as $trip)
+                $this->om->remove($trip);
+
+            foreach ($route->getTripsHavingPattern() as $trip)
+                $this->om->remove($trip);
+        }
+        $this->om->flush();
+
+        $this->om->remove($lineVersion);
+        $this->om->flush();
     }
 }

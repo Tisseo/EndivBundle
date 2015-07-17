@@ -419,6 +419,12 @@ class Trip
         $this->tripDatasources->removeElement($tripDatasource);
     }
 
+    /** Criteria functions **/
+
+    /**
+     * Getting a specific StopTime using a RouteStop
+     * @param RouteStop $routeStop
+     */
     public function getStopTime(RouteStop $routeStop)
     {
         $criteria = Criteria::create()
@@ -429,6 +435,9 @@ class Trip
         return $this->stopTimes->matching($criteria)->first();
     }
 
+    /**
+     * Getting the first StopTime using arrivalTime
+     */
     public function getFirstStopTime()
     {
         $criteria = Criteria::create()

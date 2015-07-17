@@ -54,7 +54,6 @@ class Route
 
     /**
      * @var Collection
-     * @ORM\OrderBy({"rank" = "ASC"})
      */
     private $routeStops;
 
@@ -66,11 +65,6 @@ class Route
         $this->trips = new ArrayCollection();
         $this->routeDatasources = new ArrayCollection();
         $this->routeStops = new ArrayCollection();
-    }
-
-    public function getLineVersionId()
-    {
-        return $this->lineVersion->getId();
     }
 
     /**
@@ -222,19 +216,6 @@ class Route
     {
         return $this->trips;
     }
-
-    /**
-     * Get pattern trips
-     *
-     * @return Collection
-     */
-    public function getPatternTrips()
-    {
-        return $this->trips->filter( function($t) {
-            return $t->getIsPattern() == true;
-        });
-    }
-
 
     /**
      * Add trips
@@ -421,6 +402,11 @@ class Route
         $this->routeStops->removeElement($routeStops);
     }
 
+    /** Criteria functions **/
+
+    /**
+     * Getting all Trips pattern from the collection
+     */
     public function getTripsPattern()
     {
         $criteria = Criteria::create()
@@ -430,6 +416,9 @@ class Route
         return $this->trips->matching($criteria);
     }
 
+    /**
+     * Getting all Trips not pattern from the collection
+     */
     public function getTripsNotPattern()
     {
         $criteria = Criteria::create()
@@ -439,6 +428,9 @@ class Route
         return $this->trips->matching($criteria);
     }
 
+    /**
+     * Getting all Trips with calendars which aren't pattern
+     */
     public function getTripsNotPatternWithCalendars()
     {
         $criteria = Criteria::create()
@@ -450,16 +442,25 @@ class Route
         return $this->trips->matching($criteria);
     }
 
+    /**
+     * Checking the Route has Trips
+     */
     public function hasTrips()
     {
         return ($this->trips->count() > 0);
     }
 
+    /**
+     * Checking the Route has Trips pattern
+     */
     public function hasTripsNotPattern()
     {
         return ($this->getTripsNotPattern()->count() > 0);
     }
 
+    /**
+     * Getting the last RouteStop (using rank) of the Route
+     */
     public function getLastRouteStop()
     {
         if ($this->routeStops->count() === 0)
@@ -473,6 +474,12 @@ class Route
         return $this->routeStops->matching($criteria)->first();
     }
 
+    /**
+     * Getting RouteStops ordered by rank
+     * TODO: A rule is set in Route.orm.yml in order to fill
+     * the routeStops collection with ordered RouteStops.
+     * This function may be useless then.
+     */
     public function getOrderedRouteStops()
     {
         if ($this->routeStops->count() === 0)
@@ -485,6 +492,10 @@ class Route
         return $this->routeStops->matching($criteria);
     }
 
+    /**
+     * Getting a specific Trip from the Route
+     * @param integer $tripId
+     */
     public function getTrip($tripId)
     {
         $criteria = Criteria::create()
@@ -495,6 +506,10 @@ class Route
         return $this->trips->matching($criteria)->first();
     }
 
+    /**
+     * Checking a Trip pattern is used by Trips or not
+     * @param Trip $pattern
+     */
     public function IsPatternLocked(Trip $pattern)
     {
         $criteria = Criteria::create()
@@ -502,5 +517,29 @@ class Route
         ;
 
         return $this->trips->matching($criteria)->count() > 0;
+    }
+
+    /**
+     * Getting all Trips having a Trip parent from the collection
+     */
+    public function getTripsHavingParent()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('parent', null))
+        ;
+
+        return $this->trips->matching($criteria);
+    }
+
+    /**
+     * Getting all Trips having a Trip parent from the collection
+     */
+    public function getTripsHavingPattern()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('pattern', null))
+        ;
+
+        return $this->trips->matching($criteria);
     }
 }
