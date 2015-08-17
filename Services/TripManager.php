@@ -380,6 +380,10 @@ class TripManager
         $tripDatasource = clone $trip->getTripDatasources()->first();
         $trip->getTripDatasources()->clear();
 
+        $tripCalendar = $trip->getRoute()->getAvailableTripCalendar($trip);
+        if ($tripCalendar !== null)
+            $trip->setTripCalendar($tripCalendar);
+
         foreach ($stopTimes as $jsonStopTime)
         {
             $beginTimings = explode(":", $jsonStopTime['begin']);
