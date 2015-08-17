@@ -542,4 +542,27 @@ class Route
 
         return $this->trips->matching($criteria);
     }
+
+    /**
+     * Getting a Trip having a TripCalendar and the same Calendars
+     * from the Trip passed as parameter
+     * @param Trip $trip
+     * @return TripCalendar
+     */
+    public function getAvailableTripCalendar(Trip $trip)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('tripCalendar', null))
+            ->andWhere(Criteria::expr()->eq('dayCalendar', $trip->getDayCalendar()))
+            ->andWhere(Criteria::expr()->eq('periodCalendar', $trip->getPeriodCalendar()))
+            ->setMaxResults(1)
+        ;
+
+        $trips = $this->trips->matching($criteria);
+
+        if ($trips->isEmpty())
+            return null;
+
+        return $trips->first()->getTripCalendar();
+    }
 }
