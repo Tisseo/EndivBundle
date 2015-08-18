@@ -3,8 +3,9 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use \Doctrine\Common\Collections\ArrayCollection;
-use \Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Line
@@ -442,5 +443,28 @@ class Line
     public function getLineGroupGisContents()
     {
         return $this->lineGroupGisContents;
+    }
+
+    /**
+     * Get last schematic date (priority on schematic with a filePath).
+     * @return \Datetime
+     */
+    public function getLastSchematicDate()
+    {
+        if ($this->schematics->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('filePath', null))
+            ->orderBy(array('date' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        $schematics = $this->schematics->matching($criteria);
+
+        if (!$schematics->isEmpty())
+            return $schematics->first()->getDate();
+
+        return $this->schematics->last()->getDate();
     }
 }

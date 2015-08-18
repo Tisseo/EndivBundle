@@ -149,14 +149,13 @@ class LineVersionManager extends SortManager
 
         if ($filter === 'grouplines')
             $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
-
-        if ($filter === 'schematic') {
+        else if ($filter === 'schematic')
             $query->leftJoin('lv.schematic', 'sc');
-        }
 
         $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
 
-        if ($splitByPhysicalMode) {
+        if ($splitByPhysicalMode)
+        {
             $query = $this->om->createQuery("
                     SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
             ");
@@ -244,9 +243,7 @@ class LineVersionManager extends SortManager
 
             $tripCalendars = $query->getResult();
             foreach($tripCalendars as $tripCalendar)
-            {
                 $result[$cpt][1][] = $tripCalendar;
-            }
             $cpt++;
         }
 
@@ -299,9 +296,8 @@ class LineVersionManager extends SortManager
             }
         }
 
-        if ($sync) {
+        if ($sync)
             $this->om->persist($lineVersion);
-        }
 
         return $newGridCalendars;
     }
