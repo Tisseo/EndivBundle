@@ -359,7 +359,7 @@ class TripManager
      * Create Trip and StopTimes
      * @param Trip $trip
      * @param array $stopTimes
-     * 
+     *
      * Creating new Trip entities and their StopTimes using a Trip 'pattern' and its RouteStops.
      */
     public function createTripAndStopTimes(Trip $trip, $stopTimes)
@@ -404,11 +404,12 @@ class TripManager
             {
                 $endTimings = explode(":", $jsonStopTime['end']);
                 $endTime = $endTimings[0]*3600 + $endTimings[1]*60;
-        
+
                 while ($beginTime <= $endTime)
                 {
                     $hour = (int)($beginTime/3600);
                     $minute = (int)(($beginTime - $hour*3600)/60);
+
                     if ($hour < 10)
                         $hour = '0'.$hour;
                     if ($minute < 10)
@@ -423,7 +424,7 @@ class TripManager
                     $this->createStopTimes($newTrip, $beginTime);
 
                     $this->om->persist($newTrip);
-                    $beginTime += $stopTime['frequency']*60;
+                    $beginTime += $jsonStopTime['frequency']*60;
                 }
             }
         }
@@ -442,7 +443,7 @@ class TripManager
             $newStopTime->setRouteStop($stopTime->getRouteStop());
             $newStopTime->setArrivalTime($newTime);
             $newStopTime->setDepartureTime($newTime);
-            
+
             $trip->addStopTime($newStopTime);
         }
     }
