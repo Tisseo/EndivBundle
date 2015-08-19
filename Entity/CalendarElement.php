@@ -42,13 +42,7 @@ class CalendarElement
     /**
      * @var \Tisseo\EndivBundle\Entity\Calendar
      */
-    // private $calendar;
-
-    /**
-     * @var \Tisseo\EndivBundle\Entity\Calendar
-     */
     private $includedCalendar;
-
 
     /**
      * Get id
@@ -174,29 +168,6 @@ class CalendarElement
     {
         return $this->interval;
     }
-
-    // /**
-     // * Set calendar
-     // *
-     // * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
-     // * @return CalendarElement
-     // */
-    // public function setCalendar(Calendar $calendar = null)
-    // {
-        // $this->calendar = $calendar;
-
-        // return $this;
-    // }
-
-    // /**
-     // * Get calendar
-     // *
-     // * @return \Tisseo\EndivBundle\Entity\Calendar
-     // */
-    // public function getCalendar()
-    // {
-        // return $this->calendar;
-    // }
 
     /**
      * Set includedCalendar
