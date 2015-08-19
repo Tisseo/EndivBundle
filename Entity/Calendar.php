@@ -339,4 +339,9 @@ class Calendar
     {
         return array('jour'=>'jour', 'periode'=>'periode', 'mixte'=>'mixte', 'accessibilite'=>'accessibilite', 'brique'=>'brique');
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

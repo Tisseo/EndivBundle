@@ -447,4 +447,9 @@ class Trip
 
         return $this->stopTimes->matching($criteria)->first();
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
