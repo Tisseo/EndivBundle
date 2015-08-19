@@ -446,10 +446,10 @@ class Line
     }
 
     /**
-     * Get last schematic date (priority on schematic with a filePath).
+     * Get last schematic (priority on schematic with a filePath).
      * @return \Datetime
      */
-    public function getLastSchematicDate()
+    public function getLastSchematic($withFile = false)
     {
         if ($this->schematics->count() === 0)
             return null;
@@ -463,8 +463,35 @@ class Line
         $schematics = $this->schematics->matching($criteria);
 
         if (!$schematics->isEmpty())
-            return $schematics->first()->getDate();
+            return $schematics->first();
 
-        return $this->schematics->last()->getDate();
+        if ($withFile)
+            return null;
+
+        return $this->schematics->last();
+    }
+
+    /**
+     * Get last valid schematic date
+     * @return Schematic
+     */
+    public function getLastValidSchematic()
+    {
+        if ($this->schematics->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('deprecated', true))
+            ->andWhere(Criteria::expr()->neq('filePath', null))
+            ->orderBy(array('date' => Criteria::ASC))
+            ->setMaxResults(1)
+        ;
+
+        $schematics = $this->schematics->matching($criteria);
+
+        if ($schematics->isEmpty())
+            return null;
+
+        return $schematics->first();
     }
 }
