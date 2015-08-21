@@ -257,6 +257,7 @@ class TripManager
         // Creating/updating Trips
         foreach ($tripPatterns as $tripPattern)
         {
+            // new trip
             if (empty($tripPattern['id']))
             {
                 $sync = true;
@@ -271,7 +272,15 @@ class TripManager
                 $this->om->persist($trip);
             }
             else
+            {
                 $trip = $route->getTrip($tripPattern['id']);
+                // updating trip name if different
+                if ($trip->getName() != $tripPattern['name'])
+                {
+                    $sync = true;
+                    $trip->setName($tripPattern['name']);
+                }
+            }
 
             $totalTime = 0;
             foreach ($tripPattern['stopTimes'] as $key => $jsonStopTime)
