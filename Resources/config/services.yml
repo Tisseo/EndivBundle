@@ -30,99 +30,135 @@ parameters:
     tisseo_endiv.line_group_manager.class: Tisseo\EndivBundle\Services\LineGroupManager
     tisseo_endiv.line_group_content_manager.class: Tisseo\EndivBundle\Services\LineGroupContentManager
     tisseo_endiv.modification_manager.class: Tisseo\EndivBundle\Services\ModificationManager
+    tisseo_endiv.log_subscriber.class: Tisseo\EndivBundle\Listener\LogSubscriber
 
 services:
+    tisseo_endiv.log_subscriber:
+        class: %tisseo_endiv.log_subscriber.class%
+        arguments: ["@service_container", "@request_stack", "@jms_serializer"]
+        tags:
+            - { name: doctrine.event_subscriber, connection: 'endiv' }
+
     tisseo_endiv.line_manager:
         class: %tisseo_endiv.line_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.trip_manager:
         class: %tisseo_endiv.trip_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.accessibility_mode_manager:
         class: %tisseo_endiv.accessibility_mode_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.agency_manager:
         class: %tisseo_endiv.agency_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.calendar_manager:
         class: %tisseo_endiv.calendar_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.calendar_element_manager']
+
     tisseo_endiv.calendar_element_manager:
         class: %tisseo_endiv.calendar_element_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.color_manager:
         class: %tisseo_endiv.color_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.datasource_manager:
         class: %tisseo_endiv.datasource_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.exception_type_manager:
         class: %tisseo_endiv.exception_type_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.log_manager:
         class: %tisseo_endiv.log_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.physical_mode_manager:
         class: %tisseo_endiv.physical_mode_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.poi_type_manager:
         class: %tisseo_endiv.poi_type_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.property_manager:
         class: %tisseo_endiv.property_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.grid_calendar_manager:
         class: %tisseo_endiv.grid_calendar_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.printing_manager:
         class: %tisseo_endiv.printing_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.exception_type_manager:
         class: %tisseo_endiv.exception_type_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.stored_procedure_manager:
         class: %tisseo_endiv.stored_procedure_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.route_manager:
         class: %tisseo_endiv.route_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.stop_manager:
         class: %tisseo_endiv.stop_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.stop_area_manager:
         class: %tisseo_endiv.stop_area_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.city_manager:
         class: %tisseo_endiv.city_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.schematic_manager:
         class: %tisseo_endiv.schematic_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.transfer_manager:
         class: %tisseo_endiv.transfer_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.routestop_manager:
         class: %tisseo_endiv.routestop_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager', '@jms_serializer']
+
     tisseo_endiv.stoptime_manager:
         class: %tisseo_endiv.stoptime_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.line_group_gis_manager:
         class: %tisseo_endiv.line_group_gis_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.line_group_gis_content_manager:
         class: %tisseo_endiv.line_group_gis_content_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.line_group_manager:
         class: %tisseo_endiv.line_group_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.line_group_content_manager:
         class: %tisseo_endiv.line_group_content_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
+
     tisseo_endiv.modification_manager:
         class: %tisseo_endiv.modification_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
-
