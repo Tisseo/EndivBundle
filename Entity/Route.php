@@ -12,6 +12,11 @@ use Doctrine\Common\Collections\Criteria;
  */
 class Route
 {
+    const WAY_FORWARD = 'Aller';
+    const WAY_BACKWARD = 'Retour';
+    const WAY_LOOP = 'Boucle';
+    const WAY_AREA = 'Zonal';
+
     /**
      * @var integer
      */

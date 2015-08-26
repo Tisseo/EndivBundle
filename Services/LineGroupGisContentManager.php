@@ -38,27 +38,18 @@ class LineGroupGisContentManager extends SortManager
      */
     public function findByLine($lineId)
     {
-        return $this->repository->findBy(array(
-           'line' => $lineId,
-        ));
+        return $this->repository->findBy(array('line' => $lineId));
     }
 
     /**
      * save
      * @param LineGroupGisContent $lineGroupGisContent
-     * @return array(boolean, string message, LineGroupGisContent)
      *
      * Persist and save a LineGroupGisContent into database.
      */
     public function save(LineGroupGisContent $lineGroupGisContent)
     {
-        try {
-            $this->om->persist($lineGroupGisContent);
-            $this->om->flush();
-        } catch(\Exception $e) {
-            return array($lineGroupGisContent, 'line_group_gis_content.error_persist', $e->getMessage());
-        }
-
-        return array($lineGroupGisContent, 'line_group_gis_content.persisted', null);
+        $this->om->persist($lineGroupGisContent);
+        $this->om->flush();
     }
 }

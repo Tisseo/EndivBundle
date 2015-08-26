@@ -11,6 +11,12 @@ use Doctrine\Common\Collections\Collection;
  */
 class Calendar
 {
+    const CALENDAR_TYPE_HYBRID = 'mixte';
+    const CALENDAR_TYPE_PERIOD = 'periode';
+    const CALENDAR_TYPE_DAY = 'jour';
+    const CALENDAR_TYPE_ACCESSIBILITY = 'accessibilite';
+    const CALENDAR_TYPE_BRICK = 'brique';
+
     /**
      * @var integer
      */

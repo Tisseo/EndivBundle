@@ -78,13 +78,7 @@ class SchematicManager extends SortManager
      */
     public function save(Schematic $schematic)
     {
-        try {
-            $this->om->persist($schematic);
-            $this->om->flush();
-        } catch(\Exception $e) {
-            return array($schematic, 'line_schema.error_persist', $e->getMessage());
-        }
-
-        return array($schematic, 'line_schema.persisted', null);
+        $this->om->persist($schematic);
+        $this->om->flush();
     }
 }
