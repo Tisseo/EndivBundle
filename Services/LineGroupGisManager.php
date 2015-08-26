@@ -33,7 +33,6 @@ class LineGroupGisManager extends SortManager
         return empty($lineGroupGisId) ? null : $this->repository->find($lineGroupGisId);
     }
 
-
     /**
      * save
      * @param LineGroupGis $lineGroupGis
@@ -43,27 +42,19 @@ class LineGroupGisManager extends SortManager
      */
     public function save(LineGroupGis $lineGroupGis)
     {
-        try {
-            /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
-            foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
-                $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-            }
+        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent)
+            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
 
-            $this->om->persist($lineGroupGis);
+        $this->om->persist($lineGroupGis);
 
-            /** @var  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContent*/
-            foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent) {
-                $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-                $this->om->persist($lineGroupGisContent);
-            }
-
-            $this->om->persist($lineGroupGis);
-            $this->om->flush();
-        } catch(\Exception $e) {
-            return array($lineGroupGis, 'line_group_gis.error_persist', $e->getMessage());
+        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent)
+        {
+            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+            $this->om->persist($lineGroupGisContent);
         }
 
-        return array($lineGroupGis, 'line_group_gis.persisted', null);
+        $this->om->persist($lineGroupGis);
+        $this->om->flush();
     }
 
     /**
@@ -74,13 +65,7 @@ class LineGroupGisManager extends SortManager
      */
     public function remove(LineGroupGis $lineGroupGis)
     {
-        try {
-            $this->om->remove($lineGroupGis);
-            $this->om->flush();
-        } catch(\Exception $e) {
-            return array('line_group_gis.error_remove', $e->getMessage());
-        }
-
-        return array('line_group_gis.removed', null);
+        $this->om->remove($lineGroupGis);
+        $this->om->flush();
     }
 }

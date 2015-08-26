@@ -1,17 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: clesauln
- * Date: 09/04/2015
- * Time: 11:15
- */
 
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Query\QueryBuilder;
-
 use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\RouteStop;
 use Tisseo\EndivBundle\Entity\Trip;
@@ -44,7 +35,6 @@ class RouteManager extends SortManager
 
     public function save(Route $route)
     {
-
         $this->om->persist($route);
         $this->om->flush();
     }
@@ -340,7 +330,7 @@ class RouteManager extends SortManager
 
                 $this->om->persist($tripCalendar);
             }
-            
+
             $tripIds = array_values($data['trips']);
 
             $trips = $this->om->createQuery("

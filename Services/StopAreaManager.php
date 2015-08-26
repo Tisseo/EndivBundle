@@ -2,16 +2,9 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-
-use Doctrine\Common\Collections\ArrayCollection;
-use  Doctrine\Common\Collections\Collection;
-
 use Tisseo\EndivBundle\Entity\StopArea;
 use Tisseo\EndivBundle\Entity\Transfer;
-
 
 class StopAreaManager extends SortManager
 {
@@ -29,27 +22,29 @@ class StopAreaManager extends SortManager
         return ($this->repository->findAll());
     }
 
-    public function find($StopAreaId)
+    public function find($stopAreaId)
     {
-        return empty($StopAreaId) ? null : $this->repository->find($StopAreaId);
+        return empty($stopAreaId) ? null : $this->repository->find($stopAreaId);
     }
 
-    public function save(StopArea $StopArea)
+    public function save(StopArea $stopArea)
     {
-        $this->em->persist($StopArea);
+        $this->em->persist($stopArea);
         $this->em->flush();
+
+        return $stopArea->getId();
     }
 
-    public function saveAliases(StopArea $StopArea, $originalAliases)
+    public function saveAliases(StopArea $stopArea, $originalAliases)
     {
         foreach ($originalAliases as $alias) {
-            if (false === $StopArea->getAlias()->contains($alias)) {
-                $StopArea->removeAlias($alias);
+            if (false === $stopArea->getAlias()->contains($alias)) {
+                $stopArea->removeAlias($alias);
                 $this->em->remove($alias);
             }
         }
 
-        $this->em->persist($StopArea);
+        $this->em->persist($stopArea);
         $this->em->flush();
     }
 
@@ -82,7 +77,7 @@ class StopAreaManager extends SortManager
         return $array;
     }
 
-    public function getStopsOrderedByCode($StopArea) {
+    public function getStopsOrderedByCode($stopArea) {
         $query = $this->em->createQuery("
                SELECT s
                FROM Tisseo\EndivBundle\Entity\Stop s
@@ -90,13 +85,13 @@ class StopAreaManager extends SortManager
                WHERE s.stopArea = :sa
                ORDER BY sd.code
         ")
-        ->setParameter('sa', $StopArea);
+        ->setParameter('sa', $stopArea);
 
         return $query->getResult();
     }
 
     //can get closed stops
-    public function getCurrentStops($StopArea) {
+    public function getCurrentStops($stopArea) {
         $sql = "
             SELECT s
             FROM Tisseo\EndivBundle\Entity\Stop s
@@ -108,25 +103,25 @@ class StopAreaManager extends SortManager
 
 
         $query = $this->em->createQuery($sql)
-        ->setParameter('sa', $StopArea);
+        ->setParameter('sa', $stopArea);
 
         return $query->getResult();
     }
 
     /**
      * getMainStopCityName
-     * @param entity $StopArea => stop_area to check
+     * @param entity $stopArea => stop_area to check
      * @return the name of the (first) city found, an empty string if none
      */
-    public function getMainStopCityName($StopArea) {
-        if( !$StopArea->getId() ) return "";
+    public function getMainStopCityName($stopArea) {
+        if( !$stopArea->getId() ) return "";
 
         $query = $this->em->createQuery("
                SELECT c.name
                FROM Tisseo\EndivBundle\Entity\City c
                WHERE c.mainStopArea = :sa
         ")
-        ->setParameter('sa', $StopArea)
+        ->setParameter('sa', $stopArea)
         ->setMaxResults(1);
 
         $result = $query->getResult();
