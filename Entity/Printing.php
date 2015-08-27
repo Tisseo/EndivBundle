@@ -34,15 +34,6 @@ class Printing
      */
     private $lineVersion;
 
-    public function __construct(LineVersion $lineVersion = null)
-    {
-        if ($lineVersion !== null)
-        {
-            $this->lineVersion = $lineVersion;
-            $this->lineVersion->addPrinting($this);
-        }
-    }
-
     /**
      * Get id
      *

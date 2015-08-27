@@ -25,15 +25,6 @@ class StoredProcedureManager
         $rsm = new ResultSetMapping();
         $query = $this->em->createNativeQuery('SELECT purge_fh_data(?)', $rsm);
         $query->setParameter(1, intval($lineVersionId));
-
-        try
-        {
-            $query->getResult();
-            return true;
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
+        $query->getResult();
     }
 }

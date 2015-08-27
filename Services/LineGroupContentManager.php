@@ -29,7 +29,6 @@ class LineGroupContentManager extends SortManager
     /*
      * save
      * @param LineGroupContent $LineGroupContent
-     * @return array(boolean, string)
      *
      * Persist and save a LineGroupContent into database.
      */
@@ -37,7 +36,5 @@ class LineGroupContentManager extends SortManager
     {
         $this->om->persist($lineGroupContent);
         $this->om->flush();
-
-        return array(true,'line_group_content.persisted');
     }
 }
