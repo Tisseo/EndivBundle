@@ -312,7 +312,7 @@ class LineVersionManager extends SortManager
      *  - deleting all trips which don't belong anymore to the previous
      *  LineVersion
      */
-    public function create(LineVersion $lineVersion, $username, $childLine = null)
+    public function create(LineVersion $lineVersion)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
         if ($oldLineVersion)
@@ -320,7 +320,7 @@ class LineVersionManager extends SortManager
             if ($oldLineVersion->getEndDate() === null)
                 $oldLineVersion->closeDate($lineVersion->getStartDate());
             else if ($oldLineVersion->getEndDate() > $lineVersion->getStartDate())
-                return array(false,'line_version.closure_error');
+                return;
             $this->om->persist($oldLineVersion);
         }
 
@@ -347,30 +347,12 @@ class LineVersionManager extends SortManager
         foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
             $this->om->persist($lineGroupContent);
 
-        $query = $this->om->createQuery("
-            SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
-            WHERE ds.name = ?1
-        ")->setParameter(1, 'Information Voyageurs');
-
-        $datasource = $query->getOneOrNullResult();
-        if (!empty($datasource))
-        {
-            $lineVersionDatasource = new LineVersionDatasource();
-            $lineVersionDatasource->setDatasource($datasource);
-            $lineVersionDatasource->setLineVersion($lineVersion);
-            $lineVersionDatasource->setCode($username);
-        }
-
-        $this->om->persist($lineVersionDatasource);
         $this->om->flush();
-
-        return array(true, 'line_version.persisted');
     }
 
     /*
      * save
      * @param LineVersion $lineVersion
-     * @return array(boolean, string)
      *
      * Persist and save a LineVersion into database.
      */
@@ -378,8 +360,6 @@ class LineVersionManager extends SortManager
     {
         $this->om->persist($lineVersion);
         $this->om->flush();
-
-        return array(true, 'line_version.persisted');
     }
 
     /*

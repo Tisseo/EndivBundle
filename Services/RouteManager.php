@@ -60,43 +60,6 @@ class RouteManager extends SortManager
         return $lineVersionId;
     }
 
-    private function updateRouteSections($route_stops, $route)
-    {
-        $route_sections = $this->om
-                            ->getRepository('TisseoEndivBundle:RouteSection')
-                            ->findAll();
-        $tomorrow = (new \DateTime('tomorrow'))->format('Ymd');
-
-        for ($i=0; $i < count($route_stops); $i++) {
-            $rs = $route_stops[$i];
-
-            if( $i+1 < count($route_stops) ) {
-                $startStop = $rs->getWaypoint()->getStop();
-                $endStop = $route_stops[$i+1]->getWaypoint()->getStop();
-
-                $filtered_route_sections = array_filter($route_sections,
-                    function($rs_filter)
-                    use ($startStop, $endStop, $tomorrow) {
-                        if( $rs_filter->getStartStop() != $startStop ) return false;
-                        if( $rs_filter->getEndStop() != $endStop ) return false;
-                        if( $rs_filter->getStartDate()->format('Ymd') > $tomorrow ) return false;
-                        if( !$rs_filter->getEndDate() ) {
-                            return true;
-                        } else {
-                            if( $rs_filter->getEndDate()->format('Ymd') <= $tomorrow ) return false;
-                        }
-                        return true;
-                    }
-                );
-                if(count($filtered_route_sections) > 0) {
-                    $route_section = reset($filtered_route_sections);
-                    $rs->setRouteSection($route_section);
-                    $this->om->persist($rs);
-                }
-            }
-        }
-    }
-
     private function getRouteSectionLength($routeSectionId)
     {
         $connection = $this->om->getConnection()->getWrappedConnection();
@@ -106,67 +69,6 @@ class RouteManager extends SortManager
         $stmt->bindValue(':rsId', $routeSectionId, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchColumn();
-    }
-
-    private function getNotScheduledStopRatios($route_stops)
-    {
-        $notScheduledStops = array();
-        $tmp = array();
-        for ($i=0; $i < count($route_stops); $i++) {
-            $rs = $route_stops[$i];
-            if( $rs->getRouteSection() )
-                $rsLength = $this->getRouteSectionLength($rs->getRouteSection()->getId());
-            else
-                $rsLength = 0;
-            if($rs->getScheduledStop()) {
-                if(count($tmp) > 0) {
-                    foreach ($tmp as $key => $value) {
-                        $tmp[$key]['total'] = $total;
-                        if( $tmp[$key]['total'] == 0 )
-                            $tmp[$key]['ratio'] = 0;
-                        else
-                            $tmp[$key]['ratio'] = $tmp[$key]['length'] / $tmp[$key]['total'];
-                        unset($tmp[$key]['total']);
-                        unset($tmp[$key]['length']);
-                        $notScheduledStops[$key] = $tmp[$key];
-                    }
-                    $tmp = array();
-                }
-                $total = $rsLength;
-            } else {
-                $total += $rsLength;
-                $tmp[$rs->getId()] = array('length' => $rsLength);
-            }
-        }
-
-        return $notScheduledStops;
-    }
-
-    private function updateNotScheduledStopTimes($trips, $ratios)
-    {
-        $notScheduledStopTimes = array();
-
-        foreach ($trips as $trip) {
-            foreach ($trip->getStopTimes() as $st) {
-                if( array_key_exists ( $st->getRouteStop()->getId() , $ratios ) ) {
-                    $notScheduledStopTimes[] = $st;
-                } else {
-                    if( count($notScheduledStopTimes) > 0 ) {
-                        foreach ($notScheduledStopTimes as $notScheduledST) {
-                            $totalTime = $st->getArrivalTime();
-
-                            $time = (int)($ratios[$notScheduledST->getRouteStop()->getId()]['ratio'] * $totalTime);
-                            $time = $time - ($time % 60);
-                            $notScheduledST->setArrivalTime($time);
-                            $notScheduledST->setDepartureTime($time);
-                            $this->om->persist($notScheduledST);
-                        }
-                    }
-
-                    $notScheduledStopTimes = array();
-                }
-            }
-        }
     }
 
     public function getInstantiatedServiceTemplates($route)

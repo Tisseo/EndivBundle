@@ -34,7 +34,6 @@ class LineGroupManager extends SortManager
     /**
      * save
      * @param LineGroup $LineGroup
-     * @return array(boolean, string message, LineGroup)
      *
      * Persist and save a LineGroup into database.
      */
@@ -42,13 +41,10 @@ class LineGroupManager extends SortManager
     {
         $this->om->persist($LineGroup);
         $this->om->flush();
-
-        return array(true,'line_group_gis.persisted', $LineGroup);
     }
 
     /**
      * @param LineGroup $LineGroup
-     * @return array(boolean, string message)
      *
      * Remove LineGroup into database
      */
@@ -56,8 +52,6 @@ class LineGroupManager extends SortManager
     {
         $this->om->remove($LineGroup);
         $this->om->flush();
-
-        return array(true,'line_group_gis.removed');
     }
 
     /*

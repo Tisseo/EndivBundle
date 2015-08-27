@@ -39,11 +39,11 @@ class DatasourceManager extends SortManager
 
     // TODO: This is ugly, change it
     // MAYBE ADD CONFIG PARAMETERS FOR DEFAULT AGENCY/DATASOURCE
-    public function findDefaultDatasource()
+    public function findDatasource($name)
     {
         $query = $this->repository->createQueryBuilder('d')
             ->where('d.name = :datasource')
-            ->setParameter('datasource', 'Service Données')
+            ->setParameter('datasource', $name)
             ->getQuery();
 
         return $query->getOneOrNullResult();
