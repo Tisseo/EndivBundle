@@ -2,16 +2,12 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-
 use Tisseo\EndivBundle\Entity\Calendar;
-
 
 class CalendarManager extends SortManager
 {
-    private $om = null;
+    private $em = null;
     private $repository = null;
 
     public function __construct(EntityManager $em, CalendarElementManager $calendarElementManager)
@@ -26,43 +22,27 @@ class CalendarManager extends SortManager
         return ($this->repository->findAll());
     }
 
-    public function findbyType($type)
+    public function findBy(array $array)
     {
-        $query = $this->em->createQuery("
-            SELECT c FROM Tisseo\EndivBundle\Entity\Calendar c
-            WHERE c.calendarType=:type
-            AND c.id NOT IN (
-                SELECT DISTINCT IDENTITY(t.periodCalendar)
-                FROM Tisseo\EndivBundle\Entity\Trip t
-                WHERE  t.periodCalendar IS NOT NULL
-            )
-            ORDER BY c.name
-        ")
-            ->setParameter('type', $type);;
-        $calendars = $query->getResult();
-
-        $result = array();
-        $connection = $this->em->getConnection()->getWrappedConnection();
-        foreach($calendars as $calendar) {
-            $stmt = $connection->prepare("select count(*) from calendar_element where calendar_id = :calendarId::int");
-            $stmt->bindValue(':calendarId', $calendar->getId(), \PDO::PARAM_INT);
-            $stmt->execute();
-            $nb = $stmt->fetchColumn();
-
-             $result[] = array("calendar" =>  $calendar, "nb_elements" => $nb);
-        }
-
-        return $result;
+        return ($this->repository->findBy($array));
     }
 
-    public function find($CalendarId)
+    public function find($calendarId)
     {
-        return empty($CalendarId) ? null : $this->repository->find($CalendarId);
+        return empty($calendarId) ? null : $this->repository->find($calendarId);
     }
 
-    public function save(Calendar $Calendar)
+    public function save(Calendar $calendar)
     {
-        $this->em->persist($Calendar);
+        $this->em->persist($calendar);
+        $this->em->flush();
+    }
+
+    public function remove($calendarId)
+    {
+        $calendar = $this->find($calendarId);
+
+        $this->em->remove($calendar);
         $this->em->flush();
     }
 
@@ -99,14 +79,13 @@ class CalendarManager extends SortManager
         return $result;
     }
 
-
-    public function getCalendarsBitmask( $CalendarId, $startDate, $endDate)
+    public function getCalendarBitmask($calendarId, \Datetime $startDate, \Datetime $endDate)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("select public.getcalendarbitmask(:calendarId::int, :startDate::date, :endDate::date)");
-        $stmt->bindValue(':calendarId', $CalendarId, \PDO::PARAM_INT);
-        $stmt->bindValue(':startDate', $startDate);
-        $stmt->bindValue(':endDate', $endDate);
+        $stmt->bindValue(':calendarId', $calendarId, \PDO::PARAM_INT);
+        $stmt->bindValue(':startDate', $startDate->format('Y-m-d'), \PDO::PARAM_STR);
+        $stmt->bindValue(':endDate', $endDate->format('Y-m-d'), \PDO::PARAM_STR);
 
         $stmt->execute();
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -114,29 +93,18 @@ class CalendarManager extends SortManager
         return $result["getcalendarbitmask"];
     }
 
-    public function getServiceCalendarsBitmask( $Calendar1Id, $Calendar2Id, $startDate, $endDate)
+    public function getCalendarsIntersectionBitmask($calendar1Id, $calendar2Id, \Datetime $startDate, \Datetime $endDate)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("select public.getbitmaskbeetweencalendars(:calendar1Id::int, :calendar2Id::int, :startDate::date, :endDate::date)");
-        $stmt->bindValue(':calendar1Id', $Calendar1Id, \PDO::PARAM_INT);
-        $stmt->bindValue(':calendar2Id', $Calendar2Id, \PDO::PARAM_INT);
-        $stmt->bindValue(':startDate', $startDate);
-        $stmt->bindValue(':endDate', $endDate);
+        $stmt->bindValue(':calendar1Id', $calendar1Id, \PDO::PARAM_INT);
+        $stmt->bindValue(':calendar2Id', $calendar2Id, \PDO::PARAM_INT);
+        $stmt->bindValue(':startDate', $startDate->format('Y-m-d'), \PDO::PARAM_STR);
+        $stmt->bindValue(':endDate', $endDate->format('Y-m-d'), \PDO::PARAM_STR);
 
         $stmt->execute();
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         return $result["getbitmaskbeetweencalendars"];
-    }
-
-    public function delete($CalendarId)
-    {
-        $calendar = $this->find($CalendarId);
-        if($calendar == null) return false;
-
-        $this->em->remove($calendar);
-        $this->em->flush();
-
-        return true;
     }
 }

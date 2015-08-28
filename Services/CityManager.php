@@ -3,11 +3,7 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\EntityManager;
-
 use Tisseo\EndivBundle\Entity\City;
-
 
 class CityManager extends SortManager
 {
@@ -36,7 +32,7 @@ class CityManager extends SortManager
         $this->om->flush();
     }
 
-    public function findCityLike( $term )
+    public function findCityLike($term)
     {
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);

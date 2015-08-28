@@ -61,7 +61,7 @@ services:
 
     tisseo_endiv.calendar_element_manager:
         class: %tisseo_endiv.calendar_element_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@jms_serializer']
 
     tisseo_endiv.color_manager:
         class: %tisseo_endiv.color_manager.class%

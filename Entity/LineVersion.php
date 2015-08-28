@@ -1021,16 +1021,6 @@ class LineVersion
     }
 
     /**
-     * Remove printings
-     *
-     * @param Printing $printings
-     */
-    public function getFormattedLineVersion()
-    {
-        return $this->getLine()->getNumber() .'_'.$this->getVersion();
-    }
-
-    /**
      * Add lineGroupContents
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents

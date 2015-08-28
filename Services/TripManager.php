@@ -266,7 +266,7 @@ class TripManager
             }
         }
 
-        $routeStops = $route->getOrderedRouteStops();
+        $routeStops = $route->getRouteStops();
 
         // Creating/updating Trips
         foreach ($tripPatterns as $tripPattern)

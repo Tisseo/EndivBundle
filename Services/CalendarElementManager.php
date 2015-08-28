@@ -4,18 +4,21 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Tisseo\EndivBundle\Entity\CalendarElement;
+use JMS\Serializer\Serializer;
 use Tisseo\EndivBundle\Entity\Calendar;
+use Tisseo\EndivBundle\Entity\CalendarElement;
 
 class CalendarElementManager extends SortManager
 {
-    private $om = null;
+    private $em = null;
     private $repository = null;
+    private $serializer = null;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Serializer $serializer)
     {
         $this->em = $em;
         $this->repository = $em->getRepository('TisseoEndivBundle:CalendarElement');
+        $this->serializer = $serializer;
     }
 
     public function findAll()
@@ -23,9 +26,9 @@ class CalendarElementManager extends SortManager
         return ($this->repository->findAll());
     }
 
-    public function findbyCalendar($Calendar)
+    public function findbyCalendar($calendar)
     {
-        if ($Calendar == null) return null;
+        if ($calendar == null) return null;
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('TisseoEndivBundle:CalendarElement', 'ce');
@@ -43,50 +46,90 @@ class CalendarElementManager extends SortManager
         where ce.calendar_id=:calendarId order by rank asc";
 
         $query = $this->em->createNativeQuery($sql,$rsm);
-        $query->setParameter('calendarId', $Calendar);
+        $query->setParameter('calendarId', $calendar);
 
         return $query->getResult();
     }
 
-    public function find($CalendarElementId)
+    public function find($calendarElementId)
     {
-        return empty($CalendarElementId) ? null : $this->repository->find($CalendarElementId);
+        return empty($calendarElementId) ? null : $this->repository->find($calendarElementId);
     }
 
-    public function saveFromCalendar(Calendar $Calendar)
+    public function saveFromCalendar(Calendar $calendar)
     {
-
-    foreach ($Calendar->getCalendarElements() as $CalendarElement) {
-            $this->save($CalendarElement);
+        foreach ($calendar->getCalendarElements() as $calendarElement) {
+                $this->save($calendarElement);
         }
-
     }
 
-    public function delete($CalendarElementId)
+    public function delete($calendarElementId)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("select public.deletecalendarelement(:calendarElementId::int)");
-        $stmt->bindValue(':calendarElementId', $CalendarElementId, \PDO::PARAM_INT);
+        $stmt->bindValue(':calendarElementId', $calendarElementId, \PDO::PARAM_INT);
         $stmt->execute();
     }
 
-    public function save($CalendarId, CalendarElement $CalendarElement)
+    public function save($calendarId, CalendarElement $calendarElement)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("select public.insertcalendarelement(:calendarId::int, :startDate::date, :endDate::date, :interval::int, :operator, :includedCalendarId::int)");
-        $stmt->bindValue(':calendarId', $CalendarId, \PDO::PARAM_INT);
-        $startDate = (!$CalendarElement->getStartDate() ? null : date_format($CalendarElement->getStartDate(), 'Y-m-d') );
-        $stmt->bindValue(':startDate', $startDate);
-        $endDate = (!$CalendarElement->getEndDate() ? null : date_format($CalendarElement->getEndDate(), 'Y-m-d') );
-        $stmt->bindValue(':endDate', $endDate);
 
-        $interval = $CalendarElement->getInterval();
-        if(empty($interval)) $interval =1;
-        $stmt->bindValue(':interval', $interval, \PDO::PARAM_INT);
-        $stmt->bindValue(':operator', $CalendarElement->getOperator());
-        $includedCalendarId = (!$CalendarElement->getIncludedCalendar() ? null: $CalendarElement->getIncludedCalendar()->getId());
-        $stmt->bindValue(':includedCalendarId', $includedCalendarId, \PDO::PARAM_INT);
+        $stmt = $connection->prepare("select public.insertcalendarelement(:calendarId::int, :startDate::date, :endDate::date, :interval::int, :operator, :includedCalendarId::int)");
+
+        $stmt->bindValue(':calendarId', $calendarId, \PDO::PARAM_INT);
+        $stmt->bindValue(':startDate', (!$calendarElement->getStartDate() ? null : date_format($calendarElement->getStartDate(), 'Y-m-d')));
+        $stmt->bindValue(':endDate', (!$calendarElement->getEndDate() ? null : date_format($calendarElement->getEndDate(), 'Y-m-d')));
+        $stmt->bindValue(':interval', ($calendarElement->getInterval() === null ? 1 : $calendarElement->getInterval()), \PDO::PARAM_INT);
+        $stmt->bindValue(':operator', $calendarElement->getOperator());
+        $stmt->bindValue(':includedCalendarId', (!$calendarElement->getIncludedCalendar() ? null: $calendarElement->getIncludedCalendar()->getId()), \PDO::PARAM_INT);
 
         $stmt->execute();
+    }
+
+    public function updateCalendarElements($calendarElements, Calendar $calendar)
+    {
+        foreach ($calendar->getCalendarElements() as $calendarElement)
+        {
+            $existing = array_filter(
+                $calendarElements,
+                function ($object) use ($calendarElement) {
+                    return ($object['id'] == $calendarElement->getId());
+                }
+            );
+
+            if (empty($existing))
+                $this->delete($calendarElement->getId());
+        }
+
+        $newCalendarElements = array_filter(
+            $calendarElements,
+            function ($object) {
+                return empty($object['id']);
+            }
+        );
+
+        foreach ($newCalendarElements as $calendarElement)
+        {
+            $calendarElement = $this->serializer->deserialize(json_encode($calendarElement), 'Tisseo\EndivBundle\Entity\CalendarElement', 'json');
+            $calendarElement->setCalendar($calendar);
+
+            if ($calendarElement->getIncludedCalendar() != null)
+            {
+                $includedCalendar = $this->em->createQuery("
+                    SELECT c FROM Tisseo\EndivBundle\Entity\Calendar c
+                    WHERE c.id = :calendar
+                ")
+                ->setParameter('calendar', $calendarElement->getIncludedCalendar()->getId())
+                ->getOneOrNullResult();
+
+                if ($includedCalendar === null)
+                    throw new \Exception("Can't create a new CalendarElement because provided includedCalendar with id: ".$calendarElement->getIncludedCalendar()->getId()." can't be found.");
+
+                $calendarElement->setIncludedCalendar($includedCalendar);
+            }
+
+            $this->save($calendar->getId(), $calendarElement);
+        }
     }
 }

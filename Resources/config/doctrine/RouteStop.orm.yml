@@ -76,6 +76,7 @@ Tisseo\EndivBundle\Entity\RouteStop:
     oneToMany:
         stopTimes:
             targetEntity: StopTime
+            orderBy: { 'departureTime': 'ASC' }
             cascade: ['remove']
             mappedBy: routeStop
             inversedBy: null
