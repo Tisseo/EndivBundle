@@ -18,6 +18,17 @@ class Calendar
     const CALENDAR_TYPE_BRICK = 'brique';
 
     /**
+     * Property calendarTypes
+     */
+    public static $calendarTypes = array(
+        self::CALENDAR_TYPE_DAY => self::CALENDAR_TYPE_DAY,
+        self::CALENDAR_TYPE_PERIOD => self::CALENDAR_TYPE_PERIOD,
+        self::CALENDAR_TYPE_HYBRID => self::CALENDAR_TYPE_HYBRID,
+        self::CALENDAR_TYPE_ACCESSIBILITY => self::CALENDAR_TYPE_ACCESSIBILITY,
+        self::CALENDAR_TYPE_BRICK => self::CALENDAR_TYPE_BRICK
+    );
+
+    /**
      * @var integer
      */
     private $id;
@@ -68,6 +79,11 @@ class Calendar
     private $computedEndDate;
 
     /**
+     * @var Collection
+     */
+    private $calendarElements;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -76,6 +92,7 @@ class Calendar
         $this->periodTrips = new ArrayCollection();
         $this->dayTrips = new ArrayCollection();
         $this->accessibilityTypes = new ArrayCollection();
+        $this->calendarElements = new ArrayCollection();
     }
 
     /**
@@ -119,7 +136,8 @@ class Calendar
      */
     public function setCalendarType($calendarType)
     {
-        $this->calendarType = $calendarType;
+        if (in_array($calendarType, self::$calendarTypes))
+            $this->calendarType = $calendarType;
 
         return $this;
     }
@@ -336,14 +354,52 @@ class Calendar
     }
 
     /**
-     * Get calendar types
+     * Set calendarElements
      *
-     * @return enum list
-     * @todo bad bad bad must return the real enum value by native sql querying
+     * @param Collection $calendarElements
+     * @return Route
      */
-    public static function getCalendarTypes()
+    public function setCalendarElements(Collection $calendarElements)
     {
-        return array('jour'=>'jour', 'periode'=>'periode', 'mixte'=>'mixte', 'accessibilite'=>'accessibilite', 'brique'=>'brique');
+        $this->calendarElements = $calendarElements;
+        foreach ($this->calendarElements as $calendarElement) {
+            $calendarElement->setRoute($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Get calendarElements
+     *
+     * @return Collection
+     */
+    public function getCalendarElements()
+    {
+        return $this->calendarElements;
+    }
+
+    /**
+     * Add calendarElements
+     *
+     * @param CalendarElement $calendarElement
+     * @return Route
+     */
+    public function addCalendarElement(CalendarElement $calendarElement)
+    {
+        $this->calendarElements[] = $calendarElement;
+        $calendarElement->setRoute($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove calendarElements
+     *
+     * @param CalendarElement $calendarElement
+     */
+    public function removeCalendarElement(CalendarElement $calendarElement)
+    {
+        $this->calendarElements->removeElement($calendarElement);
     }
 
     public function __toString()

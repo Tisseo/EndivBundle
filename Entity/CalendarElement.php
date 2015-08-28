@@ -3,12 +3,26 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * CalendarElement
  */
 class CalendarElement
 {
+    const CALENDAR_OPERATOR_UNION = '+';
+    const CALENDAR_OPERATOR_EXCLUSION = '-';
+    const CALENDAR_OPERATOR_INTERSECTION = '&';
+
+    /**
+     * Property operators
+     */
+    public static $operators = array(
+        self::CALENDAR_OPERATOR_UNION => self::CALENDAR_OPERATOR_UNION,
+        self::CALENDAR_OPERATOR_INTERSECTION => self::CALENDAR_OPERATOR_INTERSECTION,
+        self::CALENDAR_OPERATOR_EXCLUSION => self::CALENDAR_OPERATOR_EXCLUSION
+    );
+
     /**
      * @var integer
      */
@@ -31,6 +45,7 @@ class CalendarElement
 
     /**
      * @var string
+     * @Type("string")
      */
     private $operator;
 
@@ -43,6 +58,11 @@ class CalendarElement
      * @var \Tisseo\EndivBundle\Entity\Calendar
      */
     private $includedCalendar;
+
+    /**
+     * @var \Tisseo\EndivBundle\Entity\Calendar
+     */
+    private $calendar;
 
     /**
      * Get id
@@ -131,7 +151,8 @@ class CalendarElement
      */
     public function setOperator($operator)
     {
-        $this->operator = $operator;
+        if (in_array($operator, self::$operators))
+            $this->operator = $operator;
 
         return $this;
     }
@@ -193,13 +214,25 @@ class CalendarElement
     }
 
     /**
-     * Get operator list value
+     * Set calendar
      *
-     * @return enum list
-     * @todo bad bad bad must return the real enum value by native sql querying
+     * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
+     * @return CalendarElement
      */
-    public static function getOperatorValues()
+    public function setCalendar(Calendar $calendar = null)
     {
-        return array('+'=>'+', '-'=>'-', '&'=>'&');
+        $this->calendar = $calendar;
+
+        return $this;
+    }
+
+    /**
+     * Get calendar
+     *
+     * @return \Tisseo\EndivBundle\Entity\Calendar
+     */
+    public function getCalendar()
+    {
+        return $this->calendar;
     }
 }

@@ -53,4 +53,11 @@ Tisseo\EndivBundle\Entity\CalendarElement:
             joinColumns:
                 included_calendar_id:
                     referencedColumnName: id
+        calendar:
+            targetEntity: Calendar
+            mappedBy: null
+            inversedBy: calendarElements
+            joinColumns:
+                calendar_id:
+                    referencedColumnName: id
     lifecycleCallbacks: {  }

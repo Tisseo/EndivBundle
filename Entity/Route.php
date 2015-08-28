@@ -480,24 +480,6 @@ class Route
     }
 
     /**
-     * Getting RouteStops ordered by rank
-     * TODO: A rule is set in Route.orm.yml in order to fill
-     * the routeStops collection with ordered RouteStops.
-     * This function may be useless then.
-     */
-    public function getOrderedRouteStops()
-    {
-        if ($this->routeStops->count() === 0)
-            return null;
-
-        $criteria = Criteria::create()
-            ->orderBy(array('rank' => Criteria::ASC))
-        ;
-
-        return $this->routeStops->matching($criteria);
-    }
-
-    /**
      * Getting a specific Trip from the Route
      * @param integer $tripId
      */

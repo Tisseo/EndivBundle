@@ -3,12 +3,7 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\EntityManager;
-
-use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\StopTime;
-
 
 class StopTimeManager extends SortManager
 {
@@ -34,22 +29,18 @@ class StopTimeManager extends SortManager
     //TODO: This seems to be bad, change/delete
     public function save(StopTime $Stop)
     {
-        if (!$Stop->getId()) {
+        if (!$Stop->getId())
+        {
             // new stop + new stop_history
-
             $this->om->persist($Stop);
             $this->om->flush();
             $this->om->refresh($Stop);
             $newId = $Stop->getId();
-
             $Stop->setId($newId);
-
         }
 
         $this->om->persist($Stop);
         $this->om->flush();
         $this->om->refresh($Stop);
     }
-
-
 }

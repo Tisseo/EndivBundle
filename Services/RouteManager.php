@@ -14,8 +14,8 @@ use Tisseo\EndivBundle\Entity\RouteDatasource;
 
 class RouteManager extends SortManager
 {
-    private $om= null;
-    private $repository= null;
+    private $om = null;
+    private $repository = null;
 
     public function __construct(ObjectManager $om)
     {
