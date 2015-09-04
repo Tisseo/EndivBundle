@@ -88,17 +88,19 @@ class TripManager
 
     public function deleteTripsFromRoute(Route $route)
     {
-        $trips = $route->getTripsNotPattern();
-
-        $sync = false;
-        if ($trips->count() > 0)
-            $sync = true;
+        $trips = $route->getTripsHavingParent();
 
         foreach ($trips as $trip)
             $this->om->remove($trip);
 
-        if ($sync)
-            $this->om->flush();
+        $this->om->flush();
+
+        $trips = $route->getTripsNotPattern();
+
+        foreach ($trips as $trip)
+            $this->om->remove($trip);
+
+        $this->om->flush();
     }
 
     public function deleteTrips(LineVersion $lineVersion)
