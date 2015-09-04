@@ -146,26 +146,46 @@ class StopAreaManager extends SortManager
     // VERIFIED FUNCTION
     //
 
-    public function getLineVersions($stopAreaId)
+    public function getLinesByStop($stopAreaId)
     {
         $query = $this->em->createQuery("
-           SELECT s.id, lv
-           FROM Tisseo\EndivBundle\Entity\LineVersion lv
-           JOIN lv.line l
+           SELECT DISTINCT s.id as stop, l.id as line
+           FROM Tisseo\EndivBundle\Entity\Line l
+           JOIN l.lineVersions lv
            JOIN lv.routes r
            JOIN r.routeStops rs
            JOIN rs.waypoint w
            JOIN w.stop s
+           JOIN s.stopDatasources sd
            WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
            AND s.stopArea = :sa
+           ORDER BY s.id
         ")
         ->setParameter('sa', $stopAreaId);
-
+        // There is a bug with getResult() and custom request SELECT s.id, l
+        // leading to missing rows in the result array.
         $array = $query->getResult();
-        $result = array();
 
+        $lines = array();
         foreach ($array as $item)
-            $result[$item['id']][] = $item[0];
+            $lines[] = $item['line'];
+
+        $query = $this->em->createQuery("
+            SELECT DISTINCT l
+            FROM Tisseo\EndivBundle\Entity\Line l
+            WHERE l.id IN (:lines)
+        ")
+        ->setParameter('lines', $lines);
+        $linesResult = $query->getResult();
+
+        $lines = array();
+        foreach($linesResult as $line)
+            $lines[$line->getId()] = $line;
+
+        $result = array();
+        foreach ($array as $item) {
+            $result[$item['stop']][] = $lines[$item['line']];
+        }
 
         return $result;
     }
