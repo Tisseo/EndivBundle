@@ -447,6 +447,7 @@ class Line
 
     /**
      * Get last schematic (priority on schematic with a filePath).
+     * @param boolean withFile
      * @return \Datetime
      */
     public function getLastSchematic($withFile = false)
@@ -454,21 +455,20 @@ class Line
         if ($this->schematics->count() === 0)
             return null;
 
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('filePath', null))
-            ->orderBy(array('date' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
-
-        $schematics = $this->schematics->matching($criteria);
-
-        if (!$schematics->isEmpty())
-            return $schematics->first();
-
         if ($withFile)
-            return null;
+        {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->neq('filePath', null))
+                ->setMaxResults(1)
+            ;
 
-        return $this->schematics->last();
+            $schematics = $this->schematics->matching($criteria);
+
+            if (!$schematics->isEmpty())
+                return $schematics->first();
+        }
+
+        return $this->schematics->first();
     }
 
     /**
@@ -483,7 +483,6 @@ class Line
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('deprecated', true))
             ->andWhere(Criteria::expr()->neq('filePath', null))
-            ->orderBy(array('date' => Criteria::ASC))
             ->setMaxResults(1)
         ;
 
@@ -493,5 +492,27 @@ class Line
             return null;
 
         return $schematics->first();
+    }
+
+    /**
+     * Get fileSchematics
+     * @return ArrayCollection
+     */
+    public function getFileSchematics($max = 5)
+    {
+        if ($this->schematics->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('filePath', null))
+            ->setMaxResults($max);
+        ;
+
+        $schematics = $this->schematics->matching($criteria);
+
+        if ($schematics->isEmpty())
+            return null;
+
+        return $schematics;
     }
 }

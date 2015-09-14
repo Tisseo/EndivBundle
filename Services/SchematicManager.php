@@ -8,7 +8,6 @@ use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Schematic;
 use Tisseo\TidBundle\Form\Type\LineSchemaType;
 
-
 class SchematicManager extends SortManager
 {
     private $om = null;
@@ -30,43 +29,6 @@ class SchematicManager extends SortManager
     public function find($schematicId)
     {
         return empty($schematicId) ? null : $this->repository->find($schematicId);
-    }
-
-    /**
-     * @param $lineId
-     * @param int $limit, if 0, no result limitation
-     * @param boolean $isFile default false
-     * @return array Tisseo\EndivBundle\Entity\Schematic
-     */
-    public function findLineSchematics($lineId, $limit=5, $isFile = false)
-    {
-        $finalResult = array();
-        if (empty($lineId)) return $finalResult;
-
-        $qBuilder = $this->repository->createQueryBuilder('sc')
-            ->where('sc.line = :lineId');
-
-
-        if ($isFile == true) {
-            $qBuilder->andWhere("sc.filePath != '' ");
-        }
-
-        if ($limit != 0) {
-            $qBuilder->setMaxResults((int)$limit);
-        }
-
-        $qBuilder->setParameter('lineId', $lineId);
-        $qBuilder->orderBy('sc.date', 'DESC');
-
-        $query = $qBuilder->getQuery();
-
-        try {
-            $results = $query->getResult();
-        } catch(\Exception $e) {
-            return $finalResult;
-        }
-
-        return $results;
     }
 
     /*
