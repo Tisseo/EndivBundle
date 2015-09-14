@@ -122,7 +122,11 @@ class LogSubscriber implements EventSubscriber
 
                 break;
             case self::LOG_ACTION_UPDATE:
-                $log->setTable($entityTableName." (".$entity->getId().")");
+                if (method_exists($entity, 'getId'))
+                    $log->setTable($entityTableName." (".$entity->getId().")");
+                else
+                    $log->setTable($entityTableName);
+
                 $changeSet = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
 
                 $oldData = '';
