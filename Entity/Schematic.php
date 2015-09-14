@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -55,6 +56,18 @@ class Schematic
      */
     private $line;
 
+    /**
+     * @var Collection
+     */
+    private $lineVersions;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->lineVersions = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -270,5 +283,15 @@ class Schematic
     public function getGroupGis()
     {
         return $this->groupGis;
+    }
+
+    /**
+     * Get lineVersions
+     *
+     * @return Collection
+     */
+    public function getLineVersions()
+    {
+        return $this->lineVersions;
     }
 }

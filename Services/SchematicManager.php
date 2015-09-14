@@ -43,4 +43,11 @@ class SchematicManager extends SortManager
         $this->om->persist($schematic);
         $this->om->flush();
     }
+
+    public function remove($schematicId)
+    {
+        $schematic = $this->find($schematicId);
+        $this->om->remove($schematic);
+        $this->om->flush();
+    }
 }

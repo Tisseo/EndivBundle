@@ -52,6 +52,13 @@ Tisseo\EndivBundle\Entity\Schematic:
                 line_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        lineVersions:
+            targetEntity: LineVersion
+            cascade: ['persist']
+            mappedBy: schematic
+            inversedBy: null
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks:
         prePersist: [ preUpload ]
         preUpdate: [ preUpload ]

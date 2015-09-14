@@ -104,7 +104,7 @@ Tisseo\EndivBundle\Entity\LineVersion:
         schematic:
             targetEntity: Schematic
             mappedBy: null
-            inversedBy: null
+            inversedBy: lineVersions
             joinColumns:
                 schematic_id:
                     referencedColumnName: id
