@@ -31,6 +31,11 @@ Tisseo\EndivBundle\Entity\Schematic:
             type: boolean
             nullable: true
             comment: ''
+        groupGis:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: group_gis
         filePath:
             type: text
             nullable: true

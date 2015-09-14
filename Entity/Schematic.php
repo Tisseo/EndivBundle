@@ -46,6 +46,11 @@ class Schematic
     private $deprecated;
 
     /**
+     * @var boolean
+     */
+    private $groupGis;
+
+    /**
      * @var \Tisseo\EndivBundle\Entity\Line
      */
     private $line;
@@ -242,5 +247,28 @@ class Schematic
     public function getDeprecated()
     {
         return $this->deprecated;
+    }
+
+    /**
+     * Set groupGis
+     *
+     * @param boolean $groupGis
+     * @return Schematic
+     */
+    public function setGroupGis($groupGis)
+    {
+        $this->groupGis = $groupGis;
+
+        return $this;
+    }
+
+    /**
+     * Get groupGis
+     *
+     * @return boolean
+     */
+    public function getGroupGis()
+    {
+        return $this->groupGis;
     }
 }
