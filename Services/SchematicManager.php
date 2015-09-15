@@ -52,6 +52,19 @@ class SchematicManager extends SortManager
         $this->om->flush();
     }
 
+    /*
+     * Remove
+     * @param integer $schematicId
+     *
+     * Removing a Schematic from database.
+     */
+    public function remove($schematicId)
+    {
+        $schematic = $this->find($schematicId);
+        $this->om->remove($schematic);
+        $this->om->flush();
+    }
+
     /**
      * Update group gis
      * @param array $schematicIds

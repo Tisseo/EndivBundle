@@ -526,6 +526,29 @@ class Line
     }
 
     /**
+     * Get last gisSchematic
+     * @return Schematic
+     */
+    public function getLastGisSchematic()
+    {
+        if ($this->schematics->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('filePath', null))
+            ->andWhere(Criteria::expr()->neq('deprecated', true))
+            ->andWhere(Criteria::expr()->eq('groupGis', true))
+        ;
+
+        $schematics = $this->schematics->matching($criteria);
+
+        if (!$schematics->isEmpty())
+            return $schematics->first();
+
+        return null;
+    }
+
+    /**
      * Get gisSchematics
      * @return ArrayCollection
      */
