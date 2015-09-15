@@ -72,59 +72,6 @@ class Line
     }
 
     /**
-     * getLastLineVersion
-     *
-     * @return LineVersion
-     */
-    public function getLastLineVersion()
-    {
-        $result = null;
-        foreach($this->lineVersions as $lineVersion)
-        {
-            if ($lineVersion->getEndDate() === null)
-                return $lineVersion;
-            else if($result !== null && $lineVersion->getEndDate() < $result->getEndDate())
-                continue;
-            $result = $lineVersion;
-        }
-        return $result;
-    }
-
-    /**
-     * getHistoryLineVersions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getHistoryLineVersions()
-    {
-        $result = new ArrayCollection();
-        $now = new \Datetime();
-        foreach($this->lineVersions as $lineVersion)
-        {
-            if ($lineVersion->getEndDate() !== null)
-                $result[] = $lineVersion;
-        }
-        return $result;
-    }
-
-
-    /**
-     * getActiveLineVersions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActiveLineVersions()
-    {
-        $filtered_collection = $this->lineVersions->filter( function($lv) {
-            $endDate = $lv->getEndDate();
-            $now = new \DateTime('NOW');
-            return (empty($endDate) || $endDate->format('Ymd') > $now->format('Ymd'));
-        });
-        return $filtered_collection;
-    }
-
-
-    /**
      * Define priority
      */
     public function definePriority()
@@ -445,6 +392,68 @@ class Line
         return $this->lineGroupGisContents;
     }
 
+    // LineVersion Criteria functions
+
+    /**
+     * getLastLineVersion
+     *
+     * @return LineVersion
+     */
+    public function getLastLineVersion()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(array('endDate' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        $lineVersions = $this->lineVersions->matching($criteria);
+
+        if (!$lineVersions->isEmpty())
+            return $lineVersions->first();
+
+        return null;
+    }
+
+    /**
+     * getHistoryLineVersions
+     *
+     * @param \Datetime $now
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHistoryLineVersions(\Datetime $now)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->lt('endDate', $now))
+            ->orderBy(array('version' => Criteria::ASC))
+        ;
+
+        return $this->lineVersions->matching($criteria);
+    }
+
+    /**
+     * getActiveLineVersions
+     *
+     * @param \Datetime $now
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getActiveLineVersions(\Datetime $now)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->lte('startDate', $now))
+            ->andWhere(Criteria::expr()->orX(
+                Criteria::expr()->gt('endDate', $now),
+                Criteria::expr()->andX(
+                    Criteria::expr()->isNull('endDate'),
+                    Criteria::expr()->gte('plannedEndDate', $now)
+                )
+            ))
+        ;
+
+        return $this->lineVersions->matching($criteria);
+    }
+
+    // Schematics Criteria functions
+
     /**
      * Get last schematic (priority on schematic with a filePath).
      * @param boolean withFile
@@ -516,6 +525,10 @@ class Line
         return $schematics;
     }
 
+    /**
+     * Get gisSchematics
+     * @return ArrayCollection
+     */
     public function getGisSchematics()
     {
         if ($this->schematics->count() === 0)
