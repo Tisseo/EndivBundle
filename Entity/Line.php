@@ -481,10 +481,10 @@ class Line
     }
 
     /**
-     * Get last valid schematic date
+     * Get first valid schematic date
      * @return Schematic
      */
-    public function getLastValidSchematic()
+    public function getFirstValidSchematic()
     {
         if ($this->schematics->count() === 0)
             return null;
@@ -492,6 +492,7 @@ class Line
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('deprecated', true))
             ->andWhere(Criteria::expr()->neq('filePath', null))
+            ->orderBy(array('date' => Criteria::ASC))
             ->setMaxResults(1)
         ;
 
