@@ -31,12 +31,20 @@ class SchematicManager extends SortManager
         return empty($schematicId) ? null : $this->repository->find($schematicId);
     }
 
+    /**
+     * Find multiple by Id
+     * @param array $schematicIds
+     */
+    public function findMultipleById(array $schematicIds)
+    {
+        return $this->repository->findById($schematicIds);
+    }
+
     /*
      * Save
      * @param Schematic $schematic
-     * @return array(boolean, string, Schematic)
      *
-     * Persist and save a Schematic into database.
+     * Saving a Schematic into database.
      */
     public function save(Schematic $schematic)
     {
@@ -44,10 +52,29 @@ class SchematicManager extends SortManager
         $this->om->flush();
     }
 
-    public function remove($schematicId)
+    /**
+     * Update group gis
+     * @param array $schematicIds
+     * @param boolean $groupGis
+     *
+     * Updating groupGis attribute for specified Schematics.
+     */
+    public function updateGroupGis(array $schematics, $groupGis)
     {
-        $schematic = $this->find($schematicId);
-        $this->om->remove($schematic);
-        $this->om->flush();
+        $schematicsCollection = $this->findMultipleById($schematics);
+
+        $sync = false;
+        foreach ($schematicsCollection as $schematic)
+        {
+            if ($schematic->getGroupGis() !== $groupGis)
+            {
+                $schematic->setGroupGis($groupGis);
+                $this->om->persist($schematic);
+                $sync = true;
+            }
+        }
+
+        if ($sync)
+            $this->om->flush();
     }
 }

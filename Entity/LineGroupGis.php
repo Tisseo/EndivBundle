@@ -21,7 +21,7 @@ class LineGroupGis
     private $name;
 
     /**
-     * @var string
+     * @var integer
      */
     private $nbBus;
 

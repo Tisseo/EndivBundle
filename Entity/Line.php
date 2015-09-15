@@ -515,4 +515,21 @@ class Line
 
         return $schematics;
     }
+
+    public function getGisSchematics()
+    {
+        if ($this->schematics->count() === 0)
+            return null;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('filePath', null))
+            ->andWhere(Criteria::expr()->neq('deprecated', true))
+        ;
+
+        $result = array();
+        foreach ($this->schematics->matching($criteria) as $schematic)
+            $result[$schematic->getId()] = $schematic->getDateString();
+
+        return $result;
+    }
 }

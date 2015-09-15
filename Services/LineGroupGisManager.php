@@ -42,15 +42,16 @@ class LineGroupGisManager extends SortManager
      */
     public function save(LineGroupGis $lineGroupGis)
     {
-        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent)
-            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-
-        $this->om->persist($lineGroupGis);
+        if ($lineGroupGis->getId() === null)
+            $this->om->persist($lineGroupGis);
 
         foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent)
         {
-            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-            $this->om->persist($lineGroupGisContent);
+            if ($lineGroupGisContent->getLineGroupGis() == null)
+            {
+                $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+                $this->om->persist($lineGroupGisContent);
+            }
         }
 
         $this->om->persist($lineGroupGis);

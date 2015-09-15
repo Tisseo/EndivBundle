@@ -294,4 +294,9 @@ class Schematic
     {
         return $this->lineVersions;
     }
+
+    public function getDateString()
+    {
+        return $this->date->format('d/m/Y');
+    }
 }

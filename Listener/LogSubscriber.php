@@ -192,7 +192,7 @@ class LogSubscriber implements EventSubscriber
     {
         if (!is_object($propertyValue))
         {
-            $string .= $propertyName.':'.($propertyValue !== null ? $propertyValue : 'null');
+            $string .= $propertyName.':'.($propertyValue !== null ? (strlen($propertyValue) > 0 ? strval($propertyValue) : '0') : 'null');
         }
         else
         {
@@ -202,7 +202,6 @@ class LogSubscriber implements EventSubscriber
             else if ($propertyValue instanceof \Datetime)
                 $string .= $propertyName.':'.$propertyValue->format('Y-m-d');
         }
-
         $string .= " ";
     }
 }

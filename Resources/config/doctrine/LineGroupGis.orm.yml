@@ -18,7 +18,7 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
             comment: ''
         nbBus:
             column: nb_bus
-            type: string
+            type: integer
             nullable: true
             fixed: false
             comment: ''
@@ -31,7 +31,7 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
     oneToMany:
         lineGroupGisContents:
             targetEntity: LineGroupGisContent
-            cascade: ['remove']
+            cascade: ['persist', 'remove']
             mappedBy: lineGroupGis
             inversedBy: null
             orphanRemoval: true
