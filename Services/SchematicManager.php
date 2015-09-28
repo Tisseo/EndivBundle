@@ -81,7 +81,15 @@ class SchematicManager extends SortManager
         {
             if ($schematic->getGroupGis() !== $groupGis)
             {
+                $upSchematics = $this->repository->findBy(array('line' => $schematic->getLine()));
+                foreach ($upSchematics as $upSchematic)
+                {
+                    $upSchematic->setGroupGis(!$groupGis);
+                    $this->om->persist($upSchematic);
+                }
+
                 $schematic->setGroupGis($groupGis);
+
                 $this->om->persist($schematic);
                 $sync = true;
             }

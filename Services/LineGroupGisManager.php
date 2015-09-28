@@ -3,9 +3,8 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineGroupGis;
-
-
 
 class LineGroupGisManager extends SortManager
 {
@@ -42,16 +41,18 @@ class LineGroupGisManager extends SortManager
      */
     public function save(LineGroupGis $lineGroupGis)
     {
-        if ($lineGroupGis->getId() === null)
-            $this->om->persist($lineGroupGis);
+        $lineGroupGisContents = clone $lineGroupGis->getLineGroupGisContents();
 
-        foreach($lineGroupGis->getLineGroupGisContents() as $lineGroupGisContent)
+        if ($lineGroupGis->getId() === null)
         {
-            if ($lineGroupGisContent->getLineGroupGis() == null)
-            {
-                $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-                $this->om->persist($lineGroupGisContent);
-            }
+            $lineGroupGis->clearLineGroupGisContents();
+            $this->om->persist($lineGroupGis);
+        }
+
+        foreach($lineGroupGisContents as $lineGroupGisContent)
+        {
+            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
+            $this->om->persist($lineGroupGisContent);
         }
 
         $this->om->persist($lineGroupGis);

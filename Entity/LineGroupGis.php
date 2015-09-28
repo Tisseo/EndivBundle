@@ -114,6 +114,11 @@ class LineGroupGis
         $lineGroupGisContent->setLineGroupGis($this);
     }
 
+    public function clearLineGroupGisContents()
+    {
+        $this->lineGroupGisContents->clear();
+    }
+
     /**
      * Set nbBus
      *
