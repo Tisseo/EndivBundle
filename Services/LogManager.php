@@ -18,13 +18,31 @@ class LogManager extends SortManager
 
     public function findAll()
     {
-        //return ($this->repository->findAll());
-        return ($this->repository->findBy(array(), array('datetime' => 'asc')));
+        return ($this->repository->findBy(array(), array('id' => 'desc')));
     }
 
     public function find($LogId)
     {
         return empty($LogId) ? null : $this->repository->find($LogId);
+    }
+
+    public function count()
+    {
+        return $this->repository
+                ->createQueryBuilder('l')
+                ->select('count(l)')
+                ->getQuery()
+                ->getSingleScalarResult();
+    }
+
+    public function findLogEntries($offset, $limit)
+    {
+        return $this->repository->findBy(
+            array(),
+            array('id' => 'desc'),
+            $limit,
+            $offset
+        );
     }
 
     public function save(Log $Log)
