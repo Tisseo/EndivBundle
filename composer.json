@@ -1,8 +1,10 @@
 {
     "name" : "tisseo/endiv-bundle",
-    "description" : "Providing mapping and services in order to manage data from ENDIV database.",
     "type" : "symfony-bundle",
+    "description" : "Providing mapping and services in order to manage TID database.",
+    "keywords" : ["Tisseo tid endiv"],
     "homepage": "https://github.com/Tisseo/EndivBundle",
+    "license": "AGPLv3",
     "authors" : [
         {
             "name" : "Vincent Passama",
@@ -17,10 +19,6 @@
             "email" : "pierre.cl@gmail.com"
         }
     ],
-    "keywords" : [
-        "tisseo endiv bundle"
-    ],
-    "license" : "AGPL-3.0",
     "require" : {
         "php": ">=5.4.3",
         "creof/doctrine2-spatial": "~0.0.1",
