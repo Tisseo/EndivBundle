@@ -166,7 +166,8 @@ class GridCalendarManager extends SortManager
                 SELECT t.id, rs.rank, sh.shortName, st.departureTime FROM Tisseo\EndivBundle\Entity\Trip t
                 JOIN t.stopTimes st
                 JOIN st.routeStop rs
-                JOIN Tisseo\EndivBundle\Entity\StopHistory sh WITH IDENTITY(sh.stop) = IDENTITY(rs.waypoint)
+                JOIN Tisseo\EndivBundle\Entity\Stop s WITH s.id = rs.waypoint
+                JOIN Tisseo\EndivBundle\Entity\StopHistory sh WITH sh.stop = s.id OR sh.stop = s.masterStop
                 WHERE t.id IN (?1)
                 AND (rs.rank = (
                     SELECT max(sub_rs.rank) FROM Tisseo\EndivBundle\Entity\RouteStop sub_rs
