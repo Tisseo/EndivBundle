@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\Collection;
 class LineVersion
 {
     const NW = "new";
-    const WP = "wip";
     const PB = "published";
 
     /**
@@ -307,26 +306,14 @@ class LineVersion
     /**
      * Process Status
      *
-     * Set status according to startDate and gridCalendars values
+     * Set LineVersion status looking at a date
      */
-    public function processStatus()
+    public function processStatus(\Datetime $date)
     {
-        $now = new \Datetime();
-        if ($this->startDate < $now)
-            $this->status = self::PB;
-        else if ($this->gridCalendars->isEmpty())
+        if ($this->startDate >= $date)
             $this->status = self::NW;
         else
-        {
-            foreach($this->gridCalendars as $gridCalendar)
-            {
-                if ($gridCalendar->getGridLinkCalendarMaskTypes()->isEmpty())
-                {
-                    $this->status = self::WP;
-                    break;
-                }
-            }
-        }
+            $this->status = self::PB;
     }
 
     /**
