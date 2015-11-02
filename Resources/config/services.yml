@@ -11,6 +11,7 @@ parameters:
     tisseo_endiv.physical_mode_manager.class: Tisseo\EndivBundle\Services\PhysicalModeManager
     tisseo_endiv.poi_type_manager.class: Tisseo\EndivBundle\Services\PoiTypeManager
     tisseo_endiv.line_version_manager.class: Tisseo\EndivBundle\Services\LineVersionManager
+    tisseo_endiv.non_concurrency_manager.class: Tisseo\EndivBundle\Services\NonConcurrencyManager
     tisseo_endiv.property_manager.class: Tisseo\EndivBundle\Services\PropertyManager
     tisseo_endiv.printing_manager.class: Tisseo\EndivBundle\Services\PrintingManager
     tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
@@ -89,6 +90,10 @@ services:
 
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+
+    tisseo_endiv.non_concurrency_manager:
+        class: %tisseo_endiv.non_concurrency_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
 
     tisseo_endiv.property_manager:

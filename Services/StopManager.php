@@ -155,7 +155,7 @@ class StopManager extends SortManager
             JOIN stop s on sh.stop_id = s.id
             LEFT JOIN stop_area sa on sa.id = s.stop_area_id
             LEFT JOIN city c on c.id = sa.city_id
-            JOIN stop_datasource sd on sd.stop_id = s.id
+            JOIN stop_datasource sd on sd.stop_id = s.id OR sd.stop_id = s.master_stop_id
             WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(sd.code) LIKE UPPER(:term))
@@ -268,52 +268,28 @@ class StopManager extends SortManager
         $this->em->persist($stopHistory);
         $this->em->persist($stopHistory->getStop());
         $this->em->flush();
-
-        $phantoms = $stopHistory->getStop()->getPhantoms();
-
-        foreach ($phantoms as $phantom) {
-            $phantomHistory = clone $stopHistory;
-            $phantomHistory->setStop($phantom);
-            $this->createStopHistory($phantomHistory, $this->getLatestStopHistory($phantom->getId()));
-        }
     }
 
     /**
-     * Close
+     * Save StopHistory
      * @param StopHistory $stopHistory
      *
-     * TODO: COMMENT
+     * TODO: Create StopHistoryManager ?
      */
-    public function closeStopHistory(StopHistory $stopHistory)
+    public function saveStopHistory(StopHistory $stopHistory)
     {
-         $this->em->persist($stopHistory);
-
-         $phantoms = $stopHistory->getStop()->getPhantoms();
-
-         foreach ($phantoms as $phantom) {
-             $phantomHistory = $this->getLatestStopHistory($phantom->getId());
-             $phantomHistory->setEndDate($stopHistory->getEndDate());
-             $this->em->persist($phantomHistory);
-         }
-
-         $this->em->flush();
+        $this->em->persist($stopHistory);
+        $this->em->flush();
     }
 
     /**
-     * Delete
+     * Delete StopHistory
      * @param StopHistory $stopHistory
      *
-     * TODO: COMMENT
+     * TODO: Create StopHistoryManager ?
      */
     public function deleteStopHistory(StopHistory $stopHistory)
     {
-        $phantoms = $stopHistory->getStop()->getPhantoms();
-
-        foreach ($phantoms as $phantom) {
-             $phantomHistory = $this->getLatestStopHistory($phantom->getId());
-             $this->em->remove($phantomHistory);
-        }
-
         $this->em->remove($stopHistory);
         $this->em->flush();
     }

@@ -1,0 +1,37 @@
+Tisseo\EndivBundle\Entity\NonConcurrency:
+    type: entity
+    table: non_concurrency
+    indexes:
+        PRIORITY_LINE_ID_INDEX:
+            columns:
+                - priority_line_id
+        NON_PRIORITY_LINE_ID_INDEX:
+            columns:
+                - non_priority_line_id
+    id:
+        priorityLine:
+            associationKey: true
+        nonPriorityLine:
+            associationKey: true
+    fields:
+        time:
+            type: integer
+            nullable: true
+            comment: ''
+            column: time
+    oneToOne:
+        priorityLine:
+            targetEntity: Line
+            cascade: { }
+            mappedBy: null
+            joinColumns:
+                priority_line_id:
+                    referencedColumnName: id
+        nonPriorityLine:
+            targetEntity: Line
+            cascade: {}
+            mappedBy: null
+            joinColumns:
+                non_priority_line_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }
