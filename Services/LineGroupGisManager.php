@@ -75,19 +75,26 @@ class LineGroupGisManager extends SortManager
     {
         $query = $this->om->createQuery("
             SELECT
-                lgg.name as line_group_gis_name,
+                DISTINCT lgg.name as line_group_gis_name,
                 l.number as line_number,
-                max(s.date) as first_schematic,
-                min(s.date) as last_schematic,
-                lv.depot as line_version_depot
-            FROM Tisseo\EndivBundle\Entity\Schematic s
-            JOIN s.line l
+                s1.date as first_schematic_date,
+                s2.date as last_schematic_date,
+                s1.comment as first_schematic_comment,
+                lv.depot as line_version_depot,
+                s1.groupGis,
+                s2.groupGis
+            FROM Tisseo\EndivBundle\Entity\Line l
             JOIN l.lineVersions lv
             JOIN l.lineGroupGisContents lggc
             JOIN lggc.lineGroupGis lgg
-            WHERE s.groupGis = true
-            AND s.deprecated = false
-            GROUP BY lgg.name, l.number, lv.depot
+            JOIN l.schematics s1 WITH s1.line = l AND s1.date = (
+                SELECT max(subs1.date) FROM Tisseo\EndivBundle\Entity\Schematic subs1
+                WHERE subs1.line = l AND subs1.deprecated != true AND subs1.groupGis = true
+            )
+            JOIN l.schematics s2 WITH s2.line = l AND s2.date = (
+                SELECT min(subs2.date) FROM Tisseo\EndivBundle\Entity\Schematic subs2
+                WHERE subs2.line = l AND subs2.deprecated != true AND subs2.groupGis = true
+            )
         ");
 
         $content = $query->getArrayResult();
