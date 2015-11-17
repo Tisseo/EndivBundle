@@ -179,8 +179,6 @@ class LineVersion
 
         if ($properties !== null)
             $this->synchronizeLineVersionProperties($properties);
-
-        $this->processStatus();
     }
 
     public function getNumberAndVersion()
