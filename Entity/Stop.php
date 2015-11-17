@@ -48,9 +48,9 @@ class Stop
     private $phantoms;
 
     /**
-     * @var \Tisseo\EndivBundle\Entity\OdtStop
+     * @var \Doctrine\Common\Collections\Collection
      */
-    private $odtStop;
+    private $odtStops;
 
     /**
      * Constructor
@@ -61,6 +61,7 @@ class Stop
         $this->stopHistories = new ArrayCollection();
         $this->stopAccessibilities = new ArrayCollection();
         $this->phantoms = new ArrayCollection();
+        $this->odtStops = new ArrayCollection();
     }
 
     /**
@@ -182,6 +183,64 @@ class Stop
     public function getWaypoint()
     {
         return $this->waypoint;
+    }
+
+    /**
+     * Get getOdtStops
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOdtStops()
+    {
+        return $this->odtStops;
+    }
+
+    public function getOpenedOdtStops()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->orX(
+                    Criteria::expr()->isNull('endDate'),
+                    Criteria::expr()->gte('endDate', new \DateTime())
+                ));
+        return $this->odtStops->matching($criteria);
+    }
+
+    /**
+     * Set odtStops
+     *
+     * @param \Doctrine\Common\Collections\Collection $odtStops
+     * @return OdtArea
+     */
+    public function setOdtStops(Collection $odtStops)
+    {
+        $this->odtStops = $odtStops;
+        foreach ($this->odtStops as $odtStop) {
+            $odtStop->setStop($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Add odtStop
+     *
+     * @param OdtStop $odtStop
+     * @return OdtArea
+     */
+    public function addOdtStop(odtStop $odtStop)
+    {
+        $this->odtStops[] = $odtStop;
+        $odtStop->setStop($this);
+        return $this;
+    }
+
+    /**
+     * Remove odtStop
+     *
+     * @param OdtStop $odtStop
+     */
+    public function removeOdtStop(odtStop $odtStop)
+    {
+        $this->odtStops->removeElement($odtStop);
     }
 
     /**
@@ -453,11 +512,11 @@ class Stop
     /**
      * Stop label
      *
-     * Custom function to request a Stop "name" looking at its StopHistories and 
+     * Custom function to request a Stop "name" looking at its StopHistories and
      * StopDatasources.
      * {StopHistory.shortName} - {stopDatasource.agency.name} ({stopDatasource.code})
      * TODO: The Datetime is instanciated each time this function is called
-     * Investigate in possibility to pass $date as a parameter in a Symfony Form entity 
+     * Investigate in possibility to pass $date as a parameter in a Symfony Form entity
      * field in the option 'property' (cf. Tisseo/BoaBundle/Form/Type/StopEditType.php)
      */
     public function getStopLabel()
@@ -469,6 +528,27 @@ class Stop
         $result = $stopHistory->getShortName();
         foreach ($this->stopDatasources as $stopDatasource)
             $result .= " - ".$stopDatasource->getDatasource()->getAgency()->getName()." (".$stopDatasource->getCode().")";
+
+        return $result;
+    }
+
+    /**
+     * Stop display label
+     *
+     * Custom function to request a Stop name and city name looking at its StopHistories and
+     * StopDatasources.
+     * {StopHistory.shortName} - {stopArea.city.name} ({stopDatasource.code})
+    */
+    public function getStopDisplayLabel()
+    {
+        $stopHistory = $this->getCurrentOrLatestStopHistory(new \Datetime());
+        if (empty($stopHistory))
+            return "";
+
+        $result = $stopHistory->getShortName();
+        $result .= " ".$this->getStopArea()->getCity()->getName();
+        foreach ($this->stopDatasources as $stopDatasource)
+            $result .= " (".$stopDatasource->getCode().")";
 
         return $result;
     }

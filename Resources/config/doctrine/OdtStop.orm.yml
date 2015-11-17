@@ -10,11 +10,14 @@ Tisseo\EndivBundle\Entity\OdtStop:
                 - stop_id
     id:
         startDate:
-            type: date
+            type: date_id
             nullable: false
             comment: ''
-            id: true
             column: start_date
+        stop:
+            associationKey: true
+        odtArea:
+            associationKey: true
     fields:
         endDate:
             type: date
@@ -30,12 +33,12 @@ Tisseo\EndivBundle\Entity\OdtStop:
             nullable: false
             comment: ''
             column: drop_off
-    oneToOne:
+    manyToOne:
         odtArea:
             targetEntity: OdtArea
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: odtStops
             joinColumns:
                 odt_area_id:
                     referencedColumnName: id
@@ -44,7 +47,7 @@ Tisseo\EndivBundle\Entity\OdtStop:
             targetEntity: Stop
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: odtStops
             joinColumns:
                 stop_id:
                     referencedColumnName: id

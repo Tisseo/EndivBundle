@@ -14,16 +14,8 @@ Tisseo\EndivBundle\Entity\Waypoint:
             id: true
             generator:
                 strategy: SEQUENCE
-#    oneToOne:
-#        stop:
-#            targetEntity: Stop
-#            mappedBy: null
-#            inversedBy: null
-#            joinColumns:
-#                id:
-#                    referencedColumnName: id
     oneToOne:
-        area:
+        odtArea:
             targetEntity: OdtArea
             inversedBy: waypoint
             joinColumn:

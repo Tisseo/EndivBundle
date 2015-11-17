@@ -44,6 +44,12 @@ Tisseo\EndivBundle\Entity\Stop:
             mappedBy: masterStop
             inversedBy: null
             fetch: 'EXTRA_LAZY'
+        odtStops:
+            targetEntity: OdtStop
+            cascade: ['persist', 'remove']
+            mappedBy: stop
+            inversedBy: null
+            fetch: 'EXTRA_LAZY'
     manyToOne:
         masterStop:
             targetEntity: Stop
@@ -63,6 +69,4 @@ Tisseo\EndivBundle\Entity\Stop:
                 stop_area_id:
                     referencedColumnName: id
             orphanRemoval: false
-
-
     lifecycleCallbacks: {  }
