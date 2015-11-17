@@ -108,6 +108,23 @@ class StopAreaManager extends SortManager
         return $query->getResult();
     }
 
+    public function getOpenedStops($stopArea) {
+        $sql = "
+            SELECT s
+            FROM Tisseo\EndivBundle\Entity\Stop s
+            JOIN s.stopDatasources sd
+            JOIN s.stopHistories sh
+            WHERE s.stopArea = :sa
+            AND sh.startDate <= CURRENT_DATE()
+            AND (sh.endDate IS NULL OR sh.endDate > CURRENT_DATE())
+            ORDER BY sd.code";
+
+        $query = $this->em->createQuery($sql)
+        ->setParameter('sa', $stopArea);
+
+        return $query->getResult();
+    }
+
     /**
      * getMainStopCityName
      * @param entity $stopArea => stop_area to check

@@ -22,7 +22,7 @@ class Waypoint
     /**
      * @var \Tisseo\EndivBundle\Entity\OdtArea
      */
-    private $area = null;
+    private $odtArea = null;
 
     /**
      * Get id
@@ -64,19 +64,18 @@ class Waypoint
      */
     public function getOdtArea()
     {
-        return $this->area;
-
+        return $this->odtArea;
     }
 
     /**
      * set OdtArea
      *
-     * @param \Tisseo\EndivBundle\Entity\OdtArea $area
+     * @param \Tisseo\EndivBundle\Entity\OdtArea $odtArea
      * @return Waypoint
      */
-    public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $area = null)
+    public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $odtArea = null)
     {
-        $this->area = $area;
+        $this->odtArea = $odtArea;
         return $this;
     }
 }

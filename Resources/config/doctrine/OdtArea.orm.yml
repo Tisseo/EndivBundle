@@ -6,9 +6,6 @@ Tisseo\EndivBundle\Entity\OdtArea:
             type: integer
             nullable: false
             unsigned: false
-            id: true
-            generator:
-                strategy: SEQUENCE
     fields:
         name:
             type: string
@@ -25,6 +22,14 @@ Tisseo\EndivBundle\Entity\OdtArea:
     oneToOne:
         waypoint:
             targetEntity: Waypoint
-            cascade: {  }
-            mappedBy: area
+            cascade: { }
+            mappedBy: odtArea
+    oneToMany:
+        odtStops:
+            targetEntity: OdtStop
+            cascade: ['persist', 'remove']
+            mappedBy: odtArea
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

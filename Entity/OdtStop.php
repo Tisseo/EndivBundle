@@ -39,6 +39,10 @@ class OdtStop
      */
     private $stop;
 
+    public function getId()
+    {
+        return $this->startDate->format('Y-m-d').'/'.$this->stop->getId().'/'.$this->odtArea->getId();
+    }
 
     /**
      * Set startDate
