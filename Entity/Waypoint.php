@@ -78,4 +78,11 @@ class Waypoint
         $this->odtArea = $odtArea;
         return $this;
     }
+
+
+    public function isOdtAreaWaypoint()
+    {
+        return (is_null($this->waypoint->getStop()) and !is_null($this->waypoint->getOdtArea()));
+    }
+
 }
