@@ -58,6 +58,8 @@ Tisseo\EndivBundle\Entity\StopArea:
             targetEntity: Alias
             cascade: ['persist', 'remove']
             mappedBy: stopArea
+            orderBy:
+                name: ASC
             inversedBy: null
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
