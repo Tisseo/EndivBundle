@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\StopArea;
 use Tisseo\EndivBundle\Entity\Transfer;
+use Tisseo\EndivBundle\Entity\Alias;
 
 class StopAreaManager extends SortManager
 {
@@ -48,23 +49,35 @@ class StopAreaManager extends SortManager
         $this->em->flush();
     }
 
-    public function findStopAreasLike($term)
+    /*
+     * if $stopAreaId argument is given, then no stopArea with given id will be returned
+     */
+    public function findStopAreasLike($term, $stopAreaId = null)
     {
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);
 
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("
-            SELECT DISTINCT sa.short_name as name, c.name as city, sa.id as id
+
+        $query="SELECT DISTINCT sa.short_name as name, c.name as city, sa.id as id
             FROM stop_area sa
             JOIN city c on c.id = sa.city_id
             LEFT JOIN alias a on a.stop_area_id = sa.id
-            WHERE UPPER(unaccent(sa.short_name)) LIKE UPPER(unaccent(:term))
+            WHERE (UPPER(unaccent(sa.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sa.long_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(unaccent(a.name)) LIKE UPPER(unaccent(:term))
-            ORDER BY sa.short_name, c.name
-        ");
+            OR UPPER(unaccent(a.name)) LIKE UPPER(unaccent(:term)))";
+        if (!is_null($stopAreaId))
+        {
+            $query .= " AND (sa.id != :stop_area_id)";
+        }
+        $query .= " ORDER BY sa.short_name, c.name";
+
+        $stmt = $connection->prepare($query);
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
+        if (!is_null($stopAreaId))
+        {
+            $stmt->bindValue(':stop_area_id', $stopAreaId);
+        }
         $stmt->execute();
         $shs = $stmt->fetchAll();
 
@@ -82,8 +95,24 @@ class StopAreaManager extends SortManager
                SELECT s
                FROM Tisseo\EndivBundle\Entity\Stop s
                JOIN s.stopDatasources sd
+               JOIN s.stopHistories sh
                WHERE s.stopArea = :sa
                ORDER BY sd.code
+        ")
+        ->setParameter('sa', $stopArea);
+
+        return $query->getResult();
+    }
+
+    public function getStopsOrderedByShortName($stopArea) {
+        $query = $this->em->createQuery("
+               SELECT s
+               FROM Tisseo\EndivBundle\Entity\Stop s
+               JOIN s.stopDatasources sd
+               JOIN s.stopHistories sh
+               WHERE s.stopArea = :sa
+               AND sh.startDate <= CURRENT_DATE()
+               ORDER BY sh.shortName
         ")
         ->setParameter('sa', $stopArea);
 
@@ -206,4 +235,41 @@ class StopAreaManager extends SortManager
 
         return $result;
     }
+
+    public function updateAliases($aliases, $stopArea)
+    {
+        $sync = false;
+        foreach ($stopArea->getAliases() as $alias)
+        {
+
+            $existing = array_filter(
+                $aliases,
+                function ($object) use ($alias) {
+                    return ($object['id'] == $alias->getId());
+                }
+            );
+
+            if (empty($existing))
+            {
+                $sync = true;
+                $stopArea->removeAlias($alias);
+            }
+        }
+
+        foreach ($aliases as $alias)
+        {
+            if (empty($alias['id']) and !empty($alias['name']))
+            {
+                $sync = true;
+                $newAlias = new Alias();
+                $newAlias->setName($alias['name']);
+                $newAlias->setStopArea($stopArea);
+                $this->em->persist($newAlias);
+            }
+        }
+
+        if ($sync)
+            $this->em->flush();
+    }
 }
+

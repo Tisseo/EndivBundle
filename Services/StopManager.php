@@ -142,15 +142,17 @@ class StopManager extends SortManager
      * TODO: Investigate why use of connection + is this function good ?
      * TODO: THERE IS A JSONCONTROLLER WHICH CALL FUNCTIONS LIKE THIS ONE:
      *       JSONMANAGER CENTRALIZATION THEN ? CAPSLOCK IS GOOD.
+     *
+     * if $stopAreaId argument is given, then stops that belong to this stopArea won't be returned
      */
-    public function findStopsLike($term)
+    public function findStopsLike($term, $stopAreaId = null)
     {
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);
 
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("
-            SELECT sh.short_name as name, c.name as city, sd.code as code, s.id as id
+
+        $query = "SELECT sh.short_name as name, c.name as city, sd.code as code, s.id as id
             FROM stop_history sh
             JOIN stop s on sh.stop_id = s.id
             LEFT JOIN stop_area sa on sa.id = s.stop_area_id
@@ -158,10 +160,19 @@ class StopManager extends SortManager
             JOIN stop_datasource sd on sd.stop_id = s.id OR sd.stop_id = s.master_stop_id
             WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(sd.code) LIKE UPPER(:term))
-            ORDER BY sh.short_name, c.name, sd.code
-        ");
+            OR UPPER(sd.code) LIKE UPPER(:term))";
+        if (!is_null($stopAreaId))
+        {
+            $query .= " AND (sa.id != :stop_area_id)";
+        }
+        $query .= " ORDER BY sh.short_name, c.name, sd.code";
+
+        $stmt = $connection->prepare($query);
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
+        if (!is_null($stopAreaId))
+        {
+            $stmt->bindValue(':stop_area_id', $stopAreaId);
+        }
         $stmt->execute();
         $stopHistories = $stmt->fetchAll();
 

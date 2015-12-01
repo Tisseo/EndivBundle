@@ -314,15 +314,15 @@ class StopArea
     }
 
     /**
-     * Add aliases
+     * Add alias
      *
-     * @param Alias $aliases
+     * @param Alias $alias
      * @return StopArea
      */
-    public function addAliases(Alias $aliases)
+    public function addAlias(Alias $alias)
     {
-        $this->aliases[] = $aliases;
-        $aliases->setStopArea($this);
+        $this->aliases[] = $alias;
+        $alias->setStopArea($this);
         return $this;
     }
 
@@ -331,9 +331,9 @@ class StopArea
      *
      * @param Alias $aliases
      */
-    public function removeAliases(Alias $aliases)
+    public function removeAlias(Alias $alias)
     {
-        $this->aliases->removeElement($aliases);
+        $this->aliases->removeElement($alias);
     }
 
     /**
