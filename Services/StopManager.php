@@ -145,7 +145,7 @@ class StopManager extends SortManager
      *
      * if $stopAreaId argument is given, then stops that belong to this stopArea won't be returned
      */
-    public function findStopsLike($term, $stopAreaId = null)
+    public function findStopsLike($term, $stopAreaId = null, $getPhantoms = false)
     {
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);
@@ -153,9 +153,16 @@ class StopManager extends SortManager
         $connection = $this->em->getConnection()->getWrappedConnection();
 
         $query = "SELECT sh.short_name as name, c.name as city, sd.code as code, s.id as id
-            FROM stop_history sh
-            JOIN stop s on sh.stop_id = s.id
-            LEFT JOIN stop_area sa on sa.id = s.stop_area_id
+            FROM stop_history sh";
+        if ($getPhantoms)
+        {
+            $query .= " JOIN stop s on (sh.stop_id = s.id OR sh.stop_id = s.master_stop_id) ";
+        }
+        else
+        {
+            $query .= " JOIN stop s on sh.stop_id = s.id ";
+        }
+        $query .= "LEFT JOIN stop_area sa on sa.id = s.stop_area_id
             LEFT JOIN city c on c.id = sa.city_id
             JOIN stop_datasource sd on sd.stop_id = s.id OR sd.stop_id = s.master_stop_id
             WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
@@ -337,4 +344,40 @@ class StopManager extends SortManager
 
         return $stopAreaId;
     }
+
+    public function getStopsJson($stops, $getPhantoms = false)
+    {
+        $stopIds = array();
+        foreach ($stops as $stop)
+        {
+            $stopIds[] = $stop->getId();
+        }
+        $connection = $this->em->getConnection();//->getWrappedConnection();
+
+        if ($getPhantoms)
+        {
+            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+                FROM stop s
+                JOIN stop_datasource sd on s.id = sd.stop_id
+                JOIN stop_history sh on (s.id = sh.stop_id OR s.master_stop_id = sh.stop_id)
+                WHERE s.id IN (?)
+                AND sh.start_date <= CURRENT_DATE
+                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+        }
+        else
+        {
+            $query="SELECT DISTINCT s.id as id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+                FROM stop s
+                JOIN stop_datasource sd on sd.stop_id = s.id
+                JOIN stop_history sh on sh.stop_id = s.id
+                WHERE s.id IN (?)
+                AND sh.start_date <= CURRENT_DATE
+                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+        }
+        $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
 }

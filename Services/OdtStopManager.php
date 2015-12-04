@@ -123,7 +123,7 @@ class OdtStopManager extends SortManager
         $odtStops = array();
         $stopArea = (new StopAreaManager($this->em))->find($data['boa_odt_stop[stop]']);
         if (!empty($stopArea)){
-        $stops = $stopArea->getStops();
+            $stops = $stopArea->getStops();
             foreach ($stops as $stop) {
                 $odtStop = new OdtStop();
                 $odtStop->setStop($stop);

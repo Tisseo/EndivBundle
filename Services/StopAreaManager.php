@@ -90,16 +90,17 @@ class StopAreaManager extends SortManager
         return $array;
     }
 
-    public function getStopsOrderedByCode($stopArea) {
-        $query = $this->em->createQuery("
-               SELECT s
-               FROM Tisseo\EndivBundle\Entity\Stop s
-               JOIN s.stopDatasources sd
-               JOIN s.stopHistories sh
-               WHERE s.stopArea = :sa
-               ORDER BY sd.code
-        ")
-        ->setParameter('sa', $stopArea);
+    public function getStopsOrderedByCode($stopArea, $getPhantoms = false) {
+        $queryString = "SELECT s
+            FROM Tisseo\EndivBundle\Entity\Stop s
+            JOIN s.stopDatasources sd ";
+
+        if (! $getPhantoms) {
+            $queryString .= "JOIN s.stopHistories sh ";
+        }
+        $queryString .= "WHERE s.stopArea = :sa
+               ORDER BY sd.code";
+        $query = $this->em->createQuery($queryString)->setParameter('sa', $stopArea);
 
         return $query->getResult();
     }
@@ -271,5 +272,26 @@ class StopAreaManager extends SortManager
         if ($sync)
             $this->em->flush();
     }
+
+    public function getStopsJson($stopArea)
+    {
+
+        $connection = $this->em->getConnection()->getWrappedConnection();
+
+        $query="SELECT DISTINCT s.id as id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+            FROM stop s
+            JOIN stop_datasource sd on sd.stop_id = s.id
+            JOIN stop_history sh on sh.stop_id = s.id
+            WHERE s.stop_area_id = :sa_id
+            AND sh.start_date <= CURRENT_DATE
+            AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+        $stmt = $connection->prepare($query);
+        $stmt->bindValue(':sa_id', $stopArea->getId());
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
 }
 

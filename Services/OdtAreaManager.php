@@ -172,4 +172,26 @@ class OdtAreaManager extends SortManager
         return $odtAreas;
     }
 
+    public function getOdtStopsJson($odtArea)
+    {
+
+        $connection = $this->em->getConnection()->getWrappedConnection();
+
+        $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+            FROM stop s
+            JOIN odt_stop os on os.stop_id = s.id
+            JOIN stop_datasource sd on sd.stop_id = s.id
+            JOIN stop_history sh on (sh.stop_id = s.id OR sh.stop_id = s.master_stop_id)
+            WHERE os.odt_area_id = :oa_id
+            AND (os.end_date IS NULL or os.end_date >= CURRENT_DATE)
+            AND sh.start_date <= CURRENT_DATE
+            AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+        $stmt = $connection->prepare($query);
+        $stmt->bindValue(':oa_id', $odtArea->getId());
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
 }
