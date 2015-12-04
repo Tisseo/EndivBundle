@@ -26,7 +26,6 @@
         "jms/serializer-bundle": "~0.13.0"
     },
     "autoload" : {
-        "psr-0" : { "Tisseo\\EndivBundle\\" : "" }
-    },
-    "target-dir" : "Tisseo/EndivBundle"
+        "psr-4" : { "Tisseo\\EndivBundle\\" : "" }
+    }
 }
