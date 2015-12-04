@@ -9,7 +9,6 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Tisseo\EndivBundle\Entity\OdtArea;
 use Tisseo\EndivBundle\Entity\OdtStop;
 use Tisseo\EndivBundle\Entity\Waypoint;
-
 class OdtAreaManager extends SortManager
 {
     private $em = null;
@@ -23,7 +22,7 @@ class OdtAreaManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findBy(array(), array('name' => 'ASC'));
     }
 
     public function find($odtAreaId)
@@ -56,6 +55,9 @@ class OdtAreaManager extends SortManager
        *
        * Delete a OdtArea from the database.
        */
+    ////////
+    //TODO : INVESTIGATE THIS METHOD to avoid using queries. There is a problem with the waypoint deletion when we use the method 'remove'.
+    ////////
     public function delete(OdtArea $odtArea)
     {
         $waypoint = $odtArea->getWaypoint();
@@ -69,12 +71,16 @@ class OdtAreaManager extends SortManager
         if ($count > 0)
             throw new \Exception('Suppression impossible au motif que la zone "'.$odtArea->getName().'" est encore utilisée dans un ou plusieurs itinéraires');
         $odtArea->getOdtStops()->clear();
-        $this->em->flush();
         $this->em->remove($odtArea);
         $this->em->refresh($waypoint);
         $this->em->flush();
-        $this->em->remove($waypoint);
-        $this->em->flush();
+        $query = $this->em->createQuery("
+            DELETE
+            FROM Tisseo\EndivBundle\Entity\Waypoint w
+            WHERE w = :wp
+        ")
+        ->setParameter('wp', $waypoint);
+        $query->execute();
     }
 
     public function getLines(OdtArea $odtArea)
@@ -145,6 +151,25 @@ class OdtAreaManager extends SortManager
         }
 
         return $result;
+    }
+
+    public function findOdtAreasLike($term)
+    {
+        $specials = array("-", " ", "'");
+        $cleanTerm = str_replace($specials, "_", $term);
+
+        $connection = $this->em->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare("
+            SELECT oa.name as name, oa.id as id
+            FROM odt_area oa
+            WHERE (UPPER(unaccent(oa.name)) LIKE UPPER(unaccent(:term)))
+            ORDER BY oa.name
+        ");
+        $stmt->bindValue(':term', '%'.$cleanTerm.'%');
+        $stmt->execute();
+        $odtAreas = $stmt->fetchAll();
+
+        return $odtAreas;
     }
 
 }

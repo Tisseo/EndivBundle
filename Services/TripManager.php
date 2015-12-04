@@ -303,7 +303,11 @@ class TripManager
             {
                 $time = intVal($jsonStopTime['time'])*60;
                 $totalTime += $time;
-
+                $zoneTime = 0;
+                if (!empty($jsonStopTime['zoneTime'])) {
+                    $zoneTime = intVal($jsonStopTime['zoneTime'])*60;
+                }
+                $arrivalTime = $totalTime + $zoneTime;
                 if (empty($jsonStopTime['id']))
                 {
                     $sync = true;
@@ -312,18 +316,18 @@ class TripManager
                     $stopTime->setRouteStop($routeStops[$key]);
                     $stopTime->setTrip($trip);
                     $stopTime->setDepartureTime($totalTime);
-                    $stopTime->setArrivalTime($totalTime);
+                    $stopTime->setArrivalTime($arrivalTime);
 
                     $this->om->persist($stopTime);
                 }
                 else
                 {
                     $stopTime = $routeStops[$key]->getStopTime($jsonStopTime['id']);
-                    if ($stopTime->getDepartureTime() !== $totalTime)
+                    if ($stopTime->getDepartureTime() !== $totalTime || $stopTime->getArrivalTime() !== $arrivalTime )
                     {
                         $sync = true;
                         $stopTime->setDepartureTime($totalTime);
-                        $stopTime->setArrivalTime($totalTime);
+                        $stopTime->setArrivalTime($arrivalTime);
 
                         $this->om->merge($stopTime);
                     }
@@ -461,13 +465,13 @@ class TripManager
     {
         foreach ($trip->getPattern()->getStopTimes() as $stopTime)
         {
-            $newTime = $time + $stopTime->getDepartureTime();
-
+            $newDepartureTime = $time + $stopTime->getDepartureTime();
+            $newArrivalTime = $time + $stopTime->getArrivalTime();
             $newStopTime = new StopTime();
             $newStopTime->setTrip($trip);
             $newStopTime->setRouteStop($stopTime->getRouteStop());
-            $newStopTime->setArrivalTime($newTime);
-            $newStopTime->setDepartureTime($newTime);
+            $newStopTime->setArrivalTime($newArrivalTime);
+            $newStopTime->setDepartureTime($newDepartureTime);
 
             $trip->addStopTime($newStopTime);
         }

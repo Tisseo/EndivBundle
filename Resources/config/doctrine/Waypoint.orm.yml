@@ -21,10 +21,12 @@ Tisseo\EndivBundle\Entity\Waypoint:
             joinColumn:
                 name: id
                 referencedColumnName: id
+            fetch: EAGER
         stop:
             targetEntity: Stop
             inversedBy: waypoint
             joinColumn:
                 name: id
                 referencedColumnName: id
+            fetch: EAGER
     lifecycleCallbacks: {  }

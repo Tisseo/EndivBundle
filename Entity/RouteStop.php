@@ -386,6 +386,12 @@ class RouteStop
         return $this !== $this->route->getLastRouteStop();
     }
 
+    public function isOdtAreaRouteStop()
+    {
+        $isOdtArea = (is_null($this->waypoint->getStop()) && !is_null($this->waypoint->getOdtArea()));
+        return $isOdtArea;
+    }
+
     public function getStopTime($stopTimeId)
     {
         $criteria = Criteria::create()

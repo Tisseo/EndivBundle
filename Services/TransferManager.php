@@ -4,6 +4,8 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Transfer;
+use Tisseo\EndivBundle\Services\StopAreaManager;
+use Tisseo\EndivBundle\Services\StopManager;
 
 class TransferManager extends SortManager
 {
@@ -33,18 +35,12 @@ class TransferManager extends SortManager
     }
 
     /**
-     * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
+     * @return an array with all Transfer entities for this stopArea
+     * Transfers that don't already exist are created
      */
-    public function getInternalTransfer($StopArea) {
+    public function getInternalTransfers($stopArea) {
         $sql =
-            "SELECT
-                t.id,
-                ss.id as startStopId,
-                es.id as endStopId,
-                t.duration,
-                t.distance,
-                t.longName,
-                t.theGeom
+            "SELECT t
             FROM Tisseo\EndivBundle\Entity\Transfer t
             JOIN t.startStop ss
             JOIN t.endStop es
@@ -52,199 +48,281 @@ class TransferManager extends SortManager
             AND es.stopArea = :sa";
 
         $query = $this->om->createQuery($sql)
-        ->setParameter('sa', $StopArea);
-        $transfers = $query->getResult();
+        ->setParameter('sa', $stopArea);
+        $existingTransfers = $query->getResult();
 
-        $result = array();
-        foreach($transfers as $transfer) {
-            $key = $transfer["startStopId"].".".$transfer["endStopId"];
-            $result[$key] = $transfer;
+        $stops = (new StopAreaManager($this->om))->getStopsOrderedByCode($stopArea);
+        $transfers = array();
+        foreach ($stops as $startStop)
+        {
+            foreach ($stops as $endStop)
+            {
+                $existing = array_filter(
+                    $existingTransfers,
+                    function ($object) use ($startStop, $endStop) {
+                        return ($object->getStartStop() == $startStop and $object->getEndStop() == $endStop);
+                    }
+                );
+                if (empty($existing))
+                {
+                    $transfer = new Transfer();
+                    $transfer->setStartStop($startStop);
+                    $transfer->setEndStop($endStop);
+                    $transfers[] = $transfer;
+                }
+                else
+                {
+                    $transfers[] = array_values($existing)[0];
+                }
+            }
         }
-       return $result;
+        return $transfers;
     }
 
     /**
-     * @return array of tranfers ["startStopId.endStopId" => transferEntity, ...]
+     * @return array of tranfers
      */
-    public function getExternalTransfer($StopArea) {
-        $stopManager = $this->om->getRepository('TisseoEndivBundle:Stop');
+    public function getExternalTransfers($StopArea) {
         $query = $this->om->createQuery(
-            "SELECT
-                t.id,
-                ss.id as startStopId,
-                es.id as endStopId,
-                t.duration,
-                t.distance,
-                t.longName,
-                t.theGeom
+            "SELECT t
             FROM Tisseo\EndivBundle\Entity\Transfer t
             JOIN t.startStop ss
             JOIN t.endStop es
+            JOIN ss.stopHistories sssh
+            JOIN es.stopHistories essh
+            JOIN ss.stopDatasources sssd
+            JOIN es.stopDatasources essd
             WHERE (ss.stopArea = :sa AND es.stopArea != :sa)
             OR (ss.stopArea != :sa AND es.stopArea = :sa)
+            ORDER BY sssd.code, essd.code
         ")
         ->setParameter('sa', $StopArea);
         $transfers = $query->getResult();
 
-        $result = array();
-        foreach($transfers as $transfer) {
-            $key = $transfer["startStopId"].".".$transfer["endStopId"];
-            $startStop = $stopManager->find($transfer["startStopId"]);
-            $transfer["startStopLabel"] = $startStop->getStopLabel();
-            $endStop = $stopManager->find($transfer["endStopId"]);
-            $transfer["endStopLabel"] = $endStop->getStopLabel();
-            $result[$key] = $transfer;
-        }
-
-       return $result;
+        return $transfers;
     }
 
-    public function saveInternalTransfers($transfers) {
-        $empty_transfert = function ($transfer) {
-            return empty($transfer["duration"]) && empty($transfer["distance"]) &&
-                empty($transfer["longName"]);
-                //empty($transfer["longName"]) && empty($transfer["theGeom"]);
-        };
+    public function createExternalTransfers($data, $stopArea) {
+        $duration = $data['duration'];
+        $distance = $data['distance'];
+        $startStopId = $data['startStopId'];
+        $endStopId = $data['endStopId'];
+        $startStopType = $data['startStopType'];
+        $endStopType = $data['endStopType'];
 
-        $empty_line = function ($transfer) use ($empty_transfert) {
-            return empty($transfer["id"]) && $empty_transfert($transfer);
-        };
-
-        foreach($transfers as $transfer) {
-            $persist = true;
-            if(!$empty_line($transfer)) {
-                if(!empty($transfer["id"])) {
-                    $transferEntity = $this->find($transfer["id"]);
-                    if($empty_transfert($transfer)) {
-                        //remove record
-                        $this->om->remove($transferEntity);
-                        $persist = false;
-                    }
-                } else {
-                    //new record
-                    $transferEntity = new Transfer();
-                }
-
-                if($persist) {
-                    $this ->saveStopTransfer($transferEntity, $transfer);
-                }
-            }
+        if (empty($duration) || !is_numeric($duration) || $duration < 0 || ($duration > 60 && $duration != 99)){
+            throw new \Exception("a transfer's duration must be a positive integer <= 60 or == 99 ");
         }
-        $this->om->flush();
-    }
+        if (!empty($distance) && (!is_numeric($distance) || $distance < 0)){
+            throw new \Exception("a transfer's distance must be a positive integer");
+        }
+        if (empty($startStopId) || empty($endStopId) || empty($startStopType) || empty($endStopType))
+        {
+            throw new \Exception("error: stop's id and type are needed");
+        }
+        $stopAreaManager = (new StopAreaManager($this->om));
+        $stopManager = (new StopManager($this->om));
+        $startIsStopArea = ($data['startStopType'] == 'sa');
+        $endIsStopArea = ($data['endStopType'] == 'sa');
+        $startIsInternal = false;
+        $endIsInternal = false;
 
-    public function saveExternalTransfers($currentStopArea, $transfers) {
-        $empty_transfert = function ($transfer) {
-            return empty($transfer["duration"]) && empty($transfer["distance"]) &&
-                empty($transfer["longName"]);
-        };
-        $empty_line = function ($transfer) use ($empty_transfert) {
-            return empty($transfer["id"]) && $empty_transfert($transfer);
-        };
-        $stopAreaManager = $this->om->getRepository('TisseoEndivBundle:StopArea');
+        if ($startIsStopArea){
+            $startStopArea = $stopAreaManager->find($data['startStopId']);
+            if (is_null($startStopArea))
+                throw new \Exception('stop area with id ' . $endStopId . ' not found');
+            if ($startStopArea == $stopArea)
+                $startIsInternal = true;
+            $startStops = $stopAreaManager->getStopsOrderedByCode($startStopArea);
+        }
+        else{
+            $stop = $stopManager->find($data['startStopId']);
+            if (is_null($stop))
+                throw new \Exception('stop with id ' . $endStopId . ' not found');
+            if ($stop->getStopArea() == $stopArea)
+                $startIsInternal = true;
+            $startStops = array();
+            $startStops[] = $stop;
+        }
 
-        $existingTransfers = $this->getExternalTransfer($currentStopArea);
+        if ($endIsStopArea){
+            $endStopArea = $stopAreaManager->find($data['endStopId']);
+            if (is_null($endStopArea))
+                throw new \Exception('stop area with id ' . $endStopId . ' not found');
+            if ($endStopArea == $stopArea)
+                $endIsInternal = true;
+            $endStops = $stopAreaManager->getStopsOrderedByCode($endStopArea);
+        }
+        else{
+            $stop = $stopManager->find($data['endStopId']);
+            if (is_null($stop))
+                throw new \Exception('stop with id ' . $endStopId . ' not found');
+            if ($stop->getStopArea() == $stopArea)
+                $endIsInternal = true;
+            $endStops = array();
+            $endStops[] = $stop;
+        }
+        if (!($startIsInternal xor $endIsInternal))
+            throw new \Exception("only start OR end stop must belong to stop_area for an external transfer");
 
-        $transfers_to_save = array();
-        foreach( $transfers as $transfer ) {
-            if( !$empty_line($transfer) ) {
-                if( empty($transfer["startStopId"]) ) {
-                    if( $transfer["endStopType"] == "stop" ) {
-                        //stop_area -> stop
-                        foreach($currentStopArea->getStops() as $stop) {
-                            $transfer_tmp = $transfer;
-                            $transfer_tmp["startStopId"] = $stop->getId();
-                            $transfers_to_save[] = $transfer_tmp;
-                        }
-                    } else {
-                        //stop_area -> stop_area
-                        foreach($currentStopArea->getStops() as $startStop) {
-                            $endStopArea = $stopAreaManager->find($transfer["endStopId"]);
-                            foreach($endStopArea->getStops() as $endStop) {
-                                $transfer_tmp = $transfer;
-                                $transfer_tmp["startStopId"] = $startStop->getId();
-                                $transfer_tmp["endStopId"] = $endStop->getId();
-                                $transfers_to_save[] = $transfer_tmp;
-                            }
-                        }
-                    }
-                } else {
-                    if( $transfer["endStopType"] != "stop" ) {
-                        //stop -> stop_area
-                        $stopArea = $stopAreaManager->find($transfer["endStopId"]);
-                        foreach($stopArea->getStops() as $endStop) {
-                            $transfer_tmp = $transfer;
-                            $transfer_tmp["endStopId"] = $endStop->getId();
-                            $transfers_to_save[] = $transfer_tmp;
-                        }
-                    } else {
-                        //stop -> stop
-                        $transfer_tmp = $transfer;
-                        $transfers_to_save[] = $transfer_tmp;
-                    }
-                }
+        $transfers = array();
+        foreach ($startStops as $startStop)
+        {
+            foreach ($endStops as $endStop)
+            {
+                $transfer = new Transfer();
+                $transfer->setStartStop($startStop);
+                $transfer->setEndStop($endStop);
+                if (!empty($data['duration']))
+                    $transfer->setDuration($data['duration'] * 60);
+                if (!empty($data['distance']))
+                    $transfer->setDistance($data['distance']);
+                if (!empty($data['longName']))
+                    $transfer->setLongName($data['longName']);
+
+                $inversedTransfer = clone $transfer;
+                $inversedTransfer->setStartStop($endStop);
+                $inversedTransfer->setEndStop($startStop);
+
+                $transfers[] = $transfer;
+                $transfers[] = $inversedTransfer;
             }
         }
 
-        $ignored_transfers = 0;
-        foreach( $transfers_to_save as $transfer ) {
-            if( empty($transfer["id"]) ) {
-                //new transfer
-                if (array_key_exists($transfer["startStopId"].".".$transfer["endStopId"], $existingTransfers)) {
-                    $ignored_transfers += 1;
-                } else {
-                    $this ->saveNewExternalTransfer($transfer);
+        return $transfers;
+    }
+
+    public function saveInternalTransfers($transfers, $stopArea)
+    {
+        $this->validateTransfers($transfers, $stopArea, false);
+        $sql =
+            "SELECT t
+            FROM Tisseo\EndivBundle\Entity\Transfer t
+            JOIN t.startStop ss
+            JOIN t.endStop es
+            WHERE ss.stopArea = :sa
+            AND es.stopArea = :sa";
+
+        $query = $this->om->createQuery($sql)
+        ->setParameter('sa', $stopArea);
+        $existingTransfers = $query->getResult();
+
+        $this->updateTransfers($existingTransfers, $transfers);
+    }
+
+    public function saveExternalTransfers($transfers, $stopArea)
+    {
+        $this->validateTransfers($transfers, $stopArea, true);
+        $existingTransfers = $this->getExternalTransfers($stopArea);
+        $this->updateTransfers($existingTransfers, $transfers);
+    }
+
+    public function updateTransfers($existingTransfers, $transfers) {
+        $sync = false;
+        foreach ($existingTransfers as $transfer)
+        {
+
+            $existing = array_filter(
+                $transfers,
+                function ($object) use ($transfer) {
+                    return (!empty($object['id']) && $object['id'] == $transfer->getId());
                 }
-            } else {
-                //updating existing transfer
-                $entity = $this->find($transfer["id"]);
-                $this ->saveStopTransfer($entity, $transfer);
+            );
+
+            if (empty($existing))
+            {
+                $sync = true;
+                $this->om->remove($transfer);
             }
         }
 
-        $this->om->flush();
-        return $ignored_transfers;
+        $stopManager = new StopManager($this->om);
+        foreach ($transfers as $transfer)
+        {
+            if (empty($transfer['id']))
+            {
+                $sync = true;
+                $newTransfer = new Transfer();
+                $newTransfer->setDuration($transfer['duration'] * 60);
+                if (!empty($transfer['distance']))
+                    $newTransfer->setDistance($transfer['distance']);
+                if (!empty($transfer['longName']))
+                    $newTransfer->setLongName($transfer['longName']);
+                $startStop = $stopManager->find($transfer['startStopId']);
+                $endStop = $stopManager->find($transfer['endStopId']);
+                $newTransfer->setStartStop($startStop);
+                $newTransfer->setEndStop($endStop);
+                $this->om->persist($newTransfer);
+            }
+            else {
+                $existingTransfer = $this->find($transfer['id']);
+                $duration = null;
+                $distance = null;
+                $longName = null;
+                if (!empty($transfer['duration']))
+                    $duration = $transfer['duration'] * 60;
+                if (!empty($transfer['distance']))
+                    $distance = (int)$transfer['distance'];
+                if (!empty($transfer['longName']))
+                    $longName = $transfer['longName'];
+                if (!is_null($duration) && $existingTransfer->getDuration() !== $duration){
+                    $sync = true;
+                    $existingTransfer->setDuration($duration);
+                }
+                if ($existingTransfer->getDistance() !== $distance){
+                    $sync = true;
+                    $existingTransfer->setDistance($distance);
+                }
+                if ($existingTransfer->getLongName() !== $longName){
+                    $sync = true;
+                    $existingTransfer->setLongName($longName);
+                }
+            }
+        }
+
+        if ($sync)
+            $this->om->flush();
     }
 
-    /**
-     * saveNewExternalTransfer
-     * @param associative array $transfer => datas
-     *
-     * save a stop to stop transfer => save transfer in both direction
-     * persist but doesn't flush
-     */
-    public function saveNewExternalTransfer($transfer) {
-        $transferAller = new Transfer();
-        $this ->saveStopTransfer($transferAller, $transfer);
+    public function validateTransfers($transfers, $stopArea, $isExternal)
+    {
+        $stopManager = new StopManager($this->om);
+        foreach ($transfers as $transfer)
+        {
+            $duration = $transfer['duration'];
+            $distance = $transfer['distance'];
+            $startStopId = $transfer['startStopId'];
+            $endStopId = $transfer['endStopId'];
 
-        $transferRetour = new Transfer();
-        $tmp = $transfer["startStopId"];
-        $transfer["startStopId"] = $transfer["endStopId"];
-        $transfer["endStopId"] =$tmp;
-        $this ->saveStopTransfer($transferRetour, $transfer);
-    }
+            if (empty($duration) || !is_numeric($duration) || $duration < 0 || ($duration > 60 && $duration != 99)){
+                throw new \Exception("a transfer's duration must be a positive integer <= 60 or == 99 ");
+            }
+            if (!empty($distance) && (!is_numeric($distance) || $distance < 0)){
+                throw new \Exception("a transfer's distance must be a positive integer");
+            }
+            if (empty($startStopId) || empty($endStopId))
+            {
+                throw new \Exception("error: stop's id and type are needed");
+            }
 
-    /**
-     * saveStopTransfer
-     * @param entity $entity => Transfer entity to save
-     * @param associative array $transfer => datas
-     *
-     * save a stop to stop transfer
-     * persist but doesn't flush
-     */
-    public function saveStopTransfer($entity, $transfer) {
-        $startStop = $this->om->getRepository('TisseoEndivBundle:Stop')->find($transfer["startStopId"]);
-        $endStop = $this->om->getRepository('TisseoEndivBundle:Stop')->find($transfer["endStopId"]);
-        $entity->setStartStop($startStop);
-        $entity->setEndStop($endStop);
+            $startIsInternal = false;
+            $startStop = $stopManager->find($startStopId);
+            if (is_null($startStop))
+                throw new \Exception('stop with id ' . $startStopId . ' not found');
+            if ($startStop->getStopArea() == $stopArea)
+                $startIsInternal = true;
 
-        $transfer["duration"] ? $value = $transfer["duration"] : $value = null;
-        $entity->setDuration($value);
-        $transfer["distance"] ? $value = $transfer["distance"] : $value = null;
-        $entity->setDistance($value);
-        $entity->setLongName($transfer["longName"]);
-        //$entity->setTheGeom($transfer["theGeom"]);
+            $endIsInternal = false;
+            $endStop = $stopManager->find($endStopId);
+            if (is_null($endStop))
+                throw new \Exception('stop with id ' . $endStopId . ' not found');
+            if ($endStop->getStopArea() == $stopArea)
+                $endIsInternal = true;
 
-        $this->om->persist($entity);
+            if ($isExternal && !($startIsInternal xor $endIsInternal))
+                throw new \Exception("only start OR end stop must belong to stop_area for external transfer");
+            if (!$isExternal && !($startIsInternal && $endIsInternal))
+                throw new \Exception("both start and end stop must belong to stop_area for internal transfer");
+        }
     }
 }
