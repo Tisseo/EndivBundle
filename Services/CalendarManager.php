@@ -2,7 +2,10 @@
 
 namespace Tisseo\EndivBundle\Services;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Tisseo\EndivBundle\Entity\Calendar;
 
 class CalendarManager extends SortManager
@@ -25,6 +28,48 @@ class CalendarManager extends SortManager
     public function findBy(array $array)
     {
         return ($this->repository->findBy($array));
+    }
+
+    public function advancedFindBy(array $array, $orderParams=null, $limit=null, $offset=null)
+    {
+        $q = $this->repository->createQueryBuilder('q');
+        $this->buildCriteria($array, $q);
+
+        if (!is_null($orderParams)) {
+            foreach($orderParams as $key => $order) {
+                $q->addOrderBy('q.'.$order['columnName'], $order['orderDir']);
+            }
+        }
+        if (false === is_null($offset)) $q->setFirstResult($offset);
+        if (false === is_null($limit))  $q->setMaxResults($limit);
+
+        return $q->getQuery()->getResult();
+    }
+
+    public function findByCountResult(array $array)
+    {
+        $q = $this->repository->createQueryBuilder('q')->select('COUNT(q)');
+        $this->buildCriteria($array, $q, 'q');
+
+        return $q->getQuery()->getSingleScalarResult();
+    }
+
+    private function buildCriteria(array $params, QueryBuilder &$q, $alias = 'q')
+    {
+        if (count($params) > 0) {
+            foreach($params as $key => $value) {
+                if (!empty($value)) {
+                    if ($key !== 'calendarType') {
+                        $q->andWhere($alias.'.'.$key.' LIKE :val_'.$key);
+                        $q->setParameter('val_'.$key, '%'.$value.'%');
+                    } else {
+                        $q->andWhere(($alias.'.'.$key.' = :val_'.$key));
+                        $q->setParameter('val_'.$key, $value);
+                    }
+
+                }
+            }
+        }
     }
 
     public function find($calendarId)
