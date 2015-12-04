@@ -28,10 +28,5 @@
     "autoload" : {
         "psr-0" : { "Tisseo\\EndivBundle\\" : "" }
     },
-    "target-dir" : "Tisseo/EndivBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.1.x-dev"
-        }
-    }
+    "target-dir" : "Tisseo/EndivBundle"
 }
