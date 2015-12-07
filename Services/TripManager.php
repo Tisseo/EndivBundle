@@ -86,19 +86,64 @@ class TripManager
         $this->om->flush();
     }
 
-    public function deleteTripsFromRoute(Route $route)
+    /**
+     * Search a trip id into a collection of trips
+     *
+     * @param $trips collection of trip
+     * @param $tripId trip Id
+     * @return bool|Trip return false if not found or Trip Entity
+     */
+    private function isTripIdExist($trips, $tripId)
+    {
+        if ($trips->count() > 0) {
+            $trip = array_filter(
+                $trips->toArray(),
+                function ($trip) use ($tripId) {
+                    if ($trip->getId() === (int)$tripId && $trip instanceof Trip) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            return ($trip) ? array_shift($trip): false;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Delete all or selected trips from a route
+     *
+     * @param Route $route Route entity
+     * @param array $selectedTrips list of trips selected to be delete
+     */
+    public function deleteTripsFromRoute(Route $route, array $selectedTrips = array())
     {
         $trips = $route->getTripsHavingParent();
 
-        foreach ($trips as $trip)
-            $this->om->remove($trip);
+        if (!empty($selectedTrips)) {
+            foreach ($selectedTrips as $key => $selectedTripId) {
+                $existingTrip = $this->isTripIdExist($trips, $selectedTripId);
+                if ($existingTrip) $this->om->remove($existingTrip);
+            }
+        } else {
+            foreach ($trips as $trip)
+                $this->om->remove($trip);
+        }
 
         $this->om->flush();
 
         $trips = $route->getTripsNotPattern();
 
-        foreach ($trips as $trip)
-            $this->om->remove($trip);
+        if (!empty($selectedTrips)) {
+            foreach ($selectedTrips as $key => $selectedTripId) {
+                $existingTrip = $this->isTripIdExist($trips, $selectedTripId);
+                if ($existingTrip) $this->om->remove($existingTrip);
+            }
+        } else {
+            foreach ($trips as $trip)
+                $this->om->remove($trip);
+        }
 
         $this->om->flush();
     }
