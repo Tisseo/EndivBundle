@@ -541,10 +541,20 @@ class Stop
     */
     public function getStopDisplayLabel()
     {
-        $stopHistory = $this->getCurrentOrLatestStopHistory(new \Datetime());
-        if (empty($stopHistory))
-            return "";
+        $now = new \Datetime();
+        if (empty($this->masterStop))
+        {
+            $stopHistory = $this->getCurrentOrLatestStopHistory($now);
+        }
+        else
+        {
+            $stopHistory = $this->masterStop->getCurrentOrLatestStopHistory($now);
+        }
 
+        if (empty($stopHistory))
+        {
+            return "";
+        }
         $result = $stopHistory->getShortName();
         $result .= " ".$this->getStopArea()->getCity()->getName();
         foreach ($this->stopDatasources as $stopDatasource)

@@ -51,7 +51,7 @@ class TransferManager extends SortManager
         ->setParameter('sa', $stopArea);
         $existingTransfers = $query->getResult();
 
-        $stops = (new StopAreaManager($this->om))->getStopsOrderedByCode($stopArea);
+        $stops = (new StopAreaManager($this->om))->getStopsOrderedByCode($stopArea, true);
         $transfers = array();
         foreach ($stops as $startStop)
         {
@@ -88,13 +88,11 @@ class TransferManager extends SortManager
             FROM Tisseo\EndivBundle\Entity\Transfer t
             JOIN t.startStop ss
             JOIN t.endStop es
-            JOIN ss.stopHistories sssh
-            JOIN es.stopHistories essh
-            JOIN ss.stopDatasources sssd
-            JOIN es.stopDatasources essd
+            JOIN ss.stopDatasources ssd
+            JOIN es.stopDatasources esd
             WHERE (ss.stopArea = :sa AND es.stopArea != :sa)
             OR (ss.stopArea != :sa AND es.stopArea = :sa)
-            ORDER BY sssd.code, essd.code
+            ORDER BY ssd.code, esd.code
         ")
         ->setParameter('sa', $StopArea);
         $transfers = $query->getResult();

@@ -11,6 +11,7 @@ use Tisseo\EndivBundle\Entity\GridMaskType;
 use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
+use Tisseo\EndivBundle\Entity\Stop;
 
 class RouteManager extends SortManager
 {
@@ -252,6 +253,57 @@ class RouteManager extends SortManager
 
         if ($sync)
             $this->om->flush();
+    }
+
+    public function getRouteStopsJson($route)
+    {
+        if (empty($route))
+        {
+            return null;
+        }
+
+        // if the route is a 'TAD zonal' route, then returns a list of stops whitout geometry,
+        // with all stops from 'stop' routeStops, concatenated will all stops from 'odtArea' routeStops
+        if ($route->getWay() == Route::WAY_AREA) {
+            $stops = array();
+            foreach ($route->getRouteStops() as $routeStop)
+            {
+                if ($routeStop->isOdtAreaRouteStop())
+                {
+                   foreach ($routeStop->getWaypoint()->getOdtArea()->getOpenedOdtStops() as $odtStop)
+                    {
+                        $stops[] = $odtStop->getStop();
+                    }
+                }
+                else
+                {
+                    $stops[] = $routeStop->getWaypoint()->getStop();
+                }
+            }
+            return ((new StopManager($this->om))->getStopsJson($stops, true));
+        }
+        //otherwise, we return a list of stops with their WKT
+        else
+        {
+            $connection = $this->om->getConnection()->getWrappedConnection();
+
+            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
+                FROM stop s
+                JOIN waypoint w on s.id = w.id
+                JOIN route_stop rs on w.id = rs.waypoint_id
+                JOIN route r on rs.route_id = r.id
+                LEFT JOIN route_section rsec on rs.route_section_id = rsec.id
+                JOIN stop_datasource sd on s.id = sd.stop_id
+                JOIN stop_history sh on (s.id = sh.stop_id OR s.master_stop_id = sh.stop_id)
+                WHERE r.id = :route_id
+                AND sh.start_date <= CURRENT_DATE
+                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)
+                ORDER BY rs.rank";
+            $stmt = $connection->prepare($query);
+            $stmt->bindValue(':route_id', $route->getId());
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
     }
 
     // TODO: CHANGE THIS
