@@ -91,28 +91,41 @@ class CalendarManager extends SortManager
         $this->em->flush();
     }
 
-    public function findCalendarsLike($term, $calendarType = null, $limit = 0)
+    //If $lineVersionId argument is given, then only calendars with the same lineVersionId (or null) will be returned
+    public function findCalendarsLike($term, $calendarType = null, $limit = 0, $lineVersionId = null)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $sql = "
             SELECT name, id
             FROM calendar
             WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
+
         if ($calendarType)
         {
             if (is_array($calendarType))
-                $sql .= "and calendar_type in ('".implode("','",$calendarType)."')";
+                $sql .= " and calendar_type in ('".implode("','",$calendarType)."')";
             else
-                $sql .= "and calendar_type in ('".$calendarType."')";
+                $sql .= " and calendar_type in ('".$calendarType."')";
         }
+
+        if (!empty($lineVersionId)) {
+            $sql .= " and (line_version_id IS NULL OR line_version_id = :lv_id)";
+        }
+
         if ($limit > 0)
             $sql .= " LIMIT ".number_format($limit);
 
         $stmt = $connection->prepare($sql);
+
+        if (!empty($lineVersionId)) {
+            $stmt->bindValue(':lv_id', $lineVersionId);
+        }
+
         $stmt->execute();
         $calendars = $stmt->fetchAll();
 
         $result = array();
+
         foreach ($calendars as $calendar)
         {
             $result[] = array(
