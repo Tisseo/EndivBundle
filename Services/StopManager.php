@@ -10,6 +10,7 @@ use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\StopHistory;
 use Tisseo\EndivBundle\Entity\StopAccessibility;
 use Tisseo\EndivBundle\Entity\Waypoint;
+use Tisseo\EndivBundle\Entity\AccessibilityMode;
 
 class StopManager extends SortManager
 {
@@ -192,6 +193,21 @@ class StopManager extends SortManager
         }
 
         return $result;
+    }
+
+    public function getStopAccessibilityCalendar($stop)
+    {
+        $calendar = null;
+        foreach ($stop->getStopAccessibilities() as $stopAccessibility)
+        {
+            $accessibilityType = $stopAccessibility->getAccessibilityType();
+            if ($accessibilityType->getAccessibilityMode()->getName() == AccessibilityMode::MODE_PMR)
+            {
+                $calendar = $accessibilityType->getCalendar();
+                break;
+            }
+        }
+        return $calendar;
     }
 
     /**

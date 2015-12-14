@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AccessibilityMode
 {
+    const MODE_PMR = "UFR";
+    const MODE_WALK = "Pietons";
+
     /**
      * @var integer
      */
