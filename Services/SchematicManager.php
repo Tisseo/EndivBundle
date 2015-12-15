@@ -98,4 +98,29 @@ class SchematicManager extends SortManager
         if ($sync)
             $this->om->flush();
     }
+
+    public function getCsvExport($date)
+    {
+        $startDate = \DateTime::createFromFormat('d-m-Y', $date);
+        $now = new \Datetime();
+        $sql ="
+            SELECT
+                l.number as line_number,
+                s.date as schematic_date,
+                s.comment as schematic_comment
+            FROM Tisseo\EndivBundle\Entity\Schematic s
+            JOIN s.line l
+            WHERE s.date >= :startDate
+            ORDER BY l.priority, l.number
+        ";
+
+        $query = $this->om->createQuery($sql)
+        ->setParameter('startDate', $startDate);
+
+        $content = $query->getArrayResult();
+        $filename = 'schematic_'.$startDate->format('Y-m-d').'_to_'.$now->format('Y-m-d');
+
+        return array($content, $filename);
+    }
+
 }
