@@ -375,7 +375,7 @@ class RouteManager extends SortManager
                 $tripDatasource->setTrip($newTrip);
                 $tripDatasource->setCode($userName);
                 $this->om->persist($tripDatasource);
-                $newTrip->addTripDatasources($tripDatasource);
+                $newTrip->addTripDatasource($tripDatasource);
             }
             $this->om->persist($newTrip);
         }
