@@ -28,6 +28,17 @@ class LineManager extends SortManager
         return empty($lineId) ? null : $this->repository->find($lineId);
     }
 
+    public function findByDataSource($dataSourceId)
+    {
+        $query = $this->repository->createQueryBuilder('l')
+            ->innerJoin('l.lineDatasources', 'lds')
+            ->innerJoin('lds.datasource', 'ds')
+            ->where('ds.id = :datasourceId')
+        ->setParameter('datasourceId', $dataSourceId);
+
+        return $query->getQuery()->getResult();
+    }
+
 
     public function findExistingNumber($number, $id)
     {
