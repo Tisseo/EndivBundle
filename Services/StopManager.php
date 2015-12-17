@@ -396,4 +396,44 @@ class StopManager extends SortManager
         return $result;
     }
 
+    /**
+     * @param $stopId
+     */
+    public function getLinesByStop($stopId)
+    {
+        $query = $this->em->createQuery("
+           SELECT l.id as line
+           FROM Tisseo\EndivBundle\Entity\Line l
+           JOIN l.lineVersions lv
+           JOIN lv.routes r
+           JOIN r.routeStops rs
+           JOIN rs.waypoint w
+            LEFT JOIN w.stop s
+            LEFT JOIN w.odtArea oa
+            LEFT JOIN oa.odtStops os
+            LEFT JOIN os.stop s2
+           WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
+           AND s.id = :sid OR s2.id = :sid
+        ")->setParameter('sid', $stopId);
+
+        $array = $query->getResult();
+        $lines = array();
+        foreach ($array as $item)
+            $lines[] = $item['line'];
+
+        $query = $this->em->createQuery("
+            SELECT DISTINCT l
+            FROM Tisseo\EndivBundle\Entity\Line l
+            WHERE l.id IN (:lines)
+        ")
+            ->setParameter('lines', $lines);
+        $linesResult = $query->getResult();
+
+        $lines = array();
+        foreach($linesResult as $line)
+            $lines[$line->getId()] = $line;
+
+        return $lines;
+    }
+
 }
