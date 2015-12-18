@@ -12,16 +12,19 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
+use Tisseo\EndivBundle\Services\StopManager;
 
 class RouteManager extends SortManager
 {
     private $om = null;
     private $repository = null;
+    private $stopManager = null;
 
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, StopManager $stopManager)
     {
         $this->om = $om;
         $this->repository = $om->getRepository("TisseoEndivBundle:Route");
+        $this->stopManager = $stopManager;
     }
 
     public function findAll()
@@ -280,14 +283,14 @@ class RouteManager extends SortManager
                     $stops[] = $routeStop->getWaypoint()->getStop();
                 }
             }
-            return ((new StopManager($this->om))->getStopsJson($stops, true));
+            return $this->stopManager->getStopsJson($stops, true);
         }
         //otherwise, we return a list of stops with their WKT
         else
         {
             $connection = $this->om->getConnection()->getWrappedConnection();
 
-            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
+            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
                 FROM stop s
                 JOIN waypoint w on s.id = w.id
                 JOIN route_stop rs on w.id = rs.waypoint_id

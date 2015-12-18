@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Tisseo\EndivBundle\Entity\Route;
 
 /**
  * LineVersion
@@ -1178,4 +1179,23 @@ class LineVersion
     {
         return $this->calendars;
     }
+
+    public function getRouteWays()
+    {
+        $ways = array('WAY_FORWARD' => Route::WAY_FORWARD, 'WAY_BACKWARD' => Route::WAY_BACKWARD, 'WAY_LOOP' => Route::WAY_LOOP, 'WAY_AREA' => Route::WAY_AREA);
+        $result = array();
+        foreach ($this->routes as $route)
+        {
+            foreach ($ways as $key => $way)
+            {
+                if ($route->getWay() == $way and !in_array($key, $result))
+                {
+                    $result[] = $key;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+
 }

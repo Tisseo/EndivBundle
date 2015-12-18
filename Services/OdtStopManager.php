@@ -17,11 +17,15 @@ class OdtStopManager extends SortManager
     private $em = null;
     private $repository = null;
     private $serializer = null;
+    private $stopManager = null;
+    private $stopAreaManager = null;
 
-    public function __construct(EntityManager $em, Serializer $serializer)
+    public function __construct(EntityManager $em, StopManager $stopManager, StopAreaManager $stopAreaManager, Serializer $serializer)
     {
         $this->em = $em;
         $this->repository = $em->getRepository('TisseoEndivBundle:OdtStop');
+        $this->stopManager = $stopManager;
+        $this->stopAreaManager = $stopAreaManager;
         $this->serializer = $serializer;
     }
 
@@ -96,7 +100,7 @@ class OdtStopManager extends SortManager
                 $odtStop = new OdtStop();
                 $startDateTime = \DateTime::createFromFormat('d/m/Y', $odtStopIter['startDate']);
                 $odtStop->setStartDate(new DateId($startDateTime->format('Y-m-d')));
-                $odtStop->setStop((new StopManager($this->em))->find($odtStopIter['stop']));
+                $odtStop->setStop($this->stopManager->find($odtStopIter['stop']));
                 $odtStop->setPickup($odtStopIter['pickup']);
                 $odtStop->setDropOff($odtStopIter['dropOff']);
                 if (strlen($odtStopIter['endDate']) > 0){
@@ -121,7 +125,7 @@ class OdtStopManager extends SortManager
     public function getGroupedOdtStops($data, $odtArea)
     {
         $odtStops = array();
-        $stopArea = (new StopAreaManager($this->em))->find($data['boa_odt_stop[stop]']);
+        $stopArea = $this->stopAreaManager->find($data['boa_odt_stop[stop]']);
         if (!empty($stopArea)){
             $stops = $stopArea->getStops();
             foreach ($stops as $stop) {

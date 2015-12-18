@@ -392,6 +392,21 @@ class RouteStop
         return $isOdtArea;
     }
 
+    public function getStopLabel()
+    {
+        if ($this->isOdtAreaRouteStop())
+        {
+            $label = $this->waypoint->getOdtArea()->getName() . ' (zone)';
+        }
+        else
+        {
+            $label = $this->waypoint->getStop()->getStopArea()->getShortName();
+            /*foreach ($this->waypoint->getStop()->getStopDatasources() as $stopDatasource)
+                $label .= ' (' . $stopDatasource->getCode() . ')';*/
+        }
+        return $label;
+    }
+
     public function getStopTime($stopTimeId)
     {
         $criteria = Criteria::create()

@@ -11,11 +11,15 @@ class TransferManager extends SortManager
 {
     private $om = null;
     private $repository = null;
+    private $stopManager = null;
+    private $stopAreaManager = null;
 
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, StopManager $stopManager, StopAreaManager $stopAreaManager)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Transfer');
+        $this->stopManager = $stopManager;
+        $this->stopAreaManager = $stopAreaManager;
     }
 
     public function findAll()
@@ -51,7 +55,7 @@ class TransferManager extends SortManager
         ->setParameter('sa', $stopArea);
         $existingTransfers = $query->getResult();
 
-        $stops = (new StopAreaManager($this->om))->getStopsOrderedByCode($stopArea, true);
+        $stops = $this->stopAreaManager->getStopsOrderedByCode($stopArea, true);
         $transfers = array();
         foreach ($stops as $startStop)
         {
@@ -118,23 +122,21 @@ class TransferManager extends SortManager
         {
             throw new \Exception("error: stop's id and type are needed");
         }
-        $stopAreaManager = (new StopAreaManager($this->om));
-        $stopManager = (new StopManager($this->om));
         $startIsStopArea = ($data['startStopType'] == 'sa');
         $endIsStopArea = ($data['endStopType'] == 'sa');
         $startIsInternal = false;
         $endIsInternal = false;
 
         if ($startIsStopArea){
-            $startStopArea = $stopAreaManager->find($data['startStopId']);
+            $startStopArea = $this->stopAreaManager->find($data['startStopId']);
             if (is_null($startStopArea))
                 throw new \Exception('stop area with id ' . $endStopId . ' not found');
             if ($startStopArea == $stopArea)
                 $startIsInternal = true;
-            $startStops = $stopAreaManager->getStopsOrderedByCode($startStopArea);
+            $startStops = $this->stopAreaManager->getStopsOrderedByCode($startStopArea);
         }
         else{
-            $stop = $stopManager->find($data['startStopId']);
+            $stop = $this->stopManager->find($data['startStopId']);
             if (is_null($stop))
                 throw new \Exception('stop with id ' . $endStopId . ' not found');
             if ($stop->getStopArea() == $stopArea)
@@ -144,15 +146,15 @@ class TransferManager extends SortManager
         }
 
         if ($endIsStopArea){
-            $endStopArea = $stopAreaManager->find($data['endStopId']);
+            $endStopArea = $this->stopAreaManager->find($data['endStopId']);
             if (is_null($endStopArea))
                 throw new \Exception('stop area with id ' . $endStopId . ' not found');
             if ($endStopArea == $stopArea)
                 $endIsInternal = true;
-            $endStops = $stopAreaManager->getStopsOrderedByCode($endStopArea);
+            $endStops = $this->stopAreaManager->getStopsOrderedByCode($endStopArea);
         }
         else{
-            $stop = $stopManager->find($data['endStopId']);
+            $stop = $this->stopManager->find($data['endStopId']);
             if (is_null($stop))
                 throw new \Exception('stop with id ' . $endStopId . ' not found');
             if ($stop->getStopArea() == $stopArea)
@@ -234,7 +236,6 @@ class TransferManager extends SortManager
             }
         }
 
-        $stopManager = new StopManager($this->om);
         foreach ($transfers as $transfer)
         {
             if (empty($transfer['id']))
@@ -246,8 +247,8 @@ class TransferManager extends SortManager
                     $newTransfer->setDistance($transfer['distance']);
                 if (!empty($transfer['longName']))
                     $newTransfer->setLongName($transfer['longName']);
-                $startStop = $stopManager->find($transfer['startStopId']);
-                $endStop = $stopManager->find($transfer['endStopId']);
+                $startStop = $this->stopManager->find($transfer['startStopId']);
+                $endStop = $this->stopManager->find($transfer['endStopId']);
                 $newTransfer->setStartStop($startStop);
                 $newTransfer->setEndStop($endStop);
                 $this->om->persist($newTransfer);
@@ -284,7 +285,6 @@ class TransferManager extends SortManager
 
     public function validateTransfers($transfers, $stopArea, $isExternal)
     {
-        $stopManager = new StopManager($this->om);
         foreach ($transfers as $transfer)
         {
             $duration = $transfer['duration'];
@@ -304,14 +304,14 @@ class TransferManager extends SortManager
             }
 
             $startIsInternal = false;
-            $startStop = $stopManager->find($startStopId);
+            $startStop = $this->stopManager->find($startStopId);
             if (is_null($startStop))
                 throw new \Exception('stop with id ' . $startStopId . ' not found');
             if ($startStop->getStopArea() == $stopArea)
                 $startIsInternal = true;
 
             $endIsInternal = false;
-            $endStop = $stopManager->find($endStopId);
+            $endStop = $this->stopManager->find($endStopId);
             if (is_null($endStop))
                 throw new \Exception('stop with id ' . $endStopId . ' not found');
             if ($endStop->getStopArea() == $stopArea)

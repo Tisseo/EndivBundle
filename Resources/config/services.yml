@@ -92,7 +92,7 @@ services:
 
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.calendar_manager']
 
     tisseo_endiv.non_concurrency_manager:
         class: %tisseo_endiv.non_concurrency_manager.class%
@@ -120,7 +120,7 @@ services:
 
     tisseo_endiv.route_manager:
         class: %tisseo_endiv.route_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.stop_manager']
 
     tisseo_endiv.stop_manager:
         class: %tisseo_endiv.stop_manager.class%
@@ -136,7 +136,7 @@ services:
 
     tisseo_endiv.odt_stop_manager:
         class: %tisseo_endiv.odt_stop_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager', '@jms_serializer']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.stop_manager', '@tisseo_endiv.stop_area_manager', '@jms_serializer']
 
     tisseo_endiv.city_manager:
         class: %tisseo_endiv.city_manager.class%
@@ -148,7 +148,7 @@ services:
 
     tisseo_endiv.transfer_manager:
         class: %tisseo_endiv.transfer_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.stop_manager', '@tisseo_endiv.stop_area_manager']
 
     tisseo_endiv.routestop_manager:
         class: %tisseo_endiv.routestop_manager.class%
