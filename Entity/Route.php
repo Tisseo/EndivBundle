@@ -479,6 +479,11 @@ class Route
         return $this->routeStops->matching($criteria)->first();
     }
 
+    public function getFirstRouteStop()
+    {
+        return $this->routeStops->first();
+    }
+
     /**
      * Getting a specific Trip from the Route
      * @param integer $tripId

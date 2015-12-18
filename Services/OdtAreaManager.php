@@ -177,7 +177,7 @@ class OdtAreaManager extends SortManager
 
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+        $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
             FROM stop s
             JOIN odt_stop os on os.stop_id = s.id
             JOIN stop_datasource sd on sd.stop_id = s.id

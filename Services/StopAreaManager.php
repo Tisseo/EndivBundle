@@ -334,7 +334,7 @@ class StopAreaManager extends SortManager
 
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query="SELECT DISTINCT s.id as id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+        $query="SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
             FROM stop s
             JOIN stop_datasource sd on sd.stop_id = s.id
             JOIN stop_history sh on sh.stop_id = s.id

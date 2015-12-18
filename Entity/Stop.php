@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Tisseo\EndivBundle\Entity\AccessibilityMode;
 
 /**
  * Stop
@@ -561,6 +562,21 @@ class Stop
             $result .= " (".$stopDatasource->getCode().")";
 
         return $result;
+    }
+
+    public function getAccessibilityCalendar()
+    {
+        $calendar = null;
+        foreach ($this->stopAccessibilities as $stopAccessibility)
+        {
+            $accessibilityType = $stopAccessibility->getAccessibilityType();
+            if ($accessibilityType->getAccessibilityMode()->getName() == AccessibilityMode::MODE_PMR)
+            {
+                $calendar = $accessibilityType->getCalendar();
+                break;
+            }
+        }
+        return $calendar;
     }
 
     /**

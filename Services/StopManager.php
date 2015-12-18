@@ -153,7 +153,7 @@ class StopManager extends SortManager
 
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query = "SELECT sh.short_name as name, c.name as city, sd.code as code, s.id as id
+        $query = "SELECT DISTINCT sh.short_name as name, c.name as city, sd.code as code, s.id as id
             FROM stop_history sh";
         if ($getPhantoms)
         {
@@ -165,7 +165,7 @@ class StopManager extends SortManager
         }
         $query .= "LEFT JOIN stop_area sa on sa.id = s.stop_area_id
             LEFT JOIN city c on c.id = sa.city_id
-            JOIN stop_datasource sd on sd.stop_id = s.id OR sd.stop_id = s.master_stop_id
+            JOIN stop_datasource sd on sd.stop_id = s.id
             WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(sd.code) LIKE UPPER(:term))";
@@ -193,21 +193,6 @@ class StopManager extends SortManager
         }
 
         return $result;
-    }
-
-    public function getStopAccessibilityCalendar($stop)
-    {
-        $calendar = null;
-        foreach ($stop->getStopAccessibilities() as $stopAccessibility)
-        {
-            $accessibilityType = $stopAccessibility->getAccessibilityType();
-            if ($accessibilityType->getAccessibilityMode()->getName() == AccessibilityMode::MODE_PMR)
-            {
-                $calendar = $accessibilityType->getCalendar();
-                break;
-            }
-        }
-        return $calendar;
     }
 
     /**
@@ -368,11 +353,11 @@ class StopManager extends SortManager
         {
             $stopIds[] = $stop->getId();
         }
-        $connection = $this->em->getConnection();//->getWrappedConnection();
+        $connection = $this->em->getConnection();
 
         if ($getPhantoms)
         {
-            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on s.id = sd.stop_id
                 JOIN stop_history sh on (s.id = sh.stop_id OR s.master_stop_id = sh.stop_id)
@@ -382,7 +367,7 @@ class StopManager extends SortManager
         }
         else
         {
-            $query="SELECT DISTINCT s.id as id, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+            $query="SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on sd.stop_id = s.id
                 JOIN stop_history sh on sh.stop_id = s.id
@@ -435,5 +420,4 @@ class StopManager extends SortManager
 
         return $lines;
     }
-
 }

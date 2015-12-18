@@ -7,17 +7,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Entity\LineVersionDatasource;
+use Tisseo\EndivBundle\Services\CalendarManager;
 
 class LineVersionManager extends SortManager
 {
     private $om = null;
     /** @var \Doctrine\ORM\EntityRepository $repository */
     private $repository = null;
+    private $calendarManager = null;
 
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, CalendarManager $calendarManager)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
+        $this->calendarManager = $calendarManager;
     }
 
     public function findAll()
@@ -28,6 +31,11 @@ class LineVersionManager extends SortManager
     public function find($lineVersionId)
     {
         return empty($lineVersionId) ? null : $this->repository->find($lineVersionId);
+    }
+
+    public function findAllSortedByLineNumber()
+    {
+        return $this->sortLineVersionsByNumber($this->repository->findAll());
     }
 
     /**
@@ -408,4 +416,56 @@ class LineVersionManager extends SortManager
         $this->om->remove($lineVersion);
         $this->om->flush();
     }
+
+    public function getStopAccessibilityChangesByRoute($lineVersion, $startDate)
+    {
+        $result = array();
+        $now = new \DateTime();
+        foreach ($lineVersion->getRoutes() as $route)
+        {
+            $stops_data = array();
+            $stops = array();
+
+            foreach ($route->getRouteStops() as $routeStop)
+            {
+                if ($routeStop->isOdtAreaRouteStop())
+                {
+                    $odtArea = $routeStop->getWaypoint()->getOdtArea();
+                    foreach ($odtArea->getOdtStops() as $odtStop)
+                    {
+                        $stops[] = $odtStop->getStop();
+                    }
+                }
+                else
+                {
+                    $stops[] = $routeStop->getWaypoint()->getStop();
+                }
+            }
+
+            foreach ($stops as $stop)
+            {
+                $accessibilityCalendar = $stop->getAccessibilityCalendar();
+                if (!empty($accessibilityCalendar))
+                {
+                    $bitmask = $this->calendarManager->getCalendarBitmask($accessibilityCalendar->getId(), $startDate, $now);
+                    $startBit = substr($bitmask, 0, 1);
+                    $endBit = substr($bitmask, strlen($bitmask) - 1, 1);
+                    if ($startBit != $endBit)
+                    {
+                        $data = array();
+                        $data['stop'] = $stop;
+                        $data['accessible'] = ($endBit == '0') ? true : false;
+                        $stops_data[] = $data;
+                    }
+                }
+            }
+
+            if (!empty($stops_data))
+            {
+                $result[$route->getId()] = $stops_data;
+            }
+        }
+        return $result;
+    }
+
 }
