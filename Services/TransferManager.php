@@ -94,9 +94,11 @@ class TransferManager extends SortManager
             JOIN t.endStop es
             JOIN ss.stopDatasources ssd
             JOIN es.stopDatasources esd
+            LEFT JOIN ss.stopHistories ssh
+            LEFT JOIN es.stopHistories esh
             WHERE (ss.stopArea = :sa AND es.stopArea != :sa)
             OR (ss.stopArea != :sa AND es.stopArea = :sa)
-            ORDER BY ssd.code, esd.code
+            ORDER BY ssh.shortName, esh.shortName, ssd.code, esd.code
         ")
         ->setParameter('sa', $StopArea);
         $transfers = $query->getResult();

@@ -433,10 +433,11 @@ class LineVersionManager extends SortManager
                     $odtArea = $routeStop->getWaypoint()->getOdtArea();
                     foreach ($odtArea->getOdtStops() as $odtStop)
                     {
-                        $stops[] = $odtStop->getStop();
+                        if (!in_array($odtStop->getStop(), $stops))
+                            $stops[] = $odtStop->getStop();
                     }
                 }
-                else
+                else if (!in_array($routeStop->getWaypoint()->getStop(), $stops))
                 {
                     $stops[] = $routeStop->getWaypoint()->getStop();
                 }
@@ -466,6 +467,79 @@ class LineVersionManager extends SortManager
             }
         }
         return $result;
+    }
+
+    public function getPoiByStopArea($lineVersion)
+    {
+        $result = array();
+        $stopAreas = array();
+        $priorities = array(1, 2, 3);
+
+        foreach ($lineVersion->getRoutes() as $route)
+        {
+            foreach ($route->getRouteStops() as $routeStop)
+            {
+                if ($routeStop->isOdtAreaRouteStop())
+                {
+                    $odtArea = $routeStop->getWaypoint()->getOdtArea();
+                    foreach ($odtArea->getOdtStops() as $odtStop)
+                    {
+                        if (!in_array($odtStop->getStop()->getStopArea(), $stopAreas))
+                            $stopAreas[] = $odtStop->getStop()->getStopArea();
+                    }
+                }
+                else if (!in_array($routeStop->getWaypoint()->getStop()->getStopArea(), $stopAreas))
+                {
+                    $stopAreas[] = $routeStop->getWaypoint()->getStop()->getStopArea();
+                }
+            }
+        }
+
+        usort($stopAreas, array($this, "usortStopArea"));
+
+        $stopAreaIds = array();
+        foreach ($stopAreas as $stopArea)
+        {
+            $stopAreaIds[] = $stopArea->getId();
+        }
+        $connection = $this->om->getConnection();
+        $query = "SELECT DISTINCT p.name as poi_name, p.id as poi_id, s.stop_area_id as stop_area_id
+            FROM poi p
+            JOIN poi_stop ps ON ps.poi_id = p.id
+            JOIN stop s ON ps.stop_id = s.id
+            WHERE s.stop_area_id IN (?)
+            AND p.priority IN (?)
+            ORDER BY p.name
+        ";
+        $stmt = $connection->executeQuery($query, array($stopAreaIds, $priorities), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+        $poiArray = $stmt->fetchAll();
+
+        $poiRepository = $this->om->getRepository('TisseoEndivBundle:Poi');
+
+        foreach($stopAreas as $stopArea)
+        {
+            $stopAreaPois = array();
+            foreach ($poiArray as $poi) {
+                if ($poi["stop_area_id"] == $stopArea->getId())
+                {
+                    $stopAreaPois[] = $poiRepository->find($poi["poi_id"]);
+                }
+            }
+            $item = array(
+                "stopArea" => $stopArea,
+                "poiArray" => $stopAreaPois
+            );
+
+            $result[] = $item;
+        }
+
+        return $result;
+    }
+
+    // used in 'getPoiByStop' method to sort an array of stops by their labels
+    function usortStopArea($a, $b)
+    {
+        return strcasecmp($a->getCity()->getName() . $a->getShortName(), $b->getCity()->getName() . $b->getShortName());
     }
 
 }
