@@ -108,18 +108,17 @@ class OdtAreaManager extends SortManager
     public function getLinesByOdtArea()
     {
         $query = $this->em->createQuery("
-            SELECT DISTINCT oar.id as odtArea, l.id as line, l.priority as priority, l.number as number
+            SELECT DISTINCT oar.id as odtArea, oar2.id as odtArea2, l.id as line, l.priority as priority, l.number as number
             FROM Tisseo\EndivBundle\Entity\Line l
             JOIN l.lineVersions lv
             JOIN lv.routes r
             JOIN r.routeStops rs
             JOIN rs.waypoint w
-            JOIN w.stop s
-            JOIN s.stopDatasources sd
-            JOIN s.odtStops os
-            JOIN os.odtArea oar
-            WHERE (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
-            AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
+            LEFT JOIN w.stop s
+            LEFT JOIN s.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
+            LEFT JOIN os.odtArea oar
+            LEFT JOIN w.odtArea oar2
+            WHERE (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
             ORDER BY l.priority
         ");
         // There is a bug with getResult() and custom request SELECT s.id, l
@@ -143,7 +142,10 @@ class OdtAreaManager extends SortManager
 
         $result = array();
         foreach ($array as $item) {
-            $result[$item['odtArea']][] = $lines[$item['line']];
+            if (!empty($item['odtArea']))
+                $result[$item['odtArea']][] = $lines[$item['line']];
+            else
+                $result[$item['odtArea2']][] = $lines[$item['line']];
         }
 
         foreach ($result as $key => $item) {
