@@ -247,16 +247,18 @@ class StopAreaManager extends SortManager
     public function getLinesByStop($stopAreaId, $groupResultByStop = true)
     {
         $query = $this->em->createQuery("
-           SELECT DISTINCT s.id as stop, l.id as line
+           SELECT DISTINCT s.id as stop, s2.id as stop2, l.id as line
            FROM Tisseo\EndivBundle\Entity\Line l
            JOIN l.lineVersions lv
            JOIN lv.routes r
            JOIN r.routeStops rs
            JOIN rs.waypoint w
-           JOIN w.stop s
-           JOIN s.stopDatasources sd
+           LEFT JOIN w.stop s
+           LEFT JOIN w.odtArea oa
+           LEFT JOIN oa.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
+           LEFT JOIN os.stop s2
            WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
-           AND s.stopArea = :sa
+           AND s.stopArea = :sa OR s2.stopArea = :sa
            ORDER BY s.id
         ")
         ->setParameter('sa', $stopAreaId);
@@ -284,7 +286,10 @@ class StopAreaManager extends SortManager
 
         if ($groupResultByStop) {
             foreach ($array as $item) {
-                $result[$item['stop']][] = $lines[$item['line']];
+                if (!empty($item['stop']))
+                    $result[$item['stop']][] = $lines[$item['line']];
+                else
+                    $result[$item['stop2']][] = $lines[$item['line']];
             }
         } else {
             $result = $lines;

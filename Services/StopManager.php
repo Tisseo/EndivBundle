@@ -393,10 +393,10 @@ class StopManager extends SortManager
            JOIN lv.routes r
            JOIN r.routeStops rs
            JOIN rs.waypoint w
-            LEFT JOIN w.stop s
-            LEFT JOIN w.odtArea oa
-            LEFT JOIN oa.odtStops os
-            LEFT JOIN os.stop s2
+           LEFT JOIN w.stop s
+           LEFT JOIN w.odtArea oa
+           LEFT JOIN oa.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
+           LEFT JOIN os.stop s2
            WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
            AND s.id = :sid OR s2.id = :sid
         ")->setParameter('sid', $stopId);
