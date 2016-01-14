@@ -157,7 +157,7 @@ class StopManager extends SortManager
             FROM stop_history sh";
         if ($getPhantoms)
         {
-            $query .= " JOIN stop s on (sh.stop_id = s.id OR sh.stop_id = s.master_stop_id) ";
+            $query .= " JOIN stop s on (sh.stop_id = COALESCE(s.master_stop_id, s.id))";
         }
         else
         {
@@ -191,7 +191,6 @@ class StopManager extends SortManager
                 "id" => $stopHistory["id"]
             );
         }
-
         return $result;
     }
 
@@ -360,7 +359,7 @@ class StopManager extends SortManager
             $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on s.id = sd.stop_id
-                JOIN stop_history sh on (s.id = sh.stop_id OR s.master_stop_id = sh.stop_id)
+                JOIN stop_history sh on (sh.stop_id = COALESCE(s.master_stop_id, s.id))
                 WHERE s.id IN (?)
                 AND sh.start_date <= CURRENT_DATE
                 AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
