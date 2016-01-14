@@ -297,7 +297,7 @@ class RouteManager extends SortManager
                 JOIN route r on rs.route_id = r.id
                 LEFT JOIN route_section rsec on rs.route_section_id = rsec.id
                 JOIN stop_datasource sd on s.id = sd.stop_id
-                JOIN stop_history sh on (s.id = sh.stop_id OR s.master_stop_id = sh.stop_id)
+                JOIN stop_history sh on (sh.stop_id = COALESCE(s.master_stop_id, s.id))
                 WHERE r.id = :route_id
                 AND sh.start_date <= CURRENT_DATE
                 AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)
