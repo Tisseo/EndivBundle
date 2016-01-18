@@ -473,7 +473,6 @@ class LineVersionManager extends SortManager
     {
         $result = array();
         $stopAreas = array();
-        $priorities = array(1, 2, 3);
 
         foreach ($lineVersion->getRoutes() as $route)
         {
@@ -508,10 +507,10 @@ class LineVersionManager extends SortManager
             JOIN poi_stop ps ON ps.poi_id = p.id
             JOIN stop s ON ps.stop_id = s.id
             WHERE s.stop_area_id IN (?)
-            AND p.priority IN (?)
+            AND p.on_schema IS TRUE
             ORDER BY p.name
         ";
-        $stmt = $connection->executeQuery($query, array($stopAreaIds, $priorities), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+        $stmt = $connection->executeQuery($query, array($stopAreaIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
         $poiArray = $stmt->fetchAll();
 
         $poiRepository = $this->om->getRepository('TisseoEndivBundle:Poi');
