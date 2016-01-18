@@ -158,6 +158,11 @@ class RouteStopManager extends SortManager {
             $routeStop->setDropOff($data['dropOff']);
             $merged = true;
         }
+        if (array_key_exists('internalService', $data) and $routeStop->getInternalService() !== $data['internalService'])
+        {
+            $routeStop->setInternalService($data['internalService']);
+            $merged = true;
+        }
 
         return $merged;
     }
