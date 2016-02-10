@@ -71,7 +71,7 @@ class LineVersion
     private $comment;
 
     /**
-     * @var string
+     * @var Depot
      */
     private $depot;
 
@@ -631,10 +631,10 @@ class LineVersion
     /**
      * Set depot
      *
-     * @param string $depot
+     * @param Depot $depot
      * @return LineVersion
      */
-    public function setDepot($depot)
+    public function setDepot(Depot $depot = null)
     {
         $this->depot = $depot;
 
@@ -644,7 +644,7 @@ class LineVersion
     /**
      * Get depot
      *
-     * @return string
+     * @return Depot
      */
     public function getDepot()
     {

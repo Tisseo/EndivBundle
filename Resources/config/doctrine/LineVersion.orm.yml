@@ -67,12 +67,6 @@ Tisseo\EndivBundle\Entity\LineVersion:
             length: null
             fixed: false
             comment: ''
-        depot:
-            type: string
-            nullable: true
-            length: 50
-            fixed: false
-            comment: ''
         status:
             type: line_version_status
             requireSQLConversion: true
@@ -92,6 +86,14 @@ Tisseo\EndivBundle\Entity\LineVersion:
             inversedBy: null
             joinColumns:
                 fg_color_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        depot:
+            targetEntity: Depot
+            mappedBy: null
+            inversedBy: lineVersions
+            joinColumns:
+                depot_id:
                     referencedColumnName: id
             orphanRemoval: false
         line:
