@@ -34,7 +34,7 @@ parameters:
     tisseo_endiv.line_group_content_manager.class: Tisseo\EndivBundle\Services\LineGroupContentManager
     tisseo_endiv.modification_manager.class: Tisseo\EndivBundle\Services\ModificationManager
     tisseo_endiv.log_subscriber.class: Tisseo\EndivBundle\Listener\LogSubscriber
-
+    tisseo_endiv.depot_manager.class: Tisseo\EndivBundle\Services\DepotManager
 services:
     tisseo_endiv.log_subscriber:
         class: %tisseo_endiv.log_subscriber.class%
@@ -176,4 +176,8 @@ services:
 
     tisseo_endiv.modification_manager:
         class: %tisseo_endiv.modification_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+
+    tisseo_endiv.depot_manager:
+        class: %tisseo_endiv.depot_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
