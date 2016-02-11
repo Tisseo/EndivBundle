@@ -59,6 +59,13 @@ Tisseo\EndivBundle\Entity\Route:
             inversedBy: null
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
+        routeExportDestinations:
+            targetEntity: RouteExportDestination
+            cascade: ['persist', 'remove']
+            mappedBy: route
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
         routeDatasources:
             targetEntity: RouteDatasource
             cascade: ['persist', 'remove']

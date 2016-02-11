@@ -62,6 +62,12 @@ class Route
      */
     private $routeStops;
 
+
+    /**
+     * @var Collection
+     */
+    private $routeExportDestinations;
+
     /**
      * Constructor
      */
@@ -70,6 +76,7 @@ class Route
         $this->trips = new ArrayCollection();
         $this->routeDatasources = new ArrayCollection();
         $this->routeStops = new ArrayCollection();
+        $this->routeExportDestinations = new ArrayCollection();
     }
 
     /**
@@ -557,4 +564,50 @@ class Route
 
         return $trips->first()->getTripCalendar();
     }
+
+    /**
+     * Add routeExportDestination
+     *
+     * @param RouteExportDestination $routeExportDestination
+     * @return Route
+     */
+    public function addRouteExportDestination(RouteExportDestination $routeExportDestination)
+    {
+        $this->routeExportDestinations[] = $routeExportDestination;
+
+        return $this;
+    }
+
+    /**
+     * Remove routeExportDestination
+     *
+     * @param RouteExportDestination $routeExportDestination
+     */
+    public function removeRouteExportDestination(RouteExportDestination $routeExportDestination)
+    {
+        $this->routeExportDestinations->removeElement($routeExportDestination);
+    }
+
+    /**
+     * Get routeExportDestinations
+     *
+     * @return Collection
+     */
+    public function getRouteExportDestinations()
+    {
+        return $this->routeExportDestinations;
+    }
+
+    public function getExportDestinations()
+    {
+        $exportDestinations = new ArrayCollection();
+
+        foreach($this->routeExportDestinations as $routeExportDestination)
+        {
+            $exportDestinations[] = $routeExportDestination->getExportDestination();
+        }
+
+        return $exportDestinations;
+    }
+
 }

@@ -1,13 +1,13 @@
-Tisseo\EndivBundle\Entity\LineVersionNotExported:
+Tisseo\EndivBundle\Entity\TransferExportDestination:
     type: entity
-    table: line_version_not_exported
+    table: transfer_export_destination
     indexes:
-        line_version_not_exported_line_version_id_idx:
-            columns:
-                - line_version_id
-        IDX_17585275A574F401:
+        IDX_F25970F7A574F401:
             columns:
                 - export_destination_id
+        IDX_F25970F7537048AF:
+            columns:
+                - transfer_id
     id:
         id:
             type: integer
@@ -27,13 +27,13 @@ Tisseo\EndivBundle\Entity\LineVersionNotExported:
                 export_destination_id:
                     referencedColumnName: id
             orphanRemoval: false
-        lineVersion:
-            targetEntity: LineVersion
+        transfer:
+            targetEntity: Transfer
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                line_version_id:
+                transfer_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

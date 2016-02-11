@@ -5,9 +5,9 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TransferNotExported
+ * TransferExportDestination
  */
-class TransferNotExported
+class TransferExportDestination
 {
     /**
      * @var integer
@@ -39,7 +39,7 @@ class TransferNotExported
      * Set exportDestination
      *
      * @param \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
-     * @return TransferNotExported
+     * @return TransferExportDestination
      */
     public function setExportDestination(\Tisseo\EndivBundle\Entity\ExportDestination $exportDestination = null)
     {
@@ -62,7 +62,7 @@ class TransferNotExported
      * Set transfer
      *
      * @param \Tisseo\EndivBundle\Entity\Transfer $transfer
-     * @return TransferNotExported
+     * @return TransferExportDestination
      */
     public function setTransfer(\Tisseo\EndivBundle\Entity\Transfer $transfer = null)
     {

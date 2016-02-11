@@ -11,7 +11,7 @@ Tisseo\EndivBundle\Entity\ExportDestination:
             generator:
                 strategy: SEQUENCE
     fields:
-        nom:
+        name:
             type: string
             nullable: true
             length: 255
@@ -23,4 +23,12 @@ Tisseo\EndivBundle\Entity\ExportDestination:
             length: null
             fixed: false
             comment: ''
+    oneToMany:
+        routeExportDestinations:
+            targetEntity: RouteExportDestination
+            cascade: ['remove']
+            mappedBy: exportDestination
+            inversedBy: null
+            orphanRemoval: true
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }
