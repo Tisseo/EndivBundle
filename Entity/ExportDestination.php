@@ -17,13 +17,22 @@ class ExportDestination
     /**
      * @var string
      */
-    private $nom;
+    private $name;
 
     /**
      * @var string
      */
     private $url;
 
+    /**
+     * @var Collection
+     */
+    private $routeExportDestinations;
+
+    public function __construct()
+    {
+        $this->routeExportDestinations = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -36,26 +45,26 @@ class ExportDestination
     }
 
     /**
-     * Set nom
+     * Set nam
      *
-     * @param string $nom
+     * @param string $name
      * @return ExportDestination
      */
-    public function setNom($nom)
+    public function setName($name)
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get nom
+     * Get name
      *
      * @return string
      */
-    public function getNom()
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 
     /**

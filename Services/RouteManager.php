@@ -12,6 +12,7 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
+use Tisseo\EndivBundle\Entity\RouteExportDestination;
 use Tisseo\EndivBundle\Services\StopManager;
 
 class RouteManager extends SortManager
@@ -254,6 +255,35 @@ class RouteManager extends SortManager
             $sync = true;
         }
 
+        if ($sync)
+            $this->om->flush();
+    }
+
+    public function updateExportDestinations($route, $exportDestinations)
+    {
+        $sync = false;
+        foreach ($route->getRouteExportDestinations() as $routeExportDestination)
+        {
+            if (!($exportDestinations->contains($routeExportDestination->getExportDestination())))
+            {
+                $sync = true;
+                $route->removeRouteExportDestination($routeExportDestination);
+                $this->om->remove($routeExportDestination);
+            }
+        }
+
+        foreach ($exportDestinations as $exportDestination )
+        {
+            if (!($route->getExportDestinations()->contains($exportDestination)))
+            {
+                $routeExportDestination = new RouteExportDestination();
+                $routeExportDestination->setExportDestination($exportDestination);
+                $routeExportDestination->setRoute($route);
+                $sync = true;
+                $route->addRouteExportDestination($routeExportDestination);
+                $this->om->persist($routeExportDestination);
+            }
+        }
         if ($sync)
             $this->om->flush();
     }

@@ -5,9 +5,9 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * RouteNotExported
+ * LineVersionExportDestination
  */
-class RouteNotExported
+class LineVersionExportDestination
 {
     /**
      * @var integer
@@ -20,9 +20,9 @@ class RouteNotExported
     private $exportDestination;
 
     /**
-     * @var \Tisseo\EndivBundle\Entity\Route
+     * @var \Tisseo\EndivBundle\Entity\LineVersion
      */
-    private $route;
+    private $lineVersion;
 
 
     /**
@@ -39,7 +39,7 @@ class RouteNotExported
      * Set exportDestination
      *
      * @param \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
-     * @return RouteNotExported
+     * @return LineVersionExportDestination
      */
     public function setExportDestination(\Tisseo\EndivBundle\Entity\ExportDestination $exportDestination = null)
     {
@@ -59,25 +59,25 @@ class RouteNotExported
     }
 
     /**
-     * Set route
+     * Set lineVersion
      *
-     * @param \Tisseo\EndivBundle\Entity\Route $route
-     * @return RouteNotExported
+     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     * @return LineVersionExportDestination
      */
-    public function setRoute(\Tisseo\EndivBundle\Entity\Route $route = null)
+    public function setLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion = null)
     {
-        $this->route = $route;
+        $this->lineVersion = $lineVersion;
 
         return $this;
     }
 
     /**
-     * Get route
+     * Get lineVersion
      *
-     * @return \Tisseo\EndivBundle\Entity\Route
+     * @return \Tisseo\EndivBundle\Entity\LineVersion
      */
-    public function getRoute()
+    public function getLineVersion()
     {
-        return $this->route;
+        return $this->lineVersion;
     }
 }

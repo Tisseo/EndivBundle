@@ -1,6 +1,6 @@
-Tisseo\EndivBundle\Entity\RouteNotExported:
+Tisseo\EndivBundle\Entity\RouteExportDestination:
     type: entity
-    table: route_not_exported
+    table: route_export_destination
     indexes:
         IDX_D60ABFC6A574F401:
             columns:
@@ -22,7 +22,7 @@ Tisseo\EndivBundle\Entity\RouteNotExported:
             targetEntity: ExportDestination
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: routeExportDestinations
             joinColumns:
                 export_destination_id:
                     referencedColumnName: id
@@ -31,7 +31,7 @@ Tisseo\EndivBundle\Entity\RouteNotExported:
             targetEntity: Route
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: routeExportDestinations
             joinColumns:
                 route_id:
                     referencedColumnName: id
