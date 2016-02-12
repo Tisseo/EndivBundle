@@ -80,7 +80,7 @@ class LineGroupGisManager extends SortManager
                 s1.date as first_schematic_date,
                 s2.date as last_schematic_date,
                 s1.comment as first_schematic_comment,
-                d.shortName as line_version_depot,
+                d.longName as line_version_depot,
                 s1.groupGis,
                 s2.groupGis
             FROM Tisseo\EndivBundle\Entity\Line l
