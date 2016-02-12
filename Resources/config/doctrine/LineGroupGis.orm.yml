@@ -35,4 +35,10 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
             mappedBy: lineGroupGis
             inversedBy: null
             orphanRemoval: true
+        printings:
+            targetEntity: PrintingLineGroupGis
+            cascade: ['persist', 'remove']
+            mappedBy: lineGroupGis
+            inversedBy: null
+            orphanRemoval: true
     lifecycleCallbacks: {  }

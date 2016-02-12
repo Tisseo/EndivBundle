@@ -1,0 +1,43 @@
+Tisseo\EndivBundle\Entity\PrintingLineGroupGis:
+    type: entity
+    table: printing_line_group_gis
+    indexes:
+        printing_line_group_gis_id_index:
+            columns:
+                - line_group_gis_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        quantity:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        date:
+            type: date
+            nullable: true
+            comment: ''
+        comment:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: 'Raison du tirage : initial, reassort ou correction.'
+    manyToOne:
+        lineGroupGis:
+            targetEntity: LineGroupGis
+            cascade: {  }
+            mappedBy: null
+            inversedBy: printings
+            joinColumns:
+                line_group_gis_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

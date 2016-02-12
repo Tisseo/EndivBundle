@@ -30,6 +30,7 @@ parameters:
     tisseo_endiv.stoptime_manager.class: Tisseo\EndivBundle\Services\StopTimeManager
     tisseo_endiv.line_group_gis_manager.class: Tisseo\EndivBundle\Services\LineGroupGisManager
     tisseo_endiv.line_group_gis_content_manager.class: Tisseo\EndivBundle\Services\LineGroupGisContentManager
+    tisseo_endiv.printing_line_group_gis_manager.class: Tisseo\EndivBundle\Services\PrintingLineGroupGisManager
     tisseo_endiv.line_group_manager.class: Tisseo\EndivBundle\Services\LineGroupManager
     tisseo_endiv.line_group_content_manager.class: Tisseo\EndivBundle\Services\LineGroupContentManager
     tisseo_endiv.modification_manager.class: Tisseo\EndivBundle\Services\ModificationManager
@@ -164,6 +165,10 @@ services:
 
     tisseo_endiv.line_group_gis_content_manager:
         class: %tisseo_endiv.line_group_gis_content_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+
+    tisseo_endiv.printing_line_group_gis_manager:
+        class: %tisseo_endiv.printing_line_group_gis_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']
 
     tisseo_endiv.line_group_manager:
