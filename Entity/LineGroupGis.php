@@ -36,11 +36,17 @@ class LineGroupGis
     private $lineGroupGisContents;
 
     /**
+     * @var Collection
+     */
+    private $printings;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->lineGroupGisContents = new ArrayCollection();
+        $this->printings = new ArrayCollection();
     }
 
     /**
@@ -164,4 +170,81 @@ class LineGroupGis
     {
         return $this->comment;
     }
+
+    /**
+     * getTotalPrintings
+     *
+     * @return integer
+     *
+     * Return the total amount of printings (i.e. printing.quantity)
+     */
+    public function getTotalPrintings()
+    {
+        $printings = 0;
+        foreach($this->printings as $printing)
+            $printings += $printing->getQuantity();
+
+        return $printings;
+    }
+
+    /**
+     * Set printings
+     *
+     * @param Collection $printings
+     * @return LineGroupGis
+     */
+    public function setPrintings(Collection $printings)
+    {
+        $this->printings = $printings;
+        foreach ($this->printings as $printing) {
+            $printing->setLineGroupGis($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Get printings
+     *
+     * @return Collection
+     */
+    public function getPrintings()
+    {
+        return $this->printings;
+    }
+
+    /**
+     * Add printings
+     *
+     * @param Printing $printing
+     * @return LineGroupGis
+     */
+    public function addPrintings(Printing $printing)
+    {
+        $this->printings[] = $printing;
+        $printing->setLineGroupGis($this);
+        return $this;
+    }
+
+    /**
+     * Remove printings
+     *
+     * @param Printing $printing
+     */
+    public function removePrintings(Printing $printing)
+    {
+        $this->printings->removeElement($printing);
+    }
+
+    /**
+     * Clear printings
+     *
+     * @return LineVersion
+     */
+    public function clearPrintings()
+    {
+        $this->printings->clear();
+
+        return $this;
+    }
+
 }
