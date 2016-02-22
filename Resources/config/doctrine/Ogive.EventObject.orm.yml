@@ -1,0 +1,52 @@
+Tisseo\EndivBundle\Entity\Ogive\EventObject:
+    type: entity
+    table: ogive.event_object
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventObjectRepository
+    indexes:
+        IDX_2525FB6971F7E88B:
+            columns:
+                - event_id
+        IDX_2525FB69B88CE5A5:
+            columns:
+                - emergency_status
+        IDX_2525FB694BEE6933:
+            columns:
+                - objects_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        event:
+            targetEntity: Event
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        emergencyStatus:
+            targetEntity: EmergencyStatus
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                emergency_status:
+                    referencedColumnName: id
+            orphanRemoval: false
+        objects:
+            targetEntity: Object
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                objects_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

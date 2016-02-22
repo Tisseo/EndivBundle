@@ -1,0 +1,55 @@
+Tisseo\EndivBundle\Entity\Ogive\Board:
+    type: entity
+    table: ogive.board
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\BoardRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        shortName:
+            type: string
+            nullable: false
+            length: 8
+            fixed: false
+            comment: ''
+            column: short_name
+        longName:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+            column: long_name
+        nbBoards:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: nb_boards
+        status:
+            type: string
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: status
+        isOffice:
+            type: boolean
+            nullable: false
+            comment: 'Le lieu est-il une agence ?'
+            default: false
+            column: is_office
+        isWaitingRoom:
+            type: boolean
+            nullable: false
+            comment: 'Le lieu est-il une salle d''attente ?'
+            default: false
+            column: is_waiting_room
+    lifecycleCallbacks: {  }

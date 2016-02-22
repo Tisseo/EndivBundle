@@ -1,0 +1,27 @@
+Tisseo\EndivBundle\Entity\Ogive\Datasource:
+    type: entity
+    table: ogive.datasource
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\DatasourceRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+        isEditable:
+            type: boolean
+            nullable: false
+            comment: 'Certaines datasources sont figées si elles proviennent d''ailleurs (TR). Le booléen est à false dans ce cas là, à true sinon.'
+            default: true
+            column: is_editable
+    lifecycleCallbacks: {  }

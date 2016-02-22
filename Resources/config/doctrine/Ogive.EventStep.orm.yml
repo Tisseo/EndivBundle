@@ -1,0 +1,102 @@
+Tisseo\EndivBundle\Entity\Ogive\EventStep:
+    type: entity
+    table: ogive.event_step
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventStepRepository
+    indexes:
+        IDX_61565D09700305C8:
+            columns:
+                - event_step_parent_id
+        IDX_61565D094D085745:
+            columns:
+                - connector_id
+        IDX_61565D092CA2FD66:
+            columns:
+                - connector_param_list_id
+        IDX_61565D0971F7E88B:
+            columns:
+                - event_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        stepRank:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: 'Rang de l''étape. Les rangs sont simplement ordonnés ; ils ne se suivent pas forcément.'
+            column: step_rank
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        moment:
+            type: integer
+            nullable: false
+            comment: ''
+        mandatory:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        eventStepParent:
+            targetEntity: EventStep
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_step_parent_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        connector:
+            targetEntity: Connector
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                connector_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        connectorParamList:
+            targetEntity: ConnectorParamList
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                connector_param_list_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        event:
+            targetEntity: Event
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    manyToMany:
+        status:
+            targetEntity: EventStepStatus
+            cascade: {  }
+            mappedBy: null
+            inversedBy: eventStep
+            joinTable:
+                name: ogive.link_event_step_status
+                joinColumns:
+                    -
+                        name: event_step_id
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: status_id
+                        referencedColumnName: id
+            orderBy: null
+    lifecycleCallbacks: {  }

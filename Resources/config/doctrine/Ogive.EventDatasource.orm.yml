@@ -1,0 +1,47 @@
+Tisseo\EndivBundle\Entity\Ogive\EventDatasource:
+    type: entity
+    table: ogive.event_datasource
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventDatasourceRepository
+    indexes:
+        IDX_4DE8EFC871F7E88B:
+            columns:
+                - event_id
+        IDX_4DE8EFC8712290DD:
+            columns:
+                - datasource_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        code:
+            type: string
+            nullable: true
+            length: 40
+            fixed: false
+            comment: ''
+    manyToOne:
+        event:
+            targetEntity: Event
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        datasource:
+            targetEntity: Datasource
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                datasource_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

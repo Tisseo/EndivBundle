@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\Ogive\Text:
+    type: entity
+    table: ogive.text
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\TextRepository
+    uniqueConstraints:
+        text_label_key:
+            columns:
+                - label
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        label:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: 'Nom général du texte. N''est pas structurant et n''est afférent qu''au texte seul et pas à son lien avec l''étape.'
+        text:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: 'Texte non interprété, peut contenir des variables et fonctions.'
+    manyToMany:
+        scenarioStep:
+            targetEntity: ScenarioStep
+            cascade: {  }
+            mappedBy: text
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

@@ -1,0 +1,62 @@
+Tisseo\EndivBundle\Entity\Ogive\Mailbox:
+    type: entity
+    table: ogive.mailbox
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\MailBoxRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        title:
+            type: string
+            nullable: false
+            length: 60
+            fixed: false
+            comment: ''
+        subtitle:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        mailText:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: mail_text
+        isForWebsite:
+            type: boolean
+            nullable: false
+            comment: 'Est à true si l''enregistrement est à mettre à disposition des info réseau'
+            default: false
+            column: is_for_website
+        isForPti:
+            type: boolean
+            nullable: false
+            comment: 'Est à true si l''enregistrement est à mettre à disposition de l''IV personnalisée'
+            default: false
+            column: is_for_pti
+        eventId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: event_id
+        startDatetime:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: start_datetime
+        endDatetime:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: end_datetime
+    lifecycleCallbacks: {  }

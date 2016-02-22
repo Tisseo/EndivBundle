@@ -1,0 +1,70 @@
+Tisseo\EndivBundle\Entity\Ogive\Event:
+    type: entity
+    table: ogive.event
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventRepository
+    indexes:
+        IDX_18CB994DF4EFF44D:
+            columns:
+                - event_parent_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        chaosType:
+            type: guid
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: chaos_type
+        chaosCause:
+            type: guid
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: chaos_cause
+        isPublished:
+            type: boolean
+            nullable: false
+            column: is_published
+        status:
+            type: integer
+            nullable: false
+            column: status
+        trafficReportId:
+            type: guid
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: traffic_report_id
+        reference:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: 'Nom externe de l''événement, issu de CHAOS : disruption.reference. Non unique.'
+        isEmergency:
+            type: boolean
+            nullable: false
+            comment: 'Est à true si l''événement est de type urgence. Structurant pour son apparition dans les listes.'
+            default: false
+            column: is_emergency
+    manyToOne:
+        eventParent:
+            targetEntity: Event
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_parent_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

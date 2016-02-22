@@ -1,0 +1,108 @@
+Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
+    type: entity
+    table: ogive.scenario_step
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ScenarioStepRepository
+    indexes:
+        IDX_311CB635D080F7BD:
+            columns:
+                - scenario_step_parent_id
+        IDX_311CB635E04E49DF:
+            columns:
+                - scenario_id
+        IDX_311CB6354D085745:
+            columns:
+                - connector_id
+        IDX_311CB6352CA2FD66:
+            columns:
+                - connector_param_list_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        stepRank:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: 'Rang de l''étape. Les rangs sont simplement ordonnés ; ils ne se suivent pas forcément.'
+            column: step_rank
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        moment:
+            type: integer
+            nullable: false
+            column: moment
+        mandatory:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        scenarioStepParent:
+            targetEntity: ScenarioStep
+            cascade: {  }
+            mappedBy: null
+            inversedBy: scenarioSteps
+            joinColumns:
+                scenario_step_parent_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        scenario:
+            targetEntity: Scenario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                scenario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        connector:
+            targetEntity: Connector
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                connector_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        connectorParamList:
+            targetEntity: ConnectorParamList
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                connector_param_list_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    manyToMany:
+        text:
+            targetEntity: Text
+            cascade: {  }
+            mappedBy: null
+            inversedBy: scenarioStep
+            joinTable:
+                name: ogive.scenario_step_text
+                joinColumns:
+                    -
+                        name: scenario_step_id
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: text_id
+                        referencedColumnName: id
+            orderBy: null
+    oneToMany:
+        scenarioSteps:
+            targetEntity: ScenarioStep
+            cascade: [remove]
+            inversedBy: null
+            mappedBy: scenarioStepParent
+            orderBy: {'name': 'asc'}
+    lifecycleCallbacks: {  }
