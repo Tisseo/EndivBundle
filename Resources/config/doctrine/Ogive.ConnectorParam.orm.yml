@@ -1,0 +1,42 @@
+Tisseo\EndivBundle\Entity\Ogive\ConnectorParam:
+    type: entity
+    table: ogive.connector_param
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ConnectorParamRepository
+    indexes:
+        IDX_850945B42CA2FD66:
+            columns:
+                - connector_param_list_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        paramType:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+            column: param_type
+        param:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        connectorParamList:
+            targetEntity: ConnectorParamList
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                connector_param_list_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

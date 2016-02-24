@@ -1,0 +1,62 @@
+Tisseo\EndivBundle\Entity\Ogive\Period:
+    type: entity
+    table: ogive.period
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\PeriodRepository
+    indexes:
+        IDX_8544703B71F7E88B:
+            columns:
+                - event_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        startDate:
+            type: date
+            nullable: false
+            comment: ''
+            column: start_date
+        endDate:
+            type: date
+            nullable: false
+            comment: ''
+            column: end_date
+        startTime:
+            type: time
+            nullable: true
+            comment: ''
+            column: start_time
+        endTime:
+            type: time
+            nullable: true
+            comment: ''
+            column: end_time
+        isRecursive:
+            type: boolean
+            nullable: false
+            comment: 'Si à true, alors les heures start_time et end_time sont pour chaque jour de la période définie. Sinon, ces horaires ne font que borner la période.'
+            default: false
+            column: is_recursive
+        dayPattern:
+            type: string
+            nullable: false
+            length: 7
+            fixed: false
+            comment: ''
+            column: day_pattern
+    manyToOne:
+        event:
+            targetEntity: Event
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,45 @@
+Tisseo\EndivBundle\Entity\Ogive\EmergencyStatus:
+    type: entity
+    table: ogive.emergency_status
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EmergencyStatusRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rank:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        chaosSeverity:
+            type: guid
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: chaos_severity
+        color:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+        label:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+        description:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

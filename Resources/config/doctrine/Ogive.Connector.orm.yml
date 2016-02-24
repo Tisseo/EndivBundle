@@ -1,0 +1,35 @@
+Tisseo\EndivBundle\Entity\Ogive\Connector:
+    type: entity
+    table: ogive.connector
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ConnectorRepository
+    uniqueConstraints:
+        connector_name_key:
+            columns:
+                - name
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        connectorType:
+            type: text
+            nullable: false
+            column: connector_type
+        details:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,45 @@
+Tisseo\EndivBundle\Entity\Ogive\GroupObject:
+    type: entity
+    table: ogive.group_object
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\GroupObjectRepository
+    uniqueConstraints:
+        group_objects_name_key:
+            columns:
+                - name
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+        groupType:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: 'Correspond au type du groupe d''objets, par exemple pole d''échange, batiment public, groupe d''exploitation, secteur géographique... '
+            column: group_type
+        isPrivate:
+            type: boolean
+            nullable: false
+            comment: 'Est à true si le groupe est interne à Tisséo (pas d''affichage à l''extérieur dans de futures listes de choix)'
+            column: is_private
+    manyToMany:
+        objects:
+            targetEntity: Object
+            cascade: {  }
+            mappedBy: groupObject
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

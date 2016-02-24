@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\Ogive\EventStepStatus:
+    type: entity
+    table: ogive.event_step_status
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventStepStatusRepository
+    uniqueConstraints:
+        event_step_status_name_key:
+            columns:
+                - name
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+        color:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+    manyToMany:
+        eventStep:
+            targetEntity: EventStep
+            cascade: {  }
+            mappedBy: status
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

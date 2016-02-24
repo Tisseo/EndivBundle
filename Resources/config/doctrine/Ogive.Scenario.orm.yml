@@ -1,0 +1,35 @@
+Tisseo\EndivBundle\Entity\Ogive\Scenario:
+    type: entity
+    table: ogive.scenario
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ScenarioRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        chaosType:
+            type: guid
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: chaos_type
+        chaosCause:
+            type: guid
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: chaos_cause
+    lifecycleCallbacks: {  }

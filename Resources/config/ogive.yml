@@ -1,0 +1,12 @@
+parameters:
+    tisseo_endiv.ogive.ogive_manager.class: Tisseo\EndivBundle\Services\Ogive\OgiveManager
+    tisseo_endiv.ogive.scenario_step_manager.class: Tisseo\EndivBundle\Services\Ogive\ScenarioStepManager
+
+services:
+    tisseo_endiv.ogive.ogive_manager:
+        abstract: true
+        class: '%tisseo_endiv.ogive.ogive_manager.class%'
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.ogive.scenario_step_manager:
+        parent: 'tisseo_endiv.ogive.ogive_manager'
+        class: '%tisseo_endiv.ogive.scenario_step_manager.class%'

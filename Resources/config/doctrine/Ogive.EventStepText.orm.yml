@@ -1,0 +1,42 @@
+Tisseo\EndivBundle\Entity\Ogive\EventStepText:
+    type: entity
+    table: ogive.event_step_text
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventStepTextRepository
+    indexes:
+        IDX_460E6A36F6E5B733:
+            columns:
+                - event_step_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        labelType:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+            column: label_type
+        text:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        eventStep:
+            targetEntity: EventStep
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_step_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

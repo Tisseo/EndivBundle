@@ -1,0 +1,43 @@
+Tisseo\EndivBundle\Entity\Ogive\Object:
+    type: entity
+    table: ogive.object
+    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ObjectRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        objectType:
+            type: text
+            nullable: false
+            column: object_type
+        objectRef:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: 'Référence de l''objet dans le référentiel lié au type (si ligne, alors TID, si mécanisme, alors PIVERT...)'
+            column: object_ref
+    manyToMany:
+        groupObject:
+            targetEntity: GroupObject
+            cascade: {  }
+            mappedBy: null
+            inversedBy: objects
+            joinTable:
+                name: ogive.group_objects_content
+                joinColumns:
+                    -
+                        name: objects_id
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: group_objects_id
+                        referencedColumnName: id
+            orderBy: null
+    lifecycleCallbacks: {  }
