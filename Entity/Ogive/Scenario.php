@@ -22,13 +22,12 @@ class Scenario
     /**
      * @var guid
      */
-    private $chaosType;
+    private $severityId;
 
     /**
      * @var guid
      */
-    private $chaosCause;
-
+    private $causeId;
 
     /**
      * Get id
@@ -64,48 +63,48 @@ class Scenario
     }
 
     /**
-     * Set chaosType
+     * Set severityId
      *
-     * @param guid $chaosType
+     * @param guid $severityId
      * @return Scenario
      */
-    public function setChaosType($chaosType)
+    public function setSeverityId($severityId)
     {
-        $this->chaosType = $chaosType;
+        $this->severityId = $severityId;
 
         return $this;
     }
 
     /**
-     * Get chaosType
+     * Get severityId
      *
      * @return guid 
      */
-    public function getChaosType()
+    public function getSeverityId()
     {
-        return $this->chaosType;
+        return $this->severityId;
     }
 
     /**
-     * Set chaosCause
+     * Set causeId
      *
-     * @param guid $chaosCause
+     * @param guid $causeId
      * @return Scenario
      */
-    public function setChaosCause($chaosCause)
+    public function setCauseId($causeId)
     {
-        $this->chaosCause = $chaosCause;
+        $this->causeId = $causeId;
 
         return $this;
     }
 
     /**
-     * Get chaosCause
+     * Get causeId
      *
      * @return guid 
      */
-    public function getChaosCause()
+    public function getCauseId()
     {
-        return $this->chaosCause;
+        return $this->causeId;
     }
 }
