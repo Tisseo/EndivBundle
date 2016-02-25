@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Scenario
  */
-class Scenario
+class Scenario extends OgiveEntity
 {
     /**
      * @var integer
