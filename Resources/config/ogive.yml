@@ -1,6 +1,7 @@
 parameters:
     tisseo_endiv.ogive.ogive_manager.class: Tisseo\EndivBundle\Services\Ogive\OgiveManager
     tisseo_endiv.ogive.scenario_step_manager.class: Tisseo\EndivBundle\Services\Ogive\ScenarioStepManager
+    tisseo_endiv.ogive.scenario_manager.class: Tisseo\EndivBundle\Services\Ogive\ScenarioManager
 
 services:
     tisseo_endiv.ogive.ogive_manager:
@@ -10,3 +11,6 @@ services:
     tisseo_endiv.ogive.scenario_step_manager:
         parent: 'tisseo_endiv.ogive.ogive_manager'
         class: '%tisseo_endiv.ogive.scenario_step_manager.class%'
+    tisseo_endiv.ogive.scenario_manager:
+        parent: 'tisseo_endiv.ogive.ogive_manager'
+        class: '%tisseo_endiv.ogive.scenario_manager.class%'
