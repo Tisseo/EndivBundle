@@ -25,12 +25,12 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             generator:
                 strategy: SEQUENCE
     fields:
-        stepRank:
+        rank:
             type: integer
             nullable: false
             unsigned: false
             comment: 'Rang de l''étape. Les rangs sont simplement ordonnés ; ils ne se suivent pas forcément.'
-            column: step_rank
+            column: rank
         name:
             type: string
             nullable: false

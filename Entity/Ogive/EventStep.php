@@ -17,7 +17,7 @@ class EventStep
     /**
      * @var integer
      */
-    private $stepRank;
+    private $rank;
 
     /**
      * @var string
@@ -78,26 +78,26 @@ class EventStep
     }
 
     /**
-     * Set stepRank
+     * Set rank
      *
-     * @param integer $stepRank
+     * @param integer $rank
      * @return EventStep
      */
-    public function setStepRank($stepRank)
+    public function setRank($rank)
     {
-        $this->stepRank = $stepRank;
+        $this->rank = $rank;
 
         return $this;
     }
 
     /**
-     * Get stepRank
+     * Get rank
      *
      * @return integer 
      */
-    public function getStepRank()
+    public function getRank()
     {
-        return $this->stepRank;
+        return $this->rank;
     }
 
     /**

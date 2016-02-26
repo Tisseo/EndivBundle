@@ -3,6 +3,8 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Scenario
@@ -28,6 +30,19 @@ class Scenario extends OgiveEntity
      * @var guid
      */
     private $causeId;
+
+    /**
+     * @var Collection
+     */
+    private $scenarioSteps;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->scenarioSteps = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -106,5 +121,54 @@ class Scenario extends OgiveEntity
     public function getCauseId()
     {
         return $this->causeId;
+    }
+
+    /**
+     * Get scenarioSteps
+     *
+     * @return Collection
+     */
+    public function getScenarioSteps()
+    {
+        return $this->scenarioSteps;
+    }
+
+    /**
+     * Set scenarioSteps
+     *
+     * @param Collection $scenarioSteps
+     * @return ScenarioStep
+     */
+    public function setScenarioSteps(Collection $scenarioSteps)
+    {
+        $this->scenarioSteps = $scenarioSteps;
+
+        return $this;
+    }
+
+    /**
+     * Add scenarioStep
+     *
+     * @param ScenarioStep $scenarioStep
+     * @return ScenarioStep
+     */
+    public function addScenarioStep(ScenarioStep $scenarioStep)
+    {
+        $this->scenarioSteps->add($scenarioStep);
+
+        return $this;
+    }
+
+    /**
+     * Remove scenarioStep
+     *
+     * @param ScenarioStep $scenarioStep
+     * @return ScenarioStep
+     */
+    public function removeScenarioStep(ScenarioStep $scenarioStep)
+    {
+        $this->scenarioSteps->removeElement($scenarioStep);
+
+        return $this;
     }
 }
