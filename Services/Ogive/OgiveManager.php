@@ -127,10 +127,6 @@ abstract class OgiveManager
         } else if (is_array($data) || $data instanceof Traversable) {
             $result = array();
             foreach ($data as $entity) {
-                if (!($entity instanceof OgiveEntity)) {
-                    throw new Exception("Can't normalize unknown entity type");
-                }
-
                 $result[] = $this->doNormalize($entity);
             }
         } else {
@@ -146,7 +142,7 @@ abstract class OgiveManager
      * @param OgiveEntity $entity
      * @return array
      */
-    private function doNormalize($entity)
+    private function doNormalize(OgiveEntity $entity)
     {
         return json_decode($this->getSerializer()->serialize($entity, 'json'));
     }
