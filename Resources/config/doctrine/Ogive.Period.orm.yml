@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Period:
     type: entity
     table: ogive.period
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\PeriodRepository
     indexes:
         IDX_8544703B71F7E88B:
             columns:

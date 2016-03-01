@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Datasource:
     type: entity
     table: ogive.datasource
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\DatasourceRepository
     id:
         id:
             type: integer

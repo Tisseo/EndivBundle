@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
     type: entity
     table: ogive.scenario_step
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ScenarioStepRepository
     indexes:
         IDX_311CB635D080F7BD:
             columns:

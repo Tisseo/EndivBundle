@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Scenario:
     type: entity
     table: ogive.scenario
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ScenarioRepository
     id:
         id:
             type: integer

@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\LineStop:
     type: entity
     table: ogive.line_stop
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\LineStopRepository
     id:
         id:
             type: integer

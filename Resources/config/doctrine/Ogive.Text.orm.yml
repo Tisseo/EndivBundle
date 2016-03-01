@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Text:
     type: entity
     table: ogive.text
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\TextRepository
     uniqueConstraints:
         text_label_key:
             columns:

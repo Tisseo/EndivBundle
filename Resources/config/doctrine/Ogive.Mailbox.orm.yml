@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Mailbox:
     type: entity
     table: ogive.mailbox
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\MailBoxRepository
     id:
         id:
             type: integer

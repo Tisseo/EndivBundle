@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\LineBoard:
     type: entity
     table: ogive.line_board
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\LineBoardRepository
     indexes:
         IDX_9AF6E35AE7EC5785:
             columns:

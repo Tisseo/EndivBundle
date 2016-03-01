@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\GroupObject:
     type: entity
     table: ogive.group_object
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\GroupObjectRepository
     uniqueConstraints:
         group_objects_name_key:
             columns:
