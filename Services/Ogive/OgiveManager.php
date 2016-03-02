@@ -49,6 +49,31 @@ abstract class OgiveManager
     }
 
     /**
+     * Set the serializer
+     *
+     * @param Serializer $serializer
+     */
+    public function setSerializer(Serializer $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    /**
+     * Get serializer
+     *
+     * @return Serializer
+     * @throws Exception if serializer not instanciated
+     */
+    public function getSerializer()
+    {
+        if ($this->serializer instanceof Serializer) {
+            return $this->serializer;
+        }
+
+        throw new Exception("Serializer not instanciated in this manager");
+    }
+
+    /**
      * Save the entity in database
      * 
      * @param OgiveEntity $entity
@@ -90,28 +115,28 @@ abstract class OgiveManager
     }
 
     /**
-     * Set the serializer
+     * Update collection
+     * Manage the deleted entities from a collection
      *
-     * @param Serializer $serializer
+     * @param OgiveEntity $entity
+     * @param string $accessor
+     * @param array $collection
      */
-    public function setSerializer(Serializer $serializer)
+    public function updateCollection(OgiveEntity $entity, $accessor, array $collection)
     {
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * Get serializer
-     *
-     * @return Serializer
-     * @throws Exception if serializer not instanciated
-     */
-    public function getSerializer()
-    {
-        if ($this->serializer instanceof Serializer) {
-            return $this->serializer;
+        foreach($entity->$accessor() as $childEntity) {
+            foreach($collection as $key => $toDelete) {
+                if ($toDelete->getid() === $childEntity->getId()) {
+                    unset($collection[$key]);
+                }
+            }
         }
 
-        throw new Exception("Serializer not instanciated in this manager");
+        foreach($collection as $childEntity) {
+            $this->objectManager->remove($childEntity);
+        }
+
+        $this->objectManager->flush();
     }
 
     /**

@@ -34,7 +34,7 @@ Tisseo\EndivBundle\Entity\Ogive\Scenario:
     oneToMany:
         scenarioSteps:
             targetEntity: ScenarioStep
-            cascade: [remove]
+            cascade: ['remove','persist']
             inversedBy: null
             mappedBy: scenario
             orderBy: {'name': 'asc'}

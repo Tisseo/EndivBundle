@@ -77,6 +77,19 @@ class ScenarioStep extends OgiveEntity
     }
 
     /**
+     * Set id
+     *
+     * @param integer $identifier
+     * @return ScenarioStep
+     */
+    public function setId($identifier)
+    {
+        $this->id = $identifier;
+
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer
