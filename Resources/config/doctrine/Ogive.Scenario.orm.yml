@@ -37,5 +37,5 @@ Tisseo\EndivBundle\Entity\Ogive\Scenario:
             cascade: ['remove','persist']
             inversedBy: null
             mappedBy: scenario
-            orderBy: {'name': 'asc'}
+            orderBy: {'rank': 'asc'}
     lifecycleCallbacks: {  }
