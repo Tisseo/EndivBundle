@@ -34,4 +34,16 @@ class ScenarioManager extends OgiveManager
 
         return $this->save($scenario);
     }
+
+    public function findScenarioByNameLike($term)
+    {
+        $data = $this->repository->createQueryBuilder('s')
+            ->where('lower(s.name) like :term')
+            ->setParameter('term', '%'.strtolower($term).'%')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $this->normalize($data);
+    }
 }
