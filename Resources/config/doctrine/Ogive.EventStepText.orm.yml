@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\EventStepText:
     type: entity
     table: ogive.event_step_text
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventStepTextRepository
     indexes:
         IDX_460E6A36F6E5B733:
             columns:

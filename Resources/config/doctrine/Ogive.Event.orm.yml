@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Event:
     type: entity
     table: ogive.event
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EventRepository
     indexes:
         IDX_18CB994DF4EFF44D:
             columns:

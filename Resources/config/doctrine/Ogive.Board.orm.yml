@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Board:
     type: entity
     table: ogive.board
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\BoardRepository
     id:
         id:
             type: integer

@@ -4,7 +4,7 @@ namespace Tisseo\EndivBundle\Services\Ogive;
 
 class ScenarioStepManager extends OgiveManager
 {
-    public function findByNameLike($term)
+    private function findPatternByNameLike($term)
     {
         $data = $this->repository->createQueryBuilder('s')
             ->where('s.scenario is null and s.scenarioStepParent is null and lower(s.name) like :term')
@@ -12,6 +12,13 @@ class ScenarioStepManager extends OgiveManager
             ->getQuery()
             ->getResult()
         ;
+
+        return $data;
+    }
+
+    public function findScenarioStepParent($term)
+    {
+        $data = $this->findPatternByNameLike($term);
 
         $result = array();
         if (!empty($data)) {
@@ -24,5 +31,12 @@ class ScenarioStepManager extends OgiveManager
         }
 
         return $result;
+    }
+
+    public function findStepForScenario($term)
+    {
+        $data = $this->findPatternByNameLike($term);
+
+        return $this->normalize($data);
     }
 }

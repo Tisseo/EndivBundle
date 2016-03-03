@@ -3,11 +3,13 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Scenario
  */
-class Scenario
+class Scenario extends OgiveEntity
 {
     /**
      * @var integer
@@ -22,13 +24,25 @@ class Scenario
     /**
      * @var guid
      */
-    private $chaosType;
+    private $severityId;
 
     /**
      * @var guid
      */
-    private $chaosCause;
+    private $causeId;
 
+    /**
+     * @var Collection
+     */
+    private $scenarioSteps;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->scenarioSteps = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -64,48 +78,97 @@ class Scenario
     }
 
     /**
-     * Set chaosType
+     * Set severityId
      *
-     * @param guid $chaosType
+     * @param guid $severityId
      * @return Scenario
      */
-    public function setChaosType($chaosType)
+    public function setSeverityId($severityId)
     {
-        $this->chaosType = $chaosType;
+        $this->severityId = $severityId;
 
         return $this;
     }
 
     /**
-     * Get chaosType
+     * Get severityId
      *
      * @return guid 
      */
-    public function getChaosType()
+    public function getSeverityId()
     {
-        return $this->chaosType;
+        return $this->severityId;
     }
 
     /**
-     * Set chaosCause
+     * Set causeId
      *
-     * @param guid $chaosCause
+     * @param guid $causeId
      * @return Scenario
      */
-    public function setChaosCause($chaosCause)
+    public function setCauseId($causeId)
     {
-        $this->chaosCause = $chaosCause;
+        $this->causeId = $causeId;
 
         return $this;
     }
 
     /**
-     * Get chaosCause
+     * Get causeId
      *
      * @return guid 
      */
-    public function getChaosCause()
+    public function getCauseId()
     {
-        return $this->chaosCause;
+        return $this->causeId;
+    }
+
+    /**
+     * Get scenarioSteps
+     *
+     * @return Collection
+     */
+    public function getScenarioSteps()
+    {
+        return $this->scenarioSteps;
+    }
+
+    /**
+     * Set scenarioSteps
+     *
+     * @param Collection $scenarioSteps
+     * @return ScenarioStep
+     */
+    public function setScenarioSteps(Collection $scenarioSteps)
+    {
+        $this->scenarioSteps = $scenarioSteps;
+
+        return $this;
+    }
+
+    /**
+     * Add scenarioStep
+     *
+     * @param ScenarioStep $scenarioStep
+     * @return ScenarioStep
+     */
+    public function addScenarioStep(ScenarioStep $scenarioStep)
+    {
+        $this->scenarioSteps->add($scenarioStep);
+
+        return $this;
+    }
+
+    /**
+     * Remove scenarioStep
+     *
+     * @param ScenarioStep $scenarioStep
+     * @return ScenarioStep
+     */
+    public function removeScenarioStep(ScenarioStep $scenarioStep)
+    {
+        $this->scenarioSteps->removeElement($scenarioStep);
+
+        return $this;
     }
 }

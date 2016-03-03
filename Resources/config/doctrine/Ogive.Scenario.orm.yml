@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Scenario:
     type: entity
     table: ogive.scenario
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ScenarioRepository
     id:
         id:
             type: integer
@@ -18,18 +17,25 @@ Tisseo\EndivBundle\Entity\Ogive\Scenario:
             length: 255
             fixed: false
             comment: ''
-        chaosType:
+        severityId:
             type: guid
             nullable: false
             length: null
             fixed: false
             comment: ''
-            column: chaos_type
-        chaosCause:
+            column: chaos_severity
+        causeId:
             type: guid
             nullable: false
             length: null
             fixed: false
             comment: ''
             column: chaos_cause
+    oneToMany:
+        scenarioSteps:
+            targetEntity: ScenarioStep
+            cascade: ['remove','persist']
+            inversedBy: null
+            mappedBy: scenario
+            orderBy: {'name': 'asc'}
     lifecycleCallbacks: {  }

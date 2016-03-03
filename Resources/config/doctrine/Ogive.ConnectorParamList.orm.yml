@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\ConnectorParamList:
     type: entity
     table: ogive.connector_param_list
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ConnectorParamListRepository
     id:
         id:
             type: integer

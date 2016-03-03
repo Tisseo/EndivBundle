@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\ConnectorParam:
     type: entity
     table: ogive.connector_param
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ConnectorParamRepository
     indexes:
         IDX_850945B42CA2FD66:
             columns:

@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
     type: entity
     table: ogive.scenario_step
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ScenarioStepRepository
     indexes:
         IDX_311CB635D080F7BD:
             columns:
@@ -24,12 +23,12 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
             generator:
                 strategy: SEQUENCE
     fields:
-        stepRank:
+        rank:
             type: integer
             nullable: true
             unsigned: false
             comment: 'Rang de l''étape. Les rangs sont simplement ordonnés ; ils ne se suivent pas forcément.'
-            column: step_rank
+            column: rank
         name:
             type: string
             nullable: false
@@ -58,7 +57,7 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
             targetEntity: Scenario
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: scenarioSteps
             joinColumns:
                 scenario_id:
                     referencedColumnName: id

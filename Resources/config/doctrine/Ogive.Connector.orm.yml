@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\Connector:
     type: entity
     table: ogive.connector
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\ConnectorRepository
     uniqueConstraints:
         connector_name_key:
             columns:

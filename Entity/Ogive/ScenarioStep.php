@@ -20,7 +20,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * @var integer
      */
-    private $stepRank;
+    private $rank;
 
     /**
      * @var string
@@ -77,6 +77,19 @@ class ScenarioStep extends OgiveEntity
     }
 
     /**
+     * Set id
+     *
+     * @param integer $identifier
+     * @return ScenarioStep
+     */
+    public function setId($identifier)
+    {
+        $this->id = $identifier;
+
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -87,26 +100,26 @@ class ScenarioStep extends OgiveEntity
     }
 
     /**
-     * Set stepRank
+     * Set rank
      *
-     * @param integer $stepRank
+     * @param integer $rank
      * @return ScenarioStep
      */
-    public function setStepRank($stepRank)
+    public function setRank($rank)
     {
-        $this->stepRank = $stepRank;
+        $this->rank = $rank;
 
         return $this;
     }
 
     /**
-     * Get stepRank
+     * Get rank
      *
      * @return integer
      */
-    public function getStepRank()
+    public function getRank()
     {
-        return $this->stepRank;
+        return $this->rank;
     }
 
     /**

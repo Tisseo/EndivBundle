@@ -1,7 +1,6 @@
 Tisseo\EndivBundle\Entity\Ogive\EmergencyStatus:
     type: entity
     table: ogive.emergency_status
-    repositoryClass: Tisseo\EndivBundle\Entity\Ogive\EmergencyStatusRepository
     id:
         id:
             type: integer
