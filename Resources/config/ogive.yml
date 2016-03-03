@@ -16,3 +16,5 @@ services:
     tisseo_endiv.ogive.manager.scenario:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: '%tisseo_endiv.ogive.manager.scenario.class%'
+        calls:
+            - [setSerializer, ['@jms_serializer']]

@@ -11,12 +11,21 @@ class ScenarioManager extends OgiveManager
     {
         $this->updateCollection($scenario, 'getScenarioSteps', $originalSteps);
 
-        $parent = null;
+        $parents = $scenario->getScenarioSteps()->filter(
+            function($step) {
+                return $step->getScenarioStepParent() === null;
+            }
+        );
+
         foreach($scenario->getScenarioSteps() as $scenarioStep) {
             if ($scenarioStep->getScenario() === null) {
-                if ($scenarioStep->getScenarioStepParent() === null) {
-                    $parent = $scenarioStep;
-                } else {
+                if ($scenarioStep->getScenarioStepParent() !== null) {
+                    $name = $scenarioStep->getScenarioStepParent()->getName();
+                    $parent = $parents->filter(
+                        function($step) use ($name) {
+                            return $step->getName() === $name;
+                        }
+                    )->first();
                     $scenarioStep->setScenarioStepParent($parent);
                 }
                 $scenarioStep->setScenario($scenario);
@@ -24,5 +33,17 @@ class ScenarioManager extends OgiveManager
         }
 
         return $this->save($scenario);
+    }
+
+    public function findScenarioByNameLike($term)
+    {
+        $data = $this->repository->createQueryBuilder('s')
+            ->where('lower(s.name) like :term')
+            ->setParameter('term', '%'.strtolower($term).'%')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $this->normalize($data);
     }
 }
