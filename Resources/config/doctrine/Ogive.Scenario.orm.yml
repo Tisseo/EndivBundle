@@ -24,13 +24,13 @@ Tisseo\EndivBundle\Entity\Ogive\Scenario:
             fixed: false
             comment: ''
             column: chaos_severity
-        causeId:
-            type: guid
+        internalCause:
+            type: string
             nullable: false
             length: null
             fixed: false
             comment: ''
-            column: chaos_cause
+            column: chaos_internal_cause
     oneToMany:
         scenarioSteps:
             targetEntity: ScenarioStep
