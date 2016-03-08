@@ -27,9 +27,9 @@ class Scenario extends OgiveEntity
     private $severityId;
 
     /**
-     * @var guid
+     * @var string
      */
-    private $causeId;
+    private $internalCause;
 
     /**
      * @var Collection
@@ -101,26 +101,26 @@ class Scenario extends OgiveEntity
     }
 
     /**
-     * Set causeId
+     * Set internalCause
      *
-     * @param guid $causeId
+     * @param guid $internalCause
      * @return Scenario
      */
-    public function setCauseId($causeId)
+    public function setInternalCause($internalCause)
     {
-        $this->causeId = $causeId;
+        $this->internalCause = $internalCause;
 
         return $this;
     }
 
     /**
-     * Get causeId
+     * Get internalCause
      *
      * @return guid 
      */
-    public function getCauseId()
+    public function getInternalCause()
     {
-        return $this->causeId;
+        return $this->internalCause;
     }
 
     /**
