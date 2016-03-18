@@ -33,7 +33,7 @@ Tisseo\EndivBundle\Entity\Ogive\ConnectorParam:
             targetEntity: ConnectorParamList
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: connectorParams
             joinColumns:
                 connector_param_list_id:
                     referencedColumnName: id

@@ -47,7 +47,7 @@ class Scenario extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -70,7 +70,7 @@ class Scenario extends OgiveEntity
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -93,7 +93,7 @@ class Scenario extends OgiveEntity
     /**
      * Get severityId
      *
-     * @return guid 
+     * @return guid
      */
     public function getSeverityId()
     {
@@ -116,7 +116,7 @@ class Scenario extends OgiveEntity
     /**
      * Get internalCause
      *
-     * @return guid 
+     * @return guid
      */
     public function getInternalCause()
     {

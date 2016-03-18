@@ -22,12 +22,20 @@ Tisseo\EndivBundle\Entity\Ogive\ConnectorParamList:
             nullable: true
             unsigned: false
             comment: 'Valeur numérique permettant de trier les listes pour faciliter l''affichage.'
+    oneToMany:
+        connectorParams:
+            targetEntity: ConnectorParam
+            cascade: ['remove', 'persist']
+            inversedBy: null
+            mappedBy: connectorParamList
     manyToMany:
-        includedConnectorParamList:
+        ownerCpls:
             targetEntity: ConnectorParamList
-            cascade: {  }
-            mappedBy: null
-            inversedBy: connectorParamList
+            mappedBy: includedCpls
+        includedCpls:
+            targetEntity: ConnectorParamList
+            inversedBy: ownerCpls
+            cascade: ['persist']
             joinTable:
                 name: ogive.included_connector_param_list
                 joinColumns:
