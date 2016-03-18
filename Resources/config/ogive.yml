@@ -1,20 +1,20 @@
-parameters:
-    tisseo_endiv.ogive.manager.ogive.class: Tisseo\EndivBundle\Services\Ogive\OgiveManager
-    tisseo_endiv.ogive.manager.scenario_step.class: Tisseo\EndivBundle\Services\Ogive\ScenarioStepManager
-    tisseo_endiv.ogive.manager.scenario.class: Tisseo\EndivBundle\Services\Ogive\ScenarioManager
-
 services:
     tisseo_endiv.ogive.manager.ogive:
         abstract: true
-        class: '%tisseo_endiv.ogive.manager.ogive.class%'
+        class: 'Tisseo\EndivBundle\Services\Ogive\OgiveManager'
         arguments: ['@doctrine.orm.endiv_entity_manager']
     tisseo_endiv.ogive.manager.scenario_step:
         parent: 'tisseo_endiv.ogive.manager.ogive'
-        class: '%tisseo_endiv.ogive.manager.scenario_step.class%'
+        class: 'Tisseo\EndivBundle\Services\Ogive\ScenarioStepManager'
         calls:
             - [setSerializer, ['@jms_serializer']]
     tisseo_endiv.ogive.manager.scenario:
         parent: 'tisseo_endiv.ogive.manager.ogive'
-        class: '%tisseo_endiv.ogive.manager.scenario.class%'
+        class: 'Tisseo\EndivBundle\Services\Ogive\ScenarioManager'
+        calls:
+            - [setSerializer, ['@jms_serializer']]
+    tisseo_endiv.ogive.manager.connector_param_list:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\ConnectorParamListManager'
         calls:
             - [setSerializer, ['@jms_serializer']]

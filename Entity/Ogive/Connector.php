@@ -33,7 +33,7 @@ class Connector
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class Connector
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -79,7 +79,7 @@ class Connector
     /**
      * Get connectorType
      *
-     * @return string 
+     * @return string
      */
     public function getConnectorType()
     {
@@ -102,7 +102,7 @@ class Connector
     /**
      * Get details
      *
-     * @return string 
+     * @return string
      */
     public function getDetails()
     {

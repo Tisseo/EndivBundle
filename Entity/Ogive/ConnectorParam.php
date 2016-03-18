@@ -29,11 +29,23 @@ class ConnectorParam
      */
     private $connectorParamList;
 
+    /**
+     * Set id
+     *
+     * @param integer $identifier
+     * @return ScenarioStep
+     */
+    public function setId($identifier)
+    {
+        $this->id = $identifier;
+
+        return $this;
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +68,7 @@ class ConnectorParam
     /**
      * Get paramType
      *
-     * @return string 
+     * @return string
      */
     public function getParamType()
     {
@@ -79,7 +91,7 @@ class ConnectorParam
     /**
      * Get param
      *
-     * @return string 
+     * @return string
      */
     public function getParam()
     {
@@ -102,7 +114,7 @@ class ConnectorParam
     /**
      * Get connectorParamList
      *
-     * @return ConnectorParamList 
+     * @return ConnectorParamList
      */
     public function getConnectorParamList()
     {

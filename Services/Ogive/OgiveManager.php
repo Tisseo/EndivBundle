@@ -16,9 +16,9 @@ abstract class OgiveManager
     protected $objectManager = null;
 
     /**
-     * @var EntityRepository
+     * @var entityClass
      */
-    protected $repository = null;
+    protected $entityClass = null;
 
     /**
      * @var Serializer
@@ -33,9 +33,7 @@ abstract class OgiveManager
     public function __construct(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
-        $entityClassName = $this->resolveEntityClassName();
-        $this->repository = $objectManager
-            ->getRepository(sprintf('TisseoEndivBundle:Ogive\%s', $entityClassName));
+        $this->entityClass = sprintf('TisseoEndivBundle:Ogive\%s', $this->resolveEntityClassName());
     }
 
     /**
@@ -45,7 +43,7 @@ abstract class OgiveManager
      */
     public function getRepository()
     {
-        return $this->repository;
+        return $this->objectManager->getRepository($this->entityClass);
     }
 
     /**
@@ -74,6 +72,29 @@ abstract class OgiveManager
     }
 
     /**
+     * FindByLike
+     *
+     * @param string $property
+     * @param string $term
+     * @return mixed
+     */
+    public function findByLike($property, $term)
+    {
+        if (!$this->objectManager->getClassMetadata($this->entityClass)->hasField($property)) {
+            throw new Exception("This property isn't mapped for this entity");
+        }
+
+        $data = $this->getRepository()->createQueryBuilder('o')
+            ->where(sprintf('lower(o.%s) like :term', $property))
+            ->setParameter('term', '%'.strtolower($term).'%')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $this->normalize($data);
+    }
+
+    /**
      * Save the entity in database
      * 
      * @param OgiveEntity $entity
@@ -96,7 +117,7 @@ abstract class OgiveManager
      */
     public function remove($identifier)
     {
-        $entity = $this->repository->find($identifier);
+        $entity = $this->getRepository()->find($identifier);
 
         if (empty($entity)) {
             throw new Exception(sprintf('The entity %s was not found', $identifier));

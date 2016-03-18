@@ -3,11 +3,13 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * ConnectorParamList
  */
-class ConnectorParamList
+class ConnectorParamList extends OgiveEntity
 {
     /**
      * @var integer
@@ -25,22 +27,47 @@ class ConnectorParamList
     private $sort;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $includedConnectorParamList;
+    private $ownerCpls;
+
+    /**
+     * @var Collection
+     */
+    private $includedCpls;
+
+    /**
+     * @var Collection
+     */
+    private $connectorParams;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->includedConnectorParamList = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->includedCpls = new ArrayCollection();
+        $this->ownerCpls = new ArrayCollection();
+        $this->connectorParams = new ArrayCollection();
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $identifier
+     * @return ScenarioStep
+     */
+    public function setId($identifier)
+    {
+        $this->id = $identifier;
+
+        return $this;
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +90,7 @@ class ConnectorParamList
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -86,7 +113,7 @@ class ConnectorParamList
     /**
      * Get sort
      *
-     * @return integer 
+     * @return integer
      */
     public function getSort()
     {
@@ -94,35 +121,148 @@ class ConnectorParamList
     }
 
     /**
-     * Add includedConnectorParamList
+     * Add includedCpl
      *
-     * @param ConnectorParamList $includedConnectorParamList
+     * @param ConnectorParamList $connectorParamList
      * @return ConnectorParamList
      */
-    public function addIncludedConnectorParamList(ConnectorParamList $includedConnectorParamList)
+    public function addIncludedCpl(ConnectorParamList $connectorParamList)
     {
-        $this->includedConnectorParamList[] = $includedConnectorParamList;
+        $this->includedCpls->add($connectorParamList);
 
         return $this;
     }
 
     /**
-     * Remove includedConnectorParamList
+     * Remove includedCpl
      *
-     * @param ConnectorParamList $includedConnectorParamList
+     * @param ConnectorParamList $connectorParamList
+     * @return ConnectorParamList
      */
-    public function removeIncludedConnectorParamList(ConnectorParamList $includedConnectorParamList)
+    public function removeIncludedCpl(ConnectorParamList $connectorParamList)
     {
-        $this->includedConnectorParamList->removeElement($includedConnectorParamList);
+        $this->includedCpls->removeElement($connectorParamList);
+
+        return $this;
     }
 
     /**
-     * Get includedConnectorParamList
+     * Set includedCpls
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ConnectorParamList
      */
-    public function getIncludedConnectorParamList()
+    public function setIncludedCpls(Collection $includedCpls)
     {
-        return $this->includedConnectorParamList;
+        $this->includedCpls = $includedCpls;
+
+        return $this;
+    }
+
+    /**
+     * Get includedCpls
+     *
+     * @return Collection
+     */
+    public function getIncludedCpls()
+    {
+        return $this->includedCpls;
+    }
+
+    /**
+     * Add ownerCpl
+     *
+     * @param ConnectorParamList $connectorParamList
+     * @return ConnectorParamList
+     */
+    public function addOwnerCpl(ConnectorParamList $connectorParamList)
+    {
+        $this->ownerCpls->add($connectorParamList);
+
+        return $this;
+    }
+
+    /**
+     * Remove ownerCpl
+     *
+     * @param ConnectorParamList $connectorParamList
+     * @return ConnectorParamList
+     */
+    public function removeOwnerCpl(ConnectorParamList $connectorParamList)
+    {
+        $this->ownerCpls->removeElement($connectorParamList);
+
+        return $this;
+    }
+
+    /**
+     * Set ownerCpls
+     *
+     * @return ConnectorParamList
+     */
+    public function setOwnerCpls(Collection $ownerCpls)
+    {
+        $this->ownerCpls = $ownerCpls;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerCpls
+     *
+     * @return Collection
+     */
+    public function getOwnerCpls()
+    {
+        return $this->ownerCpls;
+    }
+
+    /**
+     * Get connectorParams
+     *
+     * @return Collection
+     */
+    public function getConnectorParams()
+    {
+        return $this->connectorParams;
+    }
+
+    /**
+     * Set connectorParams
+     *
+     * @param Collection connectorParams
+     * @return ConnectorParamList
+     */
+    public function setConnectorParams($connectorParams)
+    {
+        $this->connectorParams = $connectorParams;
+
+        return $this;
+    }
+
+    /**
+     * Add connectorParam
+     *
+     * @param ConnectorParam $connectorParam
+     * @return ConnectorParamList
+     */
+    public function addConnectorParam(ConnectorParam $connectorParam)
+    {
+        $this->connectorParams->add($connectorParam);
+        $connectorParam->setConnectorParamList($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove connectorParam
+     *
+     * @param ConnectorParam $connectorParam
+     * @return ConnectorParamList
+     */
+    public function removeConnectorParam(ConnectorParam $connectorParam)
+    {
+        $this->connectorParams->removeElement($connectorParam);
+
+        return $this;
     }
 }

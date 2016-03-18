@@ -6,7 +6,7 @@ class ScenarioStepManager extends OgiveManager
 {
     private function findPatternByNameLike($term)
     {
-        $data = $this->repository->createQueryBuilder('s')
+        $data = $this->getRepository()->createQueryBuilder('s')
             ->where('s.scenario is null and s.scenarioStepParent is null and lower(s.name) like :term')
             ->setParameter('term', '%'.strtolower($term).'%')
             ->getQuery()
