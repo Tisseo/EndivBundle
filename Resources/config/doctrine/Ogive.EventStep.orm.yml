@@ -67,7 +67,7 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             targetEntity: ConnectorParamList
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: eventSteps
             joinColumns:
                 connector_param_list_id:
                     referencedColumnName: id
