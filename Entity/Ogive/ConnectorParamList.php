@@ -42,6 +42,16 @@ class ConnectorParamList extends OgiveEntity
     private $connectorParams;
 
     /**
+     * @var Collection
+     */
+    private $scenarioSteps;
+
+    /**
+     * @var Collection
+     */
+    private $eventSteps;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -49,6 +59,8 @@ class ConnectorParamList extends OgiveEntity
         $this->includedCpls = new ArrayCollection();
         $this->ownerCpls = new ArrayCollection();
         $this->connectorParams = new ArrayCollection();
+        $this->scenarioSteps = new ArrayCollection();
+        $this->eventSteps = new ArrayCollection();
     }
 
     /**
@@ -264,5 +276,65 @@ class ConnectorParamList extends OgiveEntity
         $this->connectorParams->removeElement($connectorParam);
 
         return $this;
+    }
+
+    /**
+     * Get scenarioSteps
+     *
+     * @return Collection
+     */
+    public function getScenarioSteps()
+    {
+        return $this->scenarioSteps;
+    }
+
+    /**
+     * Set scenarioSteps
+     *
+     * @param Collection $scenarioSteps
+     * @return ConnectorParamList
+     */
+    public function setScenarioSteps(Collection $scenarioSteps)
+    {
+        $this->scenarioSteps = $scenarioSteps;
+
+        return $this;
+    }
+
+    /**
+     * Get eventSteps
+     *
+     * @return Collection $eventSteps
+     */
+    public function getEventSteps()
+    {
+        return $this->eventSteps;
+    }
+
+    /**
+     * Set eventSteps
+     *
+     * @param Collection eventSteps
+     * @return ConnectorParamList
+     */
+    public function setEventSteps(Collection $eventSteps)
+    {
+        $this->eventSteps = $eventSteps;
+
+        return $this;
+    }
+
+    /**
+     * isLinked
+     *
+     * @return boolean
+     */
+    public function isLinked()
+    {
+        if ($this->eventSteps->isEmpty() && $this->scenarioSteps->isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 }

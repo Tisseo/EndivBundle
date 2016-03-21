@@ -26,7 +26,12 @@ Tisseo\EndivBundle\Entity\Ogive\ConnectorParamList:
         connectorParams:
             targetEntity: ConnectorParam
             cascade: ['remove', 'persist']
-            inversedBy: null
+            mappedBy: connectorParamList
+        scenarioSteps:
+            targetEntity: ScenarioStep
+            mappedBy: connectorParamList
+        eventSteps:
+            targetEntity: EventStep
             mappedBy: connectorParamList
     manyToMany:
         ownerCpls:
