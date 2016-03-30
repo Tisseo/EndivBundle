@@ -36,7 +36,7 @@ class LineManager extends SortManager
             ->where('ds.id = :datasourceId')
         ->setParameter('datasourceId', $dataSourceId);
 
-        return $query->getQuery()->getResult();
+        return $this->sortLinesByNumber($query->getQuery()->getResult());
     }
 
 
