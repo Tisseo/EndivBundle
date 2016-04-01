@@ -120,7 +120,7 @@ abstract class OgiveManager
         $entity = $this->getRepository()->find($identifier);
 
         if (empty($entity)) {
-            throw new Exception(sprintf('The entity %s was not found', $identifier));
+            throw new Exception("The entity {$identifier} was not found");
         }
 
         $this->objectManager->remove($entity);
