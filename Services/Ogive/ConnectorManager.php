@@ -2,6 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-class ConnectorParamListManager extends OgiveManager
+class ConnectorManager extends OgiveManager
 {
 }

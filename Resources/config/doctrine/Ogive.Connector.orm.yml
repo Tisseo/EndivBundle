@@ -21,14 +21,20 @@ Tisseo\EndivBundle\Entity\Ogive\Connector:
             length: 255
             fixed: false
             comment: ''
-        connectorType:
+        type:
             type: text
             nullable: false
-            column: connector_type
         details:
             type: string
             nullable: false
             length: 255
             fixed: false
             comment: ''
+    oneToMany:
+        scenarioSteps:
+            targetEntity: ScenarioStep
+            mappedBy: connector
+        eventSteps:
+            targetEntity: EventStep
+            mappedBy: connector
     lifecycleCallbacks: {  }
