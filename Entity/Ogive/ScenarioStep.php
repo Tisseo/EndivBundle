@@ -185,11 +185,21 @@ class ScenarioStep extends OgiveEntity
     }
 
     /**
-     * Get mandatory
+     * Is mandatory
      *
      * @return boolean
      */
     public function isMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    /**
+     * Get mandatory
+     *
+     * @return boolean
+     */
+    public function getMandatory()
     {
         return $this->mandatory;
     }
