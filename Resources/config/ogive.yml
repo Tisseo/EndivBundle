@@ -21,3 +21,6 @@ services:
     tisseo_endiv.ogive.manager.connector:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\ConnectorManager'
+    tisseo_endiv.ogive.manager.text:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\TextManager'

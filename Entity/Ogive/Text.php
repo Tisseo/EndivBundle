@@ -3,11 +3,13 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Text
  */
-class Text
+class Text extends OgiveEntity
 {
     /**
      * @var integer
@@ -25,7 +27,7 @@ class Text
     private $text;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $scenarioStep;
 
@@ -34,13 +36,13 @@ class Text
      */
     public function __construct()
     {
-        $this->scenarioStep = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->scenarioStep = new ArrayCollection();
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +65,7 @@ class Text
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
@@ -86,7 +88,7 @@ class Text
     /**
      * Get text
      *
-     * @return string 
+     * @return string
      */
     public function getText()
     {
@@ -119,7 +121,7 @@ class Text
     /**
      * Get scenarioStep
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getScenarioStep()
     {
