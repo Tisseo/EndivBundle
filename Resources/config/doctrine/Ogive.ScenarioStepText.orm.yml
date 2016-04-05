@@ -1,0 +1,39 @@
+Tisseo\EndivBundle\Entity\Ogive\ScenarioStepText:
+    type: entity
+    table: ogive.scenario_step_text
+    indexes:
+        scenario_step_text_pkey:
+            columns:
+                - scenario_step_id
+                - text_id
+    id:
+        scenarioStep:
+            associationKey: true
+        text:
+            associationKey: true
+    fields:
+        label:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: 'Nom du texte dans l''étape, par exemple titre, corps, sous-titre, ligne3...'
+        rank:
+            type: integer
+            nullable: false
+    manyToOne:
+        scenarioStep:
+            targetEntity: ScenarioStep
+            cascade: {  }
+            inversedBy: scenarioStepTexts
+            joinColumns:
+                scenario_step_id:
+                    referencedColumnName: id
+        text:
+            targetEntity: Text
+            cascade: {  }
+            inversedBy: scenarioStepTexts
+            joinColumns:
+                text_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

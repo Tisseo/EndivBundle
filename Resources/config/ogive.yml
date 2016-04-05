@@ -24,3 +24,5 @@ services:
     tisseo_endiv.ogive.manager.text:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\TextManager'
+        calls:
+            - [setSerializer, ['@jms_serializer']]

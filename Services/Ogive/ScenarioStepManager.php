@@ -6,6 +6,13 @@ use Tisseo\EndivBundle\Entity\Ogive\ScenarioStep;
 
 class ScenarioStepManager extends OgiveManager
 {
+    public function manage(ScenarioStep $scenarioStep, array $originalTexts)
+    {
+        $this->updateCollection($scenarioStep, 'getScenarioStepTexts', $originalTexts);
+
+        return $this->save($scenarioStep);
+    }
+
     public function reapply(ScenarioStep $scenarioStep)
     {
         $scenarioSteps = $this->getRepository()->createQueryBuilder('s')
@@ -27,6 +34,41 @@ class ScenarioStepManager extends OgiveManager
 
         foreach ($scenarioSteps as $step) {
             $step->merge($scenarioStep, $mapper, false);
+
+            // entity merge can't handle collection well, so there is the ugly code to do it
+            $scenarioStepTexts = $step->cloneCollection($scenarioStep->getScenarioStepTexts());
+
+            foreach ($step->getScenarioStepTexts() as $scenarioStepText) {
+                $scenarioStepTextId = $scenarioStepText->getId();
+
+                $delStep = array_filter(
+                    $scenarioStepTexts->toArray(),
+                    function ($clonedStepText) use ($scenarioStepTextId) {
+                        return $clonedStepText->getId() === $scenarioStepTextId;
+                    }
+                );
+
+                if (empty($delStep)) {
+                    $step->removeScenarioStepText($scenarioStepText);
+                    $this->objectManager->remove($scenarioStepText);
+                }
+            }
+
+            foreach ($scenarioStepTexts as $clonedStepText) {
+                $clonedStepTextId = $clonedStepText->getId();
+
+                $addStep = array_filter(
+                    $step->getScenarioStepTexts()->toArray(),
+                    function ($stepText) use ($clonedStepTextId) {
+                        return $stepText->getId() === $clonedStepTextId;
+                    }
+                );
+
+                if (empty($addStep)) {
+                    $step->addScenarioStepText($clonedStepText);
+                }
+            }
+
             $this->objectManager->persist($step);
         }
 

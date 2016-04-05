@@ -2,13 +2,16 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
+use Doctrine\Common\Collections\Collection;
+use ReflectionClass;
+
 class OgiveEntity
 {
     /**
      * Merge
      *
      * Merge two entities of the same class using a mapper or all the properties
-     * of the merged object.
+     * of the merged object. Doesn't work with relations (have to be managed by em)
      *
      * @param OgiveEntity $entity
      * @param array $mapper
@@ -30,15 +33,36 @@ class OgiveEntity
                 }
             }
         } else {
-            $reflect = new \ReflectionClass($entity);
+            $reflect = new ReflectionClass($entity);
             foreach ($reflect->getProperties() as $property) {
                 if (!$withId && $property->getName() === 'id') {
                     continue;
                 }
+
                 $setter = 'set' . ucfirst($property->getName());
                 $getter = 'get' . ucfirst($property->getName());
+
+                if ($entity->$getter() instanceof Collection) {
+                    continue;
+                }
+
                 $this->$setter($entity->$getter());
             }
         }
+    }
+
+    public function cloneCollection($collection)
+    {
+        $newCollection = new ArrayCollection();
+
+        foreach ($collection as $subEntity) {
+            $newSubEntity = clone $subEntity;
+            $reflect = new ReflectionClass($this);
+            $setter = 'set' . ucfirst($reflect->getShortName());
+            $newSubEntity->$setter($this);
+            $newCollection->add($newSubEntity);
+        }
+
+        return $newCollection;
     }
 }

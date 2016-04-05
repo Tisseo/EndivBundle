@@ -29,14 +29,14 @@ class Text extends OgiveEntity
     /**
      * @var Collection
      */
-    private $scenarioStep;
+    private $scenarioStepTexts;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->scenarioStep = new ArrayCollection();
+        $this->scenarioStepTexts = new ArrayCollection();
     }
 
     /**
@@ -96,35 +96,51 @@ class Text extends OgiveEntity
     }
 
     /**
-     * Add scenarioStep
+     * Get scenarioStepTexts
      *
-     * @param ScenarioStep $scenarioStep
-     * @return Text
+     * @return Collection
      */
-    public function addScenarioStep(ScenarioStep $scenarioStep)
+    public function getScenarioStepTexts()
     {
-        $this->scenarioStep[] = $scenarioStep;
+        return $this->scenarioStepTexts;
+    }
+
+    /**
+     * Set scenarioStepTexts
+     *
+     * @param Collection $scenarioStepTexts
+     * @return ScenarioStep
+     */
+    public function setScenarioStepTexts(Collection $scenarioStepTexts)
+    {
+        $this->scenarioStepTexts = $scenarioStepTexts;
 
         return $this;
     }
 
     /**
-     * Remove scenarioStep
+     * Add scenarioStepText
      *
-     * @param ScenarioStep $scenarioStep
+     * @param ScenarioStep $scenarioStepText
+     * @return ScenarioStep
      */
-    public function removeScenarioStep(ScenarioStep $scenarioStep)
+    public function addScenarioStepText(ScenarioStepText $scenarioStepText)
     {
-        $this->scenarioStep->removeElement($scenarioStep);
+        $this->scenarioStepTexts->add($scenarioStepText);
+
+        return $this;
     }
 
     /**
-     * Get scenarioStep
+     * Remove scenarioStepText
      *
-     * @return Collection
+     * @param ScenarioStepText $scenarioStepText
+     * @return ScenarioStep
      */
-    public function getScenarioStep()
+    public function removeScenarioStepText(ScenarioStepText $scenarioStepText)
     {
-        return $this->scenarioStep;
+        $this->scenarioStepTexts->removeElement($scenarioStepText);
+
+        return $this;
     }
 }
