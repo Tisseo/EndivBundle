@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use ReflectionClass;
 
 class OgiveEntity
