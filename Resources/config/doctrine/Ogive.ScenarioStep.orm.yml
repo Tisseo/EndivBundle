@@ -80,24 +80,11 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
                 connector_param_list_id:
                     referencedColumnName: id
             orphanRemoval: false
-    manyToMany:
-        text:
-            targetEntity: Text
-            cascade: {  }
-            mappedBy: null
-            inversedBy: scenarioStep
-            joinTable:
-                name: ogive.scenario_step_text
-                joinColumns:
-                    -
-                        name: scenario_step_id
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    -
-                        name: text_id
-                        referencedColumnName: id
-            orderBy: null
     oneToMany:
+        scenarioStepTexts:
+            targetEntity: ScenarioStepText
+            cascade: ['persist']
+            mappedBy: scenarioStep
         scenarioSteps:
             targetEntity: ScenarioStep
             cascade: [remove]

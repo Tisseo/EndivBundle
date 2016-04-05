@@ -65,14 +65,14 @@ class ScenarioStep extends OgiveEntity
     /**
      * @var Collection
      */
-    private $text;
+    private $scenarioStepTexts;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->text = new ArrayCollection();
+        $this->scenarioStepTexts = new ArrayCollection();
         $this->scenarioSteps = new ArrayCollection();
     }
 
@@ -297,39 +297,6 @@ class ScenarioStep extends OgiveEntity
     }
 
     /**
-     * Add text
-     *
-     * @param Text $text
-     * @return ScenarioStep
-     */
-    public function addText(Text $text)
-    {
-        $this->text->add($text);
-
-        return $this;
-    }
-
-    /**
-     * Remove text
-     *
-     * @param Text $text
-     */
-    public function removeText(Text $text)
-    {
-        $this->text->removeElement($text);
-    }
-
-    /**
-     * Get text
-     *
-     * @return Collection
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
      * Get scenarioSteps
      *
      * @return Collection
@@ -374,6 +341,55 @@ class ScenarioStep extends OgiveEntity
     public function removeScenarioStep(ScenarioStep $scenarioStep)
     {
         $this->scenarioSteps->removeElement($scenarioStep);
+
+        return $this;
+    }
+
+    /**
+     * Get scenarioStepTexts
+     *
+     * @return Collection
+     */
+    public function getScenarioStepTexts()
+    {
+        return $this->scenarioStepTexts;
+    }
+
+    /**
+     * Set scenarioStepTexts
+     *
+     * @param Collection $scenarioStepTexts
+     * @return ScenarioStep
+     */
+    public function setScenarioStepTexts(Collection $scenarioStepTexts)
+    {
+        $this->scenarioStepTexts = $scenarioStepTexts;
+
+        return $this;
+    }
+
+    /**
+     * Add scenarioStepText
+     *
+     * @param ScenarioStep $scenarioStepText
+     * @return ScenarioStep
+     */
+    public function addScenarioStepText(ScenarioStepText $scenarioStepText)
+    {
+        $this->scenarioStepTexts->add($scenarioStepText);
+
+        return $this;
+    }
+
+    /**
+     * Remove scenarioStepText
+     *
+     * @param ScenarioStepText $scenarioStepText
+     * @return ScenarioStep
+     */
+    public function removeScenarioStepText(ScenarioStepText $scenarioStepText)
+    {
+        $this->scenarioStepTexts->removeElement($scenarioStepText);
 
         return $this;
     }

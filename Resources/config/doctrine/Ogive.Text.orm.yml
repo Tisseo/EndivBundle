@@ -27,12 +27,9 @@ Tisseo\EndivBundle\Entity\Ogive\Text:
             length: null
             fixed: false
             comment: 'Texte non interprété, peut contenir des variables et fonctions.'
-    manyToMany:
-        scenarioStep:
-            targetEntity: ScenarioStep
+    oneToMany:
+        scenarioStepTexts:
+            targetEntity: ScenarioStepText
             cascade: {  }
             mappedBy: text
-            inversedBy: null
-            joinTable: null
-            orderBy: null
     lifecycleCallbacks: {  }

@@ -147,7 +147,7 @@ abstract class OgiveManager
     {
         foreach($entity->$accessor() as $childEntity) {
             foreach($collection as $key => $toDelete) {
-                if ($toDelete->getid() === $childEntity->getId()) {
+                if ($toDelete->getId() === $childEntity->getId()) {
                     unset($collection[$key]);
                 }
             }
