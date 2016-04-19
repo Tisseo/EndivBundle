@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Object
  */
-class Object
+class Object extends OgiveEntity
 {
     /**
      * @var integer
@@ -40,7 +40,7 @@ class Object
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +63,7 @@ class Object
     /**
      * Get objectType
      *
-     * @return string 
+     * @return string
      */
     public function getObjectType()
     {
@@ -86,7 +86,7 @@ class Object
     /**
      * Get objectRef
      *
-     * @return string 
+     * @return string
      */
     public function getObjectRef()
     {
@@ -119,7 +119,7 @@ class Object
     /**
      * Get groupObject
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getGroupObject()
     {

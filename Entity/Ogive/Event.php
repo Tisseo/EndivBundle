@@ -7,8 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Event
  */
-class Event
+class Event extends OgiveEntity
 {
+    const STATUS_OPEN = 1;
+    
+    const STATUS_CLOSED = 2;
+    
+    const STATUS_REJECTED = 3;
+    
     /**
      * @var integer
      */
@@ -17,12 +23,12 @@ class Event
     /**
      * @var guid
      */
-    private $chaosType;
+    private $chaosSeverity;
 
     /**
-     * @var guid
+     * @var string
      */
-    private $chaosCause;
+    private $chaosInternalCause;
 
     /**
      * @var integer
@@ -37,7 +43,7 @@ class Event
     /**
      * @var guid
      */
-    private $trafficReportId;
+    private $chaosDisruptionId;
 
     /**
      * @var string
@@ -66,95 +72,72 @@ class Event
     }
 
     /**
-     * Set chaosType
+     * Set chaosSeverity
      *
-     * @param guid $chaosType
+     * @param guid $chaosSeverity
      * @return Event
      */
-    public function setChaosType($chaosType)
+    public function setChaosSeverity($chaosSeverity)
     {
-        $this->chaosType = $chaosType;
+        $this->chaosSeverity = $chaosSeverity;
 
         return $this;
     }
 
     /**
-     * Get chaosType
+     * Get chaosSeverity
      *
      * @return guid 
      */
-    public function getChaosType()
+    public function getChaosSeverity()
     {
-        return $this->chaosType;
+        return $this->chaosSeverity;
     }
 
     /**
-     * Set chaosCause
+     * Set chaosInternalCause
      *
-     * @param guid $chaosCause
+     * @param string $chaosInternalCause
      * @return Event
      */
-    public function setChaosCause($chaosCause)
+    public function setChaosInternalCause($chaosInternalCause)
     {
-        $this->chaosCause = $chaosCause;
+        $this->chaosInternalCause = $chaosInternalCause;
 
         return $this;
     }
 
     /**
-     * Get chaosCause
+     * Get chaosInternalCause
+     *
+     * @return string 
+     */
+    public function getChaosInternalCause()
+    {
+        return $this->chaosInternalCause;
+    }
+
+    /**
+     * Set chaosDisruptionId
+     *
+     * @param guid $chaosDisruptionId
+     * @return Event
+     */
+    public function setChaosDisruptionId($chaosDisruptionId)
+    {
+        $this->chaosDisruptionId = $chaosDisruptionId;
+
+        return $this;
+    }
+
+    /**
+     * Get chaosDisruptionId
      *
      * @return guid 
      */
-    public function getChaosCause()
+    public function getChaosDisruptionId()
     {
-        return $this->chaosCause;
-    }
-
-    /**
-     * Set eventStatusId
-     *
-     * @param integer $eventStatusId
-     * @return Event
-     */
-    public function setEventStatusId($eventStatusId)
-    {
-        $this->eventStatusId = $eventStatusId;
-
-        return $this;
-    }
-
-    /**
-     * Get eventStatusId
-     *
-     * @return integer 
-     */
-    public function getEventStatusId()
-    {
-        return $this->eventStatusId;
-    }
-
-    /**
-     * Set trafficReportId
-     *
-     * @param guid $trafficReportId
-     * @return Event
-     */
-    public function setTrafficReportId($trafficReportId)
-    {
-        $this->trafficReportId = $trafficReportId;
-
-        return $this;
-    }
-
-    /**
-     * Get trafficReportId
-     *
-     * @return guid 
-     */
-    public function getTrafficReportId()
-    {
-        return $this->trafficReportId;
+        return $this->chaosDisruptionId;
     }
 
     /**

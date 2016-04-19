@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EventObject
  */
-class EventObject
+class EventObject extends OgiveEntity
 {
     /**
      * @var integer
@@ -27,13 +27,13 @@ class EventObject
     /**
      * @var Object
      */
-    private $objects;
+    private $object;
 
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class EventObject
     /**
      * Get event
      *
-     * @return Event 
+     * @return Event
      */
     public function getEvent()
     {
@@ -79,7 +79,7 @@ class EventObject
     /**
      * Get emergencyStatus
      *
-     * @return EmergencyStatus 
+     * @return EmergencyStatus
      */
     public function getEmergencyStatus()
     {
@@ -87,25 +87,25 @@ class EventObject
     }
 
     /**
-     * Set objects
+     * Set object
      *
-     * @param Object $objects
+     * @param Object $object
      * @return EventObject
      */
-    public function setObject(Object $objects = null)
+    public function setObject(Object $object = null)
     {
-        $this->objects = $objects;
+        $this->object = $object;
 
         return $this;
     }
 
     /**
-     * Get objects
+     * Get object
      *
-     * @return Object 
+     * @return Object
      */
     public function getObject()
     {
-        return $this->objects;
+        return $this->object;
     }
 }

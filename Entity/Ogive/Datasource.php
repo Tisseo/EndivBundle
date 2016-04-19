@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Datasource
  */
-class Datasource
+class Datasource extends OgiveEntity
 {
     /**
      * @var integer
@@ -28,7 +28,7 @@ class Datasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class Datasource
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -74,7 +74,7 @@ class Datasource
     /**
      * Get isEditable
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsEditable()
     {

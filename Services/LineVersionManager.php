@@ -175,6 +175,23 @@ class LineVersionManager extends SortManager
         return $result;
     }
 
+    /**
+     * Get active line version by line number
+     */
+    public function findActiveLineVersionByLineNumber($lineNumber)
+    {
+        $query = $this->om->createQuery("
+            SELECT lv.id FROM Tisseo\EndivBundle\Entity\LineVersion lv
+            JOIN lv.line line
+            WHERE line.number = ?1
+        	   AND (lv.endDate is null OR lv.endDate > CURRENT_TIMESTAMP())
+        	   AND lv.startDate <= CURRENT_TIMESTAMP()");
+
+        $query->setParameter(1, $lineNumber);
+
+        return $query->getResult();
+    }
+
     /*
      * findUnlinkedGridMaskTypes
      * @param LineVersion $lineVersion

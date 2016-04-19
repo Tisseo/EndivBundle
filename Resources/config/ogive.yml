@@ -26,3 +26,25 @@ services:
         class: 'Tisseo\EndivBundle\Services\Ogive\TextManager'
         calls:
             - [setSerializer, ['@jms_serializer']]
+    tisseo_endiv.ogive.manager.event:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\EventManager'
+    tisseo_endiv.ogive.manager.event_step:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\EventStepManager'
+    tisseo_endiv.ogive.manager.period:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\PeriodManager'
+    tisseo_endiv.ogive.manager.event_object:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\EventObjectManager'
+    tisseo_endiv.ogive.manager.object:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\ObjectManager'
+    tisseo_endiv.ogive.manager.event_datasource:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\EventDatasourceManager'
+    tisseo_endiv.ogive.manager.datasource:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\DatasourceManager'
+
