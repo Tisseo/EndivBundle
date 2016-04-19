@@ -10,7 +10,7 @@ Tisseo\EndivBundle\Entity\Ogive\EventObject:
                 - emergency_status
         IDX_2525FB694BEE6933:
             columns:
-                - objects_id
+                - object_id
     id:
         id:
             type: integer
@@ -39,13 +39,13 @@ Tisseo\EndivBundle\Entity\Ogive\EventObject:
                 emergency_status:
                     referencedColumnName: id
             orphanRemoval: false
-        objects:
+        object:
             targetEntity: Object
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                objects_id:
+                object_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

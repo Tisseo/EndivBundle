@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Period
  */
-class Period
+class Period extends OgiveEntity
 {
     /**
      * @var integer
@@ -53,7 +53,7 @@ class Period
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -76,7 +76,7 @@ class Period
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -99,7 +99,7 @@ class Period
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -122,7 +122,7 @@ class Period
     /**
      * Get startTime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartTime()
     {
@@ -145,7 +145,7 @@ class Period
     /**
      * Get endTime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndTime()
     {
@@ -168,7 +168,7 @@ class Period
     /**
      * Get isRecursive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsRecursive()
     {
@@ -191,7 +191,7 @@ class Period
     /**
      * Get dayPattern
      *
-     * @return string 
+     * @return string
      */
     public function getDayPattern()
     {
@@ -214,7 +214,7 @@ class Period
     /**
      * Get event
      *
-     * @return Event 
+     * @return Event
      */
     public function getEvent()
     {

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EventDatasource
  */
-class EventDatasource
+class EventDatasource extends OgiveEntity
 {
     /**
      * @var integer
@@ -33,7 +33,7 @@ class EventDatasource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class EventDatasource
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -79,7 +79,7 @@ class EventDatasource
     /**
      * Get event
      *
-     * @return Event 
+     * @return Event
      */
     public function getEvent()
     {
@@ -102,7 +102,7 @@ class EventDatasource
     /**
      * Get datasource
      *
-     * @return Datasource 
+     * @return Datasource
      */
     public function getDatasource()
     {

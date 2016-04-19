@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EventStep
  */
-class EventStep
+class EventStep extends OgiveEntity
 {
     /**
      * @var integer
@@ -70,7 +70,7 @@ class EventStep
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -93,7 +93,7 @@ class EventStep
     /**
      * Get rank
      *
-     * @return integer 
+     * @return integer
      */
     public function getRank()
     {
@@ -116,7 +116,7 @@ class EventStep
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -139,7 +139,7 @@ class EventStep
     /**
      * Get moment
      *
-     * @return string 
+     * @return string
      */
     public function getMoment()
     {
@@ -162,7 +162,7 @@ class EventStep
     /**
      * Get mandatory
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMandatory()
     {
@@ -185,7 +185,7 @@ class EventStep
     /**
      * Get eventStepParent
      *
-     * @return EventStep 
+     * @return EventStep
      */
     public function getEventStepParent()
     {
@@ -231,7 +231,7 @@ class EventStep
     /**
      * Get connectorParamList
      *
-     * @return ConnectorParamList 
+     * @return ConnectorParamList
      */
     public function getConnectorParamList()
     {
@@ -254,7 +254,7 @@ class EventStep
     /**
      * Get event
      *
-     * @return Event 
+     * @return Event
      */
     public function getEvent()
     {
@@ -287,7 +287,7 @@ class EventStep
     /**
      * Get status
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStatus()
     {

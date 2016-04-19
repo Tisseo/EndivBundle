@@ -96,7 +96,7 @@ abstract class OgiveManager
 
     /**
      * Save the entity in database
-     * 
+     *
      * @param OgiveEntity $entity
      * @return OgiveEntity
      */
@@ -202,4 +202,13 @@ abstract class OgiveManager
     {
         return str_replace('Manager', '', (new \ReflectionClass($this))->getShortName());
     }
+
+    /**
+     * Get object manager
+     */
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }
+
 }
