@@ -2,19 +2,27 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Event
  */
 class Event extends OgiveEntity
 {
     const STATUS_OPEN = 1;
-    
+
     const STATUS_CLOSED = 2;
-    
+
     const STATUS_REJECTED = 3;
-    
+
+    /**
+     * @var array
+     * Possible status for events
+     */
+    public static $statusMap = array(
+        self::STATUS_OPEN => self::STATUS_OPEN,
+        self::STATUS_CLOSED => self::STATUS_CLOSED,
+        self::STATUS_REJECTED => self::STATUS_REJECTED
+    );
+
     /**
      * @var integer
      */
@@ -60,11 +68,30 @@ class Event extends OgiveEntity
      */
     private $eventParent;
 
+    /**
+     * @var Collection
+     */
+    private $eventSteps;
+
+    /**
+     * @var Collection
+     */
+    private $periods;
+
+    /**
+     * @var Collection
+     */
+    private $eventDatasources;
+
+    /**
+     * @var Collection
+     */
+    private $eventObjects;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -87,7 +114,7 @@ class Event extends OgiveEntity
     /**
      * Get chaosSeverity
      *
-     * @return guid 
+     * @return guid
      */
     public function getChaosSeverity()
     {
@@ -110,7 +137,7 @@ class Event extends OgiveEntity
     /**
      * Get chaosInternalCause
      *
-     * @return string 
+     * @return string
      */
     public function getChaosInternalCause()
     {
@@ -133,7 +160,7 @@ class Event extends OgiveEntity
     /**
      * Get chaosDisruptionId
      *
-     * @return guid 
+     * @return guid
      */
     public function getChaosDisruptionId()
     {
@@ -156,7 +183,7 @@ class Event extends OgiveEntity
     /**
      * Get reference
      *
-     * @return string 
+     * @return string
      */
     public function getReference()
     {
@@ -179,7 +206,7 @@ class Event extends OgiveEntity
     /**
      * Get isEmergency
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsEmergency()
     {
@@ -202,13 +229,13 @@ class Event extends OgiveEntity
     /**
      * Get eventParent
      *
-     * @return Event 
+     * @return Event
      */
     public function getEventParent()
     {
         return $this->eventParent;
     }
-    
+
     /**
      * Get status
      *
@@ -218,7 +245,7 @@ class Event extends OgiveEntity
     {
         return $this->status;
     }
-    
+
     /**
      * Set status
      *
@@ -231,7 +258,7 @@ class Event extends OgiveEntity
 
         return $this;
     }
-    
+
     /**
      * Get isPublished.
      *
@@ -241,7 +268,7 @@ class Event extends OgiveEntity
     {
         return $this->isPublished;
     }
-    
+
     /**
      * Set isPublished.
      *
@@ -254,4 +281,94 @@ class Event extends OgiveEntity
 
         return $this;
     }
+
+    /**
+     * Get eventSteps
+     *
+     * @return Collection
+     */
+    public function getEventSteps()
+    {
+        return $this->eventSteps;
+    }
+
+    /**
+     * Set eventSteps.
+     *
+     * @param Collection eventSteps
+     * @return Event
+     */
+    public function setEventSteps($eventSteps)
+    {
+        $this->eventSteps = $eventSteps;
+        return $this;
+    }
+
+    /**
+     * Get periods
+     *
+     * @return Collection
+     */
+    public function getPeriods()
+    {
+        return $this->periods;
+    }
+
+    /**
+     * Set periods.
+     *
+     * @param Collection periods
+     * @return Event
+     */
+    public function setPeriods($periods)
+    {
+        $this->periods = $periods;
+        return $this;
+    }
+
+    /**
+     * Get eventDatasources
+     *
+     * @return Collection
+     */
+    public function getEventDatasources()
+    {
+        return $this->eventDatasources;
+    }
+
+    /**
+     * Set eventDatasources.
+     *
+     * @param Collection eventDatasources
+     * @return Event
+     */
+    public function setEventDatasources($eventDatasources)
+    {
+        $this->eventDatasources = $eventDatasources;
+        return $this;
+    }
+
+    /**
+     * Get eventobjects
+     *
+     * @return Collection
+     */
+    public function getEventObjects()
+    {
+        return $this->eventObjects;
+    }
+
+    /**
+     * Set eventobjects.
+     *
+     * @param Collection eventObjects
+     * @return Event
+     */
+    public function setEventObjects($eventObjects)
+    {
+        $this->eventObjects = $eventObjects;
+        return $this;
+    }
+
+
 }
