@@ -66,4 +66,30 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
                 event_parent_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        periods:
+            targetEntity: Period
+            cascade: ['remove','persist']
+            inversedBy: null
+            mappedBy: event
+            orderBy: {'startDate': 'asc'}
+        eventSteps:
+            targetEntity: EventStep
+            cascade: ['remove','persist']
+            inversedBy: null
+            mappedBy: event
+            orderBy: {'rank': 'asc'}
+        eventDatasources:
+            targetEntity: EventDatasource
+            cascade: ['remove','persist']
+            inversedBy: null
+            mappedBy: event
+            orderBy: {'code': 'asc'}
+        eventObjects:
+            targetEntity: EventObject
+            cascade: ['remove','persist']
+            inversedBy: null
+            mappedBy: event
+            orderBy: {'object': 'asc'}
+            
     lifecycleCallbacks: {  }

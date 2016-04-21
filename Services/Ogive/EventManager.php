@@ -1,6 +1,8 @@
 <?php
 namespace Tisseo\EndivBundle\Services\Ogive;
 
+use Tisseo\EndivBundle\Entity\Ogive\Event;
+
 class EventManager extends OgiveManager
 {
 
@@ -23,5 +25,37 @@ class EventManager extends OgiveManager
         $results = $query->getResult();
 
         return $results ? $results[0] : null;
+    }
+
+    /**
+     * Find all open events
+     */
+    public function findAllOpen()
+    {
+        $queryBuilder = $this->objectManager->createQueryBuilder()
+            ->select('event')
+            ->from('Tisseo\EndivBundle\Entity\Ogive\Event','event')
+            ->where('event.status = :status')
+            ->setParameter('status', Event::STATUS_OPEN);
+
+        $results = $queryBuilder->getQuery()->getResult();
+
+        return $results;
+    }
+
+    /**
+     * Find all closed events ie not open (closed or rejected)
+     */
+    public function findAllClosed()
+    {
+        $queryBuilder = $this->objectManager->createQueryBuilder()
+        ->select('event')
+        ->from('Tisseo\EndivBundle\Entity\Ogive\Event','event')
+        ->where('event.status != :status')
+        ->setParameter('status', Event::STATUS_OPEN);
+
+        $results = $queryBuilder->getQuery()->getResult();
+
+        return $results;
     }
 }

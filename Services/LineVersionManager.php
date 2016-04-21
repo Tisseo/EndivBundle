@@ -192,6 +192,23 @@ class LineVersionManager extends SortManager
         return $query->getResult();
     }
 
+    /**
+     * Find line names from line version ids
+     *
+     * @param array $ids
+     */
+    public function findLineNames($ids)
+    {
+        $queryBuilder = $this->om->createQueryBuilder()
+            ->select('lv.id','lv.name')
+            ->from('Tisseo\EndivBundle\Entity\LineVersion', 'lv');
+        $queryBuilder->where($queryBuilder->expr()->in('lv.id', $ids));
+
+        $results = $queryBuilder->getQuery()->getResult();
+
+        return $results;
+    }
+
     /*
      * findUnlinkedGridMaskTypes
      * @param LineVersion $lineVersion
