@@ -78,6 +78,17 @@ class EventStep extends OgiveEntity
     }
 
     /**
+     * Set id
+     *
+     * @param integer $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
      * Set rank
      *
      * @param integer $rank
@@ -267,7 +278,7 @@ class EventStep extends OgiveEntity
      * @param EventStepStatus $status
      * @return EventStep
      */
-    public function addStatus(EventStepStatus $status)
+    public function addStatus(LinkEventStepStatus $status)
     {
         $this->status[] = $status;
 
@@ -279,7 +290,7 @@ class EventStep extends OgiveEntity
      *
      * @param EventStepStatus $status
      */
-    public function removeStatus(EventStepStatus $status)
+    public function removeStatus(LinkEventStepStatus $status)
     {
         $this->status->removeElement($status);
     }

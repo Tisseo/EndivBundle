@@ -76,6 +76,7 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
         eventSteps:
             targetEntity: EventStep
             cascade: ['remove','persist']
+            onDelete: 'CASCADE'
             inversedBy: null
             mappedBy: event
             orderBy: {'rank': 'asc'}

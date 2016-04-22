@@ -1,0 +1,50 @@
+Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus:
+    type: entity
+    table: ogive.link_event_step_status
+    indexes:
+        IDX_65CE976DF7EFF44D:
+            columns:
+                - event_step_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        status:
+            type: integer
+            nullable: false
+            column: status
+        dateTime:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: date_time
+        userComment:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            column: user_comment
+        login:
+            type: string
+            nullable: false
+            length: 40
+            fixed: false
+            comment: ''
+    manyToOne:
+        eventStep:
+            targetEntity: EventStep
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                event_step_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
