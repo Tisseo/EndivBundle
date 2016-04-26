@@ -64,6 +64,11 @@ class Event extends OgiveEntity
     private $isEmergency;
 
     /**
+     * @var unknown
+     */
+    private $login;
+
+    /**
      * @var Event
      */
     private $eventParent;
@@ -211,6 +216,28 @@ class Event extends OgiveEntity
     public function getIsEmergency()
     {
         return $this->isEmergency;
+    }
+
+    /**
+     * Get login
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set login
+     *
+     * @param string $login
+     * @return Event
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+        return $this;
     }
 
     /**

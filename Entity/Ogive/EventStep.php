@@ -2,7 +2,7 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * EventStep
@@ -303,5 +303,29 @@ class EventStep extends OgiveEntity
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get last selected status for the event step
+     *
+     * @return LinkEventStepStatus
+     */
+    public function getLastStatus(){
+        if ($this->status->count() === 0) {
+            return null;
+        }
+        $criteria = Criteria::create()
+            ->orderBy(array('dateTime' => Criteria::DESC))
+            ->setMaxResults(1);
+        return $this->status->matching($criteria)->first();
+    }
+
+    /**
+     * Add last selected status to event step status list
+     *
+     * @param EventStepStatus $lastStatus
+     */
+    public function setLastStatus(LinkEventStepStatus $lastStatus){
+        return $this->addStatus($lastStatus);
     }
 }

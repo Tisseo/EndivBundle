@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EventStepStatus
  */
-class EventStepStatus
+class EventStepStatus extends OgiveEntity
 {
     /**
      * @var integer
@@ -40,7 +40,7 @@ class EventStepStatus
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +63,7 @@ class EventStepStatus
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -86,7 +86,7 @@ class EventStepStatus
     /**
      * Get color
      *
-     * @return string 
+     * @return string
      */
     public function getColor()
     {
@@ -119,7 +119,7 @@ class EventStepStatus
     /**
      * Get eventStep
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEventStep()
     {
