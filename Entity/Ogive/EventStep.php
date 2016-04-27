@@ -60,6 +60,16 @@ class EventStep extends OgiveEntity
     private $status;
 
     /**
+     * Non mapped property to get eventStep original scenario when adding an eventStep
+     */
+    private $scenarioStepId;
+
+    /**
+     * Non mapped property to get the parent of the original scenario when adding an eventStepParent
+     */
+    private $scenarioStepParentId;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -328,4 +338,35 @@ class EventStep extends OgiveEntity
     public function setLastStatus(LinkEventStepStatus $lastStatus){
         return $this->addStatus($lastStatus);
     }
+
+    /**
+     * Get original scenarioStep Id
+     */
+    public function getScenarioStepId()
+    {
+        return $this->scenarioStepId;
+    }
+
+    /**
+     * Set original scenarioStep id
+     * @param integer $scenarioStepId
+     */
+    public function setScenarioStepId($scenarioStepId)
+    {
+        $this->scenarioStepId = $scenarioStepId;
+        return $this;
+    }
+
+    public function getScenarioStepParentId()
+    {
+        return $this->scenarioStepParentId;
+    }
+
+    public function setScenarioStepParentId($scenarioStepParentId)
+    {
+        $this->scenarioStepParentId = $scenarioStepParentId;
+        return $this;
+    }
+
+
 }
