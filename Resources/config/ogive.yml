@@ -32,6 +32,9 @@ services:
     tisseo_endiv.ogive.manager.event_step:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\EventStepManager'
+    tisseo_endiv.ogive.manager.event_step_status:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\LinkEventStepStatusManager'
     tisseo_endiv.ogive.manager.period:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\PeriodManager'

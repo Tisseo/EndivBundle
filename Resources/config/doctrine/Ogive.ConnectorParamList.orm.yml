@@ -30,9 +30,6 @@ Tisseo\EndivBundle\Entity\Ogive\ConnectorParamList:
         scenarioSteps:
             targetEntity: ScenarioStep
             mappedBy: connectorParamList
-        eventSteps:
-            targetEntity: EventStep
-            mappedBy: connectorParamList
     manyToMany:
         ownerCpls:
             targetEntity: ConnectorParamList

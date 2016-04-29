@@ -56,6 +56,11 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
             comment: 'Est à true si l''événement est de type urgence. Structurant pour son apparition dans les listes.'
             default: false
             column: is_emergency
+        login:
+            type: text
+            nullable: false
+            length: 40
+            fixed: false
     manyToOne:
         eventParent:
             targetEntity: Event
@@ -76,6 +81,7 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
         eventSteps:
             targetEntity: EventStep
             cascade: ['remove','persist']
+            onDelete: 'CASCADE'
             inversedBy: null
             mappedBy: event
             orderBy: {'rank': 'asc'}

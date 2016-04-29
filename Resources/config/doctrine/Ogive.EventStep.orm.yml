@@ -81,21 +81,11 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
                 event_id:
                     referencedColumnName: id
             orphanRemoval: false
-    manyToMany:
+    oneToMany:
         status:
-            targetEntity: EventStepStatus
-            cascade: {  }
-            mappedBy: null
-            inversedBy: eventStep
-            joinTable:
-                name: ogive.link_event_step_status
-                joinColumns:
-                    -
-                        name: event_step_id
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    -
-                        name: status_id
-                        referencedColumnName: id
-            orderBy: null
+            targetEntity: LinkEventStepStatus
+            cascade: ['remove','persist']
+            inversedBy: null
+            mappedBy: eventStep
+            orderBy: {'dateTime': 'desc'}
     lifecycleCallbacks: {  }

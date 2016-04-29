@@ -29,14 +29,14 @@ Tisseo\EndivBundle\Entity\Ogive\Object:
             mappedBy: null
             inversedBy: objects
             joinTable:
-                name: ogive.group_objects_content
+                name: ogive.group_object_content
                 joinColumns:
                     -
-                        name: objects_id
+                        name: object_id
                         referencedColumnName: id
                 inverseJoinColumns:
                     -
-                        name: group_objects_id
+                        name: group_object_id
                         referencedColumnName: id
             orderBy: null
     lifecycleCallbacks: {  }

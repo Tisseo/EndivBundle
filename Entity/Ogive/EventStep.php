@@ -2,7 +2,7 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * EventStep
@@ -60,6 +60,16 @@ class EventStep extends OgiveEntity
     private $status;
 
     /**
+     * Non mapped property to get eventStep original scenario when adding an eventStep
+     */
+    private $scenarioStepId;
+
+    /**
+     * Non mapped property to get the parent of the original scenario when adding an eventStepParent
+     */
+    private $scenarioStepParentId;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -75,6 +85,17 @@ class EventStep extends OgiveEntity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -267,7 +288,7 @@ class EventStep extends OgiveEntity
      * @param EventStepStatus $status
      * @return EventStep
      */
-    public function addStatus(EventStepStatus $status)
+    public function addStatus(LinkEventStepStatus $status)
     {
         $this->status[] = $status;
 
@@ -279,7 +300,7 @@ class EventStep extends OgiveEntity
      *
      * @param EventStepStatus $status
      */
-    public function removeStatus(EventStepStatus $status)
+    public function removeStatus(LinkEventStepStatus $status)
     {
         $this->status->removeElement($status);
     }
@@ -293,4 +314,60 @@ class EventStep extends OgiveEntity
     {
         return $this->status;
     }
+
+    /**
+     * Get last selected status for the event step
+     *
+     * @return LinkEventStepStatus
+     */
+    public function getLastStatus(){
+        if ($this->status->count() === 0) {
+            return null;
+        }
+        $criteria = Criteria::create()
+            ->orderBy(array('dateTime' => Criteria::DESC))
+            ->setMaxResults(1);
+        return $this->status->matching($criteria)->first();
+    }
+
+    /**
+     * Add last selected status to event step status list
+     *
+     * @param EventStepStatus $lastStatus
+     */
+    public function setLastStatus(LinkEventStepStatus $lastStatus){
+        //TODO remove this method
+        return $this->addStatus($lastStatus);
+    }
+
+    /**
+     * Get original scenarioStep Id
+     */
+    public function getScenarioStepId()
+    {
+        return $this->scenarioStepId;
+    }
+
+    /**
+     * Set original scenarioStep id
+     * @param integer $scenarioStepId
+     */
+    public function setScenarioStepId($scenarioStepId)
+    {
+        $this->scenarioStepId = $scenarioStepId;
+        return $this;
+    }
+
+    public function getScenarioStepParentId()
+    {
+        return $this->scenarioStepParentId;
+    }
+
+    public function setScenarioStepParentId($scenarioStepParentId)
+    {
+        $this->scenarioStepParentId = $scenarioStepParentId;
+        return $this;
+    }
+
+
 }

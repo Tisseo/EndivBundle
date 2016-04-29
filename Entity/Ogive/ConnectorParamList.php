@@ -331,7 +331,7 @@ class ConnectorParamList extends OgiveEntity
      */
     public function isLinked()
     {
-        if ($this->eventSteps->isEmpty() && $this->scenarioSteps->isEmpty()) {
+        if (isset($this->eventSteps) && $this->eventSteps->isEmpty() && $this->scenarioSteps->isEmpty()) {
             return false;
         }
 
