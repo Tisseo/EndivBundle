@@ -336,6 +336,7 @@ class EventStep extends OgiveEntity
      * @param EventStepStatus $lastStatus
      */
     public function setLastStatus(LinkEventStepStatus $lastStatus){
+        //TODO remove this method
         return $this->addStatus($lastStatus);
     }
 

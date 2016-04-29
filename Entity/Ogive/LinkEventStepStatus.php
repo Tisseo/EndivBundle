@@ -5,7 +5,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 /**
  * LinkEventStepStatus
  */
-class LinkEventStepStatus
+class LinkEventStepStatus extends OgiveEntity
 {
     const STATUS_TODO = 1;
 
