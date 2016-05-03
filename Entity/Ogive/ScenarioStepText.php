@@ -9,6 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ScenarioStepText extends OgiveEntity
 {
+     /**
+      * @var integer
+      */
+     private $scenarioStepId;
+
+    /**
+     * @var integer
+     */
+    private $textId;
+
     /**
      * @var string
      */
