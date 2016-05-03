@@ -10,16 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ScenarioStepText extends OgiveEntity
 {
     /**
-     * @var integer
-     */
-    private $scenarioStepId;
-
-    /**
-     * @var integer
-     */
-    private $textId;
-
-    /**
      * @var string
      */
     private $label;
@@ -46,7 +36,7 @@ class ScenarioStepText extends OgiveEntity
      */
     public function getId()
     {
-        return $this->scenarioStepId.'_'.$this->textId;
+        return $this->scenarioStep->getId().'_'.$this->text->getId();
     }
 
     /**
