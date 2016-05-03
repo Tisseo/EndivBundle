@@ -5,9 +5,12 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Connector
+ * @ExclusionPolicy("none")
  */
 class Connector extends OgiveEntity
 {
@@ -33,11 +36,13 @@ class Connector extends OgiveEntity
 
     /**
      * @var Collection
+     * @Exclude
      */
     private $scenarioSteps;
 
     /**
      * @var Collection
+     * @Exclude
      */
     private $eventSteps;
 

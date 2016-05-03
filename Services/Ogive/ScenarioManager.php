@@ -28,6 +28,15 @@ class ScenarioManager extends OgiveManager
                     )->first();
                     $scenarioStep->setScenarioStepParent($parent);
                 }
+
+                $scenarioStepTexts = $scenarioStep->getScenarioStepTexts();
+                $scenarioStep->setScenarioStepTexts(new ArrayCollection());
+                foreach ($scenarioStepTexts as $originalScenarioST) {
+                    $scenarioStepText = clone $originalScenarioST;
+                    $scenarioStepText->setScenarioStep($scenarioStep);
+                    $scenarioStep->addScenarioStepText($scenarioStepText);
+                }
+
                 $scenarioStep->setScenario($scenario);
             }
         }

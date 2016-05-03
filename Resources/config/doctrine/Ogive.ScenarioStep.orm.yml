@@ -83,7 +83,7 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
     oneToMany:
         scenarioStepTexts:
             targetEntity: ScenarioStepText
-            cascade: ['persist']
+            cascade: ['persist', 'remove']
             mappedBy: scenarioStep
         scenarioSteps:
             targetEntity: ScenarioStep
