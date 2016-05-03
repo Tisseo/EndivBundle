@@ -28,8 +28,7 @@ class ScenarioStepManager extends OgiveManager
             'moment',
             'mandatory',
             'connector',
-            'connectorParamList',
-            'scenarioStepParent'
+            'connectorParamList'
         );
 
         foreach ($scenarioSteps as $step) {
