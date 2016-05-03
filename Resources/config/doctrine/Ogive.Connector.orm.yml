@@ -34,4 +34,7 @@ Tisseo\EndivBundle\Entity\Ogive\Connector:
         scenarioSteps:
             targetEntity: ScenarioStep
             mappedBy: connector
+        eventSteps:
+            targetEntity: EventStep
+            mappedBy: connector
     lifecycleCallbacks: {  }

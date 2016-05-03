@@ -5,9 +5,12 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Text
+ * @ExclusionPolicy("none")
  */
 class Text extends OgiveEntity
 {
@@ -27,6 +30,7 @@ class Text extends OgiveEntity
     private $text;
 
     /**
+     * @Exclude
      * @var Collection
      */
     private $scenarioStepTexts;
