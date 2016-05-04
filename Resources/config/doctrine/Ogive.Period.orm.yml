@@ -51,11 +51,8 @@ Tisseo\EndivBundle\Entity\Ogive\Period:
     manyToOne:
         event:
             targetEntity: Event
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
+            inversedBy: periods
             joinColumns:
                 event_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

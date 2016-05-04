@@ -23,29 +23,18 @@ Tisseo\EndivBundle\Entity\Ogive\EventObject:
     manyToOne:
         event:
             targetEntity: Event
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
+            inversedBy: eventObjects
             joinColumns:
                 event_id:
                     referencedColumnName: id
-            orphanRemoval: false
         emergencyStatus:
             targetEntity: EmergencyStatus
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
             joinColumns:
                 emergency_status:
                     referencedColumnName: id
-            orphanRemoval: false
         object:
             targetEntity: Object
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
             joinColumns:
                 object_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

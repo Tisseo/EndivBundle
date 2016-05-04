@@ -34,7 +34,9 @@ Tisseo\EndivBundle\Entity\Ogive\Connector:
         scenarioSteps:
             targetEntity: ScenarioStep
             mappedBy: connector
+            fetch: 'EXTRA_LAZY'
         eventSteps:
             targetEntity: EventStep
             mappedBy: connector
+            fetch: 'EXTRA_LAZY'
     lifecycleCallbacks: {  }

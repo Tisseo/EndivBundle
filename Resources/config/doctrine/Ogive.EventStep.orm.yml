@@ -47,17 +47,12 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
     manyToOne:
         eventStepParent:
             targetEntity: EventStep
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
             joinColumns:
                 event_step_parent_id:
                     referencedColumnName: id
             orphanRemoval: false
         connector:
             targetEntity: Connector
-            cascade: {  }
-            mappedBy: null
             inversedBy: eventSteps
             joinColumns:
                 connector_id:
@@ -65,8 +60,6 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             orphanRemoval: false
         connectorParamList:
             targetEntity: ConnectorParamList
-            cascade: {  }
-            mappedBy: null
             inversedBy: eventSteps
             joinColumns:
                 connector_param_list_id:
@@ -74,18 +67,19 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             orphanRemoval: false
         event:
             targetEntity: Event
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
+            inversedBy: eventSteps
             joinColumns:
                 event_id:
                     referencedColumnName: id
             orphanRemoval: false
     oneToMany:
-        status:
+        statuses:
             targetEntity: LinkEventStepStatus
-            cascade: ['remove','persist']
-            inversedBy: null
             mappedBy: eventStep
+            cascade: ['remove', 'persist']
             orderBy: {'dateTime': 'desc'}
+        texts:
+            targetEntity: EventStepText
+            cascade: ['remove', 'persist']
+            mappedBy: eventStep
     lifecycleCallbacks: {  }

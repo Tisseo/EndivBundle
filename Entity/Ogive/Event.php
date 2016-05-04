@@ -2,6 +2,9 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Event
  */
@@ -92,6 +95,17 @@ class Event extends OgiveEntity
      * @var Collection
      */
     private $eventObjects;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->periods = new ArrayCollection();
+        $this->eventObjects = new ArrayCollection();
+        $this->eventDatasources = new ArrayCollection();
+        $this->eventSteps = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -325,9 +339,10 @@ class Event extends OgiveEntity
      * @param Collection eventSteps
      * @return Event
      */
-    public function setEventSteps($eventSteps)
+    public function setEventSteps(Collection $eventSteps)
     {
         $this->eventSteps = $eventSteps;
+
         return $this;
     }
 
@@ -347,9 +362,10 @@ class Event extends OgiveEntity
      * @param Collection periods
      * @return Event
      */
-    public function setPeriods($periods)
+    public function setPeriods(Collection $periods)
     {
         $this->periods = $periods;
+
         return $this;
     }
 
@@ -369,9 +385,10 @@ class Event extends OgiveEntity
      * @param Collection eventDatasources
      * @return Event
      */
-    public function setEventDatasources($eventDatasources)
+    public function setEventDatasources(Collection $eventDatasources)
     {
         $this->eventDatasources = $eventDatasources;
+
         return $this;
     }
 
@@ -391,11 +408,10 @@ class Event extends OgiveEntity
      * @param Collection eventObjects
      * @return Event
      */
-    public function setEventObjects($eventObjects)
+    public function setEventObjects(Collection $eventObjects)
     {
         $this->eventObjects = $eventObjects;
+
         return $this;
     }
-
-
 }

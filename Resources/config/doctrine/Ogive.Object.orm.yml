@@ -25,8 +25,6 @@ Tisseo\EndivBundle\Entity\Ogive\Object:
     manyToMany:
         groupObject:
             targetEntity: GroupObject
-            cascade: {  }
-            mappedBy: null
             inversedBy: objects
             joinTable:
                 name: ogive.group_object_content
@@ -38,5 +36,4 @@ Tisseo\EndivBundle\Entity\Ogive\Object:
                     -
                         name: group_object_id
                         referencedColumnName: id
-            orderBy: null
     lifecycleCallbacks: {  }

@@ -40,11 +40,8 @@ Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus:
     manyToOne:
         eventStep:
             targetEntity: EventStep
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
+            inversedBy: statuses
             joinColumns:
                 event_step_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

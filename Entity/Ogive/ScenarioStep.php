@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Tisseo\EndivBundle\Types\Ogive\MomentType;
@@ -43,11 +42,6 @@ class ScenarioStep extends OgiveEntity
     private $scenarioStepParent;
 
     /**
-     * @var Collection
-     */
-    private $scenarioSteps;
-
-    /**
      * @var Scenario
      */
     private $scenario;
@@ -66,6 +60,11 @@ class ScenarioStep extends OgiveEntity
      * @var Collection
      */
     private $scenarioStepTexts;
+
+    /**
+     * @var Collection
+     */
+    private $scenarioSteps;
 
     /**
      * Constructor

@@ -65,12 +65,14 @@ class LinkEventStepStatus extends OgiveEntity
 
     /**
      * Set id
+     *
      * @param integer $id
-     * @return \Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus
+     * @return LinkEventStepStatus
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -84,12 +86,14 @@ class LinkEventStepStatus extends OgiveEntity
 
     /**
      * Set Status
+     *
      * @param integer $status
-     * @return \Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus
+     * @return LinkEventStepStatus
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -103,12 +107,14 @@ class LinkEventStepStatus extends OgiveEntity
 
     /**
      * Set dateTime
+     *
      * @param \DateTime $dateTime
-     * @return \Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus
+     * @return LinkEventStepStatus
      */
     public function setDateTime(\DateTime $dateTime)
     {
         $this->dateTime = $dateTime;
+
         return $this;
     }
 
@@ -122,12 +128,14 @@ class LinkEventStepStatus extends OgiveEntity
 
     /**
      * Set userComment
+     *
      * @param string $userComment
-     * @return \Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus
+     * @return LinkEventStepStatus
      */
     public function setUserComment($userComment)
     {
         $this->userComment = $userComment;
+
         return $this;
     }
 
@@ -141,12 +149,14 @@ class LinkEventStepStatus extends OgiveEntity
 
     /**
      * Set login
+     *
      * @param string $login
-     * @return \Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus
+     * @return LinkEventStepStatus
      */
     public function setLogin($login)
     {
         $this->login = $login;
+
         return $this;
     }
 
@@ -162,12 +172,14 @@ class LinkEventStepStatus extends OgiveEntity
 
     /**
      * Set eventStep
+     *
      * @param EventStep $eventStep
+     * @return LinkEventStepStatus
      */
     public function setEventStep($eventStep)
     {
         $this->eventStep = $eventStep;
+
         return $this;
     }
-
 }

@@ -24,15 +24,12 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStepText:
     manyToOne:
         scenarioStep:
             targetEntity: ScenarioStep
-            cascade: {  }
             inversedBy: scenarioStepTexts
             joinColumns:
                 scenario_step_id:
                     referencedColumnName: id
         text:
             targetEntity: Text
-            cascade: {  }
-            inversedBy: scenarioStepTexts
             joinColumns:
                 text_id:
                     referencedColumnName: id
