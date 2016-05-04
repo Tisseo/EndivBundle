@@ -46,49 +46,36 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
     manyToOne:
         scenarioStepParent:
             targetEntity: ScenarioStep
-            cascade: {  }
-            mappedBy: null
             inversedBy: scenarioSteps
             joinColumns:
                 scenario_step_parent_id:
                     referencedColumnName: id
-            orphanRemoval: false
         scenario:
             targetEntity: Scenario
-            cascade: {  }
-            mappedBy: null
             inversedBy: scenarioSteps
             joinColumns:
                 scenario_id:
                     referencedColumnName: id
-            orphanRemoval: false
         connector:
             targetEntity: Connector
-            cascade: {  }
-            mappedBy: null
             inversedBy: scenarioSteps
             joinColumns:
                 connector_id:
                     referencedColumnName: id
-            orphanRemoval: false
         connectorParamList:
             targetEntity: ConnectorParamList
-            cascade: {  }
-            mappedBy: null
             inversedBy: scenarioSteps
             joinColumns:
                 connector_param_list_id:
                     referencedColumnName: id
-            orphanRemoval: false
     oneToMany:
         scenarioStepTexts:
             targetEntity: ScenarioStepText
-            cascade: ['persist', 'remove']
             mappedBy: scenarioStep
+            cascade: ['persist', 'remove']
         scenarioSteps:
             targetEntity: ScenarioStep
-            cascade: [remove]
-            inversedBy: null
             mappedBy: scenarioStepParent
+            cascade: ['remove']
             orderBy: {'name': 'asc'}
     lifecycleCallbacks: {  }

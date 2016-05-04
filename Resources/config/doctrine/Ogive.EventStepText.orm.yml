@@ -31,9 +31,7 @@ Tisseo\EndivBundle\Entity\Ogive\EventStepText:
     manyToOne:
         eventStep:
             targetEntity: EventStep
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
+            inversedBy: texts
             joinColumns:
                 event_step_id:
                     referencedColumnName: id

@@ -64,7 +64,6 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
     manyToOne:
         eventParent:
             targetEntity: Event
-            cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
@@ -74,28 +73,22 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
     oneToMany:
         periods:
             targetEntity: Period
-            cascade: ['remove','persist']
-            inversedBy: null
             mappedBy: event
+            cascade: ['remove', 'persist']
             orderBy: {'startDate': 'asc'}
         eventSteps:
             targetEntity: EventStep
-            cascade: ['remove','persist']
-            onDelete: 'CASCADE'
-            inversedBy: null
             mappedBy: event
+            cascade: ['remove', 'persist']
+            onDelete: 'cascade'
             orderBy: {'rank': 'asc'}
         eventDatasources:
             targetEntity: EventDatasource
-            cascade: ['remove','persist']
-            inversedBy: null
             mappedBy: event
+            cascade: ['remove', 'persist']
             orderBy: {'code': 'asc'}
         eventObjects:
             targetEntity: EventObject
-            cascade: ['remove','persist']
-            inversedBy: null
             mappedBy: event
-            orderBy: {'object': 'asc'}
-            
+            cascade: ['remove', 'persist']
     lifecycleCallbacks: {  }

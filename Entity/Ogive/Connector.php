@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -135,62 +134,12 @@ class Connector extends OgiveEntity
     }
 
     /**
-     * Get scenarioSteps
-     *
-     * @return Collection
-     */
-    public function getScenarioSteps()
-    {
-        return $this->scenarioSteps;
-    }
-
-    /**
-     * Set scenarioSteps
-     *
-     * @param Collection $scenarioSteps
-     * @return ConnectorParamList
-     */
-    public function setScenarioSteps(Collection $scenarioSteps)
-    {
-        $this->scenarioSteps = $scenarioSteps;
-
-        return $this;
-    }
-
-    /**
-     * Get eventSteps
-     *
-     * @return Collection $eventSteps
-     */
-    public function getEventSteps()
-    {
-        return $this->eventSteps;
-    }
-
-    /**
-     * Set eventSteps
-     *
-     * @param Collection eventSteps
-     * @return ConnectorParamList
-     */
-    public function setEventSteps(Collection $eventSteps)
-    {
-        $this->eventSteps = $eventSteps;
-
-        return $this;
-    }
-
-    /**
      * isLinked
      *
      * @return boolean
      */
     public function isLinked()
     {
-        if ($this->eventSteps->isEmpty() && $this->scenarioSteps->isEmpty()) {
-            return false;
-        }
-
-        return true;
+        return !($this->eventSteps->count() == 0 && $this->scenarioSteps->count() == 0);
     }
 }

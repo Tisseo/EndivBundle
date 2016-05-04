@@ -2,7 +2,8 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Object
@@ -25,7 +26,7 @@ class Object extends OgiveEntity
     private $objectRef;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $groupObject;
 
@@ -34,7 +35,7 @@ class Object extends OgiveEntity
      */
     public function __construct()
     {
-        $this->groupObject = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groupObject = new ArrayCollection();
     }
 
     /**
@@ -101,7 +102,7 @@ class Object extends OgiveEntity
      */
     public function addGroupObject(GroupObject $groupObject)
     {
-        $this->groupObject[] = $groupObject;
+        $this->groupObject->add($groupObject);
 
         return $this;
     }
@@ -110,16 +111,19 @@ class Object extends OgiveEntity
      * Remove groupObject
      *
      * @param GroupObject $groupObject
+     * @return Object
      */
     public function removeGroupObject(GroupObject $groupObject)
     {
         $this->groupObject->removeElement($groupObject);
+
+        return $this;
     }
 
     /**
      * Get groupObject
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getGroupObject()
     {

@@ -27,20 +27,13 @@ Tisseo\EndivBundle\Entity\Ogive\EventDatasource:
     manyToOne:
         event:
             targetEntity: Event
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
+            inversedBy: eventDatasources
             joinColumns:
                 event_id:
                     referencedColumnName: id
-            orphanRemoval: false
         datasource:
             targetEntity: Datasource
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
             joinColumns:
                 datasource_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

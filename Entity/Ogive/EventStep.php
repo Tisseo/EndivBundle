@@ -2,7 +2,8 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * EventStep
@@ -55,9 +56,14 @@ class EventStep extends OgiveEntity
     private $event;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $status;
+    private $statuses;
+
+    /**
+     * @var Collection
+     */
+    private $texts;
 
     /**
      * Non mapped property to get eventStep original scenario when adding an eventStep
@@ -74,7 +80,8 @@ class EventStep extends OgiveEntity
      */
     public function __construct()
     {
-        $this->status = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->statuses = new ArrayCollection();
+        $this->texts = new ArrayCollection();
     }
 
     /**
@@ -285,12 +292,12 @@ class EventStep extends OgiveEntity
     /**
      * Add status
      *
-     * @param EventStepStatus $status
+     * @param LinkEventStepStatus $status
      * @return EventStep
      */
     public function addStatus(LinkEventStepStatus $status)
     {
-        $this->status[] = $status;
+        $this->statuses->add($status);
 
         return $this;
     }
@@ -298,21 +305,34 @@ class EventStep extends OgiveEntity
     /**
      * Remove status
      *
-     * @param EventStepStatus $status
+     * @param LinkEventStepStatus $status
      */
     public function removeStatus(LinkEventStepStatus $status)
     {
-        $this->status->removeElement($status);
+        $this->statuses->removeElement($status);
     }
 
     /**
-     * Get status
+     * Get statuses
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getStatus()
+    public function getStatuses()
     {
-        return $this->status;
+        return $this->statuses;
+    }
+
+    /**
+     * Set statuses
+     *
+     * @param Collection $statuses
+     * @return EventStep
+     */
+    public function setStatuses(Collection $statuses)
+    {
+        $this->statuses = $statuses;
+
+        return $this;
     }
 
     /**
@@ -321,27 +341,63 @@ class EventStep extends OgiveEntity
      * @return LinkEventStepStatus
      */
     public function getLastStatus(){
-        if ($this->status->count() === 0) {
+        if ($this->statuses->count() == 0) {
             return null;
         }
-        $criteria = Criteria::create()
-            ->orderBy(array('dateTime' => Criteria::DESC))
-            ->setMaxResults(1);
-        return $this->status->matching($criteria)->first();
+
+        return $this->statuses->first();
     }
 
     /**
-     * Add last selected status to event step status list
+     * Add text
      *
-     * @param EventStepStatus $lastStatus
+     * @param EventStepText $text
+     * @return EventStep
      */
-    public function setLastStatus(LinkEventStepStatus $lastStatus){
-        //TODO remove this method
-        return $this->addStatus($lastStatus);
+    public function addText(EventStepText $text)
+    {
+        $this->texts->add($text);
+
+        return $this;
     }
 
     /**
-     * Get original scenarioStep Id
+     * Remove text
+     *
+     * @param EventStepText $text
+     */
+    public function removeText(EventStepText $text)
+    {
+        $this->texts->removeElement($text);
+    }
+
+    /**
+     * Get texts
+     *
+     * @return Collection
+     */
+    public function getTexts()
+    {
+        return $this->texts;
+    }
+
+    /**
+     * Set texts
+     *
+     * @param Collection $texts
+     * @return EventStep
+     */
+    public function setTexts(Collection $texts)
+    {
+        $this->texts = $texts;
+
+        return $this;
+    }
+
+    /**
+     * Get scenarioStep Id
+     *
+     * @return integer
      */
     public function getScenarioStepId()
     {
@@ -349,25 +405,38 @@ class EventStep extends OgiveEntity
     }
 
     /**
-     * Set original scenarioStep id
+     * Set scenarioStep id
+     *
      * @param integer $scenarioStepId
+     * @return EventStep
      */
     public function setScenarioStepId($scenarioStepId)
     {
         $this->scenarioStepId = $scenarioStepId;
+
         return $this;
     }
 
+    /**
+     * Get scenarioStepParent Id
+     *
+     * @return integer
+     */
     public function getScenarioStepParentId()
     {
         return $this->scenarioStepParentId;
     }
 
+    /**
+     * Set scenarioStepParent Id
+     *
+     * @param integer $scenarioStepParentId
+     * @return EventStep
+     */
     public function setScenarioStepParentId($scenarioStepParentId)
     {
         $this->scenarioStepParentId = $scenarioStepParentId;
+
         return $this;
     }
-
-
 }
