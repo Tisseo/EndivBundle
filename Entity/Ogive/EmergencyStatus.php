@@ -41,7 +41,7 @@ class EmergencyStatus
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -64,7 +64,7 @@ class EmergencyStatus
     /**
      * Get rank
      *
-     * @return integer 
+     * @return integer
      */
     public function getRank()
     {
@@ -87,7 +87,7 @@ class EmergencyStatus
     /**
      * Get chaosSeverity
      *
-     * @return guid 
+     * @return guid
      */
     public function getChaosSeverity()
     {
@@ -110,7 +110,7 @@ class EmergencyStatus
     /**
      * Get color
      *
-     * @return string 
+     * @return string
      */
     public function getColor()
     {
@@ -133,7 +133,7 @@ class EmergencyStatus
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
@@ -156,7 +156,7 @@ class EmergencyStatus
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {

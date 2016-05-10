@@ -4,7 +4,6 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 
 /**
  * Text
- * @ExclusionPolicy("none")
  */
 class Text extends OgiveEntity
 {

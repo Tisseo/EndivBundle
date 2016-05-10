@@ -49,7 +49,6 @@ class Period extends OgiveEntity
      */
     private $event;
 
-
     /**
      * Get id
      *
