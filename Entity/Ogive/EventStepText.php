@@ -31,7 +31,7 @@ class EventStepText
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -54,7 +54,7 @@ class EventStepText
     /**
      * Get labelType
      *
-     * @return string 
+     * @return string
      */
     public function getLabelType()
     {
@@ -77,7 +77,7 @@ class EventStepText
     /**
      * Get text
      *
-     * @return string 
+     * @return string
      */
     public function getText()
     {
@@ -100,7 +100,7 @@ class EventStepText
     /**
      * Get eventStep
      *
-     * @return EventStep 
+     * @return EventStep
      */
     public function getEventStep()
     {

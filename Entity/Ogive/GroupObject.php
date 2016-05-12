@@ -45,7 +45,7 @@ class GroupObject
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -68,7 +68,7 @@ class GroupObject
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -91,7 +91,7 @@ class GroupObject
     /**
      * Get groupType
      *
-     * @return string 
+     * @return string
      */
     public function getGroupType()
     {
@@ -114,7 +114,7 @@ class GroupObject
     /**
      * Get isPrivate
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsPrivate()
     {
@@ -147,7 +147,7 @@ class GroupObject
     /**
      * Get objects
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getObject()
     {
