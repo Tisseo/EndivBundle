@@ -16,38 +16,13 @@ Tisseo\EndivBundle\Entity\Ogive\Period:
                 strategy: SEQUENCE
     fields:
         startDate:
-            type: date
+            type: datetime
             nullable: false
-            comment: ''
             column: start_date
         endDate:
-            type: date
+            type: datetime
             nullable: false
-            comment: ''
             column: end_date
-        startTime:
-            type: time
-            nullable: true
-            comment: ''
-            column: start_time
-        endTime:
-            type: time
-            nullable: true
-            comment: ''
-            column: end_time
-        isRecursive:
-            type: boolean
-            nullable: false
-            comment: 'Si à true, alors les heures start_time et end_time sont pour chaque jour de la période définie. Sinon, ces horaires ne font que borner la période.'
-            default: false
-            column: is_recursive
-        dayPattern:
-            type: string
-            nullable: false
-            length: 7
-            fixed: false
-            comment: ''
-            column: day_pattern
     manyToOne:
         event:
             targetEntity: Event

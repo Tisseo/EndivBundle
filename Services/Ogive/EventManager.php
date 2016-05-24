@@ -45,4 +45,50 @@ class EventManager extends OgiveManager
 
         return $results;
     }
+
+    /**
+     * Manage event data and save it
+     * @param Event $event
+     * @param integer $previousStatus
+     * @return Event
+     */
+    public function manage(Event $event, $previousStatus)
+    {
+        $createdEventSteps = array();
+        $eventClosed = ($previousStatus == Event::STATUS_OPEN && $event->getStatus() != Event::STATUS_OPEN);
+
+        foreach ($event->getEventSteps() as $eventStep) {
+            $scenarioStepParentId = $eventStep->getScenarioStepParentId();
+            $scenarioStepId = $eventStep->getScenarioStepId();
+
+            if (isset($scenarioStepId)) {
+                if (isset($scenarioStepParentId) && array_key_exists($scenarioStepParentId, $createdEventSteps)) {
+                    $eventStep->setEventStepParent($createdEventSteps[$scenarioStepParentId]);
+                }
+            }
+
+            // Manage event status: If status goes to rejected or closed change event steps status
+            if ($eventClosed) {
+                $eventStepStatus = $eventStep->getLastStatus();
+
+                if ($eventStepStatus->getStatus() == LinkEventStepStatus::STATUS_TODO) {
+                    $eventStepStatus->setLogin($this->getLogin());
+                    $eventStepStatus->setdateTime(new \DateTime());
+                    $eventStepStatus->setUserComment($this->translator->trans('tisseo.ogive.event.message.closed_by_system'));
+                    $eventStepStatus->setStatus(LinkEventStepStatus::STATUS_REJECTED);
+
+                    $eventStep->setLastStatus($eventStepStatus);
+                }
+            }
+
+            // Save eventStep (edit or add if new)
+            $this->objectManager->persist($eventStep);
+
+            if (isset($scenarioStepId)) {
+                $createdEventSteps[$scenarioStepId] = $eventStep;
+            }
+        }
+
+        return $this->save($event);
+    }
 }
