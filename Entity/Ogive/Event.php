@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Event
@@ -413,5 +414,34 @@ class Event extends OgiveEntity
         $this->eventObjects = $eventObjects;
 
         return $this;
+    }
+
+    /**
+     * Get extrema period dates
+     *
+     * @return array
+     */
+    public function getExtremaPeriodDates()
+    {
+        $extrema = array();
+
+        if ($this->getPeriods()->count() == 0) {
+            return $extrema;
+        }
+
+        $min = Criteria::create()
+            ->orderBy(array('startDate' => Criteria::ASC))
+            ->setMaxResults(1)
+        ;
+
+        $max = Criteria::create()
+            ->orderBy(array('endDate' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        $extrema['min'] = $this->periods->matching($min)->first()->getStartDate();
+        $extrema['max'] = $this->periods->matching($max)->first()->getEndDate();
+
+        return $extrema;
     }
 }

@@ -48,7 +48,7 @@ class Board
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,7 +71,7 @@ class Board
     /**
      * Get shortName
      *
-     * @return string 
+     * @return string
      */
     public function getShortName()
     {
@@ -94,7 +94,7 @@ class Board
     /**
      * Get longName
      *
-     * @return string 
+     * @return string
      */
     public function getLongName()
     {
@@ -117,7 +117,7 @@ class Board
     /**
      * Get nbBoards
      *
-     * @return integer 
+     * @return integer
      */
     public function getNbBoards()
     {
@@ -140,7 +140,7 @@ class Board
     /**
      * Get status
      *
-     * @return string 
+     * @return string
      */
     public function getStatus()
     {
@@ -163,7 +163,7 @@ class Board
     /**
      * Get isOffice
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsOffice()
     {
@@ -186,7 +186,7 @@ class Board
     /**
      * Get isWaitingRoom
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsWaitingRoom()
     {
