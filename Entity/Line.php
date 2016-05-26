@@ -431,13 +431,17 @@ class Line
     }
 
     /**
-     * getActiveLineVersions
+     * Get current LineVersion
      *
      * @param \Datetime $now
-     * @return \Doctrine\Common\Collections\Collection
+     * @return LineVersion
      */
-    public function getActiveLineVersions(\Datetime $now)
+    public function getCurrentLineVersion(\Datetime $now = null)
     {
+        if (is_null($now)) {
+            $now = new \Datetime();
+        }
+
         $criteria = Criteria::create()
             ->where(Criteria::expr()->lte('startDate', $now))
             ->andWhere(Criteria::expr()->orX(
@@ -447,9 +451,16 @@ class Line
                     Criteria::expr()->gte('plannedEndDate', $now)
                 )
             ))
+            ->setMaxResults(1)
         ;
 
-        return $this->lineVersions->matching($criteria);
+        $lineVersions = $this->lineVersions->matching($criteria);
+
+        if ($lineVersions->count() === 1) {
+            return $lineVersions->first();
+        }
+
+        return null;
     }
 
     // Schematics Criteria functions
