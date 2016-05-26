@@ -10,6 +10,10 @@ use Doctrine\Common\Collections\Collection;
  */
 class Object extends OgiveEntity
 {
+    const AGENCY = 'agency';
+    const LINE = 'line';
+    const STOP = 'stop';
+
     /**
      * @var integer
      */
@@ -29,6 +33,13 @@ class Object extends OgiveEntity
      * @var Collection
      */
     private $groupObject;
+
+    /**
+     * @var string (unmapped)
+     * References the name of the ENDIV object
+     */
+    // TODO: using inheritance here and bringing the name automatically could be great
+    private $_name;
 
     /**
      * Constructor
@@ -128,5 +139,25 @@ class Object extends OgiveEntity
     public function getGroupObject()
     {
         return $this->groupObject;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->_name = $name;
     }
 }
