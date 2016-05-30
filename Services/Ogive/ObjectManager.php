@@ -18,6 +18,9 @@ class ObjectManager extends OgiveManager
         // TODO: could use inheritance here and directly bring the relation when instanciating Object class
         $extrema = null;
         foreach ($event->getEventObjects() as $eventObject) {
+            if ($eventObject->getObject()->getObjectType() === OgiveObject::STOP && empty($extrema)) {
+                $extrema = $eventObject->getEvent()->getExtremaPeriodDates();
+            }
             $this->setMetaInformation($eventObject->getObject(), $extrema);
         }
     }
@@ -27,7 +30,7 @@ class ObjectManager extends OgiveManager
      *
      * @param OgiveObject $object
      */
-    public function setMetaInformation(OgiveObject $object, &$extrema = null)
+    public function setMetaInformation(OgiveObject $object, $extrema = null)
     {
         $entityClass = sprintf('TisseoEndivBundle:%s', ucfirst($object->getObjectType()));
         $objectRef = $this->objectManager->getRepository($entityClass)->find($object->getObjectRef());
@@ -50,9 +53,6 @@ class ObjectManager extends OgiveManager
                 $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
                 break;
             case OgiveObject::STOP:
-                if (empty($extrema)) {
-                    $extrema = $object->getEventObject()->getEvent()->getExtremaPeriodDates();
-                }
                 $meta->label = $objectRef->getCurrentStopHistory($extrema['min'])->getShortName();
                 $meta->code = $objectRef->getStopDatasources()->first()->getCode();
                 break;
