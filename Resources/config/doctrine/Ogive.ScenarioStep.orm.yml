@@ -73,6 +73,7 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
             targetEntity: ScenarioStepText
             mappedBy: scenarioStep
             cascade: ['persist', 'remove']
+            orderBy: {'rank': 'asc'}
         scenarioSteps:
             targetEntity: ScenarioStep
             mappedBy: scenarioStepParent

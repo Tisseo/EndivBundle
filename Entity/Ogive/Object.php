@@ -15,6 +15,15 @@ class Object extends OgiveEntity
     const STOP = 'stop';
 
     /**
+     * @var static array
+     */
+    public static $objectTypes = array(
+        self::AGENCY,
+        self::LINE,
+        self::STOP
+    );
+
+    /**
      * @var integer
      */
     private $id;
@@ -35,11 +44,11 @@ class Object extends OgiveEntity
     private $groupObject;
 
     /**
-     * @var string (unmapped)
-     * References the name of the ENDIV object
+     * @var stdclass (unmapped)
+     * References the meta info of the ENDIV object
      */
     // TODO: using inheritance here and bringing the name automatically could be great
-    private $_name;
+    private $_meta;
 
     /**
      * Constructor
@@ -142,22 +151,22 @@ class Object extends OgiveEntity
     }
 
     /**
-     * Get name
+     * Get meta
      *
-     * @return string
+     * @return stdclass
      */
-    public function getName()
+    public function getMeta()
     {
-        return $this->_name;
+        return $this->_meta;
     }
 
     /**
-     * Set name
+     * Set meta
      *
-     * @param string $name
+     * @param stdclass $meta
      */
-    public function setName($name)
+    public function setMeta(\stdclass $meta)
     {
-        $this->_name = $name;
+        $this->_meta = $meta;
     }
 }
