@@ -32,10 +32,10 @@ class ObjectManager extends OgiveManager
      */
     public function setMetaInformation(OgiveObject $object, $extrema = null)
     {
-        $entityClass = sprintf('TisseoEndivBundle:%s', ucfirst($object->getObjectType()));
-        $objectRef = $this->objectManager->getRepository($entityClass)->find($object->getObjectRef());
         $meta = new \stdclass;
         $meta->label = 'N/A';
+
+        $objectRef = $this->getObjectReference($object);
 
         if (empty($objectRef)) {
             $object->setMeta($meta);
@@ -47,19 +47,33 @@ class ObjectManager extends OgiveManager
                 $meta->label = $objectRef->getName();
                 break;
             case OgiveObject::LINE:
-                $meta->label = $objectRef->getNumber();
                 $lineVersion = $objectRef->getCurrentLineVersion();
+                $meta->label = $objectRef->getNumber();
                 $meta->background_color = $lineVersion->getBgColor()->getHtml();
                 $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
+                $meta->physical_mode = $objectRef->getPhysicalMode()->getName();
                 break;
             case OgiveObject::STOP:
                 $meta->label = $objectRef->getCurrentStopHistory($extrema['min'])->getShortName();
                 $meta->code = $objectRef->getStopDatasources()->first()->getCode();
+                $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
                 break;
             default:
                 break;
         }
 
         $object->setMeta($meta);
+    }
+
+    /**
+     * Get object in TID referential
+     *
+     * @param OgiveObject $object
+     * @return mixed
+     */
+    public function getObjectReference(OgiveObject $object)
+    {
+        $entityClass = sprintf('TisseoEndivBundle:%s', ucfirst($object->getObjectType()));
+        return $this->objectManager->getRepository($entityClass)->find($object->getObjectRef());
     }
 }
