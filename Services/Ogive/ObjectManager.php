@@ -39,7 +39,7 @@ class ObjectManager extends OgiveManager
 
         if (empty($objectRef)) {
             $object->setMeta($meta);
-            continue;
+            return;
         }
 
         switch ($object->getObjectType()) {
