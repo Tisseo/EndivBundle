@@ -2,13 +2,24 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Board
  */
-class Board
+class Board extends OgiveEntity
 {
+    const OPEN = 1;
+    const CLOSED = 2;
+    const DEFINITIVELY_CLOSED = 3;
+
+    /**
+     * @var static array
+     */
+    public static $statuses = array(
+        self::OPEN => self::OPEN,
+        self::CLOSED => self::CLOSED,
+        self::DEFINITIVELY_CLOSED => self::DEFINITIVELY_CLOSED
+    );
+
     /**
      * @var integer
      */
@@ -30,7 +41,7 @@ class Board
     private $nbBoards;
 
     /**
-     * @var string
+     * @var integer
      */
     private $status;
 
@@ -127,11 +138,15 @@ class Board
     /**
      * Set status
      *
-     * @param string $status
+     * @param integer $status
      * @return Board
      */
     public function setStatus($status)
     {
+        if (!in_array($status, self::$statuses)) {
+            throw new \Exception(sprintf('Status %s does not exist', $status));
+        }
+
         $this->status = $status;
 
         return $this;
@@ -140,7 +155,7 @@ class Board
     /**
      * Get status
      *
-     * @return string
+     * @return integer
      */
     public function getStatus()
     {

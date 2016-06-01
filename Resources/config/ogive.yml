@@ -53,4 +53,6 @@ services:
     tisseo_endiv.ogive.manager.datasource:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\DatasourceManager'
-
+    tisseo_endiv.ogive.manager.board:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\BoardManager'
