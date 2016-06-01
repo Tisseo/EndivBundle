@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Tisseo\EndivBundle\Entity\Ogive\Board;
 
 /**
  * Line
@@ -53,6 +54,11 @@ class Line
     private $lineGroupGisContents;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $boards;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -61,6 +67,7 @@ class Line
         $this->lineVersions = new ArrayCollection();
         $this->schematics = new ArrayCollection();
         $this->lineGroupGisContents = new ArrayCollection();
+        $this->boards = new ArrayCollection();
     }
 
     /**
@@ -390,6 +397,55 @@ class Line
     public function getLineGroupGisContents()
     {
         return $this->lineGroupGisContents;
+    }
+
+    /**
+     * Get boards
+     *
+     * @return Collection
+     */
+    public function getBoards()
+    {
+        return $this->boards;
+    }
+
+    /**
+     * Set boards
+     *
+     * @param Collection $boards
+     * @return Line
+     */
+    public function setBoards(Collection $boards)
+    {
+        $this->boards = $boards;
+
+        return $this;
+    }
+
+    /**
+     * Add board
+     *
+     * @param Board $board
+     * @return Line
+     */
+    public function addBoard(Board $board)
+    {
+        $this->boards->add($board);
+
+        return $this;
+    }
+
+    /**
+     * Remove board
+     *
+     * @param Board $board
+     * @return Line
+     */
+    public function removeBoard(Board $board)
+    {
+        $this->boards->removeElement($board);
+
+        return $this;
     }
 
     // LineVersion Criteria functions
