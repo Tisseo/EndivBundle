@@ -404,7 +404,7 @@ class Event extends OgiveEntity
     }
 
     /**
-     * Set eventobjects.
+     * Set event objects
      *
      * @param Collection eventObjects
      * @return Event
@@ -412,6 +412,19 @@ class Event extends OgiveEntity
     public function setEventObjects(Collection $eventObjects)
     {
         $this->eventObjects = $eventObjects;
+
+        return $this;
+    }
+
+    /**
+     * Add event object
+     *
+     * @param EventObject $eventObject
+     * @return Event
+     */
+    public function addEventObject(EventObject $eventObject)
+    {
+        $this->eventObjects->add($eventObject);
 
         return $this;
     }

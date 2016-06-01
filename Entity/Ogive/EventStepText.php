@@ -5,7 +5,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 /**
  * EventStepText
  */
-class EventStepText
+class EventStepText extends OgiveEntity
 {
     /**
      * @var integer
