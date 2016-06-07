@@ -42,6 +42,19 @@ Tisseo\EndivBundle\Entity\Ogive\Mailbox:
             comment: 'Est à true si l''enregistrement est à mettre à disposition de l''IV personnalisée'
             default: false
             column: is_for_pti
+        pushApps:
+            type: boolean
+            nullable: false
+            default: false
+            column: push_apps
+        prehome:
+            type: boolean
+            nullable: false
+            default: false
+            column: prehome
+        urlPj:
+            type: string
+            column: url_pj
         eventId:
             type: integer
             nullable: true
