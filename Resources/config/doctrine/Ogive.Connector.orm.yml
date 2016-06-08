@@ -22,7 +22,7 @@ Tisseo\EndivBundle\Entity\Ogive\Connector:
             fixed: false
             comment: ''
         type:
-            type: text
+            type: integer
             nullable: false
         details:
             type: string
