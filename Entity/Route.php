@@ -164,7 +164,7 @@ class Route
      * @param Comment $comment
      * @return Route
      */
-    public function setComment(Comment $comment)
+    public function setComment(Comment $comment = null)
     {
         $this->comment = $comment;
 
