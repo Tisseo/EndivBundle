@@ -407,26 +407,26 @@ class TripManager
     public function getDateBounds($route)
     {
         $connection = $this->om->getConnection()->getWrappedConnection();
+
         $stmt = $connection->prepare("
-            SELECT id,
-                getdateboundsbeetweencalendars(day_calendar_id, period_calendar_id) as bounds
-            FROM trip
-            WHERE route_id = :routeId
-            AND day_calendar_id IS NOT NULL
-            AND period_calendar_id IS NOT NULL
+            SELECT UNNEST(trips) as id, (bounds).start_date AS start, (bounds).end_date AS end FROM (
+                SELECT CASE WHEN t.day_calendar_id IS NOT NULL THEN getdateboundsbeetweencalendars(t.period_calendar_id, t.day_calendar_id) ELSE (c.computed_start_date, c.computed_end_date, null, null)::date_pair END as bounds, array_agg(t.id) as trips
+                FROM trip t
+                JOIN calendar c ON c.id = t.period_calendar_id
+                WHERE t.route_id = :routeId
+                GROUP BY t.period_calendar_id, t.day_calendar_id, c.computed_start_date, c.computed_end_date
+            ) AS trip_date;
         ");
         $stmt->bindValue(':routeId', $route->getId());
         $stmt->execute();
         $datas = $stmt->fetchAll();
 
-        $results = array();
-        foreach ($datas as $item)
-        {
-            $data = explode(",", str_replace(")", "", str_replace("(", "", $item['bounds'])));
-            $results[$item['id']] = array('start' => $data[0], 'end' => $data[1]);
+        $result = array();
+        foreach ($datas as $data) {
+            $result[$data['id']] = $data;
         }
 
-        return $results;
+        return $result;
     }
 
     /**
