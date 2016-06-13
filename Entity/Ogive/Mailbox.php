@@ -58,7 +58,7 @@ class Mailbox
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -81,7 +81,7 @@ class Mailbox
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -104,7 +104,7 @@ class Mailbox
     /**
      * Get subtitle
      *
-     * @return string 
+     * @return string
      */
     public function getSubtitle()
     {
@@ -127,7 +127,7 @@ class Mailbox
     /**
      * Get mailText
      *
-     * @return string 
+     * @return string
      */
     public function getMailText()
     {
@@ -150,7 +150,7 @@ class Mailbox
     /**
      * Get isForWebsite
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsForWebsite()
     {
@@ -173,7 +173,7 @@ class Mailbox
     /**
      * Get isForPti
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsForPti()
     {
@@ -196,7 +196,7 @@ class Mailbox
     /**
      * Get eventId
      *
-     * @return integer 
+     * @return integer
      */
     public function getEventId()
     {
@@ -219,7 +219,7 @@ class Mailbox
     /**
      * Get startDatetime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDatetime()
     {
@@ -242,7 +242,7 @@ class Mailbox
     /**
      * Get endDatetime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDatetime()
     {

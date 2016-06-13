@@ -36,7 +36,7 @@ class LineBoard
     /**
      * Get lineId
      *
-     * @return integer 
+     * @return integer
      */
     public function getLineId()
     {
@@ -59,7 +59,7 @@ class LineBoard
     /**
      * Get board
      *
-     * @return Board 
+     * @return Board
      */
     public function getBoard()
     {

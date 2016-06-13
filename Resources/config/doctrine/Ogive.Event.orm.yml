@@ -31,7 +31,6 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
             column: chaos_internal_cause
         isPublished:
             type: boolean
-            nullable: true
             column: is_published
         status:
             type: integer

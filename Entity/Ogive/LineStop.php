@@ -33,7 +33,7 @@ class LineStop
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class LineStop
     /**
      * Get stopId
      *
-     * @return integer 
+     * @return integer
      */
     public function getStopId()
     {
@@ -79,7 +79,7 @@ class LineStop
     /**
      * Get lineId
      *
-     * @return integer 
+     * @return integer
      */
     public function getLineId()
     {
@@ -102,7 +102,7 @@ class LineStop
     /**
      * Get directionName
      *
-     * @return string 
+     * @return string
      */
     public function getDirectionName()
     {

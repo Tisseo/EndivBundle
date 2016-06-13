@@ -71,7 +71,7 @@ class Depot
     {
         return $this->shortName;
     }
-    
+
     /**
      * Set long name
      *
