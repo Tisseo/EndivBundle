@@ -40,6 +40,21 @@ class Mailbox
     private $isForPti;
 
     /**
+     * @var boolean
+     */
+    private $pushApps;
+
+    /**
+     * @var boolean
+     */
+    private $prehome;
+
+    /**
+     * @var string
+     */
+    private $urlPj;
+
+    /**
      * @var integer
      */
     private $eventId;
@@ -247,5 +262,74 @@ class Mailbox
     public function getEndDatetime()
     {
         return $this->endDatetime;
+    }
+
+    /**
+     * Get urlPj
+     *
+     * @return string
+     */
+    public function getUrlPj()
+    {
+        return $this->urlPj;
+    }
+
+    /**
+     * Set urlPj
+     *
+     * @param string $urlPj
+     * @return Mailbox
+     */
+    public function setUrlPj($urlPj)
+    {
+        $this->urlPj = $urlPj;
+
+        return $this;
+    }
+
+    /**
+     * Get prehome
+     *
+     * @return boolean
+     */
+    public function getPrehome()
+    {
+        return $this->prehome;
+    }
+
+    /**
+     * Set prehome
+     *
+     * @param boolean $prehome
+     * @return Mailbox
+     */
+    public function setPrehome($prehome)
+    {
+        $this->prehome = $prehome;
+
+        return $this;
+    }
+
+    /**
+     * Get pushApps
+     *
+     * @return boolean pushApps
+     */
+    public function getPushApps()
+    {
+        return $this->pushApps;
+    }
+
+    /**
+     * Set pushApps
+     *
+     * @param boolean pushApps
+     * @return Mailbox
+     */
+    public function setPushApps($pushApps)
+    {
+        $this->pushApps = $pushApps;
+
+        return $this;
     }
 }

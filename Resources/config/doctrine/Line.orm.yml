@@ -56,4 +56,18 @@ Tisseo\EndivBundle\Entity\Line:
             joinColumns:
                 physical_mode_id:
                     referencedColumnName: id
+    manyToMany:
+        boards:
+            targetEntity: Tisseo\EndivBundle\Entity\Ogive\Board
+            cascade: ['persist', 'remove']
+            joinTable:
+                name: ogive.line_board
+                joinColumns:
+                    -
+                        name: line_id
+                        referencesColumn: id
+                inverseJoinColumns:
+                    -
+                        name: board_id
+                        referencedColumnName: id
     lifecycleCallbacks: {  }

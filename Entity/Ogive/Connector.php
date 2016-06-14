@@ -13,6 +13,21 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class Connector extends OgiveEntity
 {
+    const A4 = 1;
+    const MAIL = 2;
+    const HOMEPAGE = 3;
+    const NETWORK_INFO = 4;
+
+    /**
+     * @var static array
+     */
+    public static $connectorTypes = array(
+        self::A4 => self::A4,
+        self::MAIL => self::MAIL,
+        self::HOMEPAGE => self::HOMEPAGE,
+        self::NETWORK_INFO => self::NETWORK_INFO
+    );
+
     /**
      * @var integer
      */
@@ -24,7 +39,7 @@ class Connector extends OgiveEntity
     private $name;
 
     /**
-     * @var string
+     * @var integer
      */
     private $type;
 
@@ -90,12 +105,14 @@ class Connector extends OgiveEntity
     /**
      * Set type
      *
-     * @param string $type
+     * @param integer $type
      * @return Connector
      */
     public function setType($type)
     {
-        $this->type = $type;
+        if (in_array($type, self::$connectorTypes)) {
+            $this->type = $type;
+        }
 
         return $this;
     }
@@ -103,7 +120,7 @@ class Connector extends OgiveEntity
     /**
      * Get type
      *
-     * @return string
+     * @return integer
      */
     public function getType()
     {

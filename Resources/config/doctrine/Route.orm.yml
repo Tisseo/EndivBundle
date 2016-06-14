@@ -44,6 +44,7 @@ Tisseo\EndivBundle\Entity\Route:
             joinColumns:
                 comment_id:
                     referencedColumnName: id
+            cascade: ['persist', 'remove']
         lineVersion:
             targetEntity: LineVersion
             mappedBy: null

@@ -40,6 +40,17 @@ class RouteManager extends SortManager
 
     public function save(Route $route)
     {
+        $comment = $route->getComment();
+
+        if (
+            !empty($comment) &&
+            $comment->getLabel() == null &&
+            $comment->getCommentText() == null
+        ) {
+            $route->setComment();
+            $this->om->remove($comment);
+        }
+
         $this->om->persist($route);
         $this->om->flush();
     }
