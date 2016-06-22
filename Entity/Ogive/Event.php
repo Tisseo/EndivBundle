@@ -85,6 +85,11 @@ class Event extends OgiveEntity
     /**
      * @var Collection
      */
+    private $objects;
+
+    /**
+     * @var Collection
+     */
     private $periods;
 
     /**
@@ -103,6 +108,7 @@ class Event extends OgiveEntity
     public function __construct()
     {
         $this->periods = new ArrayCollection();
+        $this->objects = new ArrayCollection();
         $this->eventObjects = new ArrayCollection();
         $this->eventDatasources = new ArrayCollection();
         $this->eventSteps = new ArrayCollection();
@@ -430,6 +436,42 @@ class Event extends OgiveEntity
     }
 
     /**
+     * Get objects
+     *
+     * @return Collection
+     */
+    public function getObjects()
+    {
+        return $this->objects;
+    }
+
+    /**
+     * Set objects
+     *
+     * @param Collection objects
+     * @return Event
+     */
+    public function setObjects(Collection $objects)
+    {
+        $this->objects = $objects;
+
+        return $this;
+    }
+
+    /**
+     * Add event object
+     *
+     * @param Object $object
+     * @return Event
+     */
+    public function addObject(Object $object)
+    {
+        $this->objects->add($object);
+
+        return $this;
+    }
+
+    /**
      * Get extrema period dates
      *
      * @return array
@@ -457,4 +499,5 @@ class Event extends OgiveEntity
 
         return $extrema;
     }
+
 }
