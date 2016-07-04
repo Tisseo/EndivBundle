@@ -13,6 +13,11 @@ Tisseo\EndivBundle\Entity\Stop:
             type: integer
             nullable: false
             unsigned: false
+    fields:
+        lock:
+            type: boolean
+            nullable: false
+            default: false
     oneToOne:
         waypoint:
             targetEntity: Waypoint
