@@ -19,6 +19,11 @@ class Stop
     private $id;
 
     /**
+     * @var boolean
+     */
+    private $lock;
+
+    /**
      * @var \Tisseo\EndivBundle\Entity\Stop
      */
     private $masterStop;
@@ -76,6 +81,26 @@ class Stop
         $this->id = $id;
 
         return $this;
+    }
+
+    /**
+     * Get lock
+     *
+     * @return boolean
+     */
+    public function getLock()
+    {
+        return $this->lock;
+    }
+
+    /**
+     * Set lock
+     *
+     * @param boolean $lock
+     */
+    public function setLock($lock)
+    {
+        $this->lock = $lock;
     }
 
     /**
