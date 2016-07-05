@@ -419,4 +419,25 @@ class StopManager extends SortManager
 
         return $lines;
     }
+
+    /**
+     * find locked stops
+     */
+    public function findLockedStops($lock = true) {
+        return $this->repository->findBy(array('lock' => $lock));
+    }
+
+    /**
+     * toggle lock stops
+     */
+    public function toggleLock(array $stopIds) {
+        $stops = $this->repository->findById($stopIds);
+
+        foreach($stops as $stop) {
+            $stop->setLock(!$stop->getLock());
+            $this->em->persist($stop);
+        }
+
+        $this->em->flush();
+    }
 }
