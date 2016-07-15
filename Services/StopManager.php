@@ -129,9 +129,8 @@ class StopManager extends SortManager
     {
         $query = $this->em->createQuery("
             SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            JOIN sh.stop s
             WHERE sh.stop = :stop
-            ORDER BY sh.startDate DESC
+            ORDER BY sh.startDate DESC, sh.endDate DESC
         ");
         $query->setParameter('stop', $stop);
 
