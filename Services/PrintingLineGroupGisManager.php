@@ -35,7 +35,7 @@ class PrintingLineGroupGisManager
     public function getCsvExport()
     {
         $query = $this->om->createQuery("
-            SELECT 
+            SELECT
                 DISTINCT lgg.name AS line_group_gis_name,
                 p.quantity AS printing_quantity,
                 p.date AS printing_date,

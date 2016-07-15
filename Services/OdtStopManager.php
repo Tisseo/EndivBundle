@@ -37,7 +37,7 @@ class OdtStopManager extends SortManager
     public function find($odtStopId)
     {
         if (empty($odtStopId))
-            return null; 
+            return null;
         $args = explode("/", $odtStopId);
         return $this->repository->find(array(
             'startDate' => new DateId($args[0]),

@@ -77,7 +77,7 @@ class StopHistory
                 );
             }
         }
-        else 
+        else
         {
             if ($this->getStartDate() <= $now)
             {

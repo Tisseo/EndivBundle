@@ -4,7 +4,7 @@ namespace Tisseo\EndivBundle\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class DateId extends \DateTime 
+class DateId extends \DateTime
 {
     public function __toString()
     {
