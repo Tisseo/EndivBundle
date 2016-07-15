@@ -74,4 +74,17 @@ Tisseo\EndivBundle\Entity\Stop:
                 stop_area_id:
                     referencedColumnName: id
             orphanRemoval: false
+    manyToMany:
+        pois:
+            targetEntity: Poi
+            joinTable:
+                name: poi_stop
+                joinColumns:
+                    -
+                        name: stop_id
+                        referencesColumn: id
+                inverseJoinColumns:
+                    -
+                        name: poi_id
+                        referencedColumnName: id
     lifecycleCallbacks: {  }

@@ -59,6 +59,11 @@ class Stop
     private $odtStops;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $pois;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -68,6 +73,7 @@ class Stop
         $this->stopAccessibilities = new ArrayCollection();
         $this->phantoms = new ArrayCollection();
         $this->odtStops = new ArrayCollection();
+        $this->pois = new ArrayCollection();
     }
 
     /**
@@ -473,6 +479,26 @@ class Stop
     public function removePhantom(Stop $phantom)
     {
         $this->phantoms->removeElement($phantom);
+    }
+
+    /**
+     * Get pois
+     *
+     * @return Collection
+     */
+    public function getPois()
+    {
+        return $this->pois;
+    }
+
+    /**
+     * Set pois
+     *
+     * @param Collection $pois
+     */
+    public function setPois(Collection $pois)
+    {
+        $this->pois = $pois;
     }
 
     /**
