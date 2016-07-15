@@ -67,7 +67,7 @@ Tisseo\EndivBundle\Entity\Calendar:
             orphanRemoval: true
             fetch: 'EXTRA_LAZY'
         calendarElements:
-            orderBy: { 'rank': 'ASC' } 
+            orderBy: { 'rank': 'ASC' }
             targetEntity: CalendarElement
             mappedBy: calendar
             inversedBy: null

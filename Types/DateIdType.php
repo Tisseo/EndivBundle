@@ -9,7 +9,7 @@ class DateIdType extends \Doctrine\DBAL\Types\DateType
 {
     public function getName()
     {
-        return 'date_id';        
+        return 'date_id';
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
