@@ -485,7 +485,7 @@ class Stop
     public function getLatestStopHistory()
     {
         $criteria = Criteria::create()
-            ->orderBy(array('startDate' => Criteria::DESC))
+            ->orderBy(array('startDate' => Criteria::DESC, 'endDate' => Criteria::DESC))
             ->setMaxResults(1)
         ;
 
