@@ -357,17 +357,18 @@ class LineVersionManager extends SortManager
     public function create(LineVersion $lineVersion)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
-        if ($oldLineVersion)
-        {
-            if ($oldLineVersion->getEndDate() === null)
+        if ($oldLineVersion) {
+            if ($oldLineVersion->getEndDate() === null) {
                 $oldLineVersion->closeDate($lineVersion->getStartDate());
-            else if ($oldLineVersion->getEndDate() > $lineVersion->getStartDate())
+            } else if ($oldLineVersion->getEndDate() > $lineVersion->getStartDate()) {
                 return;
+            }
             $this->om->persist($oldLineVersion);
         }
 
-        foreach($lineVersion->getLineGroupContents() as $lineGroupContent)
+        foreach($lineVersion->getLineGroupContents() as $lineGroupContent) {
             $this->om->persist($lineGroupContent->getLineGroup());
+        }
 
         $this->om->flush();
 
@@ -380,8 +381,7 @@ class LineVersionManager extends SortManager
         $lineVersion->setModifications(new ArrayCollection());
         $this->om->persist($lineVersion);
 
-        foreach($modifications as $modification)
-        {
+        foreach($modifications as $modification) {
             $modification->setResolvedIn($lineVersion);
             $this->om->persist($modification->getLineVersion());
         }

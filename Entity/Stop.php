@@ -59,6 +59,11 @@ class Stop
     private $odtStops;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $pois;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -68,6 +73,7 @@ class Stop
         $this->stopAccessibilities = new ArrayCollection();
         $this->phantoms = new ArrayCollection();
         $this->odtStops = new ArrayCollection();
+        $this->pois = new ArrayCollection();
     }
 
     /**
@@ -476,6 +482,26 @@ class Stop
     }
 
     /**
+     * Get pois
+     *
+     * @return Collection
+     */
+    public function getPois()
+    {
+        return $this->pois;
+    }
+
+    /**
+     * Set pois
+     *
+     * @param Collection $pois
+     */
+    public function setPois(Collection $pois)
+    {
+        $this->pois = $pois;
+    }
+
+    /**
      * CUSTOM FUNCTIONS MOST USING CRITERIA FOR SIMPLE DB REQUESTS
      */
 
@@ -485,7 +511,7 @@ class Stop
     public function getLatestStopHistory()
     {
         $criteria = Criteria::create()
-            ->orderBy(array('startDate' => Criteria::DESC))
+            ->orderBy(array('startDate' => Criteria::DESC, 'endDate' => Criteria::DESC))
             ->setMaxResults(1)
         ;
 

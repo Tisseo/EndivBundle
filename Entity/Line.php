@@ -582,7 +582,7 @@ class Line
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('filePath', null));
-        if (!is_null($max)) { 
+        if (!is_null($max)) {
            $criteria->setMaxResults($max);
         }
         $schematics = $this->schematics->matching($criteria);

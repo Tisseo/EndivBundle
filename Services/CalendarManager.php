@@ -49,19 +49,20 @@ class CalendarManager extends SortManager
     public function findByCountResult(array $array)
     {
         $q = $this->repository->createQueryBuilder('q')->select('COUNT(q)');
-        $this->buildCriteria($array, $q, 'q');
+        $this->buildCriteria($array, $q);
 
         return $q->getQuery()->getSingleScalarResult();
     }
 
-    private function buildCriteria(array $params, QueryBuilder &$q, $alias = 'q')
+    private function buildCriteria(array $params, QueryBuilder &$q)
     {
+        $alias = $q->getRootAliases()[0];
+
         if (count($params) > 0) {
             foreach($params as $key => $value) {
                 if (!empty($value)) {
-                    if ($key !== 'calendarType') {
-                        $q->andWhere($alias.'.'.$key.' LIKE :val_'.$key);
-                        $q->setParameter('val_'.$key, '%'.$value.'%');
+                    if ($key === 'name') {
+                        $q->andWhere("UPPER(".$alias.".".$key.") LIKE UPPER('%".$value."%')");
                     } else {
                         $q->andWhere(($alias.'.'.$key.' = :val_'.$key));
                         $q->setParameter('val_'.$key, $value);

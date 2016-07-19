@@ -35,7 +35,7 @@ class PrintingManager
     public function getCsvExport()
     {
         $query = $this->om->createQuery("
-            SELECT 
+            SELECT
                 l.number AS line_number,
                 lv.version AS line_version_version,
                 p.quantity AS printing_quantity,
