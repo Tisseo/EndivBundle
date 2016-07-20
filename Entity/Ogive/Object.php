@@ -13,6 +13,7 @@ class Object extends OgiveEntity
     const AGENCY = 'agency';
     const LINE = 'line';
     const STOP = 'stop';
+    const STOP_AREA = 'stop_area';
 
     /**
      * @var static array
