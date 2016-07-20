@@ -47,16 +47,27 @@ class ObjectManager extends OgiveManager
                 $meta->label = $objectRef->getName();
                 break;
             case OgiveObject::LINE:
-                $lineVersion = $objectRef->getCurrentLineVersion();
                 $meta->label = $objectRef->getNumber();
-                $meta->background_color = $lineVersion->getBgColor()->getHtml();
-                $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
                 $meta->physical_mode = $objectRef->getPhysicalMode()->getName();
+
+                $lineVersion = $objectRef->getCurrentLineVersion();
+                if (empty($lineVersion)) {
+                    $lineVersion = $objectRef->getLastLineVersion();
+                }
+                if (!empty($lineVersion)) {
+                    $meta->background_color = $lineVersion->getBgColor()->getHtml();
+                    $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
+                }
+
                 break;
             case OgiveObject::STOP:
                 $meta->label = $objectRef->getCurrentStopHistory($extrema['min'])->getShortName();
                 $meta->code = $objectRef->getStopDatasources()->first()->getCode();
                 $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
+                break;
+            case OgiveObject::STOP_AREA:
+                $meta->label = $objectRef->getShortName();
+                $meta->city = ucfirst(strtolower($objectRef->getCity()->getName()));
                 break;
             default:
                 break;
@@ -73,7 +84,8 @@ class ObjectManager extends OgiveManager
      */
     public function getObjectReference(OgiveObject $object)
     {
-        $entityClass = sprintf('TisseoEndivBundle:%s', ucfirst($object->getObjectType()));
+        $entityName = ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $object->getObjectType()))));
+        $entityClass = sprintf('TisseoEndivBundle:%s', $entityName);
         return $this->objectManager->getRepository($entityClass)->find($object->getObjectRef());
     }
 }
