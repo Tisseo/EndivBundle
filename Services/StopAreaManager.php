@@ -29,7 +29,6 @@ class StopAreaManager extends SortManager
         return empty($stopAreaId) ? null : $this->repository->find($stopAreaId);
     }
 
-
     public function findByCityId($cityId, $search = array(), $orderParams = null, $limit = null, $offset = null)
     {
         $q = $this->repository->createQueryBuilder('q');
@@ -243,23 +242,49 @@ class StopAreaManager extends SortManager
     //
     // VERIFIED FUNCTION
     //
+    public function getUsedStops($stopAreaId) {
+        $query = $this->em->createQuery("
+            SELECT DISTINCT s.id as stop1, s2.id as stop2
+            FROM Tisseo\EndivBundle\Entity\Line l
+            JOIN l.lineVersions lv
+            JOIN lv.routes r
+            JOIN r.routeStops rs
+            JOIN rs.waypoint w
+            LEFT JOIN w.stop s
+            LEFT JOIN w.odtArea oa
+            LEFT JOIN oa.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
+            LEFT JOIN os.stop s2
+            WHERE (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
+            AND s.stopArea = :sa OR s2.stopArea = :sa
+            ORDER BY s.id
+       ")->setParameter('sa', $stopAreaId);
+
+        $stops = $query->getArrayResult();
+
+        $result = array();
+        foreach ($stops as $stop) {
+            $result[] = ($stop['stop1'] ? $stop['stop1'] : $stop['stop2']);
+        }
+
+        return $result;
+    }
 
     public function getLinesByStop($stopAreaId, $groupResultByStop = true)
     {
         $query = $this->em->createQuery("
-           SELECT DISTINCT s.id as stop, s2.id as stop2, l.id as line
-           FROM Tisseo\EndivBundle\Entity\Line l
-           JOIN l.lineVersions lv
-           JOIN lv.routes r
-           JOIN r.routeStops rs
-           JOIN rs.waypoint w
-           LEFT JOIN w.stop s
-           LEFT JOIN w.odtArea oa
-           LEFT JOIN oa.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
-           LEFT JOIN os.stop s2
-           WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
-           AND s.stopArea = :sa OR s2.stopArea = :sa
-           ORDER BY s.id
+            SELECT DISTINCT s.id as stop, s2.id as stop2, l.id as line
+            FROM Tisseo\EndivBundle\Entity\Line l
+            JOIN l.lineVersions lv
+            JOIN lv.routes r
+            JOIN r.routeStops rs
+            JOIN rs.waypoint w
+            LEFT JOIN w.stop s
+            LEFT JOIN w.odtArea oa
+            LEFT JOIN oa.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
+            LEFT JOIN os.stop s2
+            WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
+            AND s.stopArea = :sa OR s2.stopArea = :sa
+            ORDER BY s.id
         ")
         ->setParameter('sa', $stopAreaId);
         // There is a bug with getResult() and custom request SELECT s.id, l
@@ -353,6 +378,5 @@ class StopAreaManager extends SortManager
 
         return $result;
     }
-
 }
 
