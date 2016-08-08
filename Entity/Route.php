@@ -610,4 +610,16 @@ class Route
         return $exportDestinations;
     }
 
+    /**
+     * Get Terminus Stop Area
+     *
+     * @return StopArea
+     *
+     * Getting the terminus stop area
+     */
+    
+    public function getTerminus()
+    {
+        return $this->getRouteStops()->last()->getWaypoint()->getStop()->getStopArea();
+    }
 }

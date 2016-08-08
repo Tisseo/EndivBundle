@@ -12,6 +12,7 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
+use Tisseo\EndivBundle\Entity\StopArea;
 use Tisseo\EndivBundle\Entity\RouteExportDestination;
 use Tisseo\EndivBundle\Services\StopManager;
 
@@ -31,6 +32,21 @@ class RouteManager extends SortManager
     public function findAll()
     {
         return $this->repository->findAll();
+    }
+
+    /**
+     * findByChaosId
+     * @param string $ChaosRouteId
+     * @return Route
+     *
+     * Generates a route endiv entity based on chaos api pt_object id
+     */
+    
+    public function findByChaosId($chaosRouteId)
+    {
+        $tempArray = explode(":",$chaosRouteId);
+        $endivRouteId = $tempArray[1];
+        return $this->find($endivRouteId);
     }
 
     public function find($routeId)
