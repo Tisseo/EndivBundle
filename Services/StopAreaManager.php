@@ -28,7 +28,22 @@ class StopAreaManager extends SortManager
     {
         return empty($stopAreaId) ? null : $this->repository->find($stopAreaId);
     }
-
+    
+    /**
+     * findByChaosId
+     * @param string $ChaosStopAreaId
+     * @return StopArea
+     *
+     * Generates a stop area endiv entity based on chaos api pt_object id
+     */
+    
+    public function findByChaosId($chaosStopAreaId)
+    {
+        $tempArray = explode("SA_", $chaosStopAreaId);
+        $endivStopAreaId = $tempArray[1];
+        return $this->find($endivStopAreaId);
+    }
+    
     public function findByCityId($cityId, $search = array(), $orderParams = null, $limit = null, $offset = null)
     {
         $q = $this->repository->createQueryBuilder('q');
@@ -152,7 +167,7 @@ class StopAreaManager extends SortManager
                ORDER BY sd.code";
         $query = $this->em->createQuery($queryString)->setParameter('sa', $stopArea);
 
-        return $query->getResult();
+        return $query->getFirstResult();
     }
 
     public function getStopsOrderedByShortName($stopArea) {

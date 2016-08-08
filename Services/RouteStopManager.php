@@ -40,6 +40,49 @@ class RouteStopManager extends SortManager {
 
         return $query->getResult();
     }
+    public function findStopMinRankByRouteId($routeId, $stopAreaId) {
+        $rank = 0;
+        $qb = $this->om->createQueryBuilder()
+                       ->select('rs.rank') 
+                       ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
+                       ->join('rs.route', 'r')
+                       ->join('rs.waypoint', 'w')
+                       ->join('w.stop', 's')
+                       ->join('s.stopArea', 'sa')
+                       ->where('r.id = ?1 AND sa.id = ?2')
+                       ->orderBy('rs.rank', 'ASC')
+                       ->setMaxResults( 1 )
+                       ->setParameters(array(
+                           1 => $routeId, 
+                           2 => $stopAreaId
+                       ))
+            ; 
+        return $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function findStopMaxRankByRouteId($routeId, $stopAreaId) {
+        $rank = 0;
+        $qb = $this->om->createQueryBuilder()
+                       ->select('rs.rank') 
+                       ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
+                       ->join('rs.route', 'r')
+                       ->join('rs.waypoint', 'w')
+                       ->join('w.stop', 's')
+                       ->join('s.stopArea', 'sa')
+                       ->where('r.id = ?1 AND sa.id = ?2')
+                       ->orderBy('rs.rank', 'DESC')
+                       ->setMaxResults( 1 )
+                       ->setParameters(array(
+                           1 => $routeId, 
+                           2 => $stopAreaId
+                       ))
+            ;
+        return $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     public function getStoptimes($trip)
     {
@@ -50,6 +93,23 @@ class RouteStopManager extends SortManager {
         )->setParameter("trip", $trip);
 
         return $query->getResult();
+    }
+    public function getRouteStopsSectionByMinMaxRank($routeId, $minRank, $maxRank)
+    {
+        $qb = $this->om->createQueryBuilder()
+                       ->select('rs')
+                       ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
+                       ->join('rs.route', 'r')
+                       ->where('r.id = ?1 AND rs.rank BETWEEN ?2 AND ?3')
+                       ->setParameters(array(
+                           1 => $routeId,
+                           2 => $minRank,
+                           3 => $maxRank
+                       ));
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     public function save(RouteStop $routeStop)

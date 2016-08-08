@@ -27,7 +27,20 @@ class LineManager extends SortManager
     {
         return empty($lineId) ? null : $this->repository->find($lineId);
     }
-
+    /**
+     * findByChaosId
+     * @param string $ChaosLineId
+     * @return Line
+     *
+     * Generates a line endiv entity based on chaos api id
+     */
+    
+    public function findByChaosId($ChaosLineId)
+    {
+        $tempArray = explode(':', $ChaosLineId);
+        $endivLineId = $tempArray[1];
+        return $this->find($endivLineId);
+    }
     public function findByDataSource($dataSourceId)
     {
         $query = $this->repository->createQueryBuilder('l')
