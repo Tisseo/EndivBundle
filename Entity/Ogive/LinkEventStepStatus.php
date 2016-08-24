@@ -8,9 +8,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class LinkEventStepStatus extends OgiveEntity
 {
     const STATUS_TODO = 1;
-
     const STATUS_VALIDATED = 2;
-
     const STATUS_REJECTED = 3;
 
     /**
@@ -92,6 +90,10 @@ class LinkEventStepStatus extends OgiveEntity
      */
     public function setStatus($status)
     {
+        if (!in_array($status, self::$statusMap)) {
+            throw new \Exception(sprintf('The status %s is invalid', $status));
+        }
+
         $this->status = $status;
 
         return $this;
