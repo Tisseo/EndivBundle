@@ -15,9 +15,9 @@ class ConnectorParam
     private $id;
 
     /**
-     * @var string
+     * @var integer
      */
-    private $paramType;
+    private $type;
 
     /**
      * @var string
@@ -53,26 +53,26 @@ class ConnectorParam
     }
 
     /**
-     * Set paramType
+     * Set type
      *
-     * @param string $paramType
+     * @param integer $type
      * @return ConnectorParam
      */
-    public function setParamType($paramType)
+    public function setType($type)
     {
-        $this->paramType = $paramType;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get paramType
+     * Get type
      *
-     * @return string
+     * @return integer
      */
-    public function getParamType()
+    public function getType()
     {
-        return $this->paramType;
+        return $this->type;
     }
 
     /**

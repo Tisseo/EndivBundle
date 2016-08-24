@@ -18,9 +18,9 @@ class ScenarioStepText extends OgiveEntity
     private $textId;
 
     /**
-     * @var string
+     * @var integer
      */
-    private $label;
+    private $type;
 
     /**
      * @var integer
@@ -48,26 +48,26 @@ class ScenarioStepText extends OgiveEntity
     }
 
     /**
-     * Set label
+     * Set type
      *
-     * @param string $label
+     * @param integer $type
      * @return ScenarioStepText
      */
-    public function setLabel($label)
+    public function setType($type)
     {
-        $this->label = $label;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get label
+     * Get type
      *
-     * @return string
+     * @return integer
      */
-    public function getLabel()
+    public function getType()
     {
-        return $this->label;
+        return $this->type;
     }
 
     /**

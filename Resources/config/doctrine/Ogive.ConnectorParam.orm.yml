@@ -15,12 +15,9 @@ Tisseo\EndivBundle\Entity\Ogive\ConnectorParam:
             generator:
                 strategy: SEQUENCE
     fields:
-        paramType:
-            type: string
+        type:
+            type: integer
             nullable: false
-            length: 40
-            fixed: false
-            comment: ''
             column: param_type
         param:
             type: string

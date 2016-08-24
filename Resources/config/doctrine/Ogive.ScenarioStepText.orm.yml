@@ -12,12 +12,11 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStepText:
         text:
             associationKey: true
     fields:
-        label:
-            type: string
+        type:
+            type: integer
             nullable: false
-            length: 40
-            fixed: false
-            comment: 'Nom du texte dans l''étape, par exemple titre, corps, sous-titre, ligne3...'
+            default: 0
+            column: text_type
         rank:
             type: integer
             nullable: false
