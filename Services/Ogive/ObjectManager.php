@@ -61,7 +61,12 @@ class ObjectManager extends OgiveManager
 
                 break;
             case OgiveObject::STOP:
-                $meta->label = $objectRef->getCurrentStopHistory($extrema['min'])->getShortName();
+                $stopHistory = $objectRef->getCurrentStopHistory($extrema['min']);
+                if (!empty($stopHistory)) {
+                    $meta->label = $stopHistory->getShortName();
+                } else {
+                    $meta->label = null;
+                }
                 $meta->code = $objectRef->getStopDatasources()->first()->getCode();
                 $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
                 break;
