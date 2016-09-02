@@ -152,7 +152,7 @@ class LineVersionManager extends SortManager
     public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
     {
         $query = $this->repository->createQueryBuilder('lv')
-            ->where('lv.endDate is null OR lv.endDate > :now')
+            ->where('lv.endDate is null OR (lv.endDate + 1) > :now')
             ->setParameter('now', $now);
 
         if ($filter === 'grouplines')
@@ -184,7 +184,7 @@ class LineVersionManager extends SortManager
             SELECT lv.id FROM Tisseo\EndivBundle\Entity\LineVersion lv
             JOIN lv.line line
             WHERE line.number = ?1
-        	   AND (lv.endDate is null OR lv.endDate > CURRENT_TIMESTAMP())
+        	   AND (lv.endDate is null OR (lv.endDate + 1) > CURRENT_TIMESTAMP())
         	   AND lv.startDate <= CURRENT_TIMESTAMP()");
 
         $query->setParameter(1, $lineNumber);
