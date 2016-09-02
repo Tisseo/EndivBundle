@@ -1,6 +1,6 @@
-Tisseo\EndivBundle\Entity\Ogive\Mailbox:
+Tisseo\EndivBundle\Entity\Ogive\Message:
     type: entity
-    table: ogive.mailbox
+    table: ogive.message
     id:
         id:
             type: integer
