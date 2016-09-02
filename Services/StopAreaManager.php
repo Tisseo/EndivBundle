@@ -28,22 +28,7 @@ class StopAreaManager extends SortManager
     {
         return empty($stopAreaId) ? null : $this->repository->find($stopAreaId);
     }
-    
-    /**
-     * findByChaosId
-     * @param string $ChaosStopAreaId
-     * @return StopArea
-     *
-     * Generates a stop area endiv entity based on chaos api pt_object id
-     */
-    
-    public function findByChaosId($chaosStopAreaId)
-    {
-        $tempArray = explode("SA_", $chaosStopAreaId);
-        $endivStopAreaId = $tempArray[1];
-        return $this->find($endivStopAreaId);
-    }
-    
+
     public function findByCityId($cityId, $search = array(), $orderParams = null, $limit = null, $offset = null)
     {
         $q = $this->repository->createQueryBuilder('q');
