@@ -71,6 +71,18 @@ Tisseo\EndivBundle\Entity\LineVersion:
             type: line_version_status
             requireSQLConversion: true
             comment: ''
+        numAudio:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: num_audio
+        text2speech:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
     manyToOne:
         bgColor:
             targetEntity: Color
