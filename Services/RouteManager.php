@@ -34,21 +34,6 @@ class RouteManager extends SortManager
         return $this->repository->findAll();
     }
 
-    /**
-     * findByChaosId
-     * @param string $ChaosRouteId
-     * @return Route
-     *
-     * Generates a route endiv entity based on chaos api pt_object id
-     */
-    
-    public function findByChaosId($chaosRouteId)
-    {
-        $tempArray = explode(":",$chaosRouteId);
-        $endivRouteId = $tempArray[1];
-        return $this->find($endivRouteId);
-    }
-
     public function find($routeId)
     {
         return empty($routeId) ? null : $this->repository->find($routeId);
