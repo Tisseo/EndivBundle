@@ -5,9 +5,9 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Mailbox
+ * Message
  */
-class Mailbox
+class Message
 {
     /**
      * @var integer
@@ -84,7 +84,7 @@ class Mailbox
      * Set title
      *
      * @param string $title
-     * @return Mailbox
+     * @return Message
      */
     public function setTitle($title)
     {
@@ -107,7 +107,7 @@ class Mailbox
      * Set subtitle
      *
      * @param string $subtitle
-     * @return Mailbox
+     * @return Message
      */
     public function setSubtitle($subtitle)
     {
@@ -130,7 +130,7 @@ class Mailbox
      * Set mailText
      *
      * @param string $mailText
-     * @return Mailbox
+     * @return Message
      */
     public function setMailText($mailText)
     {
@@ -153,7 +153,7 @@ class Mailbox
      * Set isForWebsite
      *
      * @param boolean $isForWebsite
-     * @return Mailbox
+     * @return Message
      */
     public function setIsForWebsite($isForWebsite)
     {
@@ -176,7 +176,7 @@ class Mailbox
      * Set isForPti
      *
      * @param boolean $isForPti
-     * @return Mailbox
+     * @return Message
      */
     public function setIsForPti($isForPti)
     {
@@ -199,7 +199,7 @@ class Mailbox
      * Set eventId
      *
      * @param integer $eventId
-     * @return Mailbox
+     * @return Message
      */
     public function setEventId($eventId)
     {
@@ -222,7 +222,7 @@ class Mailbox
      * Set startDatetime
      *
      * @param \DateTime $startDatetime
-     * @return Mailbox
+     * @return Message
      */
     public function setStartDatetime($startDatetime)
     {
@@ -245,7 +245,7 @@ class Mailbox
      * Set endDatetime
      *
      * @param \DateTime $endDatetime
-     * @return Mailbox
+     * @return Message
      */
     public function setEndDatetime($endDatetime)
     {
@@ -278,7 +278,7 @@ class Mailbox
      * Set urlPj
      *
      * @param string $urlPj
-     * @return Mailbox
+     * @return Message
      */
     public function setUrlPj($urlPj)
     {
@@ -301,7 +301,7 @@ class Mailbox
      * Set prehome
      *
      * @param boolean $prehome
-     * @return Mailbox
+     * @return Message
      */
     public function setPrehome($prehome)
     {
@@ -324,7 +324,7 @@ class Mailbox
      * Set pushApps
      *
      * @param boolean pushApps
-     * @return Mailbox
+     * @return Message
      */
     public function setPushApps($pushApps)
     {
