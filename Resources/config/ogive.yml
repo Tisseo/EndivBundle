@@ -56,3 +56,6 @@ services:
     tisseo_endiv.ogive.manager.board:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\BoardManager'
+    tisseo_endiv.ogive.manager.message:
+        parent: 'tisseo_endiv.ogive.manager.ogive'
+        class: 'Tisseo\EndivBundle\Services\Ogive\MessageManager'
