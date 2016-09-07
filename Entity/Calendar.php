@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Calendar
@@ -371,10 +372,19 @@ class Calendar
     /**
      * Get calendarElements
      *
+     * @param $order (optional)
      * @return Collection
      */
-    public function getCalendarElements()
+    public function getCalendarElements($order = null)
     {
+        if (in_array($order, array(Criteria::ASC, Criteria::DESC))) {
+            $criteria = Criteria::create()
+                ->orderBy(array('rank' => $order))
+            ;
+
+            return $this->calendarElements->matching($criteria);
+        }
+
         return $this->calendarElements;
     }
 
