@@ -42,8 +42,8 @@ class StopAreaManager extends SortManager
                 $q->addOrderBy('q.'.$order['columnName'], $order['orderDir']);
             }
         }
-        if (false === is_null($offset)) $q->setFirstResult($offset);
-        if (false === is_null($limit))  $q->setMaxResults($limit);
+        if (!is_null($offset) && !is_null($limit)) $q->setFirstResult($offset * $limit);
+        if (!is_null($limit))  $q->setMaxResults($limit);
 
         return $q->getQuery()->getResult();
     }
@@ -65,7 +65,7 @@ class StopAreaManager extends SortManager
         if (count($search) > 0) {
             foreach($search as $key => $value) {
                 if (!empty($value)) {
-                    $q->andWhere($alias.'.'.$key.' LIKE :val_' . $key);
+                    $q->andWhere('LOWER('.$alias.'.'.$key.') LIKE LOWER(:val_' . $key . ')');
                     $q->setParameter('val_' . $key, '%' . $value . '%');
                 }
             }
@@ -318,6 +318,56 @@ class StopAreaManager extends SortManager
             }
         } else {
             $result = $lines;
+        }
+
+        return $result;
+    }
+
+    public function getLinesByStopAreas($stopAreas){
+        $query = $this->em->createQuery("
+            SELECT DISTINCT sa.id as stop_area, sa2.id as stop_area_2, l.id as line
+            FROM Tisseo\EndivBundle\Entity\Line l
+            JOIN l.lineVersions lv
+            JOIN lv.routes r
+            JOIN r.routeStops rs
+            JOIN rs.waypoint w
+            LEFT JOIN w.stop s
+            LEFT JOIN s.stopArea sa
+            LEFT JOIN w.odtArea oa
+            LEFT JOIN oa.odtStops os WITH (os.endDate IS NULL OR os.endDate >= CURRENT_DATE())
+            LEFT JOIN os.stop s2
+            LEFT JOIN s2.stopArea sa2
+            WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
+            AND (sa IN (:stop_areas) OR sa2 IN (:stop_areas))
+        ")
+        ->setParameter('stop_areas', $stopAreas);
+        // There is a bug with getResult() and custom request SELECT s.id, l
+        // leading to missing rows in the result array.
+        $array = $query->getResult();
+
+        $lines = array();
+        foreach ($array as $item)
+            $lines[] = $item['line'];
+
+        $query = $this->em->createQuery("
+            SELECT DISTINCT l
+            FROM Tisseo\EndivBundle\Entity\Line l
+            WHERE l.id IN (:lines)
+        ")
+        ->setParameter('lines', $lines);
+        $linesResult = $query->getResult();
+
+        $lines = array();
+        foreach($linesResult as $line)
+            $lines[$line->getId()] = $line;
+
+        $result = array();
+
+        foreach ($array as $item) {
+            if (!empty($item['stop_area']))
+                $result[$item['stop_area']][] = $lines[$item['line']];
+            else
+                $result[$item['stop_area_2']][] = $lines[$item['line']];
         }
 
         return $result;
