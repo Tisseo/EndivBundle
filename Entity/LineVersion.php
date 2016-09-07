@@ -81,6 +81,16 @@ class LineVersion
     private $status;
 
     /**
+     * @var numAudio
+     */
+    private $numAudio;
+
+    /**
+     * @var text2speech
+     */
+    private $text2speech;
+
+    /**
      * @var Line
      */
     private $line;
@@ -169,6 +179,8 @@ class LineVersion
             $this->bgColor = $previousLineVersion->getBgColor();
             $this->depot = $previousLineVersion->getDepot();
             $this->setLine($previousLineVersion->getLine());
+            $this->setNumAudio($previousLineVersion->getNumAudio());
+            $this->setText2speech($previousLineVersion->getText2speech());
             if (!$previousLineVersion->getLineVersionProperties()->isEmpty())
                 $this->setNewLineVersionProperties($previousLineVersion->getLineVersionProperties());
         }
@@ -718,6 +730,52 @@ class LineVersion
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set numAudio
+     *
+     * @param integer
+     * @return LineVersion
+     */
+    public function setNumAudio($numAudio)
+    {
+        $this->numAudio = $numAudio;
+
+        return $this;
+    }
+
+    /**
+     * Get numAudio
+     *
+     * @return integer
+     */
+    public function getNumAudio()
+    {
+        return $this->numAudio;
+    }
+
+    /**
+     * Set text2speech
+     *
+     * @param string
+     * @return LineVersion
+     */
+    public function setText2speech($text2speech)
+    {
+        $this->text2speech = $text2speech;
+
+        return $this;
+    }
+
+    /**
+     * Get text2speech
+     *
+     * @return string
+     */
+    public function getText2speech()
+    {
+        return $this->text2speech;
     }
 
     /**
