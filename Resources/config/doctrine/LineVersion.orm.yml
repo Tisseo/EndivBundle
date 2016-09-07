@@ -78,9 +78,9 @@ Tisseo\EndivBundle\Entity\LineVersion:
             comment: ''
             column: num_audio
         text2speech:
-            type: string
+            type: text
             nullable: true
-            length: 255
+            length: null
             fixed: false
             comment: ''
     manyToOne:
