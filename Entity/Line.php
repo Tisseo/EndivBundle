@@ -59,6 +59,11 @@ class Line
     private $boards;
 
     /**
+     * @var Collection
+     */
+    private $lineStatuses;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -68,6 +73,7 @@ class Line
         $this->schematics = new ArrayCollection();
         $this->lineGroupGisContents = new ArrayCollection();
         $this->boards = new ArrayCollection();
+        $this->lineStatuses = new ArrayCollection();
     }
 
     /**
@@ -448,6 +454,62 @@ class Line
         return $this;
     }
 
+    /**
+     * Set lineStatuses
+     *
+     * @param Collection $lineStatuses
+     * @return Line
+     */
+    public function setLineStatuses(Collection $lineStatuses)
+    {
+        $this->lineStatuses = $lineStatuses;
+        return $this;
+    }
+
+    /**
+     * Get lineStatuses
+     *
+     * @return Collection
+     */
+    public function getLineStatuses()
+    {
+        return $this->lineStatuses;
+    }
+
+    /**
+     * Add lineStatus
+     *
+     * @param LineStatus $lineStatus
+     * @return Line
+     */
+    public function addLineStatus(LineStatus $lineStatus)
+    {
+        $this->lineStatuses[] = $lineStatus;
+        $lineStatus->setLineVersion($this);
+        return $this;
+    }
+
+    /**
+     * Remove lineStatus
+     *
+     * @param LineStatus $lineStatus
+     */
+    public function removeLineStatus(LineStatus $lineStatus)
+    {
+        $this->lineStatuses->removeElement($lineStatus);
+    }
+
+    /**
+     * Clear lineStatuses
+     *
+     * @return Line
+     */
+    public function clearLineStatuses()
+    {
+        $this->lineStatuses->clear();
+        return $this;
+    }
+
     // LineVersion Criteria functions
 
     /**
@@ -514,6 +576,60 @@ class Line
 
         if ($lineVersions->count() === 1) {
             return $lineVersions->first();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get current or future LineVersion
+     *
+     * @param \Datetime $now
+     * @return LineVersion
+     */
+    public function getCurrentOrFutureLineVersion(\Datetime $now = null)
+    {
+        if (is_null($now)) {
+            $now = new \Datetime();
+        }
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->orX(
+                Criteria::expr()->gte('endDate', $now),
+                Criteria::expr()->andX(
+                    Criteria::expr()->isNull('endDate'),
+                    Criteria::expr()->gte('plannedEndDate', $now)
+                )
+            ))
+            ->orderBy(array('endDate' => Criteria::DESC, 'plannedEndDate' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        $lineVersions = $this->lineVersions->matching($criteria);
+
+        if ($lineVersions->count() === 1) {
+            return $lineVersions->first();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get current line_status
+     *
+     * @return LineStatus
+     */
+    public function getCurrentStatus()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(array('dateTime' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        $lineStatuses = $this->lineStatuses->matching($criteria);
+
+        if ($lineStatuses->count() === 1) {
+            return $lineStatuses->first();
         }
 
         return null;
