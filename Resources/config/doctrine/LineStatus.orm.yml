@@ -1,0 +1,45 @@
+Tisseo\EndivBundle\Entity\LineStatus:
+    type: entity
+    table: line_status
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        dateTime:
+            column: date_time
+            type: datetime
+            nullable: false
+            comment: ''
+        login:
+            type: string
+            length: 255
+            fixed: false
+            nullable: false
+            comment: ''
+        status:
+            type: integer
+            nullable: false
+            unsigned: true
+            comment: ''
+        comment:
+            type: text
+            length: null
+            fixed: false
+            nullable: true
+            comment: ''
+
+    manyToOne:
+        line:
+            targetEntity: Line
+            mappedBy: null
+            inversedBy: lineStatuses
+            joinColumns:
+                line_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }
