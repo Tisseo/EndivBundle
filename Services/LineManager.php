@@ -39,6 +39,16 @@ class LineManager extends SortManager
         return $this->sortLinesByNumber($query->getQuery()->getResult());
     }
 
+    public function findByDataSourceSortByStatus($dataSourceId)
+    {
+        $query = $this->repository->createQueryBuilder('l')
+            ->innerJoin('l.lineDatasources', 'lds')
+            ->innerJoin('lds.datasource', 'ds')
+            ->where('ds.id = :datasourceId')
+        ->setParameter('datasourceId', $dataSourceId);
+
+        return $this->sortLinesByStatus($query->getQuery()->getResult());
+    }
 
     public function findExistingNumber($number, $id)
     {

@@ -35,6 +35,33 @@ abstract class SortManager
         return $lines;
     }
 
+    public function sortLinesByStatus($lines)
+    {
+        usort($lines, function($val1, $val2) {
+            $status1 = ($val1->getCurrentStatus() == null) ? null : $val1->getCurrentStatus()->getStatus();
+            $status2 = ($val2->getCurrentStatus() == null) ? null : $val2->getCurrentStatus()->getStatus();
+
+            if ($status1 == $status2)
+            {
+                if ($val1->getPriority() == $val2->getPriority())
+                    return strnatcmp($val1->getNumber(), $val2->getNumber());
+                if ($val1->getPriority() > $val2->getPriority())
+                    return 1;
+                if ($val1->getPriority() < $val2->getPriority())
+                    return -1;
+            }
+            if ($status1 == null)
+                return 1;
+            if ($status2 == null)
+                return -1;
+            if ($status1 < $status2)
+                return -1;
+            if ($status1 > $status2)
+                return 1;
+        });
+        return $lines;
+    }
+
     protected function splitByPhysicalMode($data, $physicalModes)
     {
         if (empty($data) || !(method_exists($data[0], 'getPhysicalModeName')))
