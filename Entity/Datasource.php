@@ -9,6 +9,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Datasource
 {
+    const HASTUS_SRC = 'HASTUS';
+    const DATA_SRC = 'Service Données';
+    const IV_SRC = 'Information Voyageurs';
+    const TIGRE_SRC = 'TIGRE';
+
+    public static $datasources = array(
+        self::HASTUS_SRC,
+        self::DATA_SRC,
+        self::IV_SRC,
+        self::TIGRE_SRC
+    );
+
     /**
      * @var integer
      */

@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Datasource;
+use Tisseo\EndivBundle\Entity\ObjectDatasource;
 
 class DatasourceManager extends SortManager
 {
@@ -21,31 +22,47 @@ class DatasourceManager extends SortManager
         return ($this->repository->findAll());
     }
 
-    public function find($DatasourceId)
+    public function find($datasourceId)
     {
-        return empty($DatasourceId) ? null : $this->repository->find($DatasourceId);
+        return empty($datasourceId) ? null : $this->repository->find($datasourceId);
     }
 
-    public function findByName($name)
+    /**
+     * Filling an object datasource with specified content
+     *
+     * @param ObjectDatasource $object
+     * @param string $name
+     * @param string $code
+     * @return $source
+     */
+    public function fill(ObjectDatasource $object, $name, $code)
     {
-        return $this->repository->findBy(array('name' => $name));
+        $datasource = $this->repository->findOneBy(array('name' => $name));
+
+        if (empty($datasource)) {
+            throw new \Exception(sprintf('Datasource %s not found', $name));
+        }
+
+        $objectSrc = $object->linkNewDatasource();
+        $objectSrc->setDatasource($datasource);
+        $objectSrc->setCode($code);
+    }
+
+    public function fillDatasource($objectSrc, $name, $code)
+    {
+        $datasource = $this->repository->findOneBy(array('name' => $name));
+
+        if (empty($datasource)) {
+            throw new \Exception(sprintf('Datasource %s not found', $name));
+        }
+
+        $objectSrc->setDatasource($datasource);
+        $objectSrc->setCode($code);
     }
 
     public function save(Datasource $Datasource)
     {
         $this->om->persist($Datasource);
         $this->om->flush();
-    }
-
-    // TODO: This is ugly, change it
-    // MAYBE ADD CONFIG PARAMETERS FOR DEFAULT AGENCY/DATASOURCE
-    public function findDatasource($name)
-    {
-        $query = $this->repository->createQueryBuilder('d')
-            ->where('d.name = :datasource')
-            ->setParameter('datasource', $name)
-            ->getQuery();
-
-        return $query->getOneOrNullResult();
     }
 }

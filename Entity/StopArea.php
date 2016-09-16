@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * StopArea
  */
-class StopArea
+class StopArea extends ObjectDatasource
 {
     /**
      * @var integer
@@ -220,24 +220,25 @@ class StopArea
     /**
      * Add stopAreaDatasource
      *
-     * @param StopAreaDatasource $stopAreaDatasources
+     * @param StopAreaDatasource $stopAreaDatasource
      * @return Line
      */
-    public function addStopAreaDatasources(StopAreaDatasource $stopAreaDatasource)
+    public function addStopAreaDatasource(StopAreaDatasource $stopAreaDatasource)
     {
-        $this->stopAreaDatasources[] = $stopAreaDatasource;
+        $this->stopAreaDatasources->add($stopAreaDatasource);
         $stopAreaDatasource->setStopArea($this);
+
         return $this;
     }
 
     /**
-     * Remove stopAreaDatasources
+     * Remove stopAreaDatasource
      *
-     * @param StopAreaDatasource $stopAreaDatasources
+     * @param StopAreaDatasource $stopAreaDatasource
      */
-    public function removeStopAreaDatasources(StopAreaDatasource $stopAreaDatasources)
+    public function removeStopAreaDatasource(StopAreaDatasource $stopAreaDatasource)
     {
-        $this->stopAreaDatasources->removeElement($stopAreaDatasources);
+        $this->stopAreaDatasources->removeElement($stopAreaDatasource);
     }
 
     /**
