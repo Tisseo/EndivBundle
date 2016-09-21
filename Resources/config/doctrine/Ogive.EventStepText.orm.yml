@@ -29,7 +29,6 @@ Tisseo\EndivBundle\Entity\Ogive\EventStepText:
         text:
             type: string
             nullable: false
-            length: 255
             fixed: false
             comment: ''
     manyToOne:
