@@ -3,6 +3,8 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Message
@@ -27,37 +29,12 @@ class Message
     /**
      * @var string
      */
-    private $mailText;
-
-    /**
-     * @var boolean
-     */
-    private $isForWebsite;
-
-    /**
-     * @var boolean
-     */
-    private $isForPti;
-
-    /**
-     * @var boolean
-     */
-    private $pushApps;
-
-    /**
-     * @var boolean
-     */
-    private $prehome;
+    private $content;
 
     /**
      * @var string
      */
     private $urlPj;
-
-    /**
-     * @var integer
-     */
-    private $eventId;
 
     /**
      * @var \DateTime
@@ -69,6 +46,18 @@ class Message
      */
     private $endDatetime;
 
+    /**
+     * @var Collection
+     */
+    private $channels;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->channels = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -127,98 +116,29 @@ class Message
     }
 
     /**
-     * Set mailText
+     * Set content
      *
-     * @param string $mailText
+     * @param string $content
      * @return Message
      */
-    public function setMailText($mailText)
+    public function setContent($content)
     {
-        $this->mailText = $mailText;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get mailText
+     * Get content
      *
      * @return string
      */
-    public function getMailText()
+    public function getContent()
     {
-        return $this->mailText;
+        return $this->content;
     }
 
-    /**
-     * Set isForWebsite
-     *
-     * @param boolean $isForWebsite
-     * @return Message
-     */
-    public function setIsForWebsite($isForWebsite)
-    {
-        $this->isForWebsite = $isForWebsite;
-
-        return $this;
-    }
-
-    /**
-     * Get isForWebsite
-     *
-     * @return boolean
-     */
-    public function getIsForWebsite()
-    {
-        return $this->isForWebsite;
-    }
-
-    /**
-     * Set isForPti
-     *
-     * @param boolean $isForPti
-     * @return Message
-     */
-    public function setIsForPti($isForPti)
-    {
-        $this->isForPti = $isForPti;
-
-        return $this;
-    }
-
-    /**
-     * Get isForPti
-     *
-     * @return boolean
-     */
-    public function getIsForPti()
-    {
-        return $this->isForPti;
-    }
-
-    /**
-     * Set eventId
-     *
-     * @param integer $eventId
-     * @return Message
-     */
-    public function setEventId($eventId)
-    {
-        $this->eventId = $eventId;
-
-        return $this;
-    }
-
-    /**
-     * Get eventId
-     *
-     * @return integer
-     */
-    public function getEventId()
-    {
-        return $this->eventId;
-    }
-
-    /**
+   /**
      * Set startDatetime
      *
      * @param \DateTime $startDatetime
@@ -288,48 +208,38 @@ class Message
     }
 
     /**
-     * Get prehome
+     * Add channel
      *
-     * @return boolean
-     */
-    public function getPrehome()
-    {
-        return $this->prehome;
-    }
-
-    /**
-     * Set prehome
-     *
-     * @param boolean $prehome
+     * @param Channel $channel
      * @return Message
      */
-    public function setPrehome($prehome)
+    public function addChannel(Channel $channel)
     {
-        $this->prehome = $prehome;
+        $this->channel->add($channel);
 
         return $this;
     }
 
     /**
-     * Get pushApps
+     * Remove channel
      *
-     * @return boolean pushApps
+     * @param Channel $channel
+     * @return Message
      */
-    public function getPushApps()
+    public function removeChannel(Channel $channel)
     {
-        return $this->pushApps;
+        $this->channel->removeElement($channel);
+
+        return $this;
     }
 
     /**
-     * Set pushApps
+     * Get channels
      *
-     * @param boolean pushApps
-     * @return Message
+     * @return Collection
      */
-    public function setPushApps($pushApps)
+    public function getChannels()
     {
-        $this->pushApps = $pushApps;
-
-        return $this;
+        return $this->channels;
     }
 }
