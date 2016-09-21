@@ -103,6 +103,11 @@ class Event extends OgiveEntity
     private $eventObjects;
 
     /**
+     * @var Collection
+     */
+    private $messages;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -112,6 +117,7 @@ class Event extends OgiveEntity
         $this->eventObjects = new ArrayCollection();
         $this->eventDatasources = new ArrayCollection();
         $this->eventSteps = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -500,4 +506,39 @@ class Event extends OgiveEntity
         return $extrema;
     }
 
+    /**
+     * Add message
+     *
+     * @param Message $message
+     * @return Message
+     */
+    public function addMessage(Message $message)
+    {
+        $this->message->add($message);
+
+        return $this;
+    }
+
+    /**
+     * Remove message
+     *
+     * @param Message $message
+     * @return Message
+     */
+    public function removeMessage(Message $message)
+    {
+        $this->message->removeElement($message);
+
+        return $this;
+    }
+
+    /**
+     * Get messages
+     *
+     * @return Collection
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 }
