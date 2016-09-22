@@ -11,7 +11,7 @@ use Tisseo\EndivBundle\Entity\Ogive\Board;
 /**
  * Line
  */
-class Line
+class Line extends ObjectDatasource
 {
     /**
      * @var integer
@@ -208,24 +208,25 @@ class Line
     }
 
     /**
-     * Add lineDatasources
+     * Add lineDatasource
      *
      * @param LineDatasource $lineDatasources
      * @return Line
      */
-    public function addLineDatasources(LineDatasource $lineDatasources)
+    public function addLineDatasource(LineDatasource $lineDatasource)
     {
-        $this->lineDatasources[] = $lineDatasources;
-        $lineDatasources->setLine($this);
+        $this->lineDatasources->add($lineDatasource);
+        $lineDatasource->setLine($this);
+
         return $this;
     }
 
     /**
-     * Remove lineDatasources
+     * Remove lineDatasource
      *
-     * @param LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasource
      */
-    public function removeLineDatasources(LineDatasource $lineDatasources)
+    public function removeLineDatasource(LineDatasource $lineDatasources)
     {
         $this->lineDatasources->removeElement($lineDatasources);
     }
@@ -281,12 +282,12 @@ class Line
     /**
      * Add lineDatasources
      *
-     * @param LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasource
      * @return Line
      */
-    public function addLineDatasource(LineDatasource $lineDatasources)
+    public function addLineDatasources(LineDatasource $lineDatasource)
     {
-        $this->lineDatasources[] = $lineDatasources;
+        $this->lineDatasources->add($lineDatasource);
 
         return $this;
     }
@@ -294,11 +295,11 @@ class Line
     /**
      * Remove lineDatasources
      *
-     * @param LineDatasource $lineDatasources
+     * @param LineDatasource $lineDatasource
      */
-    public function removeLineDatasource(LineDatasource $lineDatasources)
+    public function removeLineDatasources(LineDatasource $lineDatasource)
     {
-        $this->lineDatasources->removeElement($lineDatasources);
+        $this->lineDatasources->removeElement($lineDatasource);
     }
 
     /**

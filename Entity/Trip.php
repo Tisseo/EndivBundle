@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Criteria;
 /**
  * Trip
  */
-class Trip
+class Trip extends ObjectDatasource
 {
     /**
      * @var integer
@@ -403,7 +403,7 @@ class Trip
      */
     public function addTripDatasource(\Tisseo\EndivBundle\Entity\TripDatasource $tripDatasource)
     {
-        $this->tripDatasources[] = $tripDatasource;
+        $this->tripDatasources->add($tripDatasource);
         $tripDatasource->setTrip($this);
 
         return $this;

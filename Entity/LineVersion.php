@@ -10,7 +10,7 @@ use Tisseo\EndivBundle\Entity\Route;
 /**
  * LineVersion
  */
-class LineVersion
+class LineVersion extends ObjectDatasource
 {
     const NW = "new";
     const PB = "published";
@@ -1167,23 +1167,23 @@ class LineVersion
     {
         foreach($lineVersionProperties as $lineVersionProperty)
         {
-            $newLineVersionProperty = new LineVersionProperty();
-            $newLineVersionProperty->setValue($lineVersionProperty->getValue());
-            $newLineVersionProperty->setProperty($lineVersionProperty->getProperty());
-            $newLineVersionProperty->setLineVersion($this);
-            $this->addLineVersionProperty($newLineVersionProperty);
+            $newProperty = new LineVersionProperty();
+            $newProperty->setValue($lineVersionProperty->getValue());
+            $newProperty->setProperty($lineVersionProperty->getProperty());
+            $newProperty->setLineVersion($this);
+            $this->addLineVersionProperty($newProperty);
         }
     }
 
     /**
      * Add lineVersionDatasource
      *
-     * @param LineVersionDatasource $lineVersionDatasource
+     * @param LineVersionDatasource $lvDatasource
      * @return LineVersion
      */
-    public function addLineVersionDatasource(LineVersionDatasource $lineVersionDatasource)
+    public function addLineVersionDatasource(LineVersionDatasource $lvDatasource)
     {
-        $this->lineVersionDatasources[] = $lineVersionDatasource;
+        $this->lineVersionDatasources->add($lvDatasource);
 
         return $this;
     }
@@ -1191,11 +1191,11 @@ class LineVersion
     /**
      * Remove lineVersionDatasource
      *
-     * @param LineVersionDatasource $lineVersionDatasource
+     * @param LineVersionDatasource $lvDatasource
      */
-    public function removeLineVersionDatasource(LineVersionDatasource $lineVersionDatasource)
+    public function removeLineVersionDatasource(LineVersionDatasource $lvDatasource)
     {
-        $this->lineVersionDatasources->removeElement($lineVersionDatasource);
+        $this->lineVersionDatasources->removeElement($lvDatasource);
     }
 
     /**
@@ -1211,9 +1211,9 @@ class LineVersion
     /**
      * Set lineVersionDatasources
      */
-    public function setLineVersionDatasources($lineVersionDatasources)
+    public function setLineVersionDatasources($lvDatasources)
     {
-        $this->lineVersionDatasources = $lineVersionDatasources;
+        $this->lineVersionDatasources = $lvDatasources;
     }
 
     /**

@@ -11,7 +11,7 @@ use Tisseo\EndivBundle\Entity\AccessibilityMode;
 /**
  * Stop
  */
-class Stop
+class Stop extends ObjectDatasource
 {
     /**
      * @var integer
@@ -303,24 +303,25 @@ class Stop
     /**
      * Add stopDatasource
      *
-     * @param StopDatasource $stopDatasources
+     * @param StopDatasource $stopDatasource
      * @return Line
      */
-    public function addStopDatasources(StopDatasource $stopDatasource)
+    public function addStopDatasource(StopDatasource $stopDatasource)
     {
-        $this->stopDatasources[] = $stopDatasource;
+        $this->stopDatasources->add($stopDatasource);
         $stopDatasource->setStop($this);
+
         return $this;
     }
 
     /**
-     * Remove stopDatasources
+     * Remove stopDatasource
      *
-     * @param StopDatasource $stopDatasources
+     * @param StopDatasource $stopDatasource
      */
-    public function removeStopDatasources(StopDatasource $stopDatasources)
+    public function removeStopDatasource(StopDatasource $stopDatasource)
     {
-        $this->stopDatasources->removeElement($stopDatasources);
+        $this->stopDatasources->removeElement($stopDatasource);
     }
 
     /**
