@@ -22,11 +22,12 @@ Tisseo\EndivBundle\Entity\Ogive\Object:
             fixed: false
             comment: 'Référence de l''objet dans le référentiel lié au type (si ligne, alors TID, si mécanisme, alors PIVERT...)'
             column: object_ref
-    manyToMany:
+    oneToMany:
         messages:
             targetEntity: Message
-            mappedBy: message
+            mappedBy: object
             orderBy: {'startDatetime': 'asc'}
+    manyToMany:
         groupObject:
             targetEntity: GroupObject
             inversedBy: objects

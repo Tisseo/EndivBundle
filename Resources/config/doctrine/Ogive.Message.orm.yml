@@ -43,6 +43,19 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             nullable: true
             comment: ''
             column: end_datetime
+    manyToOne:
+        object:
+            targetEntity: Object
+            inversedBy: messages
+            joinColumns:
+                object_id:
+                    referencedColumnName: id
+        event:
+            targetEntity: Event
+            inversedBy: messages
+            joinColumns:
+                event_id:
+                    referencedColumnName: id
     manyToMany:
         channels:
             targetEntity: Channel
