@@ -18,4 +18,5 @@ Tisseo\EndivBundle\Entity\Ogive\Channel:
         maxSize:
             type: integer
             nullable: true
+            column: max_size
     lifecycleCallbacks: {  }

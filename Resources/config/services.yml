@@ -16,7 +16,6 @@ parameters:
     tisseo_endiv.printing_manager.class: Tisseo\EndivBundle\Services\PrintingManager
     tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
     tisseo_endiv.grid_calendar_manager.class: Tisseo\EndivBundle\Services\GridCalendarManager
-    tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
     tisseo_endiv.stored_procedure_manager.class: Tisseo\EndivBundle\Services\StoredProcedureManager
     tisseo_endiv.route_manager.class: Tisseo\EndivBundle\Services\RouteManager
     tisseo_endiv.city_manager.class: Tisseo\EndivBundle\Services\CityManager
