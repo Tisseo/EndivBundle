@@ -52,6 +52,16 @@ class Message
     private $channels;
 
     /**
+     * @var Event
+     */
+    private $event;
+
+    /**
+     * @var Object
+     */
+    private $object;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -241,5 +251,51 @@ class Message
     public function getChannels()
     {
         return $this->channels;
+    }
+
+    /**
+     * Get event
+     *
+     * @return Event.
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Set event
+     *
+     * @param Event event
+     * @return Message
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * Get object
+     *
+     * @return Object.
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * Set object
+     *
+     * @param Object object
+     * @return Message
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+
+        return $this;
     }
 }

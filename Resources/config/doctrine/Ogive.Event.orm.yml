@@ -72,7 +72,7 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
     oneToMany:
         messages:
             targetEntity: Message
-            mappedBy: message
+            mappedBy: event
             orderBy: {'startDatetime': 'asc'}
         periods:
             targetEntity: Period
