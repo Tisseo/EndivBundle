@@ -6,13 +6,15 @@ use \Traversable;
 use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 
+
 class ObjectManager extends OgiveManager
 {
+
     /**
-    * set event object meta information
-    *
-    * @param Event $event
-    */
+     * set event object meta information
+     *
+     * @param Event $event
+     */
     public function setEventObjectsMetaInformation(Event $event)
     {
         // TODO: could use inheritance here and directly bring the relation when instanciating Object class
