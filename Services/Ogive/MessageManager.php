@@ -21,54 +21,46 @@ class MessageManager extends OgiveManager
     }
 
     /**
-     * Retreive Message by Object Type
+     * Retrieve Message by Object Type
      * @param PtObjectType $objectType
      * @return null
      */
-    public function findByObjectType($objectType)
+    public function findMessagesByObjectType($objectType, $messageId = null)
     {
 
         if (!$objectType) {
             return null;
         }
 
-//        $rsm = new ResultSetMapping();
-//        $rsm->addEntityResult('TisseoEndivBundle:Ogive\Message', 'message');
-//        $rsm->addFieldResult('message', 'message.id', 'id');
-//        $rsm->addFieldResult('message', 'message.title', 'title');
-//        $rsm->addFieldResult('message', 'message.subtitle', 'subtitle');
-//        $rsm->addFieldResult('message', 'message.subtitle', 'subtitle');
-//        $rsm->addFieldResult('message', 'message.subtitle', 'subtitle');
-//        $rsm->addFieldResult('message', 'message.subtitle', 'subtitle');
-
-//        $SQL_Query = "SELECT channel.id, channel.name, channel.maxSize
-//                      FROM TisseoEndivBundle:Ogive\Message message
-//                      WHERE
-//                          channel.name=:channelName
-//                      OR
-//                          channel.name=:channelName
-//                      GROUP BY
-//                           ???";
-
         $queryBuilder = $this->objectManager->createQueryBuilder();
+        $expr = $queryBuilder->expr();
         $queryBuilder
-            ->select(['message', 'object'])
+            ->select(['message'])
             ->from('TisseoEndivBundle:Ogive\Message', 'message')
-            ->join('TisseoEndivBundle:Ogive\Object', 'object', 'WITH', $queryBuilder->expr()->eq('message.objectId', 'object.id'));
+            ->from('TisseoEndivBundle:Ogive\Object', 'object')
+            ->join('message.object', 'WITH', 'object');
+
+        if ($messageId) {
+            $queryBuilder
+                ->andWhere($expr->in('message.id', ":messageId"))
+                ->setParameter('messageId', $messageId);
+        }
+
+        if (in_array($objectType, $this->lineTypes)) {
+            $queryBuilder
+                ->andWhere($expr->in('object.objectType', ":typeList"))
+                ->setParameter('typeList', $this->lineTypes);
+        } else {
+            $queryBuilder
+                ->andWhere($expr->eq('object.objectType', ":objectType"))
+                ->setParameter('objectType', $objectType);
+        }
 
         $SQLResult = $queryBuilder
             ->getQuery()
             ->getResult();
 
-
-//        $doctrineQuery = $this->objectManager->createQuery($SQL_Query, $rsm);
-//        $SQLResult = $doctrineQuery
-//            ->setParameter('channelName', $objectType)
-//            ->getResult();
-
         return $SQLResult;
-
-
     }
 
 }
