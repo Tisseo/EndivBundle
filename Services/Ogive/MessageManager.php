@@ -2,12 +2,15 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
+use Tisseo\ChaosComponent\Service\ChannelService;
+use Tisseo\EndivBundle\Services\Ogive\ChannelManager;
 use Tisseo\ChaosComponent\Type\PtObjectType;
 use Doctrine\Common\Persistence\ObjectManager;
+use Tisseo\OgiveBundle\Service\UtilsService;
 
 class MessageManager extends OgiveManager
 {
-    private $repository = null;
+    private $channelRepository = null;
     protected $objectManager = null;
     private $lineTypes = null;
 
@@ -16,8 +19,10 @@ class MessageManager extends OgiveManager
         parent::__construct($objectManager);
 
         $this->objectManager = $objectManager;
-        $this->repository = $objectManager->getRepository('TisseoEndivBundle:Ogive\Channel');
+        $this->channelRepository = $objectManager->getRepository('TisseoEndivBundle:Ogive\Channel');
         $this->lineTypes = [PtObjectType::PT_OBJECT_LINE, PtObjectType::PT_OBJECT_LINE_SECTION];
+
+
     }
 
     /**
@@ -25,42 +30,89 @@ class MessageManager extends OgiveManager
      * @param PtObjectType $objectType
      * @return null
      */
-    public function findMessagesByObjectType($objectType, $messageId = null)
+    public function findMessagesByObjectType($objectType, $messageId = null, $filters = [])
     {
 
         if (!$objectType) {
             return null;
         }
 
+        $query = $this->buildQuery(array(
+            'filters' => $filters,
+            'messageId' => $messageId
+        ));
+
+        $queryResults = $query->getResult();
+        return $queryResults;
+    }
+
+
+    /**
+     * Use to generate Custome DQL Query
+     *
+     * @param $queryParameters
+     * @return mixed
+     */
+    private function buildQuery($queryParameters)
+    {
+
         $queryBuilder = $this->objectManager->createQueryBuilder();
         $expr = $queryBuilder->expr();
+        $queryParams = [];
+
         $queryBuilder
-            ->select(['message'])
+            ->select('message')
             ->from('TisseoEndivBundle:Ogive\Message', 'message')
-            ->from('TisseoEndivBundle:Ogive\Object', 'object')
-            ->join('message.object', 'WITH', 'object');
+            ->join('TisseoEndivBundle:Ogive\Object', 'object', 'WITH', 'message.object = object');
 
-        if ($messageId) {
+        if (!empty($queryParameters['messageId'])) {
+            $queryParams ['messageId'] = $queryParameters['messageId'];
             $queryBuilder
-                ->andWhere($expr->in('message.id', ":messageId"))
-                ->setParameter('messageId', $messageId);
+                ->where($expr->eq('message.id', ':messageId'));
         }
 
-        if (in_array($objectType, $this->lineTypes)) {
+        if (!empty($queryParameters['objectType'])) {
+            if (in_array($queryParameters['objectType'], $this->lineTypes)) {
+                $queryParams ['objectType'] = $this->lineTypes;
+            } else {
+                $queryParams ['objectType'] = $queryParameters['objectType'];
+            }
             $queryBuilder
-                ->andWhere($expr->in('object.objectType', ":typeList"))
-                ->setParameter('typeList', $this->lineTypes);
-        } else {
-            $queryBuilder
-                ->andWhere($expr->eq('object.objectType', ":objectType"))
-                ->setParameter('objectType', $objectType);
+                ->andWhere($expr->in('object.objectType', ':objectType'));
         }
 
-        $SQLResult = $queryBuilder
+        if (sizeof($queryParameters['filters']) > 0) {
+            $channelFilter = $queryParameters['filters'];
+            $channel = $this->getChannelByItsName($channelFilter);
+            $queryParams ['channel'] = $channel;
+            $queryBuilder
+                ->andWhere(':channel MEMBER OF message.channels');
+
+        }
+
+        return $queryBuilder
             ->getQuery()
-            ->getResult();
+            ->setParameters($queryParams);
 
-        return $SQLResult;
     }
+
+    /**
+     * Get a Channel by its Name
+     *
+     * @param $name
+     * @return null
+     */
+    private function getChannelByItsName($name)
+    {
+        if ($name) {
+            $channels = $this->channelRepository->findByName($name);
+            if (empty($channels)) {
+                return null;
+            }
+            return $channels[0];
+        }
+        return null;
+    }
+
 
 }

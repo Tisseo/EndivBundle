@@ -44,12 +44,14 @@ class ChannelManager extends OgiveManager
         $rsm->addFieldResult('channel', 'channel.name', 'name');
         $rsm->addFieldResult('channel', 'channel.maxSize', 'max_size');
 
-        $SQL_Query = "SELECT channel.id, channel.name, channel.maxSize 
-                      FROM TisseoEndivBundle:Ogive\Channel channel
-                      WHERE channel.name=:channelName";
+        $queryBuilder = $this->objectManager->createQueryBuilder();
+        $expr = $queryBuilder->expr();
+        $queryBuilder
+            ->from('TisseoEndivBundle:Ogive\Channel', 'channel')
+            ->where($expr->eq('channel.name', ":channelName"));
 
-        $doctrineQuery = $this->objectManager->createQuery($SQL_Query, $rsm);
-        $SQLResult = $doctrineQuery
+//        $doctrineQuery = $this->objectManager->createQuery($SQL_Query, $rsm);
+        $SQLResult = $queryBuilder
             ->setParameter('channelName', $channelName)
             ->getResult();
 
