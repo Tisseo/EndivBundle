@@ -2,11 +2,8 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-use Tisseo\ChaosComponent\Service\ChannelService;
-use Tisseo\EndivBundle\Services\Ogive\ChannelManager;
 use Tisseo\ChaosComponent\Type\PtObjectType;
 use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\OgiveBundle\Service\UtilsService;
 
 class MessageManager extends OgiveManager
 {
@@ -27,6 +24,7 @@ class MessageManager extends OgiveManager
 
     /**
      * Retrieve Message by Object Type
+     *
      * @param PtObjectType $objectType
      * @return null
      */

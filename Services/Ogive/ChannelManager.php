@@ -29,6 +29,7 @@ class ChannelManager extends OgiveManager
 
     /**
      * Find a particular channel by its channel's name
+     *
      * @param null $channelName
      * @return null| Array
      */
@@ -38,19 +39,12 @@ class ChannelManager extends OgiveManager
             return null;
         }
 
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('TisseoEndivBundle:Ogive\Channel', 'channel');
-        $rsm->addFieldResult('channel', 'channel.id', 'id');
-        $rsm->addFieldResult('channel', 'channel.name', 'name');
-        $rsm->addFieldResult('channel', 'channel.maxSize', 'max_size');
-
         $queryBuilder = $this->objectManager->createQueryBuilder();
         $expr = $queryBuilder->expr();
         $queryBuilder
             ->from('TisseoEndivBundle:Ogive\Channel', 'channel')
             ->where($expr->eq('channel.name', ":channelName"));
 
-//        $doctrineQuery = $this->objectManager->createQuery($SQL_Query, $rsm);
         $SQLResult = $queryBuilder
             ->setParameter('channelName', $channelName)
             ->getResult();
