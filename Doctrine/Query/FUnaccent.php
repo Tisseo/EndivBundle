@@ -8,9 +8,9 @@ use \Doctrine\ORM\Query\SqlWalker;
 use \Doctrine\ORM\Query\Parser;
 
 /**
- * Unaccent plugin DQL wrapper
+ * Custom DQL wrapper
  *
- * @package Tisseo\OgiveBundle\Doctrine\DQL
+ * @package Tisseo\EndivBundle\Doctrine\Query
  */
 class FUnaccent extends FunctionNode
 {
