@@ -508,7 +508,7 @@ class Route extends ObjectDatasource
      * Checking a Trip pattern is used by Trips or not
      * @param Trip $pattern
      */
-    public function IsPatternLocked(Trip $pattern)
+    public function isPatternLocked(Trip $pattern)
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('pattern', $pattern))
