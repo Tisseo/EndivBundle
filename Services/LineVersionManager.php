@@ -570,7 +570,7 @@ class LineVersionManager extends SortManager
     }
 
     // used in 'getPoiByStop' method to sort an array of stops by their labels
-    function usortStopArea($a, $b)
+    private function usortStopArea($a, $b)
     {
         return strcasecmp($a->getCity()->getName() . $a->getShortName(), $b->getCity()->getName() . $b->getShortName());
     }
