@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Tisseo\EndivBundle\Validator\Constraints;
 
