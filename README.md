@@ -16,10 +16,11 @@ TID database through different scopes.
 Requirements
 ------------
 
-- PHP 5.3+
+- PHP 5.4+
 - Symfony 2.6.x
 - https://github.com/djlambert/doctrine2-spatial
 - https://github.com/orocrm/doctrine-extensions
+- https://github.com/schmittjoh/serializer
 - https://github.com/Tisseo/TID (ENDIV)
 
 Installation
@@ -79,9 +80,11 @@ doctrine:
     dbal:
         types:
             geometry:                       CrEOF\Spatial\DBAL\Types\GeometryType
+            point:                          CrEOF\Spatial\DBAL\Types\Geometry\PointType
             calendar_operator:              Doctrine\DBAL\Types\StringType
             line_version_status:            Doctrine\DBAL\Types\StringType
             calendar_type:                  Doctrine\DBAL\Types\StringType
+            date_id:                        Tisseo\EndivBundle\Types\DateIdType
         connections:
             %endiv_database_connection%:
                 driver:                     "%endiv_database_driver%"
