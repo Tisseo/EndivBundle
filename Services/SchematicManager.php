@@ -3,10 +3,7 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\Line;
-use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Schematic;
-use Tisseo\TidBundle\Form\Type\LineSchemaType;
 
 class SchematicManager extends SortManager
 {

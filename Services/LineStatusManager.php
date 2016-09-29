@@ -3,7 +3,6 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineStatus;
 
 class LineStatusManager

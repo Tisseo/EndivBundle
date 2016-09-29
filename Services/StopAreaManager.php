@@ -5,7 +5,6 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\StopArea;
-use Tisseo\EndivBundle\Entity\Transfer;
 use Tisseo\EndivBundle\Entity\Alias;
 
 class StopAreaManager extends SortManager

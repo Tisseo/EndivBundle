@@ -53,7 +53,6 @@ class OgiveObject extends OgiveEntity
      * @var stdclass (unmapped)
      * References the meta info of the ENDIV object
      */
-    // TODO: using inheritance here and bringing the name automatically could be great
     private $_meta;
 
     /**

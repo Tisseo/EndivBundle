@@ -26,7 +26,7 @@ class StopTimeManager extends SortManager
         return empty($StopId) ? null : $this->repository->find($StopId);
     }
 
-    //TODO: This seems to be bad, change/delete
+    //TODO: This seems to be bad
     public function save(StopTime $Stop)
     {
         if (!$Stop->getId()) {

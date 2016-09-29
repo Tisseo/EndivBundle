@@ -53,7 +53,7 @@ class OgiveEntity
         }
     }
 
-    public function cloneCollection($collection)
+    public function cloneCollection(Collection $collection)
     {
         $newCollection = new ArrayCollection();
 

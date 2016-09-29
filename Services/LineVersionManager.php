@@ -6,7 +6,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
-use Tisseo\EndivBundle\Entity\LineVersionDatasource;
 use Tisseo\EndivBundle\Services\CalendarManager;
 
 class LineVersionManager extends SortManager
@@ -435,19 +434,14 @@ class LineVersionManager extends SortManager
             $this->om->persist($previousLineVersion);
         }
 
-        /**
- * Calendars are just isolated not deleted
-*/
+        // Calendars are just isolated not deleted
         foreach ($lineVersion->getCalendars() as $calendar) {
             $calendar->setLineVersion(null);
             $this->om->persist($calendar);
         }
         $this->om->flush();
 
-        /* Doctrine won't delete trips in a good way if parent/pattern relations exist
-         * TODO: See if Doctrine can be configured to detect priority in Trip deletion
-         * in order to avoid this kind of actions
-         */
+        // Doctrine won't delete trips in a good order if parent/pattern relations exist
         foreach ($lineVersion->getRoutes() as $route) {
             foreach ($route->getTripsHavingParent() as $trip) {
                 $this->om->remove($trip);

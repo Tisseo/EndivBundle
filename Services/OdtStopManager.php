@@ -2,13 +2,9 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-use JMS\Serializer\Serializer;
 use Tisseo\EndivBundle\Entity\OdtArea;
 use Tisseo\EndivBundle\Entity\OdtStop;
-use Tisseo\EndivBundle\Entity\Waypoint;
 use Tisseo\EndivBundle\Types\DateId;
 use Tisseo\EndivBundle\Services\StopManager;
 use Tisseo\EndivBundle\Services\StopAreaManager;
@@ -17,17 +13,15 @@ class OdtStopManager extends SortManager
 {
     private $em = null;
     private $repository = null;
-    private $serializer = null;
     private $stopManager = null;
     private $stopAreaManager = null;
 
-    public function __construct(EntityManager $em, StopManager $stopManager, StopAreaManager $stopAreaManager, Serializer $serializer)
+    public function __construct(EntityManager $em, StopManager $stopManager, StopAreaManager $stopAreaManager)
     {
         $this->em = $em;
         $this->repository = $em->getRepository('TisseoEndivBundle:OdtStop');
         $this->stopManager = $stopManager;
         $this->stopAreaManager = $stopAreaManager;
-        $this->serializer = $serializer;
     }
 
     public function findAll()

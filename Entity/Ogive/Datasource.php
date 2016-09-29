@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Datasource

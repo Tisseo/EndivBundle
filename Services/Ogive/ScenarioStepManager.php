@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Tisseo\EndivBundle\Entity\Ogive\ScenarioStep;
+use Tisseo\EndivBundle\Entity\Ogive\ScenarioStepText;
 
 class ScenarioStepManager extends OgiveManager
 {
@@ -41,7 +42,7 @@ class ScenarioStepManager extends OgiveManager
 
                 $delStep = array_filter(
                     $scenarioStepTexts->toArray(),
-                    function ($clonedStepText) use ($scenarioStepTextId) {
+                    function (ScenarioStepText $clonedStepText) use ($scenarioStepTextId) {
                         return $clonedStepText->getId() === $scenarioStepTextId;
                     }
                 );
@@ -57,7 +58,7 @@ class ScenarioStepManager extends OgiveManager
 
                 $addStep = array_filter(
                     $step->getScenarioStepTexts()->toArray(),
-                    function ($stepText) use ($clonedStepTextId) {
+                    function (ScenarioStepText $stepText) use ($clonedStepTextId) {
                         return $stepText->getId() === $clonedStepTextId;
                     }
                 );

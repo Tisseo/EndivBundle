@@ -12,7 +12,6 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
-use Tisseo\EndivBundle\Entity\StopArea;
 use Tisseo\EndivBundle\Entity\RouteExportDestination;
 use Tisseo\EndivBundle\Services\StopManager;
 
@@ -76,19 +75,6 @@ class RouteManager extends SortManager
         $this->om->flush();
 
         return $lineVersionId;
-    }
-
-    private function getRouteSectionLength($routeSectionId)
-    {
-        $connection = $this->om->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare(
-            "
-            select ST_Length(the_geom) from route_section where id = :rsId::int
-        "
-        );
-        $stmt->bindValue(':rsId', $routeSectionId, \PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchColumn();
     }
 
     public function getInstantiatedServiceTemplates($route)
@@ -390,7 +376,7 @@ class RouteManager extends SortManager
         }
 
         $services_patterns = $route->getTrips()->filter(
-            function ($t) {
+            function (Trip $t) {
                 return $t->getIsPattern() === true;
             }
         );

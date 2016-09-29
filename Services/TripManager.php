@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\Collection;
 use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\Route;
@@ -98,7 +99,7 @@ class TripManager
      * @param  $tripId trip Id
      * @return bool|Trip return false if not found or Trip Entity
      */
-    private function isTripIdExist($trips, $tripId)
+    private function isTripIdExist(Collection $trips, $tripId)
     {
         if ($trips->count() > 0) {
             $trip = array_filter(
@@ -404,7 +405,7 @@ class TripManager
         return ($result > 0);
     }
 
-    public function getDateBounds($route)
+    public function getDateBounds(Route $route)
     {
         $connection = $this->om->getConnection()->getWrappedConnection();
 

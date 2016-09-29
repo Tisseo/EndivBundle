@@ -3,7 +3,6 @@
 namespace Tisseo\EndivBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Exception\MissingOptionsException;
 
 class UniqueFieldsInCollection extends Constraint
 {

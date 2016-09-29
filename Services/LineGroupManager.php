@@ -4,7 +4,6 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\LineGroup;
-use Tisseo\EndivBundle\Entity\LineGroupContent;
 use Tisseo\EndivBundle\Entity\LineVersion;
 
 class LineGroupManager extends SortManager

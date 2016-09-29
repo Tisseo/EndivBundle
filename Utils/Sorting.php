@@ -2,12 +2,15 @@
 
 namespace Tisseo\EndivBundle\Services;
 
+use Tisseo\EndivBundle\Entity\LineVersion;
+use Tisseo\EndivBundle\Entity\Line;
+
 abstract class SortManager
 {
     protected function sortLineVersionsByNumber($lineVersions)
     {
         usort(
-            $lineVersions, function ($val1, $val2) {
+            $lineVersions, function (LineVersion $val1, LineVersion $val2) {
                 $line1 = $val1->getLine();
                 $line2 = $val2->getLine();
                 if ($line1->getPriority() == $line2->getPriority()) {
@@ -31,7 +34,7 @@ abstract class SortManager
     protected function sortLinesByNumber($lines)
     {
         usort(
-            $lines, function ($val1, $val2) {
+            $lines, function (Line $val1, Line $val2) {
                 if ($val1->getPriority() == $val2->getPriority()) {
                     return strnatcmp($val1->getNumber(), $val2->getNumber());
                 }
@@ -49,7 +52,7 @@ abstract class SortManager
     public function sortLinesByStatus($lines)
     {
         usort(
-            $lines, function ($val1, $val2) {
+            $lines, function (Line $val1, Line $val2) {
                 $status1 = ($val1->getCurrentStatus() === null) ? null : $val1->getCurrentStatus()->getStatus();
                 $status2 = ($val2->getCurrentStatus() === null) ? null : $val2->getCurrentStatus()->getStatus();
 
@@ -78,6 +81,7 @@ abstract class SortManager
                 }
             }
         );
+
         return $lines;
     }
 

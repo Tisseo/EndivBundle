@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Tisseo\EndivBundle\Entity\Calendar;

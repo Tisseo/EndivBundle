@@ -8,16 +8,6 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class ScenarioStepText extends OgiveEntity
 {
     /**
-      * @var integer
-      */
-    private $scenarioStepId;
-
-    /**
-     * @var integer
-     */
-    private $textId;
-
-    /**
      * @var integer
      */
     private $type;

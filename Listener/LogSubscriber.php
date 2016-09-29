@@ -2,18 +2,17 @@
 
 namespace Tisseo\EndivBundle\Listener;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Tisseo\EndivBundle\Entity\Log;
 
 class LogSubscriber implements EventSubscriber
 {
-    private $container;
+    private $token;
 
     private $requestStack;
 
@@ -26,11 +25,14 @@ class LogSubscriber implements EventSubscriber
     const LOG_ACTION_DELETE = 'DELETE';
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param TokenStorageInterace $token
+     * @param RequestStack $requestStack
      */
-    public function __construct(ContainerInterface $container, RequestStack $requestStack)
-    {
-        $this->container = $container;
+    public function __construct(
+        TokenStorageInterface $token,
+        RequestStack $requestStack
+    ) {
+        $this->token = $token;
         $this->requestStack = $requestStack;
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
@@ -99,7 +101,7 @@ class LogSubscriber implements EventSubscriber
      */
     private function log(LifeCycleEventArgs $args, $action)
     {
-        $user = $this->container->get('security.context')->getToken();
+        $user = $this->token->getToken()->getUser();
 
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();

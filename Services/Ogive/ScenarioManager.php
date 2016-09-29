@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\Ogive\Scenario;
+use Tisseo\EndivBundle\Entity\Ogive\ScenarioStep;
 
 class ScenarioManager extends OgiveManager
 {
@@ -12,7 +13,7 @@ class ScenarioManager extends OgiveManager
         $this->updateCollection($scenario, 'getScenarioSteps', $originalSteps);
 
         $parents = $scenario->getScenarioSteps()->filter(
-            function ($step) {
+            function (ScenarioStep $step) {
                 return $step->getScenarioStepParent() === null;
             }
         );
@@ -22,7 +23,7 @@ class ScenarioManager extends OgiveManager
                 if ($scenarioStep->getScenarioStepParent() !== null) {
                     $name = $scenarioStep->getScenarioStepParent()->getName();
                     $parent = $parents->filter(
-                        function ($step) use ($name) {
+                        function (ScenarioStep $step) use ($name) {
                             return $step->getName() === $name;
                         }
                     )->first();

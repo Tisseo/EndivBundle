@@ -2,13 +2,8 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Tisseo\EndivBundle\Entity\OdtArea;
-use Tisseo\EndivBundle\Entity\OdtStop;
-use Tisseo\EndivBundle\Entity\Waypoint;
 
 class OdtAreaManager extends SortManager
 {
@@ -51,12 +46,12 @@ class OdtAreaManager extends SortManager
     }
 
     /**
-       * delete
+     * delete
      *
-       * @param OdtArea $odtArea
-       *
-       * Delete a OdtArea from the database.
-       */
+     * @param OdtArea $odtArea
+     *
+     * Delete a OdtArea from the database.
+     */
     ////////
     //TODO : INVESTIGATE THIS METHOD to avoid using queries. There is a problem with the waypoint deletion when we use the method 'remove'.
     ////////

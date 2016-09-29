@@ -3,21 +3,17 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
-use Tisseo\EndivBundle\Entity\Modification;
 
 class ModificationManager
 {
     private $om = null;
     private $repository = null;
 
-
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Modification');
     }
-
 
     public function findAll()
     {

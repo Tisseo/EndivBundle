@@ -2,15 +2,10 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\StopHistory;
 use Tisseo\EndivBundle\Entity\StopAccessibility;
-use Tisseo\EndivBundle\Entity\Waypoint;
-use Tisseo\EndivBundle\Entity\AccessibilityMode;
 
 class StopManager extends SortManager
 {

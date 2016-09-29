@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -581,9 +580,6 @@ class Stop extends ObjectDatasource
      * Custom function to request a Stop "name" looking at its StopHistories and
      * StopDatasources.
      * {StopHistory.shortName} - {stopDatasource.agency.name} ({stopDatasource.code})
-     * TODO: The Datetime is instanciated each time this function is called
-     * Investigate in possibility to pass $date as a parameter in a Symfony Form entity
-     * field in the option 'property' (cf. Tisseo/BoaBundle/Form/Type/StopEditType.php)
      */
     public function getStopLabel()
     {

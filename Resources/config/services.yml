@@ -39,7 +39,7 @@ parameters:
 services:
     tisseo_endiv.log_subscriber:
         class: %tisseo_endiv.log_subscriber.class%
-        arguments: ["@service_container", "@request_stack", "@jms_serializer"]
+        arguments: ["@security.token_storage", "@request_stack", "@jms_serializer"]
         tags:
             - { name: doctrine.event_subscriber, connection: 'endiv' }
 
@@ -137,7 +137,7 @@ services:
 
     tisseo_endiv.odt_stop_manager:
         class: %tisseo_endiv.odt_stop_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.stop_manager', '@tisseo_endiv.stop_area_manager', '@jms_serializer']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.stop_manager', '@tisseo_endiv.stop_area_manager']
 
     tisseo_endiv.city_manager:
         class: %tisseo_endiv.city_manager.class%
