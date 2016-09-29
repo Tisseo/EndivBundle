@@ -53,51 +53,61 @@ class StopManager extends SortManager
     }
 
     // TODO: Does this belong here ?
-    public function getRouteStopsByRoute($routeId) {
-        $query = $this->em->createQuery("
+    public function getRouteStopsByRoute($routeId)
+    {
+        $query = $this->em->createQuery(
+            "
             SELECT rs.id, rs.rank, rs.pickup, rs.dropOff, wp.id as waypoint
             FROM Tisseo\EndivBundle\Entity\RouteStop rs
             JOIN rs.waypoint wp
             WHERE rs.route = :id
             ORDER BY rs.rank
-        ")
-        ->setParameter('id', $routeId);
+        "
+        )
+            ->setParameter('id', $routeId);
 
         return $query->getResult();
     }
 
     // TODO: Investigate this function
-    public function getStops($waypointId) {
-        $query = $this->em->createQuery("
+    public function getStops($waypointId)
+    {
+        $query = $this->em->createQuery(
+            "
             SELECT st.id, ar.shortName, ar.id as zone, c.name as city, sd.code as code
             FROM Tisseo\EndivBundle\Entity\Stop st
             JOIN st.stopArea ar
             JOIN ar.city c
             JOIN st.stopDatasources sd
             WHERE st.id = :id
-        ")
-        ->setParameter('id', $waypointId);
+        "
+        )
+            ->setParameter('id', $waypointId);
 
         return $query->getResult();
     }
 
     // TODO: WTF ?? route ??
-    public function getStopArea($route) {
-        $query = $this->em->createQuery("
+    public function getStopArea($route)
+    {
+        $query = $this->em->createQuery(
+            "
             SELECT st.id, ar.shortName, ar.id as zone,  c.name as city
             FROM Tisseo\EndivBundle\Entity\Stop st
             JOIN st.stopArea ar
             JOIN ar.city c
             WHERE st.id = :id
-        ")->setParameter('id', $route);
+        "
+        )->setParameter('id', $route);
 
         return $query->getResult();
     }
 
     // TODO: AAAAAAAAAAAAH !!
-    public function getStopLabel( Stop $stop )
+    public function getStopLabel(Stop $stop)
     {
-        $query = $this->em->createQuery("
+        $query = $this->em->createQuery(
+            "
             SELECT sh.shortName as name, c.name as city,  sd.code as code, s.id as id
             FROM Tisseo\EndivBundle\Entity\StopHistory sh
             JOIN sh.stop s
@@ -107,11 +117,14 @@ class StopManager extends SortManager
             WHERE sh.stop = :stop
             AND sh.startDate <= CURRENT_DATE()
             AND (sh.endDate IS NULL or sh.endDate >= CURRENT_DATE())
-        ")
-        ->setParameter('stop', $stop);
+        "
+        )
+            ->setParameter('stop', $stop);
 
         $sh = $query->getResult();
-        if( !$sh ) return "";
+        if (!$sh) {
+            return "";
+        }
 
         $label = $sh[0]["name"]." ".$sh[0]["city"]." (".$sh[0]["code"].")";
         return $label;
@@ -127,11 +140,13 @@ class StopManager extends SortManager
      */
     public function getOrderedStopHistories($stop)
     {
-        $query = $this->em->createQuery("
+        $query = $this->em->createQuery(
+            "
             SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
             WHERE sh.stop = :stop
             ORDER BY sh.startDate DESC, sh.endDate DESC
-        ");
+        "
+        );
         $query->setParameter('stop', $stop);
 
         return $query->getResult();
@@ -154,12 +169,9 @@ class StopManager extends SortManager
 
         $query = "SELECT DISTINCT sh.short_name as name, c.name as city, sd.code as code, s.id as id
             FROM stop_history sh";
-        if ($getPhantoms)
-        {
+        if ($getPhantoms) {
             $query .= " JOIN stop s on (sh.stop_id = COALESCE(s.master_stop_id, s.id))";
-        }
-        else
-        {
+        } else {
             $query .= " JOIN stop s on sh.stop_id = s.id ";
         }
         $query .= "LEFT JOIN stop_area sa on sa.id = s.stop_area_id
@@ -168,16 +180,14 @@ class StopManager extends SortManager
             WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(sd.code) LIKE UPPER(:term))";
-        if (!is_null($stopAreaId))
-        {
+        if (!is_null($stopAreaId)) {
             $query .= " AND (sa.id != :stop_area_id)";
         }
         $query .= " ORDER BY sh.short_name, c.name, sd.code";
 
         $stmt = $connection->prepare($query);
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
-        if (!is_null($stopAreaId))
-        {
+        if (!is_null($stopAreaId)) {
             $stmt->bindValue(':stop_area_id', $stopAreaId);
         }
         $stmt->execute();
@@ -200,7 +210,8 @@ class StopManager extends SortManager
 
     /**
      * Save
-     * @param integer $stopId
+     *
+     * @param integer           $stopId
      * @param StopAccessibility $stopAccessibility
      *
      * TODO: COMMENT
@@ -209,8 +220,9 @@ class StopManager extends SortManager
     {
         $stop = $this->find($stopId);
 
-        if (empty($stop))
+        if (empty($stop)) {
             throw new \Exception("Can't save accessibility for the related stop with ID: ".$stopId." because it doesn't exist.");
+        }
 
         $stopAccessibility->setStop($stop);
         $stop->addStopAccessibility($stopAccessibility);
@@ -222,6 +234,7 @@ class StopManager extends SortManager
 
     /**
      * Delete
+     *
      * @param integer $stopId
      * @param integer $stopAccessibilityId
      *
@@ -231,13 +244,15 @@ class StopManager extends SortManager
     {
         $stop = $this->find($stopId);
 
-        if (empty($stop))
+        if (empty($stop)) {
             throw new \Exception("Can't delete accessibility for the related stop with ID: ".$stopId." because it doesn't exist.");
+        }
 
         $stopAccessibility = $stop->findStopAccessibility($stopAccessibilityId);
 
-        if (empty($stopAccessibility))
+        if (empty($stopAccessibility)) {
             throw new \Exception("Can't delete accessibility with ID: ".$stopAccessibilityId." because it doesn't exist.");
+        }
 
         $stop->removeStopAccessibility($stopAccessibility);
         $this->em->remove($stopAccessibility);
@@ -252,6 +267,7 @@ class StopManager extends SortManager
 
     /**
      * Save
+     *
      * @param StopHistory $stopHistory
      * @param StopHistory $latestStopHistory
      *
@@ -260,24 +276,21 @@ class StopManager extends SortManager
     public function createStopHistory(StopHistory $stopHistory, StopHistory $latestStopHistory)
     {
         // the new startDate is before some StopHistories startDate, delete them
-        if ($latestStopHistory->getStartDate() >= $stopHistory->getStartDate())
-        {
+        if ($latestStopHistory->getStartDate() >= $stopHistory->getStartDate()) {
             $youngerStopHistories = $stopHistory->getStop()->getYoungerStopHistories($stopHistory->getStartDate());
-            foreach ($youngerStopHistories as $youngerStopHistory)
+            foreach ($youngerStopHistories as $youngerStopHistory) {
                 $this->em->remove($youngerStopHistory);
+            }
 
             $this->em->flush();
 
             // updating end date
             $latestStopHistory = $stopHistory->getStop()->getLatestStopHistory();
-            if ($latestStopHistory && $latestStopHistory->getEndDate() >= $stopHistory->getStartDate())
-            {
+            if ($latestStopHistory && $latestStopHistory->getEndDate() >= $stopHistory->getStartDate()) {
                 $latestStopHistory->closeDate($stopHistory->getStartDate());
                 $this->em->persist($latestStopHistory);
             }
-        }
-        else if ($latestStopHistory->getEndDate() === null)
-        {
+        } elseif ($latestStopHistory->getEndDate() === null) {
             $latestStopHistory->closeDate($stopHistory->getStartDate());
             $this->em->persist($latestStopHistory);
         }
@@ -289,6 +302,7 @@ class StopManager extends SortManager
 
     /**
      * Save StopHistory
+     *
      * @param StopHistory $stopHistory
      *
      * TODO: Create StopHistoryManager ?
@@ -301,6 +315,7 @@ class StopManager extends SortManager
 
     /**
      * Delete StopHistory
+     *
      * @param StopHistory $stopHistory
      *
      * TODO: Create StopHistoryManager ?
@@ -313,6 +328,7 @@ class StopManager extends SortManager
 
     /**
      * Detach
+     *
      * @param integer $stopId
      *
      * Close last Stop's history and delete its link with its StopArea.
@@ -321,14 +337,16 @@ class StopManager extends SortManager
     {
         $stop = $this->find($stopId);
 
-        if (empty($stop))
+        if (empty($stop)) {
             throw new \Exception("Can't find the stop with ID: ".$stopId);
+        }
 
         $now = new \Datetime();
 
         $youngerStopHistories = $stop->getYoungerStopHistories($now);
-        foreach ($youngerStopHistories as $youngerStopHistory)
+        foreach ($youngerStopHistories as $youngerStopHistory) {
             $this->em->remove($youngerStopHistory);
+        }
 
         $this->em->flush();
 
@@ -347,14 +365,12 @@ class StopManager extends SortManager
     public function getStopsJson($stops, $getPhantoms = false)
     {
         $stopIds = array();
-        foreach ($stops as $stop)
-        {
+        foreach ($stops as $stop) {
             $stopIds[] = $stop->getId();
         }
         $connection = $this->em->getConnection();
 
-        if ($getPhantoms)
-        {
+        if ($getPhantoms) {
             $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on s.id = sd.stop_id
@@ -362,9 +378,7 @@ class StopManager extends SortManager
                 WHERE s.id IN (?)
                 AND sh.start_date <= CURRENT_DATE
                 AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
-        }
-        else
-        {
+        } else {
             $query="SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on sd.stop_id = s.id
@@ -384,7 +398,8 @@ class StopManager extends SortManager
      */
     public function getLinesByStop($stopId)
     {
-        $query = $this->em->createQuery("
+        $query = $this->em->createQuery(
+            "
            SELECT l.id as line
            FROM Tisseo\EndivBundle\Entity\Line l
            JOIN l.lineVersions lv
@@ -397,24 +412,29 @@ class StopManager extends SortManager
            LEFT JOIN os.stop s2
            WHERE lv.startDate <= CURRENT_DATE() AND (lv.endDate IS NULL OR lv.endDate >= CURRENT_DATE())
            AND s.id = :sid OR s2.id = :sid
-        ")->setParameter('sid', $stopId);
+        "
+        )->setParameter('sid', $stopId);
 
         $array = $query->getResult();
         $lines = array();
-        foreach ($array as $item)
+        foreach ($array as $item) {
             $lines[] = $item['line'];
+        }
 
-        $query = $this->em->createQuery("
+        $query = $this->em->createQuery(
+            "
             SELECT DISTINCT l
             FROM Tisseo\EndivBundle\Entity\Line l
             WHERE l.id IN (:lines)
-        ")
+        "
+        )
             ->setParameter('lines', $lines);
         $linesResult = $query->getResult();
 
         $lines = array();
-        foreach($linesResult as $line)
+        foreach ($linesResult as $line) {
             $lines[$line->getId()] = $line;
+        }
 
         return $lines;
     }
@@ -422,17 +442,19 @@ class StopManager extends SortManager
     /**
      * find locked stops
      */
-    public function findLockedStops($lock = true) {
+    public function findLockedStops($lock = true)
+    {
         return $this->repository->findBy(array('lock' => $lock));
     }
 
     /**
      * toggle lock stops
      */
-    public function toggleLock(array $stopIds) {
+    public function toggleLock(array $stopIds)
+    {
         $stops = $this->repository->findById($stopIds);
 
-        foreach($stops as $stop) {
+        foreach ($stops as $stop) {
             $stop->setLock(!$stop->getLock());
             $this->em->persist($stop);
         }

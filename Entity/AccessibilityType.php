@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-
 /**
  * AccessibilityType
  */
@@ -68,7 +67,7 @@ class AccessibilityType
     /**
      * Set startTime
      *
-     * @param integer $startTime
+     * @param  integer $startTime
      * @return AccessibilityType
      */
     public function setStartTime($startTime)
@@ -91,7 +90,7 @@ class AccessibilityType
     /**
      * Set endTime
      *
-     * @param integer $endTime
+     * @param  integer $endTime
      * @return AccessibilityType
      */
     public function setEndTime($endTime)
@@ -114,7 +113,7 @@ class AccessibilityType
     /**
      * Set isRecursive
      *
-     * @param boolean $isRecursive
+     * @param  boolean $isRecursive
      * @return AccessibilityType
      */
     public function setIsRecursive($isRecursive)
@@ -137,7 +136,7 @@ class AccessibilityType
     /**
      * Set accessibilityMode
      *
-     * @param AccessibilityMode $accessibilityMode
+     * @param  AccessibilityMode $accessibilityMode
      * @return AccessibilityType
      */
     public function setAccessibilityMode(AccessibilityMode $accessibilityMode = null)
@@ -160,7 +159,7 @@ class AccessibilityType
     /**
      * Set calendar
      *
-     * @param Calendar $calendar
+     * @param  Calendar $calendar
      * @return AccessibilityType
      */
     public function setCalendar(Calendar $calendar = null)
@@ -193,7 +192,7 @@ class AccessibilityType
     /**
      * Set StopAccessibilities
      *
-     * @param \Doctrine\Common\Collections\Collection $stopAccessibilities
+     * @param  \Doctrine\Common\Collections\Collection $stopAccessibilities
      * @return Line
      */
     public function setStopAccessibilities(Collection $stopAccessibilities)
@@ -208,7 +207,7 @@ class AccessibilityType
     /**
      * Add stopAccessibility
      *
-     * @param stopAccessibility $stopAccessibility
+     * @param  stopAccessibility $stopAccessibility
      * @return Line
      */
     public function addStopAccessibility(stopAccessibility $stopAccessibility)

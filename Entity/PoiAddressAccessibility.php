@@ -38,7 +38,7 @@ class PoiAddressAccessibility
     /**
      * Set accessibilityType
      *
-     * @param AccessibilityType $accessibilityType
+     * @param  AccessibilityType $accessibilityType
      * @return PoiAddressAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -61,7 +61,7 @@ class PoiAddressAccessibility
     /**
      * Set poiAddress
      *
-     * @param PoiAddress $poiAddress
+     * @param  PoiAddress $poiAddress
      * @return PoiAddressAccessibility
      */
     public function setPoiAddress(PoiAddress $poiAddress = null)

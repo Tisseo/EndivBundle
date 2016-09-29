@@ -34,6 +34,7 @@ class DepotManager extends SortManager
 
        /**
        * delete
+        *
        * @param Depot $depot
        *
        * Delete a Depot from the database.
@@ -43,5 +44,4 @@ class DepotManager extends SortManager
         $this->om->remove($depot);
         $this->om->flush();
     }
-
 }

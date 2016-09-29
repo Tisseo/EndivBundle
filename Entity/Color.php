@@ -83,7 +83,7 @@ class Color
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Color
      */
     public function setName($name)
@@ -106,7 +106,7 @@ class Color
     /**
      * Set html
      *
-     * @param string $html
+     * @param  string $html
      * @return Color
      */
     public function setHtml($html)
@@ -129,7 +129,7 @@ class Color
     /**
      * Set pantoneOc
      *
-     * @param string $pantoneOc
+     * @param  string $pantoneOc
      * @return Color
      */
     public function setPantoneOc($pantoneOc)
@@ -152,7 +152,7 @@ class Color
     /**
      * Set hoxis
      *
-     * @param string $hoxis
+     * @param  string $hoxis
      * @return Color
      */
     public function setHoxis($hoxis)
@@ -175,7 +175,7 @@ class Color
     /**
      * Set cmykCyan
      *
-     * @param integer $cmykCyan
+     * @param  integer $cmykCyan
      * @return Color
      */
     public function setCmykCyan($cmykCyan)
@@ -198,7 +198,7 @@ class Color
     /**
      * Set cmykMagenta
      *
-     * @param integer $cmykMagenta
+     * @param  integer $cmykMagenta
      * @return Color
      */
     public function setCmykMagenta($cmykMagenta)
@@ -221,7 +221,7 @@ class Color
     /**
      * Set cmykYellow
      *
-     * @param integer $cmykYellow
+     * @param  integer $cmykYellow
      * @return Color
      */
     public function setCmykYellow($cmykYellow)
@@ -244,7 +244,7 @@ class Color
     /**
      * Set cmykBlack
      *
-     * @param integer $cmykBlack
+     * @param  integer $cmykBlack
      * @return Color
      */
     public function setCmykBlack($cmykBlack)
@@ -267,7 +267,7 @@ class Color
     /**
      * Set rgbRed
      *
-     * @param integer $rgbRed
+     * @param  integer $rgbRed
      * @return Color
      */
     public function setRgbRed($rgbRed)
@@ -290,7 +290,7 @@ class Color
     /**
      * Set rgbGreen
      *
-     * @param integer $rgbGreen
+     * @param  integer $rgbGreen
      * @return Color
      */
     public function setRgbGreen($rgbGreen)
@@ -313,7 +313,7 @@ class Color
     /**
      * Set rgbBlue
      *
-     * @param integer $rgbBlue
+     * @param  integer $rgbBlue
      * @return Color
      */
     public function setRgbBlue($rgbBlue)

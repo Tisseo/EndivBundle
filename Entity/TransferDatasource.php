@@ -43,7 +43,7 @@ class TransferDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return TransferDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class TransferDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return TransferDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -89,7 +89,7 @@ class TransferDatasource
     /**
      * Set transfer
      *
-     * @param \Tisseo\EndivBundle\Entity\Transfer $transfer
+     * @param  \Tisseo\EndivBundle\Entity\Transfer $transfer
      * @return TransferDatasource
      */
     public function setTransfer(\Tisseo\EndivBundle\Entity\Transfer $transfer = null)

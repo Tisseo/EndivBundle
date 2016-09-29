@@ -38,7 +38,7 @@ class Datasource extends OgiveEntity
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Datasource
      */
     public function setName($name)
@@ -61,7 +61,7 @@ class Datasource extends OgiveEntity
     /**
      * Set isEditable
      *
-     * @param boolean $isEditable
+     * @param  boolean $isEditable
      * @return Datasource
      */
     public function setIsEditable($isEditable)

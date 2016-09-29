@@ -56,8 +56,9 @@ class EventManager extends OgiveManager
 
     /**
      * Manage event data and save it
-     * @param Event $event
-     * @param integer $previousStatus
+     *
+     * @param  Event   $event
+     * @param  integer $previousStatus
      * @return Event
      */
     public function manage(Event $event, $previousStatus, $login, $message)

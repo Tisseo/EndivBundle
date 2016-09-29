@@ -38,7 +38,7 @@ class PoiType
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return PoiType
      */
     public function setName($name)

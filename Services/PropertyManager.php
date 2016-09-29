@@ -26,8 +26,7 @@ class PropertyManager
         $properties = $this->repository->findAll();
         $arrayProperties = array();
 
-        foreach($properties as $property)
-        {
+        foreach ($properties as $property) {
             $arrayProperties[$property->getId()] = $property;
         }
 

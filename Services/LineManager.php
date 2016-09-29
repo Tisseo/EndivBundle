@@ -34,7 +34,7 @@ class LineManager extends SortManager
             ->innerJoin('l.lineDatasources', 'lds')
             ->innerJoin('lds.datasource', 'ds')
             ->where('ds.id = :datasourceId')
-        ->setParameter('datasourceId', $dataSourceId);
+            ->setParameter('datasourceId', $dataSourceId);
 
         return $this->sortLinesByNumber($query->getQuery()->getResult());
     }
@@ -45,7 +45,7 @@ class LineManager extends SortManager
             ->innerJoin('l.lineDatasources', 'lds')
             ->innerJoin('lds.datasource', 'ds')
             ->where('ds.id = :datasourceId')
-        ->setParameter('datasourceId', $dataSourceId);
+            ->setParameter('datasourceId', $dataSourceId);
 
         return $this->sortLinesByStatus($query->getQuery()->getResult());
     }
@@ -72,7 +72,8 @@ class LineManager extends SortManager
     }
 
 
-    public function findAllLinesWithSchematic($splitByPhysicalMode = false) {
+    public function findAllLinesWithSchematic($splitByPhysicalMode = false)
+    {
         $query = $this->repository->createQueryBuilder('l')
             ->leftJoin('l.schematics', 'sc')
             ->leftJoin('l.lineGroupGisContents', 'lgc')

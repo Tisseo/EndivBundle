@@ -9,7 +9,7 @@ class TextType
     const CONTENT = 2;
     const ATTACHEMENT = 3;
 
-    /** 
+    /**
      * @var static array
      * available types for text objects
      */

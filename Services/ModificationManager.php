@@ -32,11 +32,11 @@ class ModificationManager
     public function findAllNotResolvedByLine($lineId)
     {
         $query = $this->repository->createQueryBuilder('m')
-                    ->innerJoin('m.lineVersion', 'lv')
-                    ->innerJoin('lv.line', 'l')
-                    ->where('l.id = :id')
-                    ->andWhere('m.resolvedIn IS NULL')
-                    ->setParameter('id', $lineId);
+            ->innerJoin('m.lineVersion', 'lv')
+            ->innerJoin('lv.line', 'l')
+            ->where('l.id = :id')
+            ->andWhere('m.resolvedIn IS NULL')
+            ->setParameter('id', $lineId);
 
         return $query;
     }

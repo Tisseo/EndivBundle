@@ -28,16 +28,18 @@ class CalendarElementManager extends SortManager
 
     public function findbyCalendar($calendar)
     {
-        if ($calendar == null) return null;
+        if ($calendar == null) {
+            return null;
+        }
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('TisseoEndivBundle:CalendarElement', 'ce');
-        $rsm->addFieldResult('ce','id','id');
-        $rsm->addFieldResult('ce','start_date','startDate');
-        $rsm->addFieldResult('ce','end_date','endDate');
-        $rsm->addFieldResult('ce','rank','rank');
-        $rsm->addFieldResult('ce','operator','operator');
-        $rsm->addFieldResult('ce','interval','interval');
+        $rsm->addFieldResult('ce', 'id', 'id');
+        $rsm->addFieldResult('ce', 'start_date', 'startDate');
+        $rsm->addFieldResult('ce', 'end_date', 'endDate');
+        $rsm->addFieldResult('ce', 'rank', 'rank');
+        $rsm->addFieldResult('ce', 'operator', 'operator');
+        $rsm->addFieldResult('ce', 'interval', 'interval');
         $rsm->addMetaResult('ce', 'included_calendar_id', 'included_calendar_id');
 
         $sql = "SELECT ce.id, ce.start_date, ce.end_date, ce.rank, ce.operator, ce.interval, ce.included_calendar_id
@@ -45,7 +47,7 @@ class CalendarElementManager extends SortManager
         JOIN calendar c on c.id=ce.calendar_id
         where ce.calendar_id=:calendarId order by rank asc";
 
-        $query = $this->em->createNativeQuery($sql,$rsm);
+        $query = $this->em->createNativeQuery($sql, $rsm);
         $query->setParameter('calendarId', $calendar);
 
         return $query->getResult();
@@ -59,7 +61,7 @@ class CalendarElementManager extends SortManager
     public function saveFromCalendar(Calendar $calendar)
     {
         foreach ($calendar->getCalendarElements() as $calendarElement) {
-                $this->save($calendarElement);
+            $this->save($calendarElement);
         }
     }
 
@@ -89,8 +91,7 @@ class CalendarElementManager extends SortManager
 
     public function updateCalendarElements($calendarElements, Calendar $calendar)
     {
-        foreach ($calendar->getCalendarElements('DESC') as $calendarElement)
-        {
+        foreach ($calendar->getCalendarElements('DESC') as $calendarElement) {
             $existing = array_filter(
                 $calendarElements,
                 function ($object) use ($calendarElement) {
@@ -110,22 +111,23 @@ class CalendarElementManager extends SortManager
             }
         );
 
-        foreach ($newCalendarElements as $calendarElement)
-        {
+        foreach ($newCalendarElements as $calendarElement) {
             $calendarElement = $this->serializer->deserialize(json_encode($calendarElement), 'Tisseo\EndivBundle\Entity\CalendarElement', 'json');
             $calendarElement->setCalendar($calendar);
 
-            if ($calendarElement->getIncludedCalendar() != null)
-            {
-                $includedCalendar = $this->em->createQuery("
+            if ($calendarElement->getIncludedCalendar() != null) {
+                $includedCalendar = $this->em->createQuery(
+                    "
                     SELECT c FROM Tisseo\EndivBundle\Entity\Calendar c
                     WHERE c.id = :calendar
-                ")
-                ->setParameter('calendar', $calendarElement->getIncludedCalendar()->getId())
-                ->getOneOrNullResult();
+                "
+                )
+                    ->setParameter('calendar', $calendarElement->getIncludedCalendar()->getId())
+                    ->getOneOrNullResult();
 
-                if ($includedCalendar === null)
+                if ($includedCalendar === null) {
                     throw new \Exception("Can't create a new CalendarElement because provided includedCalendar with id: ".$calendarElement->getIncludedCalendar()->getId()." can't be found.");
+                }
 
                 $calendarElement->setIncludedCalendar($includedCalendar);
             }

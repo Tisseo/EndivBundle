@@ -7,10 +7,10 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
  */
 class ScenarioStepText extends OgiveEntity
 {
-     /**
+    /**
       * @var integer
       */
-     private $scenarioStepId;
+    private $scenarioStepId;
 
     /**
      * @var integer
@@ -50,7 +50,7 @@ class ScenarioStepText extends OgiveEntity
     /**
      * Set type
      *
-     * @param integer $type
+     * @param  integer $type
      * @return ScenarioStepText
      */
     public function setType($type)
@@ -73,7 +73,7 @@ class ScenarioStepText extends OgiveEntity
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param  integer $rank
      * @return ScenarioStepText
      */
     public function setRank($rank)
@@ -96,7 +96,7 @@ class ScenarioStepText extends OgiveEntity
     /**
      * Set scenarioStep
      *
-     * @param ScenarioStep $scenarioStep
+     * @param  ScenarioStep $scenarioStep
      * @return ScenarioStepText
      */
     public function setScenarioStep(ScenarioStep $scenarioStep = null)
@@ -119,7 +119,7 @@ class ScenarioStepText extends OgiveEntity
     /**
      * Set text
      *
-     * @param Text $text
+     * @param  Text $text
      * @return ScenarioStepText
      */
     public function setText(Text $text = null)

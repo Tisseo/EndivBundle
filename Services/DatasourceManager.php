@@ -30,9 +30,9 @@ class DatasourceManager extends SortManager
     /**
      * Filling an object datasource with specified content
      *
-     * @param ObjectDatasource $object
-     * @param string $name
-     * @param string $code
+     * @param  ObjectDatasource $object
+     * @param  string           $name
+     * @param  string           $code
      * @return $source
      */
     public function fill(ObjectDatasource $object, $name, $code)

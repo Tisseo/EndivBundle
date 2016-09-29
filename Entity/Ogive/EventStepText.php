@@ -50,7 +50,7 @@ class EventStepText extends OgiveEntity
     /**
      * Set type
      *
-     * @param integer $type
+     * @param  integer $type
      * @return EventStepText
      */
     public function setType($type)
@@ -73,7 +73,7 @@ class EventStepText extends OgiveEntity
     /**
      * Set label
      *
-     * @param string $label
+     * @param  string $label
      * @return EventStepText
      */
     public function setLabel($label)
@@ -96,7 +96,7 @@ class EventStepText extends OgiveEntity
     /**
      * Set text
      *
-     * @param string $text
+     * @param  string $text
      * @return EventStepText
      */
     public function setText($text)
@@ -119,7 +119,7 @@ class EventStepText extends OgiveEntity
     /**
      * Set eventStep
      *
-     * @param EventStep $eventStep
+     * @param  EventStep $eventStep
      * @return EventStepText
      */
     public function setEventStep(EventStep $eventStep = null)

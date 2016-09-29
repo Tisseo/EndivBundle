@@ -12,6 +12,7 @@ use Tisseo\EndivBundle\Entity\Waypoint;
 use Tisseo\EndivBundle\Types\DateId;
 use Tisseo\EndivBundle\Services\StopManager;
 use Tisseo\EndivBundle\Services\StopAreaManager;
+
 class OdtStopManager extends SortManager
 {
     private $em = null;
@@ -36,14 +37,17 @@ class OdtStopManager extends SortManager
 
     public function find($odtStopId)
     {
-        if (empty($odtStopId))
+        if (empty($odtStopId)) {
             return null;
+        }
         $args = explode("/", $odtStopId);
-        return $this->repository->find(array(
+        return $this->repository->find(
+            array(
             'startDate' => new DateId($args[0]),
             'stop' => $args[1],
             'odtArea' => $args[2]
-        ));
+            )
+        );
     }
 
     public function save(OdtStop $odtStop)
@@ -60,8 +64,9 @@ class OdtStopManager extends SortManager
 
     /**
      * Update OdtStops
-     * @param array $odtStops
-     * @param OdtArea $odtArea
+     *
+     * @param  array   $odtStops
+     * @param  OdtArea $odtArea
      *
      * Creating, deleting OdtStop entities.
      * @usedBy BOABundle
@@ -69,33 +74,25 @@ class OdtStopManager extends SortManager
     public function updateOdtStops($odtStops, OdtArea $odtArea)
     {
         $sync = false;
-        foreach ($odtArea->getOdtStops() as $odtStop)
-        {
-
+        foreach ($odtArea->getOdtStops() as $odtStop) {
             $existing = array_filter(
                 $odtStops,
                 function ($object) use ($odtStop) {
                     return ($object['id'] == $odtStop->getId());
                 }
             );
-            if (empty($existing))
-            {
+            if (empty($existing)) {
                 $today = (new DateId())->setTime(0, 0, 0);
-                if ($odtStop->getStartDate() >= $today)
-                {
+                if ($odtStop->getStartDate() >= $today) {
                     $this->delete($odtStop);
-                }
-                else
-                {
+                } else {
                     $odtStop->setEndDate((new DateId())->sub(new \DateInterval('P1D')));
                 }
                 $sync = true;
             }
         }
-        foreach ($odtStops as $odtStopIter)
-        {
-            if (empty($odtStopIter['id']))
-            {
+        foreach ($odtStops as $odtStopIter) {
+            if (empty($odtStopIter['id'])) {
                 $sync = true;
                 $odtStop = new OdtStop();
                 $startDateTime = \DateTime::createFromFormat('d/m/Y', $odtStopIter['startDate']);
@@ -103,7 +100,7 @@ class OdtStopManager extends SortManager
                 $odtStop->setStop($this->stopManager->find($odtStopIter['stop']));
                 $odtStop->setPickup($odtStopIter['pickup']);
                 $odtStop->setDropOff($odtStopIter['dropOff']);
-                if (strlen($odtStopIter['endDate']) > 0){
+                if (strlen($odtStopIter['endDate']) > 0) {
                     $endDateTime = \DateTime::createFromFormat('d/m/Y', $odtStopIter['endDate']);
                     $odtStop->setEndDate(new DateId($endDateTime->format('Y-m-d')));
                 }
@@ -111,13 +108,15 @@ class OdtStopManager extends SortManager
                 $this->em->persist($odtStop);
             }
         }
-        if ($sync)
+        if ($sync) {
             $this->em->flush();
+        }
     }
 
     /**
      * get OdtStops
-     * @param $data
+     *
+     * @param  $data
      *
      * returns an array with odtStops
      * @usedBy BOABundle
@@ -126,7 +125,7 @@ class OdtStopManager extends SortManager
     {
         $odtStops = array();
         $stopArea = $this->stopAreaManager->find($data['boa_odt_stop[stop]']);
-        if (!empty($stopArea)){
+        if (!empty($stopArea)) {
             $stops = $stopArea->getStops();
             foreach ($stops as $stop) {
                 $odtStop = new OdtStop();
@@ -135,7 +134,7 @@ class OdtStopManager extends SortManager
                 $odtStop->setStartDate(new DateId($startDateTime->format('Y-m-d')));
                 $odtStop->setPickup($data['boa_odt_stop[pickup]']);
                 $odtStop->setDropOff($data['boa_odt_stop[dropOff]']);
-                if (strlen($data['boa_odt_stop[endDate]']) > 0){
+                if (strlen($data['boa_odt_stop[endDate]']) > 0) {
                     $endDateTime = \DateTime::createFromFormat('d/m/Y', $data['boa_odt_stop[endDate]']);
                     $odtStop->setEndDate(new DateId($endDateTime->format('Y-m-d')));
                 }
@@ -144,7 +143,5 @@ class OdtStopManager extends SortManager
             }
             return $odtStops;
         }
-
     }
-
 }

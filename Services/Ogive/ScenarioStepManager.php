@@ -20,8 +20,7 @@ class ScenarioStepManager extends OgiveManager
             ->andWhere('s.scenario is not null')
             ->setParameter('name', $scenarioStep->getName())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
 
         $mapper = array(
             'name',
@@ -80,8 +79,7 @@ class ScenarioStepManager extends OgiveManager
             ->where('s.scenario is null and s.scenarioStepParent is null and UNACCENT(lower(s.name)) like UNACCENT(:term)')
             ->setParameter('term', '%'.strtolower($term).'%')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
 
         return $data;
     }

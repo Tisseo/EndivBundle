@@ -43,7 +43,7 @@ class RouteDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return RouteDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class RouteDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return RouteDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -89,7 +89,7 @@ class RouteDatasource
     /**
      * Set route
      *
-     * @param \Tisseo\EndivBundle\Entity\Route $route
+     * @param  \Tisseo\EndivBundle\Entity\Route $route
      * @return RouteDatasource
      */
     public function setRoute(\Tisseo\EndivBundle\Entity\Route $route = null)

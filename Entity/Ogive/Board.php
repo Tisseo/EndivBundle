@@ -69,7 +69,7 @@ class Board extends OgiveEntity
     /**
      * Set shortName
      *
-     * @param string $shortName
+     * @param  string $shortName
      * @return Board
      */
     public function setShortName($shortName)
@@ -92,7 +92,7 @@ class Board extends OgiveEntity
     /**
      * Set longName
      *
-     * @param string $longName
+     * @param  string $longName
      * @return Board
      */
     public function setLongName($longName)
@@ -115,7 +115,7 @@ class Board extends OgiveEntity
     /**
      * Set nbBoards
      *
-     * @param integer $nbBoards
+     * @param  integer $nbBoards
      * @return Board
      */
     public function setNbBoards($nbBoards)
@@ -138,7 +138,7 @@ class Board extends OgiveEntity
     /**
      * Set status
      *
-     * @param integer $status
+     * @param  integer $status
      * @return Board
      */
     public function setStatus($status)
@@ -165,7 +165,7 @@ class Board extends OgiveEntity
     /**
      * Set isOffice
      *
-     * @param boolean $isOffice
+     * @param  boolean $isOffice
      * @return Board
      */
     public function setIsOffice($isOffice)
@@ -188,7 +188,7 @@ class Board extends OgiveEntity
     /**
      * Set isWaitingRoom
      *
-     * @param boolean $isWaitingRoom
+     * @param  boolean $isWaitingRoom
      * @return Board
      */
     public function setIsWaitingRoom($isWaitingRoom)

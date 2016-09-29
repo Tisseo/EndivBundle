@@ -64,7 +64,7 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return EventStepStatus
      */
     public function setId($id)
@@ -85,8 +85,13 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set Status
      *
+<<<<<<< HEAD:Entity/Ogive/EventStepStatus.php
      * @param integer $status
      * @return EventStepStatus
+=======
+     * @param  integer $status
+     * @return LinkEventStepStatus
+>>>>>>> d844f7c... syntax: use phpcs-fixer:Entity/Ogive/LinkEventStepStatus.php
      */
     public function setStatus($status)
     {
@@ -110,8 +115,13 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set dateTime
      *
+<<<<<<< HEAD:Entity/Ogive/EventStepStatus.php
      * @param \DateTime $dateTime
      * @return EventStepStatus
+=======
+     * @param  \DateTime $dateTime
+     * @return LinkEventStepStatus
+>>>>>>> d844f7c... syntax: use phpcs-fixer:Entity/Ogive/LinkEventStepStatus.php
      */
     public function setDateTime(\DateTime $dateTime)
     {
@@ -131,8 +141,13 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set userComment
      *
+<<<<<<< HEAD:Entity/Ogive/EventStepStatus.php
      * @param string $userComment
      * @return EventStepStatus
+=======
+     * @param  string $userComment
+     * @return LinkEventStepStatus
+>>>>>>> d844f7c... syntax: use phpcs-fixer:Entity/Ogive/LinkEventStepStatus.php
      */
     public function setUserComment($userComment)
     {
@@ -152,8 +167,13 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set login
      *
+<<<<<<< HEAD:Entity/Ogive/EventStepStatus.php
      * @param string $login
      * @return EventStepStatus
+=======
+     * @param  string $login
+     * @return LinkEventStepStatus
+>>>>>>> d844f7c... syntax: use phpcs-fixer:Entity/Ogive/LinkEventStepStatus.php
      */
     public function setLogin($login)
     {
@@ -175,8 +195,13 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set eventStep
      *
+<<<<<<< HEAD:Entity/Ogive/EventStepStatus.php
      * @param EventStep $eventStep
      * @return EventStepStatus
+=======
+     * @param  EventStep $eventStep
+     * @return LinkEventStepStatus
+>>>>>>> d844f7c... syntax: use phpcs-fixer:Entity/Ogive/LinkEventStepStatus.php
      */
     public function setEventStep($eventStep)
     {

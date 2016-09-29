@@ -53,7 +53,7 @@ class Agency
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Agency
      */
     public function setName($name)
@@ -76,7 +76,7 @@ class Agency
     /**
      * Set url
      *
-     * @param string $url
+     * @param  string $url
      * @return Agency
      */
     public function setUrl($url)
@@ -99,7 +99,7 @@ class Agency
     /**
      * Set timezone
      *
-     * @param string $timezone
+     * @param  string $timezone
      * @return Agency
      */
     public function setTimezone($timezone)
@@ -122,7 +122,7 @@ class Agency
     /**
      * Set lang
      *
-     * @param string $lang
+     * @param  string $lang
      * @return Agency
      */
     public function setLang($lang)
@@ -145,7 +145,7 @@ class Agency
     /**
      * Set phone
      *
-     * @param string $phone
+     * @param  string $phone
      * @return Agency
      */
     public function setPhone($phone)

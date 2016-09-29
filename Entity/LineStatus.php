@@ -58,7 +58,7 @@ class LineStatus
     /**
      * Set login
      *
-     * @param string $login
+     * @param  string $login
      * @return LineStatus
      */
     public function setLogin($login)
@@ -81,7 +81,7 @@ class LineStatus
     /**
      * Set comment
      *
-     * @param string $comment
+     * @param  string $comment
      * @return LineStatus
      */
     public function setComment($comment)
@@ -104,7 +104,7 @@ class LineStatus
     /**
      * Set status
      *
-     * @param integer $status
+     * @param  integer $status
      * @return LineStatus
      */
     public function setStatus($status)
@@ -127,7 +127,7 @@ class LineStatus
     /**
      * Set dateTime
      *
-     * @param \DateTime $dateTime
+     * @param  \DateTime $dateTime
      * @return LineStatus
      */
     public function setDateTime($dateTime)
@@ -150,7 +150,7 @@ class LineStatus
     /**
      * Set line
      *
-     * @param Line $line
+     * @param  Line $line
      * @return LineStatus
      */
     public function setLine(Line $line = null)

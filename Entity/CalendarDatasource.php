@@ -43,7 +43,7 @@ class CalendarDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return CalendarDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class CalendarDatasource
     /**
      * Set calendar
      *
-     * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
+     * @param  \Tisseo\EndivBundle\Entity\Calendar $calendar
      * @return CalendarDatasource
      */
     public function setCalendar(\Tisseo\EndivBundle\Entity\Calendar $calendar = null)
@@ -89,7 +89,7 @@ class CalendarDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return CalendarDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)

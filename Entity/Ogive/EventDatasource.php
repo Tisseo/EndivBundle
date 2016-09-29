@@ -41,7 +41,7 @@ class EventDatasource extends OgiveEntity
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return EventDatasource
      */
     public function setCode($code)
@@ -64,7 +64,7 @@ class EventDatasource extends OgiveEntity
     /**
      * Set event
      *
-     * @param Event $event
+     * @param  Event $event
      * @return EventDatasource
      */
     public function setEvent(Event $event = null)
@@ -87,7 +87,7 @@ class EventDatasource extends OgiveEntity
     /**
      * Set datasource
      *
-     * @param Datasource $datasource
+     * @param  Datasource $datasource
      * @return EventDatasource
      */
     public function setDatasource(Datasource $datasource = null)

@@ -5,10 +5,8 @@ namespace Tisseo\EndivBundle\Services\Ogive;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Ogive\Channel;
 
-
 class ChannelManager extends OgiveManager
 {
-
     private $repository = null;
     protected $objectManager = null;
 
@@ -23,7 +21,7 @@ class ChannelManager extends OgiveManager
     /**
      * Find a particular channel by its channel's name
      *
-     * @param null $channelName
+     * @param  null $channelName
      * @return null| Channel
      */
     public function findByChannelName($channelName = null)
@@ -47,5 +45,4 @@ class ChannelManager extends OgiveManager
 
         return null;
     }
-
 }

@@ -12,7 +12,6 @@ class StopTime
     /**
      *
      * @var integer
-     *
      */
     private $id;
 
@@ -49,7 +48,7 @@ class StopTime
     /**
      * Get id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return StopTime
      */
     public function setId($id)
@@ -62,7 +61,7 @@ class StopTime
     /**
      * Set arrivalTime
      *
-     * @param integer $arrivalTime
+     * @param  integer $arrivalTime
      * @return StopTime
      */
     public function setArrivalTime($arrivalTime)
@@ -85,7 +84,7 @@ class StopTime
     /**
      * Set departureTime
      *
-     * @param integer $departureTime
+     * @param  integer $departureTime
      * @return StopTime
      */
     public function setDepartureTime($departureTime)
@@ -108,7 +107,7 @@ class StopTime
     /**
      * Set trip
      *
-     * @param Trip $trip
+     * @param  Trip $trip
      * @return StopTime
      */
     public function setTrip(Trip $trip = null)
@@ -143,7 +142,7 @@ class StopTime
     /**
      * Set routeStop
      *
-     * @param RouteStop $routeStop
+     * @param  RouteStop $routeStop
      * @return StopTime
      */
     public function setRouteStop(RouteStop $routeStop = null)

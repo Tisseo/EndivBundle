@@ -12,7 +12,9 @@ class NonConcurrencyManager extends SortManager
      */
     private $om = null;
 
-    /** @var \Doctrine\ORM\EntityRepository $repository */
+    /**
+ * @var \Doctrine\ORM\EntityRepository $repository
+*/
     private $repository = null;
 
     public function __construct(ObjectManager $om)
@@ -32,16 +34,19 @@ class NonConcurrencyManager extends SortManager
      */
     public function find($priorityLineId, $nonPriorityLineId)
     {
-        return $this->repository->findOneBy(array(
+        return $this->repository->findOneBy(
+            array(
             'priorityLine' => $priorityLineId,
             'nonPriorityLine' => $nonPriorityLineId,
-        ));
+            )
+        );
     }
 
     public function findById($nonConcurrencyId)
     {
-        if ($nonConcurrencyId === null)
+        if ($nonConcurrencyId === null) {
             return null;
+        }
         $idArray = explode("/", $nonConcurrencyId);
 
         return $this->find($idArray[0], $idArray[1]);
@@ -49,6 +54,7 @@ class NonConcurrencyManager extends SortManager
 
     /**
        * delete
+     *
        * @param NonConcurrency $nonConcurrency
        *
        * Delete a NonConcurrency from the database.
@@ -61,6 +67,7 @@ class NonConcurrencyManager extends SortManager
 
     /**
      * save
+     *
      * @param NonConcurrency $nonConcurrency
      *
      * Persist and save a NonConcurrency into database.

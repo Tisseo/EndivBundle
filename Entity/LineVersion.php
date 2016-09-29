@@ -142,8 +142,9 @@ class LineVersion extends ObjectDatasource
 
     /**
      * Constructor
+     *
      * @param LineVersion $previousLineVersion = null
-     * @param Line $line = null
+     * @param Line        $line                = null Build a LineVersion with default values Add information from $previousLineVersion if not null Link to a specific Line if $line is not null Build a LineVersion with default values Add information from $previousLineVersion if not null Link to a specific Line if $line is not null
      *
      * Build a LineVersion with default values
      * Add information from $previousLineVersion if not null
@@ -162,12 +163,12 @@ class LineVersion extends ObjectDatasource
         $this->startDate = new \Datetime();
         $this->version = 1;
 
-        if ($previousLineVersion !== null)
-        {
-            if ($previousLineVersion->getEndDate() !== null)
+        if ($previousLineVersion !== null) {
+            if ($previousLineVersion->getEndDate() !== null) {
                 $this->startDate = $previousLineVersion->getEndDate();
-            else
+            } else {
                 $this->startDate = $previousLineVersion->getPlannedEndDate();
+            }
 
             $this->startDate->modify('+1 day');
 
@@ -181,17 +182,18 @@ class LineVersion extends ObjectDatasource
             $this->setLine($previousLineVersion->getLine());
             $this->setNumAudio($previousLineVersion->getNumAudio());
             $this->setText2speech($previousLineVersion->getText2speech());
-            if (!$previousLineVersion->getLineVersionProperties()->isEmpty())
+            if (!$previousLineVersion->getLineVersionProperties()->isEmpty()) {
                 $this->setNewLineVersionProperties($previousLineVersion->getLineVersionProperties());
+            }
         }
 
-        if ($line !== null)
-        {
+        if ($line !== null) {
             $this->setLine($line);
         }
 
-        if ($properties !== null)
+        if ($properties !== null) {
             $this->synchronizeLineVersionProperties($properties);
+        }
     }
 
     public function getNumberAndVersion()
@@ -203,8 +205,7 @@ class LineVersion extends ObjectDatasource
     {
         $properties = new ArrayCollection();
 
-        foreach($this->lineVersionProperties as $lineVersionProperty)
-        {
+        foreach ($this->lineVersionProperties as $lineVersionProperty) {
             $properties[] = $lineVersionProperty->getProperty();
         }
 
@@ -213,12 +214,12 @@ class LineVersion extends ObjectDatasource
 
     public function setProperty($properties)
     {
-        foreach($this->lineVersionProperties as $lineVersionProperty)
-        {
-            if ($properties->contains($lineVersionProperty->getProperty()))
+        foreach ($this->lineVersionProperties as $lineVersionProperty) {
+            if ($properties->contains($lineVersionProperty->getProperty())) {
                 $lineVersionProperty->setValue(true);
-            else
+            } else {
                 $lineVersionProperty->setValue(false);
+            }
         }
     }
 
@@ -229,8 +230,9 @@ class LineVersion extends ObjectDatasource
 
     public function setChildLine(LineVersion $childLine = null)
     {
-        if (empty($childLine) || $childLine === $this)
+        if (empty($childLine) || $childLine === $this) {
             return;
+        }
 
         $lineGroup = new LineGroup();
         $lineGroup->setName($this->getLine()->getNumber()."_".$childLine->getLine()->getNumber()."_".$this->getStartDate()->format("Ymd"));
@@ -252,10 +254,10 @@ class LineVersion extends ObjectDatasource
 
     public function isParent()
     {
-        foreach($this->lineGroupContents as $lineGroupContent)
-        {
-            if ($lineGroupContent->getIsParent())
+        foreach ($this->lineGroupContents as $lineGroupContent) {
+            if ($lineGroupContent->getIsParent()) {
                 return true;
+            }
         }
 
         return false;
@@ -265,11 +267,11 @@ class LineVersion extends ObjectDatasource
     {
         $result = new ArrayCollection();
 
-        foreach($this->lineGroupContents as $lineGroupContent)
-        {
+        foreach ($this->lineGroupContents as $lineGroupContent) {
             $childLines = $lineGroupContent->getChildLines();
-            if (!empty($childLines))
-               $result = array_merge($result->toArray(), $childLines->toArray());
+            if (!empty($childLines)) {
+                $result = array_merge($result->toArray(), $childLines->toArray());
+            }
         }
 
         return $result;
@@ -277,10 +279,8 @@ class LineVersion extends ObjectDatasource
 
     public function synchronizeLineVersionProperties($properties)
     {
-        foreach($properties as $property)
-        {
-            if (!($this->getProperty()->contains($property)))
-            {
+        foreach ($properties as $property) {
+            if (!($this->getProperty()->contains($property))) {
                 $lineVersionProperty = new LineVersionProperty();
                 $lineVersionProperty->setProperty($property);
                 $lineVersionProperty->setLineVersion($this);
@@ -300,14 +300,14 @@ class LineVersion extends ObjectDatasource
 
     /**
      * Merge GridCalendars
+     *
      * @param LineVersion $lineVersion
      *
      * Attach gridCalendars passed from another LineVersion
      */
     public function mergeGridCalendars(LineVersion $lineVersion)
     {
-        foreach($lineVersion->getGridCalendars() as $gridCalendar)
-        {
+        foreach ($lineVersion->getGridCalendars() as $gridCalendar) {
             $newGridCalendar = new GridCalendar();
             $newGridCalendar->merge($gridCalendar, $this);
             $this->addGridCalendar($newGridCalendar);
@@ -321,14 +321,16 @@ class LineVersion extends ObjectDatasource
      */
     public function processStatus(\Datetime $date)
     {
-        if ($this->startDate >= $date)
+        if ($this->startDate >= $date) {
             $this->status = self::NW;
-        else
+        } else {
             $this->status = self::PB;
+        }
     }
 
     /**
      * Close Date
+     *
      * @param Datetime $date
      *
      * Set the endDate with the date passed as parameter
@@ -341,6 +343,7 @@ class LineVersion extends ObjectDatasource
 
     /**
      * isLocked
+     *
      * @return boolean
      *
      * A LineVersion is locked if :
@@ -350,10 +353,9 @@ class LineVersion extends ObjectDatasource
     public function isLocked()
     {
         $now = new \Datetime();
-        if ($this->startDate < $now)
+        if ($this->startDate < $now) {
             return true;
-        else
-        {
+        } else {
             $diff = intval($this->startDate->diff($now)->format('%a'));
             return ($diff < 20);
         }
@@ -394,8 +396,9 @@ class LineVersion extends ObjectDatasource
     public function getTotalPrintings()
     {
         $printings = 0;
-        foreach($this->printings as $printing)
+        foreach ($this->printings as $printing) {
             $printings += $printing->getQuantity();
+        }
 
         return $printings;
     }
@@ -413,7 +416,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set version
      *
-     * @param integer $version
+     * @param  integer $version
      * @return LineVersion
      */
     public function setVersion($version)
@@ -436,7 +439,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param  \DateTime $startDate
      * @return LineVersion
      */
     public function setStartDate($startDate)
@@ -459,7 +462,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param  \DateTime $endDate
      * @return LineVersion
      */
     public function setEndDate($endDate)
@@ -482,7 +485,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set plannedEndDate
      *
-     * @param \DateTime $plannedEndDate
+     * @param  \DateTime $plannedEndDate
      * @return LineVersion
      */
     public function setPlannedEndDate($plannedEndDate)
@@ -505,7 +508,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return LineVersion
      */
     public function setName($name)
@@ -528,7 +531,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set forwardDirection
      *
-     * @param string $forwardDirection
+     * @param  string $forwardDirection
      * @return LineVersion
      */
     public function setForwardDirection($forwardDirection)
@@ -551,7 +554,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set backwardDirection
      *
-     * @param string $backwardDirection
+     * @param  string $backwardDirection
      * @return LineVersion
      */
     public function setBackwardDirection($backwardDirection)
@@ -574,7 +577,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set bgColor
      *
-     * @param Color $bgColor
+     * @param  Color $bgColor
      * @return LineVersion
      */
     public function setBgColor(Color $bgColor = null)
@@ -597,7 +600,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set fgColor
      *
-     * @param Color $fgColor
+     * @param  Color $fgColor
      * @return LineVersion
      */
     public function setFgColor(Color $fgColor = null)
@@ -620,7 +623,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set comment
      *
-     * @param string $comment
+     * @param  string $comment
      * @return LineVersion
      */
     public function setComment($comment)
@@ -643,7 +646,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set depot
      *
-     * @param Depot $depot
+     * @param  Depot $depot
      * @return LineVersion
      */
     public function setDepot(Depot $depot = null)
@@ -666,7 +669,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set line
      *
-     * @param Line $line
+     * @param  Line $line
      * @return LineVersion
      */
     public function setLine(Line $line = null)
@@ -689,7 +692,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set line
      *
-     * @param Schematic $schematic
+     * @param  Schematic $schematic
      * @return LineVersion
      */
     public function setSchematic(Schematic $schematic = null)
@@ -712,7 +715,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set status
      *
-     * @param string
+     * @param  string
      * @return LineVersion
      */
     public function setStatus($status)
@@ -735,7 +738,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set numAudio
      *
-     * @param integer
+     * @param  integer
      * @return LineVersion
      */
     public function setNumAudio($numAudio)
@@ -758,7 +761,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set text2speech
      *
-     * @param string
+     * @param  string
      * @return LineVersion
      */
     public function setText2speech($text2speech)
@@ -781,7 +784,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set gridCalendars
      *
-     * @param Collection $gridCalendars
+     * @param  Collection $gridCalendars
      * @return LineVersion
      */
     public function setGridCalendars(Collection $gridCalendars)
@@ -803,7 +806,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add gridCalendars
      *
-     * @param GridCalendar $gridCalendar
+     * @param  GridCalendar $gridCalendar
      * @return LineVersion
      */
     public function addGridCalendars(GridCalendar $gridCalendar)
@@ -846,7 +849,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set modifications
      *
-     * @param Collection $modifications
+     * @param  Collection $modifications
      * @return LineVersion
      */
     public function setModifications(Collection $modifications)
@@ -868,7 +871,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add modifications
      *
-     * @param Modification $modification
+     * @param  Modification $modification
      * @return LineVersion
      */
     public function addModification(Modification $modification)
@@ -902,7 +905,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set printings
      *
-     * @param Collection $printings
+     * @param  Collection $printings
      * @return Line
      */
     public function setPrintings(Collection $printings)
@@ -927,7 +930,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add printings
      *
-     * @param Printing $printing
+     * @param  Printing $printing
      * @return LineVersion
      */
     public function addPrintings(Printing $printing)
@@ -962,7 +965,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set routes
      *
-     * @param Collection $routes
+     * @param  Collection $routes
      * @return LineVersion
      */
     public function setRoutes(Collection $routes)
@@ -987,7 +990,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add route
      *
-     * @param Route $route
+     * @param  Route $route
      * @return LineVersion
      */
     public function addRoute(Route $route)
@@ -1021,7 +1024,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add gridCalendars
      *
-     * @param GridCalendar $gridCalendars
+     * @param  GridCalendar $gridCalendars
      * @return LineVersion
      */
     public function addGridCalendar(GridCalendar $gridCalendars)
@@ -1044,7 +1047,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add printings
      *
-     * @param Printing $printings
+     * @param  Printing $printings
      * @return LineVersion
      */
     public function addPrinting(Printing $printings)
@@ -1067,7 +1070,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add lineGroupContents
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
      * @return LineGroup
      */
     public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContent)
@@ -1101,13 +1104,13 @@ class LineVersion extends ObjectDatasource
     /**
      * Set lineGroupContents
      *
-     * @param Collection $lineGroupContents
+     * @param  Collection $lineGroupContents
      * @return LineVersion
      */
     public function setLineGroupContents(Collection $lineGroupContents = null)
     {
         $this->lineGroupContents = $lineGroupContents;
-        if( $this->lineGroupContents ) {
+        if ($this->lineGroupContents) {
             foreach ($this->lineGroupContents as $lineGroupContent) {
                 $lineGroupContent->setLineVersion($this);
             }
@@ -1118,7 +1121,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add lineVersionProperties
      *
-     * @param LineVersionProperty $lineVersionProperties
+     * @param  LineVersionProperty $lineVersionProperties
      * @return Property
      */
     public function addLineVersionProperty(LineVersionProperty $lineVersionProperties)
@@ -1165,8 +1168,7 @@ class LineVersion extends ObjectDatasource
      */
     public function setNewLineVersionProperties($lineVersionProperties)
     {
-        foreach($lineVersionProperties as $lineVersionProperty)
-        {
+        foreach ($lineVersionProperties as $lineVersionProperty) {
             $newProperty = new LineVersionProperty();
             $newProperty->setValue($lineVersionProperty->getValue());
             $newProperty->setProperty($lineVersionProperty->getProperty());
@@ -1178,7 +1180,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Add lineVersionDatasource
      *
-     * @param LineVersionDatasource $lvDatasource
+     * @param  LineVersionDatasource $lvDatasource
      * @return LineVersion
      */
     public function addLineVersionDatasource(LineVersionDatasource $lvDatasource)
@@ -1219,7 +1221,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Set calendars
      *
-     * @param Collection $calendars
+     * @param  Collection $calendars
      * @return LineVersion
      */
     public function setCalendars(Collection $calendars)
@@ -1242,12 +1244,9 @@ class LineVersion extends ObjectDatasource
     {
         $ways = array('WAY_FORWARD' => Route::WAY_FORWARD, 'WAY_BACKWARD' => Route::WAY_BACKWARD, 'WAY_LOOP' => Route::WAY_LOOP, 'WAY_AREA' => Route::WAY_AREA);
         $result = array();
-        foreach ($this->routes as $route)
-        {
-            foreach ($ways as $key => $way)
-            {
-                if ($route->getWay() == $way and !in_array($key, $result))
-                {
+        foreach ($this->routes as $route) {
+            foreach ($ways as $key => $way) {
+                if ($route->getWay() == $way and !in_array($key, $result)) {
                     $result[] = $key;
                     break;
                 }
@@ -1255,5 +1254,4 @@ class LineVersion extends ObjectDatasource
         }
         return $result;
     }
-
 }

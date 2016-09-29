@@ -38,7 +38,7 @@ class TransferAccessibility
     /**
      * Set accessibilityType
      *
-     * @param AccessibilityType $accessibilityType
+     * @param  AccessibilityType $accessibilityType
      * @return TransferAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -61,7 +61,7 @@ class TransferAccessibility
     /**
      * Set transfer
      *
-     * @param Transfer $transfer
+     * @param  Transfer $transfer
      * @return TransferAccessibility
      */
     public function setTransfer(Transfer $transfer = null)

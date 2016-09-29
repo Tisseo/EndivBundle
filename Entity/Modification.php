@@ -58,7 +58,7 @@ class Modification
     /**
      * Set author
      *
-     * @param string $author
+     * @param  string $author
      * @return Modification
      */
     public function setAuthor($author)
@@ -81,7 +81,7 @@ class Modification
     /**
      * Set description
      *
-     * @param string $description
+     * @param  string $description
      * @return Modification
      */
     public function setDescription($description)
@@ -104,7 +104,7 @@ class Modification
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param  \DateTime $date
      * @return ModificationLink
      */
     public function setDate($date)
@@ -127,7 +127,7 @@ class Modification
     /**
      * Set lineVersion
      *
-     * @param LineVersion $lineVersion
+     * @param  LineVersion $lineVersion
      * @return ModificationLink
      */
     public function setLineVersion(LineVersion $lineVersion = null)
@@ -150,7 +150,7 @@ class Modification
     /**
      * Set resolvedIn
      *
-     * @param LineVersion $resolvedIn
+     * @param  LineVersion $resolvedIn
      * @return ModificationLink
      */
     public function setResolvedIn(LineVersion $resolvedIn = null)

@@ -47,7 +47,7 @@ class Printing
     /**
      * Set quantity
      *
-     * @param integer $quantity
+     * @param  integer $quantity
      * @return Printing
      */
     public function setQuantity($quantity)
@@ -70,7 +70,7 @@ class Printing
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param  \DateTime $date
      * @return Printing
      */
     public function setDate($date)
@@ -93,7 +93,7 @@ class Printing
     /**
      * Set comment
      *
-     * @param string $comment
+     * @param  string $comment
      * @return Printing
      */
     public function setComment($comment)
@@ -116,7 +116,7 @@ class Printing
     /**
      * Set lineVersion
      *
-     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     * @param  \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
      * @return Printing
      */
     public function setLineVersion(LineVersion $lineVersion = null)

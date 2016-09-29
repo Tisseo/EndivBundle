@@ -16,6 +16,7 @@ class StoredProcedureManager
 
     /**
      * Clean LineVersion
+     *
      * @param integer $lineVersionId
      *
      * Clean all timetable data related to this LineVersion

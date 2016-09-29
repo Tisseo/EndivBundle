@@ -48,7 +48,7 @@ class PoiAddress
     /**
      * Set address
      *
-     * @param string $address
+     * @param  string $address
      * @return PoiAddress
      */
     public function setAddress($address)
@@ -71,7 +71,7 @@ class PoiAddress
     /**
      * Set isEntrance
      *
-     * @param boolean $isEntrance
+     * @param  boolean $isEntrance
      * @return PoiAddress
      */
     public function setIsEntrance($isEntrance)
@@ -94,7 +94,7 @@ class PoiAddress
     /**
      * Set theGeom
      *
-     * @param geometry $theGeom
+     * @param  geometry $theGeom
      * @return PoiAddress
      */
     public function setTheGeom($theGeom)
@@ -117,7 +117,7 @@ class PoiAddress
     /**
      * Set poi
      *
-     * @param \Tisseo\EndivBundle\Entity\Poi $poi
+     * @param  \Tisseo\EndivBundle\Entity\Poi $poi
      * @return PoiAddress
      */
     public function setPoi(\Tisseo\EndivBundle\Entity\Poi $poi = null)

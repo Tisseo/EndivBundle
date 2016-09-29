@@ -6,7 +6,6 @@ use \Traversable;
 use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 
-
 class ObjectManager extends OgiveManager
 {
 
@@ -45,39 +44,39 @@ class ObjectManager extends OgiveManager
         }
 
         switch ($object->getObjectType()) {
-            case OgiveObject::AGENCY:
-                $meta->label = $objectRef->getName();
-                break;
-            case OgiveObject::LINE:
-                $meta->label = $objectRef->getNumber();
-                $meta->physical_mode = $objectRef->getPhysicalMode()->getName();
+        case OgiveObject::AGENCY:
+            $meta->label = $objectRef->getName();
+            break;
+        case OgiveObject::LINE:
+            $meta->label = $objectRef->getNumber();
+            $meta->physical_mode = $objectRef->getPhysicalMode()->getName();
 
-                $lineVersion = $objectRef->getCurrentLineVersion();
-                if (empty($lineVersion)) {
-                    $lineVersion = $objectRef->getLastLineVersion();
-                }
-                if (!empty($lineVersion)) {
-                    $meta->background_color = $lineVersion->getBgColor()->getHtml();
-                    $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
-                }
+            $lineVersion = $objectRef->getCurrentLineVersion();
+            if (empty($lineVersion)) {
+                $lineVersion = $objectRef->getLastLineVersion();
+            }
+            if (!empty($lineVersion)) {
+                $meta->background_color = $lineVersion->getBgColor()->getHtml();
+                $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
+            }
 
-                break;
-            case OgiveObject::STOP:
-                $stopHistory = $objectRef->getCurrentStopHistory($extrema['min']);
-                if (!empty($stopHistory)) {
-                    $meta->label = $stopHistory->getShortName();
-                } else {
-                    $meta->label = null;
-                }
-                $meta->code = $objectRef->getStopDatasources()->first()->getCode();
-                $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
-                break;
-            case OgiveObject::STOP_AREA:
-                $meta->label = $objectRef->getShortName();
-                $meta->city = ucfirst(strtolower($objectRef->getCity()->getName()));
-                break;
-            default:
-                break;
+            break;
+        case OgiveObject::STOP:
+            $stopHistory = $objectRef->getCurrentStopHistory($extrema['min']);
+            if (!empty($stopHistory)) {
+                $meta->label = $stopHistory->getShortName();
+            } else {
+                $meta->label = null;
+            }
+            $meta->code = $objectRef->getStopDatasources()->first()->getCode();
+            $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
+            break;
+        case OgiveObject::STOP_AREA:
+            $meta->label = $objectRef->getShortName();
+            $meta->city = ucfirst(strtolower($objectRef->getCity()->getName()));
+            break;
+        default:
+            break;
         }
 
         $object->setMeta($meta);
@@ -86,7 +85,7 @@ class ObjectManager extends OgiveManager
     /**
      * Get object in TID referential
      *
-     * @param OgiveObject $object
+     * @param  OgiveObject $object
      * @return mixed
      */
     public function getObjectReference(OgiveObject $object)

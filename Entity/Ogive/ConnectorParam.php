@@ -33,7 +33,7 @@ class ConnectorParam
     /**
      * Set id
      *
-     * @param integer $identifier
+     * @param  integer $identifier
      * @return ScenarioStep
      */
     public function setId($identifier)
@@ -56,7 +56,7 @@ class ConnectorParam
     /**
      * Set type
      *
-     * @param integer $type
+     * @param  integer $type
      * @return ConnectorParam
      */
     public function setType($type)
@@ -79,7 +79,7 @@ class ConnectorParam
     /**
      * Set param
      *
-     * @param string $param
+     * @param  string $param
      * @return ConnectorParam
      */
     public function setParam($param)
@@ -102,7 +102,7 @@ class ConnectorParam
     /**
      * Set connectorParamList
      *
-     * @param ConnectorParamList $connectorParamList
+     * @param  ConnectorParamList $connectorParamList
      * @return ConnectorParam
      */
     public function setConnectorParamList(ConnectorParamList $connectorParamList = null)

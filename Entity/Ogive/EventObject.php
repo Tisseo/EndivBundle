@@ -41,7 +41,7 @@ class EventObject extends OgiveEntity
     /**
      * Set event
      *
-     * @param Event $event
+     * @param  Event $event
      * @return EventObject
      */
     public function setEvent(Event $event = null)
@@ -64,7 +64,7 @@ class EventObject extends OgiveEntity
     /**
      * Set emergencyStatus
      *
-     * @param EmergencyStatus $emergencyStatus
+     * @param  EmergencyStatus $emergencyStatus
      * @return EventObject
      */
     public function setEmergencyStatus(EmergencyStatus $emergencyStatus = null)
@@ -87,7 +87,7 @@ class EventObject extends OgiveEntity
     /**
      * Set object
      *
-     * @param Object $object
+     * @param  Object $object
      * @return EventObject
      */
     public function setObject(Object $object = null)

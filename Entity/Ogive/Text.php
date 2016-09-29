@@ -35,7 +35,7 @@ class Text extends OgiveEntity
     /**
      * Set label
      *
-     * @param string $label
+     * @param  string $label
      * @return Text
      */
     public function setLabel($label)
@@ -58,7 +58,7 @@ class Text extends OgiveEntity
     /**
      * Set text
      *
-     * @param string $text
+     * @param  string $text
      * @return Text
      */
     public function setText($text)

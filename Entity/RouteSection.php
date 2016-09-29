@@ -53,7 +53,7 @@ class RouteSection
     /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param  \DateTime $startDate
      * @return RouteSection
      */
     public function setStartDate($startDate)
@@ -76,7 +76,7 @@ class RouteSection
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param  \DateTime $endDate
      * @return RouteSection
      */
     public function setEndDate($endDate)
@@ -99,7 +99,7 @@ class RouteSection
     /**
      * Set theGeom
      *
-     * @param geometry $theGeom
+     * @param  geometry $theGeom
      * @return RouteSection
      */
     public function setTheGeom($theGeom)
@@ -122,7 +122,7 @@ class RouteSection
     /**
      * Set endStop
      *
-     * @param \Tisseo\EndivBundle\Entity\Stop $endStop
+     * @param  \Tisseo\EndivBundle\Entity\Stop $endStop
      * @return RouteSection
      */
     public function setEndStop(\Tisseo\EndivBundle\Entity\Stop $endStop = null)
@@ -145,7 +145,7 @@ class RouteSection
     /**
      * Set startStop
      *
-     * @param \Tisseo\EndivBundle\Entity\Stop $startStop
+     * @param  \Tisseo\EndivBundle\Entity\Stop $startStop
      * @return RouteSection
      */
     public function setStartStop(\Tisseo\EndivBundle\Entity\Stop $startStop = null)

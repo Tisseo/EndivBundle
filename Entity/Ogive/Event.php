@@ -133,7 +133,7 @@ class Event extends OgiveEntity
     /**
      * Set chaosSeverity
      *
-     * @param guid $chaosSeverity
+     * @param  guid $chaosSeverity
      * @return Event
      */
     public function setChaosSeverity($chaosSeverity)
@@ -156,7 +156,7 @@ class Event extends OgiveEntity
     /**
      * Set chaosInternalCause
      *
-     * @param string $chaosInternalCause
+     * @param  string $chaosInternalCause
      * @return Event
      */
     public function setChaosInternalCause($chaosInternalCause)
@@ -179,7 +179,7 @@ class Event extends OgiveEntity
     /**
      * Set chaosDisruptionId
      *
-     * @param guid $chaosDisruptionId
+     * @param  guid $chaosDisruptionId
      * @return Event
      */
     public function setChaosDisruptionId($chaosDisruptionId)
@@ -202,7 +202,7 @@ class Event extends OgiveEntity
     /**
      * Set reference
      *
-     * @param string $reference
+     * @param  string $reference
      * @return Event
      */
     public function setReference($reference)
@@ -225,7 +225,7 @@ class Event extends OgiveEntity
     /**
      * Set isEmergency
      *
-     * @param boolean $isEmergency
+     * @param  boolean $isEmergency
      * @return Event
      */
     public function setIsEmergency($isEmergency)
@@ -258,7 +258,7 @@ class Event extends OgiveEntity
     /**
      * Set login
      *
-     * @param string $login
+     * @param  string $login
      * @return Event
      */
     public function setLogin($login)
@@ -270,7 +270,7 @@ class Event extends OgiveEntity
     /**
      * Set eventParent
      *
-     * @param Event $eventParent
+     * @param  Event $eventParent
      * @return Event
      */
     public function setEventParent(Event $eventParent = null)
@@ -303,7 +303,7 @@ class Event extends OgiveEntity
     /**
      * Set status
      *
-     * @param integer status
+     * @param  integer status
      * @return Event
      */
     public function setStatus($status)
@@ -326,7 +326,7 @@ class Event extends OgiveEntity
     /**
      * Set isPublished.
      *
-     * @param boolean isPublished
+     * @param  boolean isPublished
      * @return Event
      */
     public function setIsPublished($isPublished)
@@ -349,7 +349,7 @@ class Event extends OgiveEntity
     /**
      * Set eventSteps.
      *
-     * @param Collection eventSteps
+     * @param  Collection eventSteps
      * @return Event
      */
     public function setEventSteps(Collection $eventSteps)
@@ -372,7 +372,7 @@ class Event extends OgiveEntity
     /**
      * Set periods.
      *
-     * @param Collection periods
+     * @param  Collection periods
      * @return Event
      */
     public function setPeriods(Collection $periods)
@@ -395,7 +395,7 @@ class Event extends OgiveEntity
     /**
      * Set eventDatasources.
      *
-     * @param Collection eventDatasources
+     * @param  Collection eventDatasources
      * @return Event
      */
     public function setEventDatasources(Collection $eventDatasources)
@@ -418,7 +418,7 @@ class Event extends OgiveEntity
     /**
      * Set event objects
      *
-     * @param Collection eventObjects
+     * @param  Collection eventObjects
      * @return Event
      */
     public function setEventObjects(Collection $eventObjects)
@@ -431,7 +431,7 @@ class Event extends OgiveEntity
     /**
      * Add event object
      *
-     * @param EventObject $eventObject
+     * @param  EventObject $eventObject
      * @return Event
      */
     public function addEventObject(EventObject $eventObject)
@@ -454,7 +454,7 @@ class Event extends OgiveEntity
     /**
      * Set objects
      *
-     * @param Collection objects
+     * @param  Collection objects
      * @return Event
      */
     public function setObjects(Collection $objects)
@@ -467,7 +467,7 @@ class Event extends OgiveEntity
     /**
      * Add event object
      *
-     * @param Object $object
+     * @param  Object $object
      * @return Event
      */
     public function addObject(Object $object)
@@ -492,13 +492,11 @@ class Event extends OgiveEntity
 
         $min = Criteria::create()
             ->orderBy(array('startDate' => Criteria::ASC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $max = Criteria::create()
             ->orderBy(array('endDate' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $extrema['min'] = $this->periods->matching($min)->first()->getStartDate();
         $extrema['max'] = $this->periods->matching($max)->first()->getEndDate();
@@ -509,7 +507,7 @@ class Event extends OgiveEntity
     /**
      * Add message
      *
-     * @param Message $message
+     * @param  Message $message
      * @return Message
      */
     public function addMessage(Message $message)
@@ -522,7 +520,7 @@ class Event extends OgiveEntity
     /**
      * Remove message
      *
-     * @param Message $message
+     * @param  Message $message
      * @return Message
      */
     public function removeMessage(Message $message)

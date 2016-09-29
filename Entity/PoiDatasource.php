@@ -43,7 +43,7 @@ class PoiDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return PoiDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class PoiDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return PoiDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -89,7 +89,7 @@ class PoiDatasource
     /**
      * Set poi
      *
-     * @param \Tisseo\EndivBundle\Entity\Poi $poi
+     * @param  \Tisseo\EndivBundle\Entity\Poi $poi
      * @return PoiDatasource
      */
     public function setPoi(\Tisseo\EndivBundle\Entity\Poi $poi = null)

@@ -38,7 +38,7 @@ class StopAccessibility
     /**
      * Set accessibilityType
      *
-     * @param AccessibilityType $accessibilityType
+     * @param  AccessibilityType $accessibilityType
      * @return StopAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -61,7 +61,7 @@ class StopAccessibility
     /**
      * Set stop
      *
-     * @param Stop $stop
+     * @param  Stop $stop
      * @return StopAccessibility
      */
     public function setStop(Stop $stop = null)

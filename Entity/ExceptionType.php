@@ -48,7 +48,7 @@ class ExceptionType
     /**
      * Set label
      *
-     * @param string $label
+     * @param  string $label
      * @return ExceptionType
      */
     public function setLabel($label)
@@ -71,7 +71,7 @@ class ExceptionType
     /**
      * Set exceptionText
      *
-     * @param string $exceptionText
+     * @param  string $exceptionText
      * @return ExceptionType
      */
     public function setExceptionText($exceptionText)
@@ -94,7 +94,7 @@ class ExceptionType
     /**
      * Set gridCalendarPattern
      *
-     * @param string $gridCalendarPattern
+     * @param  string $gridCalendarPattern
      * @return ExceptionType
      */
     public function setGridCalendarPattern($gridCalendarPattern)
@@ -117,7 +117,7 @@ class ExceptionType
     /**
      * Set tripCalendarPattern
      *
-     * @param string $tripCalendarPattern
+     * @param  string $tripCalendarPattern
      * @return ExceptionType
      */
     public function setTripCalendarPattern($tripCalendarPattern)

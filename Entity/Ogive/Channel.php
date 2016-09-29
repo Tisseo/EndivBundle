@@ -42,7 +42,7 @@ class Channel
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Channel
      */
     public function setName($name)
@@ -65,7 +65,7 @@ class Channel
     /**
      * Set maxSize
      *
-     * @param integer $maxSize
+     * @param  integer $maxSize
      * @return Channel
      */
     public function setMaxSize($maxSize)

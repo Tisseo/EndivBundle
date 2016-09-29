@@ -13,7 +13,9 @@ class LineGroupGisManager extends SortManager
      */
     private $om = null;
 
-    /** @var \Doctrine\ORM\EntityRepository $repository */
+    /**
+ * @var \Doctrine\ORM\EntityRepository $repository
+*/
     private $repository = null;
 
     public function __construct(ObjectManager $om)
@@ -34,7 +36,8 @@ class LineGroupGisManager extends SortManager
 
     /**
      * save
-     * @param LineGroupGis $lineGroupGis
+     *
+     * @param  LineGroupGis $lineGroupGis
      * @return array(boolean, string message, LineGroupGis)
      *
      * Persist and save a LineGroupGis into database.
@@ -43,14 +46,12 @@ class LineGroupGisManager extends SortManager
     {
         $lineGroupGisContents = clone $lineGroupGis->getLineGroupGisContents();
 
-        if ($lineGroupGis->getId() === null)
-        {
+        if ($lineGroupGis->getId() === null) {
             $lineGroupGis->clearLineGroupGisContents();
             $this->om->persist($lineGroupGis);
         }
 
-        foreach($lineGroupGisContents as $lineGroupGisContent)
-        {
+        foreach ($lineGroupGisContents as $lineGroupGisContent) {
             $lineGroupGisContent->setLineGroupGis($lineGroupGis);
             $this->om->persist($lineGroupGisContent);
         }
@@ -73,7 +74,8 @@ class LineGroupGisManager extends SortManager
 
     public function getCsvExport()
     {
-        $query = $this->om->createQuery("
+        $query = $this->om->createQuery(
+            "
             SELECT
                 DISTINCT lgg.name as line_group_gis_name,
                 l.number as line_number,
@@ -96,7 +98,8 @@ class LineGroupGisManager extends SortManager
                 SELECT min(subs2.date) FROM Tisseo\EndivBundle\Entity\Schematic subs2
                 WHERE subs2.line = l AND subs2.deprecated != true AND subs2.groupGis = true
             )
-        ");
+        "
+        );
 
         $content = $query->getArrayResult();
         $date = new \Datetime();

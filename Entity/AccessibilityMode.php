@@ -36,7 +36,7 @@ class AccessibilityMode
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return AccessibilityMode
      */
     public function setName($name)

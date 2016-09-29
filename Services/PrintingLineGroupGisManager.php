@@ -34,7 +34,8 @@ class PrintingLineGroupGisManager
 
     public function getCsvExport()
     {
-        $query = $this->om->createQuery("
+        $query = $this->om->createQuery(
+            "
             SELECT
                 DISTINCT lgg.name AS line_group_gis_name,
                 p.quantity AS printing_quantity,
@@ -43,7 +44,8 @@ class PrintingLineGroupGisManager
             FROM Tisseo\EndivBundle\Entity\LineGroupGis lgg
             JOIN lgg.printings p
             ORDER BY lgg.name
-        ");
+        "
+        );
 
         $content = $query->getArrayResult();
 

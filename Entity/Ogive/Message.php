@@ -82,7 +82,7 @@ class Message
     /**
      * Set title
      *
-     * @param string $title
+     * @param  string $title
      * @return Message
      */
     public function setTitle($title)
@@ -105,7 +105,7 @@ class Message
     /**
      * Set subtitle
      *
-     * @param string $subtitle
+     * @param  string $subtitle
      * @return Message
      */
     public function setSubtitle($subtitle)
@@ -128,7 +128,7 @@ class Message
     /**
      * Set content
      *
-     * @param string $content
+     * @param  string $content
      * @return Message
      */
     public function setContent($content)
@@ -148,10 +148,10 @@ class Message
         return $this->content;
     }
 
-   /**
+    /**
      * Set startDatetime
      *
-     * @param \DateTime $startDatetime
+     * @param  \DateTime $startDatetime
      * @return Message
      */
     public function setStartDatetime($startDatetime)
@@ -174,7 +174,7 @@ class Message
     /**
      * Set endDatetime
      *
-     * @param \DateTime $endDatetime
+     * @param  \DateTime $endDatetime
      * @return Message
      */
     public function setEndDatetime($endDatetime)
@@ -207,7 +207,7 @@ class Message
     /**
      * Set urlPj
      *
-     * @param string $urlPj
+     * @param  string $urlPj
      * @return Message
      */
     public function setUrlPj($urlPj)
@@ -220,7 +220,7 @@ class Message
     /**
      * Add channel
      *
-     * @param Channel $channel
+     * @param  Channel $channel
      * @return Message
      */
     public function addChannel(Channel $channel)
@@ -233,7 +233,7 @@ class Message
     /**
      * Remove channel
      *
-     * @param Channel $channel
+     * @param  Channel $channel
      * @return Message
      */
     public function removeChannel(Channel $channel)
@@ -266,7 +266,7 @@ class Message
     /**
      * Set event
      *
-     * @param Event event
+     * @param  Event event
      * @return Message
      */
     public function setEvent($event)
@@ -289,7 +289,7 @@ class Message
     /**
      * Set object
      *
-     * @param Object object
+     * @param  Object object
      * @return Message
      */
     public function setObject($object)

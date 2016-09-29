@@ -43,7 +43,7 @@ class TripDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return TripDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class TripDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return TripDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -89,7 +89,7 @@ class TripDatasource
     /**
      * Set trip
      *
-     * @param \Tisseo\EndivBundle\Entity\Trip $trip
+     * @param  \Tisseo\EndivBundle\Entity\Trip $trip
      * @return TripDatasource
      */
     public function setTrip(\Tisseo\EndivBundle\Entity\Trip $trip = null)

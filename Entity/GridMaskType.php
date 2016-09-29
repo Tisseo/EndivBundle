@@ -57,7 +57,7 @@ class GridMaskType
     /**
      * Set calendarType
      *
-     * @param string $calendarType
+     * @param  string $calendarType
      * @return GridMaskType
      */
     public function setCalendarType($calendarType)
@@ -80,7 +80,7 @@ class GridMaskType
     /**
      * Set calendarPeriod
      *
-     * @param string $calendarPeriod
+     * @param  string $calendarPeriod
      * @return GridMaskType
      */
     public function setCalendarPeriod($calendarPeriod)
@@ -103,7 +103,7 @@ class GridMaskType
     /**
      * Add gridLinkCalendarMaskTypes
      *
-     * @param \Tisseo\EndivBundle\Entity\GridLinkCalendarMaskType $gridLinkCalendarMaskTypes
+     * @param  \Tisseo\EndivBundle\Entity\GridLinkCalendarMaskType $gridLinkCalendarMaskTypes
      * @return GridMaskType
      */
     public function addGridLinkCalendarMaskType(GridLinkCalendarMaskType $gridLinkCalendarMaskTypes)
@@ -136,7 +136,7 @@ class GridMaskType
     /**
      * Add tripCalendars
      *
-     * @param \Tisseo\EndivBundle\Entity\TripCalendar $tripCalendars
+     * @param  \Tisseo\EndivBundle\Entity\TripCalendar $tripCalendars
      * @return GridMaskType
      */
     public function addTripCalendar(TripCalendar $tripCalendars)

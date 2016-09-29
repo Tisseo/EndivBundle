@@ -51,7 +51,7 @@ class EmergencyStatus
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param  integer $rank
      * @return EmergencyStatus
      */
     public function setRank($rank)
@@ -74,7 +74,7 @@ class EmergencyStatus
     /**
      * Set chaosSeverity
      *
-     * @param guid $chaosSeverity
+     * @param  guid $chaosSeverity
      * @return EmergencyStatus
      */
     public function setChaosSeverity($chaosSeverity)
@@ -97,7 +97,7 @@ class EmergencyStatus
     /**
      * Set color
      *
-     * @param string $color
+     * @param  string $color
      * @return EmergencyStatus
      */
     public function setColor($color)
@@ -120,7 +120,7 @@ class EmergencyStatus
     /**
      * Set label
      *
-     * @param string $label
+     * @param  string $label
      * @return EmergencyStatus
      */
     public function setLabel($label)
@@ -143,7 +143,7 @@ class EmergencyStatus
     /**
      * Set description
      *
-     * @param string $description
+     * @param  string $description
      * @return EmergencyStatus
      */
     public function setDescription($description)

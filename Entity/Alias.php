@@ -38,7 +38,7 @@ class Alias
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Alias
      */
     public function setName($name)
@@ -61,7 +61,7 @@ class Alias
     /**
      * Set stopArea
      *
-     * @param \Tisseo\EndivBundle\Entity\StopArea $stopArea
+     * @param  \Tisseo\EndivBundle\Entity\StopArea $stopArea
      * @return Alias
      */
     public function setStopArea(\Tisseo\EndivBundle\Entity\StopArea $stopArea = null)

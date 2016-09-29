@@ -36,12 +36,16 @@ class CalendarManager extends SortManager
         $this->buildCriteria($array, $q);
 
         if (!is_null($orderParams)) {
-            foreach($orderParams as $key => $order) {
+            foreach ($orderParams as $key => $order) {
                 $q->addOrderBy('q.'.$order['columnName'], $order['orderDir']);
             }
         }
-        if (false === is_null($offset)) $q->setFirstResult($offset);
-        if (false === is_null($limit))  $q->setMaxResults($limit);
+        if (false === is_null($offset)) {
+            $q->setFirstResult($offset);
+        }
+        if (false === is_null($limit)) {
+            $q->setMaxResults($limit);
+        }
 
         return $q->getQuery()->getResult();
     }
@@ -59,7 +63,7 @@ class CalendarManager extends SortManager
         $alias = $q->getRootAliases()[0];
 
         if (count($params) > 0) {
-            foreach($params as $key => $value) {
+            foreach ($params as $key => $value) {
                 if (!empty($value)) {
                     if ($key === 'name') {
                         $q->andWhere("UPPER(".$alias.".".$key.") LIKE UPPER('%".$value."%')");
@@ -67,7 +71,6 @@ class CalendarManager extends SortManager
                         $q->andWhere(($alias.'.'.$key.' = :val_'.$key));
                         $q->setParameter('val_'.$key, $value);
                     }
-
                 }
             }
         }
@@ -101,20 +104,21 @@ class CalendarManager extends SortManager
             FROM calendar
             WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
 
-        if ($calendarType)
-        {
-            if (is_array($calendarType))
-                $sql .= " and calendar_type in ('".implode("','",$calendarType)."')";
-            else
+        if ($calendarType) {
+            if (is_array($calendarType)) {
+                $sql .= " and calendar_type in ('".implode("','", $calendarType)."')";
+            } else {
                 $sql .= " and calendar_type in ('".$calendarType."')";
+            }
         }
 
         if (!empty($lineVersionId)) {
             $sql .= " and (line_version_id IS NULL OR line_version_id = :lv_id)";
         }
 
-        if ($limit > 0)
+        if ($limit > 0) {
             $sql .= " LIMIT ".number_format($limit);
+        }
 
         $stmt = $connection->prepare($sql);
 
@@ -127,8 +131,7 @@ class CalendarManager extends SortManager
 
         $result = array();
 
-        foreach ($calendars as $calendar)
-        {
+        foreach ($calendars as $calendar) {
             $result[] = array(
                 "name" => $calendar["name"],
                 "id" => $calendar["id"]

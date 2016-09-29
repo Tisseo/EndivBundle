@@ -38,7 +38,7 @@ class LineVersionProperty
     /**
      * Set lineVersion
      *
-     * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     * @param  \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
      * @return LineVersionProperty
      */
     public function setLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion = null)
@@ -61,7 +61,7 @@ class LineVersionProperty
     /**
      * Set property
      *
-     * @param \Tisseo\EndivBundle\Entity\Property $property
+     * @param  \Tisseo\EndivBundle\Entity\Property $property
      * @return LineVersionProperty
      */
     public function setProperty(\Tisseo\EndivBundle\Entity\Property $property = null)
@@ -89,7 +89,7 @@ class LineVersionProperty
     /**
      * Set value
      *
-     * @param integer $value
+     * @param  integer $value
      * @return LineVersionProperty
      */
     public function setValue($value)

@@ -7,12 +7,13 @@ use Tisseo\EndivBundle\Entity\LineGroup;
 use Tisseo\EndivBundle\Entity\LineGroupContent;
 use Tisseo\EndivBundle\Entity\LineVersion;
 
-
 class LineGroupManager extends SortManager
 {
     private $om = null;
 
-    /** @var \Doctrine\ORM\EntityRepository $repository */
+    /**
+ * @var \Doctrine\ORM\EntityRepository $repository
+*/
     private $repository = null;
 
     public function __construct(ObjectManager $om)
@@ -33,6 +34,7 @@ class LineGroupManager extends SortManager
 
     /**
      * save
+     *
      * @param LineGroup $LineGroup
      *
      * Persist and save a LineGroup into database.
@@ -61,15 +63,18 @@ class LineGroupManager extends SortManager
      *
      * return the child line
      */
-    public function getChildLine(LineVersion $lineVersion) {
-        $query = $this->om->createQuery("
+    public function getChildLine(LineVersion $lineVersion)
+    {
+        $query = $this->om->createQuery(
+            "
             SELECT IDENTITY(lgc.lineVersion)
             FROM Tisseo\EndivBundle\Entity\LineGroupContent lgc
             JOIN lgc.lineGroup lg
             JOIN lg.lineGroupContent lgc2
             WHERE lgc2.lineVersion = :lv
-            AND lgc2.isParent")
-        ->setParameter('lv', $lineVersion);
+            AND lgc2.isParent"
+        )
+            ->setParameter('lv', $lineVersion);
 
         return $query->getOneOrNullResult();
     }

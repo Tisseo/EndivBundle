@@ -91,7 +91,7 @@ class Route extends ObjectDatasource
     /**
      * Set way
      *
-     * @param string $way
+     * @param  string $way
      * @return Route
      */
     public function setWay($way)
@@ -114,7 +114,7 @@ class Route extends ObjectDatasource
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Route
      */
     public function setName($name)
@@ -137,7 +137,7 @@ class Route extends ObjectDatasource
     /**
      * Set direction
      *
-     * @param string $direction
+     * @param  string $direction
      * @return Route
      */
     public function setDirection($direction)
@@ -160,7 +160,7 @@ class Route extends ObjectDatasource
     /**
      * Set comment
      *
-     * @param Comment $comment
+     * @param  Comment $comment
      * @return Route
      */
     public function setComment(Comment $comment = null)
@@ -183,7 +183,7 @@ class Route extends ObjectDatasource
     /**
      * Set lineVersion
      *
-     * @param LineVersion $lineVersion
+     * @param  LineVersion $lineVersion
      * @return Route
      */
     public function setLineVersion(LineVersion $lineVersion = null)
@@ -206,7 +206,7 @@ class Route extends ObjectDatasource
     /**
      * Set trips
      *
-     * @param Collection $trips
+     * @param  Collection $trips
      * @return Route
      */
     public function setTrips(Collection $trips)
@@ -231,7 +231,7 @@ class Route extends ObjectDatasource
     /**
      * Add trips
      *
-     * @param Trip $trip
+     * @param  Trip $trip
      * @return Route
      */
     public function addTrip(Trip $trip)
@@ -252,14 +252,16 @@ class Route extends ObjectDatasource
         $this->trips->removeElement($trip);
     }
 
-    /** Remove trips
+    /**
+ * Remove trips
      *
      * @param Collection $trips
      */
     public function removeTrips(Collection $trips)
     {
-        foreach($trips as $trip)
+        foreach ($trips as $trip) {
             $this->trips->removeElement($trip);
+        }
     }
 
     /**
@@ -275,7 +277,7 @@ class Route extends ObjectDatasource
     /**
      * Set routeStops
      *
-     * @param Collection $routeStops
+     * @param  Collection $routeStops
      * @return Route
      */
     public function setRouteStops(Collection $routeStops)
@@ -300,7 +302,7 @@ class Route extends ObjectDatasource
     /**
      * Add routeStops
      *
-     * @param RouteStop $routeStop
+     * @param  RouteStop $routeStop
      * @return Route
      */
     public function addRouteStops(RouteStop $routeStop)
@@ -334,7 +336,7 @@ class Route extends ObjectDatasource
     /**
      * Set routeDatasources
      *
-     * @param Collection $routeDatasources
+     * @param  Collection $routeDatasources
      * @return Route
      */
     public function setRouteDatasources(Collection $routeDatasources)
@@ -359,7 +361,7 @@ class Route extends ObjectDatasource
     /**
      * Add routeDatasource
      *
-     * @param RouteDatasource $routeDatasource
+     * @param  RouteDatasource $routeDatasource
      * @return Route
      */
     public function addRouteDatasource(RouteDatasource $routeDatasource)
@@ -393,7 +395,7 @@ class Route extends ObjectDatasource
     /**
      * Add routeStops
      *
-     * @param \Tisseo\EndivBundle\Entity\RouteStop $routeStops
+     * @param  \Tisseo\EndivBundle\Entity\RouteStop $routeStops
      * @return Route
      */
     public function addRouteStop(\Tisseo\EndivBundle\Entity\RouteStop $routeStops)
@@ -413,7 +415,9 @@ class Route extends ObjectDatasource
         $this->routeStops->removeElement($routeStops);
     }
 
-    /** Criteria functions **/
+    /**
+ * Criteria functions
+**/
 
     /**
      * Getting all Trips pattern from the collection
@@ -421,8 +425,7 @@ class Route extends ObjectDatasource
     public function getTripsPattern()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('isPattern', true))
-        ;
+            ->where(Criteria::expr()->eq('isPattern', true));
 
         return $this->trips->matching($criteria);
     }
@@ -433,8 +436,7 @@ class Route extends ObjectDatasource
     public function getTripsNotPattern()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('isPattern', true))
-        ;
+            ->where(Criteria::expr()->neq('isPattern', true));
 
         return $this->trips->matching($criteria);
     }
@@ -447,8 +449,7 @@ class Route extends ObjectDatasource
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('isPattern', true))
             ->andWhere(Criteria::expr()->neq('dayCalendar', null))
-            ->andWhere(Criteria::expr()->neq('periodCalendar', null))
-        ;
+            ->andWhere(Criteria::expr()->neq('periodCalendar', null));
 
         return $this->trips->matching($criteria);
     }
@@ -474,13 +475,13 @@ class Route extends ObjectDatasource
      */
     public function getLastRouteStop()
     {
-        if ($this->routeStops->count() === 0)
+        if ($this->routeStops->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->orderBy(array('rank' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         return $this->routeStops->matching($criteria)->first();
     }
@@ -492,27 +493,27 @@ class Route extends ObjectDatasource
 
     /**
      * Getting a specific Trip from the Route
+     *
      * @param integer $tripId
      */
     public function getTrip($tripId)
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('id', $tripId))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         return $this->trips->matching($criteria)->first();
     }
 
     /**
      * Checking a Trip pattern is used by Trips or not
+     *
      * @param Trip $pattern
      */
     public function isPatternLocked(Trip $pattern)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('pattern', $pattern))
-        ;
+            ->where(Criteria::expr()->eq('pattern', $pattern));
 
         return $this->trips->matching($criteria)->count() > 0;
     }
@@ -523,8 +524,7 @@ class Route extends ObjectDatasource
     public function getTripsHavingParent()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('parent', null))
-        ;
+            ->where(Criteria::expr()->neq('parent', null));
 
         return $this->trips->matching($criteria);
     }
@@ -535,8 +535,7 @@ class Route extends ObjectDatasource
     public function getTripsHavingPattern()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('pattern', null))
-        ;
+            ->where(Criteria::expr()->neq('pattern', null));
 
         return $this->trips->matching($criteria);
     }
@@ -544,7 +543,8 @@ class Route extends ObjectDatasource
     /**
      * Getting a Trip having a TripCalendar and the same Calendars
      * from the Trip passed as parameter
-     * @param Trip $trip
+     *
+     * @param  Trip $trip
      * @return TripCalendar
      */
     public function getAvailableTripCalendar(Trip $trip)
@@ -553,13 +553,13 @@ class Route extends ObjectDatasource
             ->where(Criteria::expr()->neq('tripCalendar', null))
             ->andWhere(Criteria::expr()->eq('dayCalendar', $trip->getDayCalendar()))
             ->andWhere(Criteria::expr()->eq('periodCalendar', $trip->getPeriodCalendar()))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $trips = $this->trips->matching($criteria);
 
-        if ($trips->isEmpty())
+        if ($trips->isEmpty()) {
             return null;
+        }
 
         return $trips->first()->getTripCalendar();
     }
@@ -567,7 +567,7 @@ class Route extends ObjectDatasource
     /**
      * Add routeExportDestination
      *
-     * @param RouteExportDestination $routeExportDestination
+     * @param  RouteExportDestination $routeExportDestination
      * @return Route
      */
     public function addRouteExportDestination(RouteExportDestination $routeExportDestination)
@@ -601,8 +601,7 @@ class Route extends ObjectDatasource
     {
         $exportDestinations = new ArrayCollection();
 
-        foreach($this->routeExportDestinations as $routeExportDestination)
-        {
+        foreach ($this->routeExportDestinations as $routeExportDestination) {
             $exportDestinations[] = $routeExportDestination->getExportDestination();
         }
 

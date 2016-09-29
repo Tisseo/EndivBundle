@@ -82,7 +82,7 @@ class Schematic
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Schematic
      */
     public function setName($name)
@@ -105,7 +105,7 @@ class Schematic
     /**
      * Set comment
      *
-     * @param string $comment
+     * @param  string $comment
      * @return Schematic
      */
     public function setComment($comment)
@@ -128,7 +128,7 @@ class Schematic
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param  \DateTime $date
      * @return Schematic
      */
     public function setDate($date)
@@ -151,7 +151,7 @@ class Schematic
     /**
      * Set filePath
      *
-     * @param string $filePath
+     * @param  string $filePath
      * @return Schematic
      */
     public function setFilePath($filePath)
@@ -219,7 +219,7 @@ class Schematic
     /**
      * Set line
      *
-     * @param \Tisseo\EndivBundle\Entity\Line $line
+     * @param  \Tisseo\EndivBundle\Entity\Line $line
      * @return Schematic
      */
     public function setLine(\Tisseo\EndivBundle\Entity\Line $line = null)
@@ -242,7 +242,7 @@ class Schematic
     /**
      * Set deprecated
      *
-     * @param boolean $deprecated
+     * @param  boolean $deprecated
      * @return Schematic
      */
     public function setDeprecated($deprecated)
@@ -265,7 +265,7 @@ class Schematic
     /**
      * Set groupGis
      *
-     * @param boolean $groupGis
+     * @param  boolean $groupGis
      * @return Schematic
      */
     public function setGroupGis($groupGis)

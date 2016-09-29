@@ -5,7 +5,6 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\LineGroupGisContent;
 
-
 class LineGroupGisContentManager extends SortManager
 {
     /**
@@ -13,7 +12,9 @@ class LineGroupGisContentManager extends SortManager
      */
     private $om = null;
 
-    /** @var \Doctrine\ORM\EntityRepository $repository */
+    /**
+ * @var \Doctrine\ORM\EntityRepository $repository
+*/
     private $repository = null;
 
     public function __construct(ObjectManager $om)
@@ -43,6 +44,7 @@ class LineGroupGisContentManager extends SortManager
 
     /**
      * save
+     *
      * @param LineGroupGisContent $lineGroupGisContent
      *
      * Persist and save a LineGroupGisContent into database.

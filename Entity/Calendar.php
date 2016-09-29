@@ -109,7 +109,7 @@ class Calendar extends ObjectDatasource
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Calendar
      */
     public function setName($name)
@@ -132,13 +132,14 @@ class Calendar extends ObjectDatasource
     /**
      * Set calendarType
      *
-     * @param string $calendarType
+     * @param  string $calendarType
      * @return Calendar
      */
     public function setCalendarType($calendarType)
     {
-        if (in_array($calendarType, self::$calendarTypes))
+        if (in_array($calendarType, self::$calendarTypes)) {
             $this->calendarType = $calendarType;
+        }
 
         return $this;
     }
@@ -156,7 +157,7 @@ class Calendar extends ObjectDatasource
     /**
      * Add calendarDatasource
      *
-     * @param CalendarDatasource $calendarDatasource
+     * @param  CalendarDatasource $calendarDatasource
      * @return Calendar
      */
     public function addCalendarDatasource(CalendarDatasource $calendarDatasource)
@@ -186,10 +187,10 @@ class Calendar extends ObjectDatasource
         return $this->calendarDatasources;
     }
 
-   /**
+    /**
      * Add calendarDatasources
      *
-     * @param CalendarDatasource $calendarDatasources
+     * @param  CalendarDatasource $calendarDatasources
      * @return Calendar
      */
     public function addAccessibilityType(AccessibilityType $accessibilityType)
@@ -222,7 +223,7 @@ class Calendar extends ObjectDatasource
     /**
      * Add periodTrips
      *
-     * @param Trip $periodTrips
+     * @param  Trip $periodTrips
      * @return Calendar
      */
     public function addPeriodTrip(Trip $periodTrips)
@@ -255,7 +256,7 @@ class Calendar extends ObjectDatasource
     /**
      * Add dayTrips
      *
-     * @param Trip $dayTrips
+     * @param  Trip $dayTrips
      * @return Calendar
      */
     public function addDayTrip(Trip $dayTrips)
@@ -288,7 +289,7 @@ class Calendar extends ObjectDatasource
     /**
      * Set lineVersion
      *
-     * @param LineVersion $lineVersion
+     * @param  LineVersion $lineVersion
      * @return Route
      */
     public function setLineVersion(LineVersion $lineVersion = null)
@@ -308,10 +309,10 @@ class Calendar extends ObjectDatasource
         return $this->lineVersion;
     }
 
-   /**
+    /**
      * Set computedStartDate
      *
-     * @param string $computedStartDate
+     * @param  string $computedStartDate
      * @return Calendar
      */
     public function setComputedStartDate($computedStartDate)
@@ -331,10 +332,10 @@ class Calendar extends ObjectDatasource
         return $this->computedStartDate;
     }
 
-   /**
+    /**
      * Set computedEndDate
      *
-     * @param string $computedEndDate
+     * @param  string $computedEndDate
      * @return Calendar
      */
     public function setComputedEndDate($computedEndDate)
@@ -357,7 +358,7 @@ class Calendar extends ObjectDatasource
     /**
      * Set calendarElements
      *
-     * @param Collection $calendarElements
+     * @param  Collection $calendarElements
      * @return Route
      */
     public function setCalendarElements(Collection $calendarElements)
@@ -372,15 +373,14 @@ class Calendar extends ObjectDatasource
     /**
      * Get calendarElements
      *
-     * @param $order (optional)
+     * @param  $order (optional)
      * @return Collection
      */
     public function getCalendarElements($order = null)
     {
         if (in_array($order, array(Criteria::ASC, Criteria::DESC))) {
             $criteria = Criteria::create()
-                ->orderBy(array('rank' => $order))
-            ;
+                ->orderBy(array('rank' => $order));
 
             return $this->calendarElements->matching($criteria);
         }
@@ -391,7 +391,7 @@ class Calendar extends ObjectDatasource
     /**
      * Add calendarElements
      *
-     * @param CalendarElement $calendarElement
+     * @param  CalendarElement $calendarElement
      * @return Route
      */
     public function addCalendarElement(CalendarElement $calendarElement)

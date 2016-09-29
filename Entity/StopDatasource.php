@@ -43,7 +43,7 @@ class StopDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return StopDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class StopDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return StopDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -89,7 +89,7 @@ class StopDatasource
     /**
      * Set stop
      *
-     * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     * @param  \Tisseo\EndivBundle\Entity\Stop $stop
      * @return StopDatasource
      */
     public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)

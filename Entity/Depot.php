@@ -52,7 +52,7 @@ class Depot
     /**
      * Set short name
      *
-     * @param string $shortName
+     * @param  string $shortName
      * @return Depot
      */
     public function setShortName($shortName)
@@ -75,7 +75,7 @@ class Depot
     /**
      * Set long name
      *
-     * @param string $longName
+     * @param  string $longName
      * @return Depot
      */
     public function setLongName($longName)

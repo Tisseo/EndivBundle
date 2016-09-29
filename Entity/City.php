@@ -47,7 +47,7 @@ class City
     /**
      * Set insee
      *
-     * @param integer $insee
+     * @param  integer $insee
      * @return City
      */
     public function setInsee($insee)
@@ -70,7 +70,7 @@ class City
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return City
      */
     public function setName($name)
@@ -93,7 +93,7 @@ class City
     /**
      * Set theGeom
      *
-     * @param geometry $theGeom
+     * @param  geometry $theGeom
      * @return City
      */
     public function setTheGeom($theGeom)
@@ -116,7 +116,7 @@ class City
     /**
      * Set mainStopArea
      *
-     * @param \Tisseo\EndivBundle\Entity\StopArea $mainStopArea
+     * @param  \Tisseo\EndivBundle\Entity\StopArea $mainStopArea
      * @return City
      */
     public function setMainStopArea(\Tisseo\EndivBundle\Entity\StopArea $mainStopArea = null)

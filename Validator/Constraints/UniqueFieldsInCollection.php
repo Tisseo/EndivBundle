@@ -18,7 +18,8 @@ class UniqueFieldsInCollection extends Constraint
     {
         // no known options set? $options is the fields array
         if (is_array($options)
-            && !array_intersect(array_keys($options), array('message', 'fields'))) {
+            && !array_intersect(array_keys($options), array('message', 'fields'))
+        ) {
             $options = array('fields' => $options);
         }
 

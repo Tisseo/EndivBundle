@@ -51,8 +51,7 @@ class StopHistory
         $this->startDate = new \Datetime('now');
         $this->startDate->modify('+1 day');
 
-        if ($stopHistory !== null)
-        {
+        if ($stopHistory !== null) {
             $this->shortName = $stopHistory->getShortName();
             $this->longName = $stopHistory->getLongName();
             $this->theGeom = $stopHistory->getTheGeom();
@@ -65,22 +64,17 @@ class StopHistory
         $now = new \Datetime();
         $currentStopHistory = $this->getStop()->getCurrentStopHistory($now);
 
-        if (!empty($currentStopHistory) && $currentStopHistory->getEndDate() !== null)
-        {
-            if ($this->getStartDate() <= $currentStopHistory->getEndDate())
-            {
-                 $context->addViolationAt(
+        if (!empty($currentStopHistory) && $currentStopHistory->getEndDate() !== null) {
+            if ($this->getStartDate() <= $currentStopHistory->getEndDate()) {
+                $context->addViolationAt(
                     'startDate',
                     'stop_history.errors.min_date_end',
                     array('%date%' => $currentStopHistory->getEndDate()->format('d/m/Y')),
                     null
                 );
             }
-        }
-        else
-        {
-            if ($this->getStartDate() <= $now)
-            {
+        } else {
+            if ($this->getStartDate() <= $now) {
                 $context->addViolationAt(
                     'startDate',
                     'stop_history.errors.min_date',
@@ -104,7 +98,7 @@ class StopHistory
     /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param  \DateTime $startDate
      * @return StopHistory
      */
     public function setStartDate($startDate)
@@ -127,7 +121,7 @@ class StopHistory
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param  \DateTime $endDate
      * @return StopHistory
      */
     public function setEndDate($endDate)
@@ -150,7 +144,7 @@ class StopHistory
     /**
      * Set shortName
      *
-     * @param string $shortName
+     * @param  string $shortName
      * @return StopHistory
      */
     public function setShortName($shortName)
@@ -173,7 +167,7 @@ class StopHistory
     /**
      * Set longName
      *
-     * @param string $longName
+     * @param  string $longName
      * @return StopHistory
      */
     public function setLongName($longName)
@@ -196,7 +190,7 @@ class StopHistory
     /**
      * Set theGeom
      *
-     * @param geometry $theGeom
+     * @param  geometry $theGeom
      * @return StopHistory
      */
     public function setTheGeom($theGeom)
@@ -219,7 +213,7 @@ class StopHistory
     /**
      * Set stop
      *
-     * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     * @param  \Tisseo\EndivBundle\Entity\Stop $stop
      * @return StopHistory
      */
     public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)
@@ -241,6 +235,7 @@ class StopHistory
 
     /**
      * Close Date
+     *
      * @param Datetime $date
      *
      * Set the endDate with the date passed as parameter

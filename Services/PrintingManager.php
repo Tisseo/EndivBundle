@@ -34,7 +34,8 @@ class PrintingManager
 
     public function getCsvExport()
     {
-        $query = $this->om->createQuery("
+        $query = $this->om->createQuery(
+            "
             SELECT
                 l.number AS line_number,
                 lv.version AS line_version_version,
@@ -45,7 +46,8 @@ class PrintingManager
             JOIN lv.printings p
             JOIN lv.line l
             ORDER BY l.number, lv.version
-        ");
+        "
+        );
 
         $content = $query->getArrayResult();
 

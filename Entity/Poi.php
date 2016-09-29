@@ -47,7 +47,7 @@ class Poi
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Poi
      */
     public function setName($name)
@@ -70,7 +70,7 @@ class Poi
     /**
      * Set cityId
      *
-     * @param integer $cityId
+     * @param  integer $cityId
      * @return Poi
      */
     public function setCityId($cityId)
@@ -93,7 +93,7 @@ class Poi
     /**
      * Set poiType
      *
-     * @param \Tisseo\EndivBundle\Entity\PoiType $poiType
+     * @param  \Tisseo\EndivBundle\Entity\PoiType $poiType
      * @return Poi
      */
     public function setPoiType(\Tisseo\EndivBundle\Entity\PoiType $poiType = null)
@@ -116,7 +116,7 @@ class Poi
     /**
      * Set priority
      *
-     * @param integer $priority
+     * @param  integer $priority
      * @return Poi
      */
     public function setPriority($priority)

@@ -106,7 +106,7 @@ class Line extends ObjectDatasource
     /**
      * Set number
      *
-     * @param string $number
+     * @param  string $number
      * @return Line
      */
     public function setNumber($number)
@@ -129,7 +129,7 @@ class Line extends ObjectDatasource
     /**
      * Set priority
      *
-     * @param integer $priority
+     * @param  integer $priority
      * @return Line
      */
     public function setPriority($priority)
@@ -152,7 +152,7 @@ class Line extends ObjectDatasource
     /**
      * Set physicalMode
      *
-     * @param PhysicalMode $physicalMode
+     * @param  PhysicalMode $physicalMode
      * @return Line
      */
     public function setPhysicalMode(PhysicalMode $physicalMode = null)
@@ -195,7 +195,7 @@ class Line extends ObjectDatasource
     /**
      * Set lineDatasources
      *
-     * @param \Doctrine\Common\Collections\Collection $lineDatasources
+     * @param  \Doctrine\Common\Collections\Collection $lineDatasources
      * @return Line
      */
     public function setLineDatasources(Collection $lineDatasources)
@@ -210,7 +210,7 @@ class Line extends ObjectDatasource
     /**
      * Add lineDatasource
      *
-     * @param LineDatasource $lineDatasources
+     * @param  LineDatasource $lineDatasources
      * @return Line
      */
     public function addLineDatasource(LineDatasource $lineDatasource)
@@ -244,7 +244,7 @@ class Line extends ObjectDatasource
     /**
      * Set lineVersions
      *
-     * @param \Doctrine\Common\Collections\Collection $lineVersions
+     * @param  \Doctrine\Common\Collections\Collection $lineVersions
      * @return Line
      */
     public function setLineVersions(Collection $lineVersions)
@@ -259,7 +259,7 @@ class Line extends ObjectDatasource
     /**
      * Add lineVersions
      *
-     * @param LineVersion $lineVersion
+     * @param  LineVersion $lineVersion
      * @return Line
      */
     public function addLineVersions(LineVersion $lineVersion)
@@ -280,9 +280,32 @@ class Line extends ObjectDatasource
     }
 
     /**
+     * Add lineDatasources
+     *
+     * @param  LineDatasource $lineDatasource
+     * @return Line
+     */
+    public function addLineDatasources(LineDatasource $lineDatasource)
+    {
+        $this->lineDatasources->add($lineDatasource);
+
+        return $this;
+    }
+
+    /**
+     * Remove lineDatasources
+     *
+     * @param LineDatasource $lineDatasource
+     */
+    public function removeLineDatasources(LineDatasource $lineDatasource)
+    {
+        $this->lineDatasources->removeElement($lineDatasource);
+    }
+
+    /**
      * Add lineVersions
      *
-     * @param LineVersion $lineVersions
+     * @param  LineVersion $lineVersions
      * @return Line
      */
     public function addLineVersion(LineVersion $lineVersions)
@@ -305,7 +328,7 @@ class Line extends ObjectDatasource
     /**
      * Add schematic
      *
-     * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
+     * @param  \Tisseo\EndivBundle\Entity\Schematic $schematic
      * @return Line
      */
     public function addSchematics(Schematic $schematic)
@@ -318,7 +341,7 @@ class Line extends ObjectDatasource
     /**
      * Set schematics
      *
-     * @param \Doctrine\Common\Collections\Collection $schematics
+     * @param  \Doctrine\Common\Collections\Collection $schematics
      * @return Line
      */
     public function setSchematics(Collection $schematics)
@@ -353,7 +376,7 @@ class Line extends ObjectDatasource
     /**
      * Add lineGroupGisContents
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
      * @return Line
      */
     public function addLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
@@ -396,7 +419,7 @@ class Line extends ObjectDatasource
     /**
      * Set boards
      *
-     * @param Collection $boards
+     * @param  Collection $boards
      * @return Line
      */
     public function setBoards(Collection $boards)
@@ -409,7 +432,7 @@ class Line extends ObjectDatasource
     /**
      * Add board
      *
-     * @param Board $board
+     * @param  Board $board
      * @return Line
      */
     public function addBoard(Board $board)
@@ -422,7 +445,7 @@ class Line extends ObjectDatasource
     /**
      * Remove board
      *
-     * @param Board $board
+     * @param  Board $board
      * @return Line
      */
     public function removeBoard(Board $board)
@@ -435,7 +458,7 @@ class Line extends ObjectDatasource
     /**
      * Set lineStatuses
      *
-     * @param Collection $lineStatuses
+     * @param  Collection $lineStatuses
      * @return Line
      */
     public function setLineStatuses(Collection $lineStatuses)
@@ -457,7 +480,7 @@ class Line extends ObjectDatasource
     /**
      * Add lineStatus
      *
-     * @param LineStatus $lineStatus
+     * @param  LineStatus $lineStatus
      * @return Line
      */
     public function addLineStatus(LineStatus $lineStatus)
@@ -499,13 +522,13 @@ class Line extends ObjectDatasource
     {
         $criteria = Criteria::create()
             ->orderBy(array('endDate' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $lineVersions = $this->lineVersions->matching($criteria);
 
-        if (!$lineVersions->isEmpty())
+        if (!$lineVersions->isEmpty()) {
             return $lineVersions->first();
+        }
 
         return null;
     }
@@ -513,15 +536,14 @@ class Line extends ObjectDatasource
     /**
      * getHistoryLineVersions
      *
-     * @param \Datetime $now
+     * @param  \Datetime $now
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getHistoryLineVersions(\Datetime $now)
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->lt('endDate', $now))
-            ->orderBy(array('version' => Criteria::ASC))
-        ;
+            ->orderBy(array('version' => Criteria::ASC));
 
         return $this->lineVersions->matching($criteria);
     }
@@ -529,7 +551,7 @@ class Line extends ObjectDatasource
     /**
      * Get current LineVersion
      *
-     * @param \Datetime $now
+     * @param  \Datetime $now
      * @return LineVersion
      */
     public function getCurrentLineVersion(\Datetime $now = null)
@@ -540,15 +562,16 @@ class Line extends ObjectDatasource
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->lte('startDate', $now))
-            ->andWhere(Criteria::expr()->orX(
-                Criteria::expr()->gt('endDate', $now),
-                Criteria::expr()->andX(
-                    Criteria::expr()->isNull('endDate'),
-                    Criteria::expr()->gte('plannedEndDate', $now)
+            ->andWhere(
+                Criteria::expr()->orX(
+                    Criteria::expr()->gt('endDate', $now),
+                    Criteria::expr()->andX(
+                        Criteria::expr()->isNull('endDate'),
+                        Criteria::expr()->gte('plannedEndDate', $now)
+                    )
                 )
-            ))
-            ->setMaxResults(1)
-        ;
+            )
+            ->setMaxResults(1);
 
         $lineVersions = $this->lineVersions->matching($criteria);
 
@@ -562,7 +585,7 @@ class Line extends ObjectDatasource
     /**
      * Get current or future LineVersion
      *
-     * @param \Datetime $now
+     * @param  \Datetime $now
      * @return LineVersion
      */
     public function getCurrentOrFutureLineVersion(\Datetime $now = null)
@@ -572,16 +595,17 @@ class Line extends ObjectDatasource
         }
 
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->orX(
-                Criteria::expr()->gte('endDate', $now),
-                Criteria::expr()->andX(
-                    Criteria::expr()->isNull('endDate'),
-                    Criteria::expr()->gte('plannedEndDate', $now)
+            ->where(
+                Criteria::expr()->orX(
+                    Criteria::expr()->gte('endDate', $now),
+                    Criteria::expr()->andX(
+                        Criteria::expr()->isNull('endDate'),
+                        Criteria::expr()->gte('plannedEndDate', $now)
+                    )
                 )
-            ))
+            )
             ->orderBy(array('endDate' => Criteria::DESC, 'plannedEndDate' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $lineVersions = $this->lineVersions->matching($criteria);
 
@@ -601,8 +625,7 @@ class Line extends ObjectDatasource
     {
         $criteria = Criteria::create()
             ->orderBy(array('dateTime' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $lineStatuses = $this->lineStatuses->matching($criteria);
 
@@ -617,25 +640,26 @@ class Line extends ObjectDatasource
 
     /**
      * Get last schematic (priority on schematic with a filePath).
-     * @param boolean withFile
+     *
+     * @param  boolean withFile
      * @return \Datetime
      */
     public function getLastSchematic($withFile = false)
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
-        if ($withFile)
-        {
+        if ($withFile) {
             $criteria = Criteria::create()
                 ->where(Criteria::expr()->neq('filePath', null))
-                ->setMaxResults(1)
-            ;
+                ->setMaxResults(1);
 
             $schematics = $this->schematics->matching($criteria);
 
-            if (!$schematics->isEmpty())
+            if (!$schematics->isEmpty()) {
                 return $schematics->first();
+            }
         }
 
         return $this->schematics->first();
@@ -643,90 +667,99 @@ class Line extends ObjectDatasource
 
     /**
      * Get first valid schematic date
+     *
      * @return Schematic
      */
     public function getFirstValidSchematic()
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('deprecated', true))
             ->andWhere(Criteria::expr()->neq('filePath', null))
             ->orderBy(array('date' => Criteria::ASC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $schematics = $this->schematics->matching($criteria);
 
-        if ($schematics->isEmpty())
+        if ($schematics->isEmpty()) {
             return null;
+        }
 
         return $schematics->first();
     }
 
     /**
      * Get fileSchematics
+     *
      * @return ArrayCollection
      */
     public function getFileSchematics($max = null)
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('filePath', null));
         if (!is_null($max)) {
-           $criteria->setMaxResults($max);
+            $criteria->setMaxResults($max);
         }
         $schematics = $this->schematics->matching($criteria);
 
-        if ($schematics->isEmpty())
+        if ($schematics->isEmpty()) {
             return null;
+        }
 
         return $schematics;
     }
 
     /**
      * Get last gisSchematic
+     *
      * @return Schematic
      */
     public function getLastGisSchematic()
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('filePath', null))
             ->andWhere(Criteria::expr()->neq('deprecated', true))
-            ->andWhere(Criteria::expr()->eq('groupGis', true))
-        ;
+            ->andWhere(Criteria::expr()->eq('groupGis', true));
 
         $schematics = $this->schematics->matching($criteria);
 
-        if (!$schematics->isEmpty())
+        if (!$schematics->isEmpty()) {
             return $schematics->first();
+        }
 
         return null;
     }
 
     /**
      * Get gisSchematics
+     *
      * @return ArrayCollection
      */
     public function getGisSchematics()
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('filePath', null))
-            ->andWhere(Criteria::expr()->neq('deprecated', true))
-        ;
+            ->andWhere(Criteria::expr()->neq('deprecated', true));
 
         $result = array();
-        foreach ($this->schematics->matching($criteria) as $schematic)
+        foreach ($this->schematics->matching($criteria) as $schematic) {
             $result[$schematic->getId()] = $schematic->getDateString();
+        }
 
         return $result;
     }

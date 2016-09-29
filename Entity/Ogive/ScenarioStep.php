@@ -78,7 +78,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set id
      *
-     * @param integer $identifier
+     * @param  integer $identifier
      * @return ScenarioStep
      */
     public function setId($identifier)
@@ -101,7 +101,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param  integer $rank
      * @return ScenarioStep
      */
     public function setRank($rank)
@@ -124,7 +124,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return ScenarioStep
      */
     public function setName($name)
@@ -147,7 +147,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set moment
      *
-     * @param integer $moment
+     * @param  integer $moment
      * @return ScenarioStep
      */
     public function setMoment($moment)
@@ -173,7 +173,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set mandatory
      *
-     * @param boolean $mandatory
+     * @param  boolean $mandatory
      * @return ScenarioStep
      */
     public function setMandatory($mandatory)
@@ -206,7 +206,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set scenarioStepParent
      *
-     * @param ScenarioStep $scenarioStepParent
+     * @param  ScenarioStep $scenarioStepParent
      * @return ScenarioStep
      */
     public function setScenarioStepParent(ScenarioStep $scenarioStepParent = null)
@@ -229,7 +229,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set scenario
      *
-     * @param Scenario $scenario
+     * @param  Scenario $scenario
      * @return ScenarioStep
      */
     public function setScenario(Scenario $scenario = null)
@@ -252,7 +252,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set connector
      *
-     * @param Connector $connector
+     * @param  Connector $connector
      * @return ScenarioStep
      */
     public function setConnector(Connector $connector = null)
@@ -275,7 +275,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set connectorParamList
      *
-     * @param ConnectorParamList $connectorParamList
+     * @param  ConnectorParamList $connectorParamList
      * @return ScenarioStep
      */
     public function setConnectorParamList(ConnectorParamList $connectorParamList = null)
@@ -308,7 +308,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set scenarioSteps
      *
-     * @param Collection $scenarioSteps
+     * @param  Collection $scenarioSteps
      * @return ScenarioStep
      */
     public function setScenarioSteps(Collection $scenarioSteps)
@@ -321,7 +321,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Add scenarioStep
      *
-     * @param ScenarioStep $scenarioStep
+     * @param  ScenarioStep $scenarioStep
      * @return ScenarioStep
      */
     public function addScenarioStep(ScenarioStep $scenarioStep)
@@ -334,7 +334,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Remove scenarioStep
      *
-     * @param ScenarioStep $scenarioStep
+     * @param  ScenarioStep $scenarioStep
      * @return ScenarioStep
      */
     public function removeScenarioStep(ScenarioStep $scenarioStep)
@@ -357,7 +357,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Set scenarioStepTexts
      *
-     * @param Collection $scenarioStepTexts
+     * @param  Collection $scenarioStepTexts
      * @return ScenarioStep
      */
     public function setScenarioStepTexts(Collection $scenarioStepTexts)
@@ -370,7 +370,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Add scenarioStepText
      *
-     * @param ScenarioStep $scenarioStepText
+     * @param  ScenarioStep $scenarioStepText
      * @return ScenarioStep
      */
     public function addScenarioStepText(ScenarioStepText $scenarioStepText)
@@ -383,7 +383,7 @@ class ScenarioStep extends OgiveEntity
     /**
      * Remove scenarioStepText
      *
-     * @param ScenarioStepText $scenarioStepText
+     * @param  ScenarioStepText $scenarioStepText
      * @return ScenarioStep
      */
     public function removeScenarioStepText(ScenarioStepText $scenarioStepText)

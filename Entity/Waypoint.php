@@ -37,7 +37,7 @@ class Waypoint
     /**
      * Set stop
      *
-     * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     * @param  \Tisseo\EndivBundle\Entity\Stop $stop
      * @return Waypoint
      */
     public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)
@@ -70,7 +70,7 @@ class Waypoint
     /**
      * set OdtArea
      *
-     * @param \Tisseo\EndivBundle\Entity\OdtArea $odtArea
+     * @param  \Tisseo\EndivBundle\Entity\OdtArea $odtArea
      * @return Waypoint
      */
     public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $odtArea = null)
@@ -84,5 +84,4 @@ class Waypoint
     {
         return (is_null($this->waypoint->getStop()) and !is_null($this->waypoint->getOdtArea()));
     }
-
 }

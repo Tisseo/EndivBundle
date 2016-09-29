@@ -80,7 +80,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set shortName
      *
-     * @param string $shortName
+     * @param  string $shortName
      * @return StopArea
      */
     public function setShortName($shortName)
@@ -103,7 +103,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set longName
      *
-     * @param string $longName
+     * @param  string $longName
      * @return StopArea
      */
     public function setLongName($longName)
@@ -126,7 +126,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set transferDuration
      *
-     * @param integer $transferDuration
+     * @param  integer $transferDuration
      * @return StopArea
      */
     public function setTransferDuration($transferDuration)
@@ -149,7 +149,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set theGeom
      *
-     * @param geometry $theGeom
+     * @param  geometry $theGeom
      * @return StopArea
      */
     public function setTheGeom($theGeom)
@@ -172,7 +172,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set city
      *
-     * @param \Tisseo\EndivBundle\Entity\City $city
+     * @param  \Tisseo\EndivBundle\Entity\City $city
      * @return StopArea
      */
     public function setCity(\Tisseo\EndivBundle\Entity\City $city = null)
@@ -205,7 +205,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set stopAreaDatasources
      *
-     * @param \Doctrine\Common\Collections\Collection $stopAreaDatasources
+     * @param  \Doctrine\Common\Collections\Collection $stopAreaDatasources
      * @return Line
      */
     public function setStopAreaDatasources(Collection $stopAreaDatasources)
@@ -220,7 +220,7 @@ class StopArea extends ObjectDatasource
     /**
      * Add stopAreaDatasource
      *
-     * @param StopAreaDatasource $stopAreaDatasource
+     * @param  StopAreaDatasource $stopAreaDatasource
      * @return Line
      */
     public function addStopAreaDatasource(StopAreaDatasource $stopAreaDatasource)
@@ -254,7 +254,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set stops
      *
-     * @param \Doctrine\Common\Collections\Collection $stops
+     * @param  \Doctrine\Common\Collections\Collection $stops
      * @return Line
      */
     public function setStops(Collection $stops)
@@ -269,7 +269,7 @@ class StopArea extends ObjectDatasource
     /**
      * Add stop
      *
-     * @param Stop $stop
+     * @param  Stop $stop
      * @return Line
      */
     public function addStop(Stop $stop)
@@ -302,7 +302,7 @@ class StopArea extends ObjectDatasource
     /**
      * Set aliases
      *
-     * @param \Doctrine\Common\Collections\Collection $aliases
+     * @param  \Doctrine\Common\Collections\Collection $aliases
      * @return StopArea
      */
     public function setAliases(Collection $aliases)
@@ -317,7 +317,7 @@ class StopArea extends ObjectDatasource
     /**
      * Add alias
      *
-     * @param Alias $alias
+     * @param  Alias $alias
      * @return StopArea
      */
     public function addAlias(Alias $alias)

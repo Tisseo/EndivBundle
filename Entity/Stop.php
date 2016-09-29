@@ -84,7 +84,7 @@ class Stop extends ObjectDatasource
     /**
      * Set id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return Stop
      */
     public function setId($id)
@@ -117,7 +117,7 @@ class Stop extends ObjectDatasource
     /**
      * Set OdtStop
      *
-     * @param \Tisseo\EndivBundle\Entity\OdtStop
+     * @param  \Tisseo\EndivBundle\Entity\OdtStop
      * @return Stop
      */
     public function setOdtStop($odtstop)
@@ -151,7 +151,7 @@ class Stop extends ObjectDatasource
     /**
      * Set masterStop
      *
-     * @param \Tisseo\EndivBundle\Entity\Stop $masterStop
+     * @param  \Tisseo\EndivBundle\Entity\Stop $masterStop
      * @return Stop
      */
     public function setMasterStop(\Tisseo\EndivBundle\Entity\Stop $masterStop = null)
@@ -174,7 +174,7 @@ class Stop extends ObjectDatasource
     /**
      * Set stopArea
      *
-     * @param \Tisseo\EndivBundle\Entity\StopArea $stopArea
+     * @param  \Tisseo\EndivBundle\Entity\StopArea $stopArea
      * @return Stop
      */
     public function setStopArea(\Tisseo\EndivBundle\Entity\StopArea $stopArea = null)
@@ -197,7 +197,7 @@ class Stop extends ObjectDatasource
     /**
      * Set waypoint
      *
-     * @param \Tisseo\EndivBundle\Entity\Waypoint $waypoint
+     * @param  \Tisseo\EndivBundle\Entity\Waypoint $waypoint
      * @return Stop
      */
     public function setWaypoint(\Tisseo\EndivBundle\Entity\Waypoint $waypoint = null)
@@ -230,17 +230,19 @@ class Stop extends ObjectDatasource
     public function getOpenedOdtStops()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->orX(
+            ->where(
+                Criteria::expr()->orX(
                     Criteria::expr()->isNull('endDate'),
                     Criteria::expr()->gte('endDate', new \DateTime())
-                ));
+                )
+            );
         return $this->odtStops->matching($criteria);
     }
 
     /**
      * Set odtStops
      *
-     * @param \Doctrine\Common\Collections\Collection $odtStops
+     * @param  \Doctrine\Common\Collections\Collection $odtStops
      * @return OdtArea
      */
     public function setOdtStops(Collection $odtStops)
@@ -255,7 +257,7 @@ class Stop extends ObjectDatasource
     /**
      * Add odtStop
      *
-     * @param OdtStop $odtStop
+     * @param  OdtStop $odtStop
      * @return OdtArea
      */
     public function addOdtStop(odtStop $odtStop)
@@ -288,7 +290,7 @@ class Stop extends ObjectDatasource
     /**
      * Set stopDatasources
      *
-     * @param \Doctrine\Common\Collections\Collection $stopDatasources
+     * @param  \Doctrine\Common\Collections\Collection $stopDatasources
      * @return Line
      */
     public function setStopDatasources(Collection $stopDatasources)
@@ -303,7 +305,7 @@ class Stop extends ObjectDatasource
     /**
      * Add stopDatasource
      *
-     * @param StopDatasource $stopDatasource
+     * @param  StopDatasource $stopDatasource
      * @return Line
      */
     public function addStopDatasource(StopDatasource $stopDatasource)
@@ -337,7 +339,7 @@ class Stop extends ObjectDatasource
     /**
      * Set StopHistories
      *
-     * @param \Doctrine\Common\Collections\Collection $stopHistories
+     * @param  \Doctrine\Common\Collections\Collection $stopHistories
      * @return Line
      */
     public function setStopHistories(Collection $stopHistories)
@@ -352,7 +354,7 @@ class Stop extends ObjectDatasource
     /**
      * Add stopHistory
      *
-     * @param stopHistory $stopHistory
+     * @param  stopHistory $stopHistory
      * @return Line
      */
     public function addStopHistory(stopHistory $stopHistory)
@@ -385,7 +387,7 @@ class Stop extends ObjectDatasource
     /**
      * Set StopAccessibilities
      *
-     * @param \Doctrine\Common\Collections\Collection $stopAccessibilities
+     * @param  \Doctrine\Common\Collections\Collection $stopAccessibilities
      * @return Line
      */
     public function setStopAccessibilities(Collection $stopAccessibilities)
@@ -400,7 +402,7 @@ class Stop extends ObjectDatasource
     /**
      * Add stopAccessibility
      *
-     * @param stopAccessibility $stopAccessibility
+     * @param  stopAccessibility $stopAccessibility
      * @return Line
      */
     public function addStopAccessibility(stopAccessibility $stopAccessibility)
@@ -428,8 +430,7 @@ class Stop extends ObjectDatasource
     public function findStopAccessibility($stopAccessibilityId)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->in('id', $stopAccessibilityId))
-        ;
+            ->where(Criteria::expr()->in('id', $stopAccessibilityId));
 
         return $this->stopAccessibilities()->matching($criteria);
     }
@@ -447,7 +448,7 @@ class Stop extends ObjectDatasource
     /**
      * Set phantoms
      *
-     * @param \Doctrine\Common\Collections\Collection $stopDatasources
+     * @param  \Doctrine\Common\Collections\Collection $stopDatasources
      * @return Line
      */
     public function setPhantoms(Collection $phantoms)
@@ -462,7 +463,7 @@ class Stop extends ObjectDatasource
     /**
      * Add phantom
      *
-     * @param Stop $Phantom
+     * @param  Stop $Phantom
      * @return Line
      */
     public function addPhantom(Stop $phantom)
@@ -513,8 +514,7 @@ class Stop extends ObjectDatasource
     {
         $criteria = Criteria::create()
             ->orderBy(array('startDate' => Criteria::DESC, 'endDate' => Criteria::DESC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $results = $this->stopHistories->matching($criteria);
 
@@ -529,8 +529,7 @@ class Stop extends ObjectDatasource
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->gte('startDate', $date))
-            ->orderBy(array('startDate' => Criteria::DESC))
-        ;
+            ->orderBy(array('startDate' => Criteria::DESC));
 
         return $this->stopHistories->matching($criteria);
     }
@@ -550,8 +549,7 @@ class Stop extends ObjectDatasource
                     Criteria::expr()->gt('endDate', $date)
                 )
             )
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $results = $this->stopHistories->matching($criteria);
 
@@ -590,12 +588,14 @@ class Stop extends ObjectDatasource
     public function getStopLabel()
     {
         $stopHistory = $this->getCurrentOrLatestStopHistory(new \Datetime());
-        if (empty($stopHistory))
+        if (empty($stopHistory)) {
             return "";
+        }
 
         $result = $stopHistory->getShortName();
-        foreach ($this->stopDatasources as $stopDatasource)
+        foreach ($this->stopDatasources as $stopDatasource) {
             $result .= " - ".$stopDatasource->getDatasource()->getAgency()->getName()." (".$stopDatasource->getCode().")";
+        }
 
         return $result;
     }
@@ -662,8 +662,9 @@ class Stop extends ObjectDatasource
     {
         $stopHistory = $this->getLatestStopHistory();
 
-        if (empty($stopHistory) || $stopHistory->getEndDate() !== null)
+        if (empty($stopHistory) || $stopHistory->getEndDate() !== null) {
             return false;
+        }
 
         return true;
     }

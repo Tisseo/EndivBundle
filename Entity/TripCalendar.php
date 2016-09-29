@@ -86,7 +86,7 @@ class TripCalendar
     /**
      * Set monday
      *
-     * @param boolean $monday
+     * @param  boolean $monday
      * @return TripCalendar
      */
     public function setMonday($monday)
@@ -109,7 +109,7 @@ class TripCalendar
     /**
      * Set tuesday
      *
-     * @param boolean $tuesday
+     * @param  boolean $tuesday
      * @return TripCalendar
      */
     public function setTuesday($tuesday)
@@ -132,7 +132,7 @@ class TripCalendar
     /**
      * Set wednesday
      *
-     * @param boolean $wednesday
+     * @param  boolean $wednesday
      * @return TripCalendar
      */
     public function setWednesday($wednesday)
@@ -155,7 +155,7 @@ class TripCalendar
     /**
      * Set thursday
      *
-     * @param boolean $thursday
+     * @param  boolean $thursday
      * @return TripCalendar
      */
     public function setThursday($thursday)
@@ -178,7 +178,7 @@ class TripCalendar
     /**
      * Set friday
      *
-     * @param boolean $friday
+     * @param  boolean $friday
      * @return TripCalendar
      */
     public function setFriday($friday)
@@ -201,7 +201,7 @@ class TripCalendar
     /**
      * Set saturday
      *
-     * @param boolean $saturday
+     * @param  boolean $saturday
      * @return TripCalendar
      */
     public function setSaturday($saturday)
@@ -224,7 +224,7 @@ class TripCalendar
     /**
      * Set sunday
      *
-     * @param boolean $sunday
+     * @param  boolean $sunday
      * @return TripCalendar
      */
     public function setSunday($sunday)
@@ -247,7 +247,7 @@ class TripCalendar
     /**
      * Set gridMaskType
      *
-     * @param \Tisseo\EndivBundle\Entity\GridMaskType $gridMaskType
+     * @param  \Tisseo\EndivBundle\Entity\GridMaskType $gridMaskType
      * @return TripCalendar
      */
     public function setGridMaskType(GridMaskType $gridMaskType = null)
@@ -280,7 +280,7 @@ class TripCalendar
     /**
      * Set trips
      *
-     * @param \Tisseo\EndivBundle\Entity\Trip $trips
+     * @param  \Tisseo\EndivBundle\Entity\Trip $trips
      * @return TripCalendar
      */
     public function setTrips(Trip $trips)
@@ -296,7 +296,7 @@ class TripCalendar
     /**
      * Add trip
      *
-     * @param \Tisseo\EndivBundle\Entity\Trip $trip
+     * @param  \Tisseo\EndivBundle\Entity\Trip $trip
      * @return TripCalendar
      */
     public function addTrip(Trip $trip)

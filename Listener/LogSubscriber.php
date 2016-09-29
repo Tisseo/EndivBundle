@@ -53,11 +53,11 @@ class LogSubscriber implements EventSubscriber
      */
     public function postFlush(PostFlushEventArgs $event)
     {
-        if (!empty($this->logs))
-        {
+        if (!empty($this->logs)) {
             $entityManager = $event->getEntityManager();
-            foreach ($this->logs as $log)
+            foreach ($this->logs as $log) {
                 $entityManager->persist($log);
+            }
 
             $this->logs = [];
             $entityManager->flush();
@@ -85,12 +85,14 @@ class LogSubscriber implements EventSubscriber
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        if (!$args->getEntity() instanceof Log)
+        if (!$args->getEntity() instanceof Log) {
             $this->log($args, self::LOG_ACTION_INSERT);
+        }
     }
 
     /**
      * Log
+     *
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
      *
      * Writing log for each detected action in database.
@@ -109,57 +111,53 @@ class LogSubscriber implements EventSubscriber
         $log->setUser($user->getUsername()."@".$bundleName[1]);
         $log->setAction($action);
 
-        switch($action)
-        {
-            case self::LOG_ACTION_INSERT:
+        switch ($action) {
+        case self::LOG_ACTION_INSERT:
+            $log->setTable($entityTableName);
+
+            try {
+                $log->setInsertedData($this->entityToString($entity));
+            } catch (\Exception $e) {
+                $log->setInsertedData($e->getMessage());
+            }
+
+            break;
+        case self::LOG_ACTION_UPDATE:
+            if (method_exists($entity, 'getId')) {
+                $table = $entityTableName." (".$entity->getId().")";
+                if (strlen($table) > 30) {
+                    $table = substr($table, 0, 30);
+                }
+                $log->setTable($table);
+            } else {
                 $log->setTable($entityTableName);
+            }
 
-                try {
-                    $log->setInsertedData($this->entityToString($entity));
-                } catch(\Exception $e) {
-                    $log->setInsertedData($e->getMessage());
+            $changeSet = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
+
+            $oldData = '';
+            $newData = '';
+            try {
+                foreach ($changeSet as $key => $val) {
+                    $this->entityPropertyToString($oldData, $key, $val[0]);
+                    $this->entityPropertyToString($newData, $key, $val[1]);
                 }
+                $log->setInsertedData(trim($newData));
+                $log->setPreviousData(trim($oldData));
+            } catch (\Exception $e) {
+                $log->setPreviousData($e->getMessage);
+            }
+            break;
+        case self::LOG_ACTION_DELETE:
+            $log->setTable($entityTableName);
 
-                break;
-            case self::LOG_ACTION_UPDATE:
-                if (method_exists($entity, 'getId'))
-                {
-                    $table = $entityTableName." (".$entity->getId().")";
-                    if (strlen($table) > 30)
-                    {
-                        $table = substr($table, 0, 30);
-                    }
-                    $log->setTable($table);
-                }
-                else
-                    $log->setTable($entityTableName);
-
-                $changeSet = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
-
-                $oldData = '';
-                $newData = '';
-                try {
-                    foreach ($changeSet as $key => $val)
-                    {
-                        $this->entityPropertyToString($oldData, $key, $val[0]);
-                        $this->entityPropertyToString($newData, $key, $val[1]);
-                    }
-                    $log->setInsertedData(trim($newData));
-                    $log->setPreviousData(trim($oldData));
-                } catch (\Exception $e) {
-                    $log->setPreviousData($e->getMessage);
-                }
-                break;
-            case self::LOG_ACTION_DELETE:
-                $log->setTable($entityTableName);
-
-                try {
-                    $log->setPreviousData($this->entityToString($entity));
-                } catch(\Exception $e) {
-                    $log->setPreviousData($e->getMessage());
-                }
-                break;
-            default:
+            try {
+                $log->setPreviousData($this->entityToString($entity));
+            } catch (\Exception $e) {
+                $log->setPreviousData($e->getMessage());
+            }
+            break;
+        default:
         }
 
         $this->logs[] = $log;
@@ -167,7 +165,8 @@ class LogSubscriber implements EventSubscriber
 
     /**
      * Entity to string
-     * @param object $entity
+     *
+     * @param  object $entity
      * @return string $string
      *
      * Transforming any entity into a string.
@@ -178,8 +177,7 @@ class LogSubscriber implements EventSubscriber
         $props = $reflect->getProperties();
         $string = "";
 
-        foreach($props as $prop)
-        {
+        foreach ($props as $prop) {
             $propertyValue = $this->accessor->getValue($entity, $prop->getName());
             $this->entityPropertyToString($string, $prop->getName(), $propertyValue);
         }
@@ -189,25 +187,24 @@ class LogSubscriber implements EventSubscriber
 
     /**
      * EntityPropertyToString
+     *
      * @param string $string
      * @param string $propertyName
-     * @param void $propertyValue
+     * @param void   $propertyValue
      *
      * Transforming a property into a string.
      */
     private function entityPropertyToString(&$string, $propertyName, $propertyValue)
     {
-        if (!is_object($propertyValue))
-        {
+        if (!is_object($propertyValue)) {
             $string .= $propertyName.':'.($propertyValue !== null ? (strlen($propertyValue) > 0 ? strval($propertyValue) : '0') : 'null');
-        }
-        else
-        {
+        } else {
             $propertyReflect = new \ReflectionClass($propertyValue);
-            if ($propertyReflect->hasMethod('getId'))
+            if ($propertyReflect->hasMethod('getId')) {
                 $string .= $propertyName.':'.$propertyValue->getId();
-            else if ($propertyValue instanceof \Datetime)
+            } elseif ($propertyValue instanceof \Datetime) {
                 $string .= $propertyName.':'.$propertyValue->format('Y-m-d');
+            }
         }
         $string .= " ";
     }

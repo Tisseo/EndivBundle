@@ -88,12 +88,12 @@ class RouteStop
     /**
      * Set id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return RouteStop
      */
 
-    public function setId($id){
-
+    public function setId($id)
+    {
         $this->id = $id;
 
         return $this;
@@ -102,7 +102,7 @@ class RouteStop
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param  integer $rank
      * @return RouteStop
      */
     public function setRank($rank)
@@ -125,7 +125,7 @@ class RouteStop
     /**
      * Set scheduledStop
      *
-     * @param boolean $scheduledStop
+     * @param  boolean $scheduledStop
      * @return RouteStop
      */
     public function setScheduledStop($scheduledStop)
@@ -148,7 +148,7 @@ class RouteStop
     /**
      * Set pickup
      *
-     * @param boolean $pickup
+     * @param  boolean $pickup
      * @return RouteStop
      */
     public function setPickup($pickup)
@@ -171,7 +171,7 @@ class RouteStop
     /**
      * Set dropOff
      *
-     * @param boolean $dropOff
+     * @param  boolean $dropOff
      * @return RouteStop
      */
     public function setDropOff($dropOff)
@@ -194,7 +194,7 @@ class RouteStop
     /**
      * Set reservationRequired
      *
-     * @param boolean $reservationRequired
+     * @param  boolean $reservationRequired
      * @return RouteStop
      */
     public function setReservationRequired($reservationRequired)
@@ -217,7 +217,7 @@ class RouteStop
     /**
      * Set route
      *
-     * @param Route $route
+     * @param  Route $route
      * @return RouteStop
      */
     public function setRoute(Route $route = null)
@@ -240,7 +240,7 @@ class RouteStop
     /**
      * Set routeSection
      *
-     * @param RouteSection $routeSection
+     * @param  RouteSection $routeSection
      * @return RouteStop
      */
     public function setRouteSection(RouteSection $routeSection = null)
@@ -263,7 +263,7 @@ class RouteStop
     /**
      * Set waypoint
      *
-     * @param Waypoint $waypoint
+     * @param  Waypoint $waypoint
      * @return RouteStop
      */
     public function setWaypoint(Waypoint $waypoint = null)
@@ -286,7 +286,7 @@ class RouteStop
     /**
      * Set internalService
      *
-     * @param boolean $internalService
+     * @param  boolean $internalService
      * @return RouteStop
      */
     public function setInternalService($internalService)
@@ -309,7 +309,7 @@ class RouteStop
     /**
      * Set stopTimes
      *
-     * @param Collection $stopTimes
+     * @param  Collection $stopTimes
      * @return RouteStop
      */
     public function setStopTimes(Collection $stopTimes = null)
@@ -332,7 +332,7 @@ class RouteStop
     /**
      * Add stopTimes
      *
-     * @param StopTime $stopTime
+     * @param  StopTime $stopTime
      * @return Route
      */
     public function addStopTimes(StopTime $stopTime)
@@ -356,7 +356,7 @@ class RouteStop
     /**
      * Add stopTimes
      *
-     * @param \Tisseo\EndivBundle\Entity\StopTime $stopTimes
+     * @param  \Tisseo\EndivBundle\Entity\StopTime $stopTimes
      * @return RouteStop
      */
     public function addStopTime(\Tisseo\EndivBundle\Entity\StopTime $stopTimes)
@@ -405,9 +405,8 @@ class RouteStop
     public function getStopTime($stopTimeId)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('id',$stopTimeId))
-            ->setMaxResults(1)
-        ;
+            ->where(Criteria::expr()->eq('id', $stopTimeId))
+            ->setMaxResults(1);
 
         return $this->stopTimes->matching($criteria)->first();
     }

@@ -22,7 +22,7 @@ class LineGroupGisContent
     /**
      * Set line
      *
-     * @param \Tisseo\EndivBundle\Entity\Line $line
+     * @param  \Tisseo\EndivBundle\Entity\Line $line
      * @return LineGroupGisContent
      */
     public function setLine(\Tisseo\EndivBundle\Entity\Line $line = null)
@@ -45,7 +45,7 @@ class LineGroupGisContent
     /**
      * Set lineGroupGis
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
      * @return LineGroupGisContent
      */
     public function setLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis = null)

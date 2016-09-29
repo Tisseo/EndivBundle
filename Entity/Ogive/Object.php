@@ -78,7 +78,7 @@ class Object extends OgiveEntity
     /**
      * Set objectType
      *
-     * @param string $objectType
+     * @param  string $objectType
      * @return Object
      */
     public function setObjectType($objectType)
@@ -101,7 +101,7 @@ class Object extends OgiveEntity
     /**
      * Set objectRef
      *
-     * @param string $objectRef
+     * @param  string $objectRef
      * @return Object
      */
     public function setObjectRef($objectRef)
@@ -124,7 +124,7 @@ class Object extends OgiveEntity
     /**
      * Add groupObject
      *
-     * @param GroupObject $groupObject
+     * @param  GroupObject $groupObject
      * @return Object
      */
     public function addGroupObject(GroupObject $groupObject)
@@ -137,7 +137,7 @@ class Object extends OgiveEntity
     /**
      * Remove groupObject
      *
-     * @param GroupObject $groupObject
+     * @param  GroupObject $groupObject
      * @return Object
      */
     public function removeGroupObject(GroupObject $groupObject)
@@ -180,7 +180,7 @@ class Object extends OgiveEntity
     /**
      * Add message
      *
-     * @param Message $message
+     * @param  Message $message
      * @return Message
      */
     public function addMessage(Message $message)
@@ -193,7 +193,7 @@ class Object extends OgiveEntity
     /**
      * Remove message
      *
-     * @param Message $message
+     * @param  Message $message
      * @return Message
      */
     public function removeMessage(Message $message)

@@ -63,7 +63,7 @@ class LineGroupGis
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return LineGroupGis
      */
     public function setName($name)
@@ -86,7 +86,7 @@ class LineGroupGis
     /**
      * Add lineGroupGisContents
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
      * @return LineGroupGis
      */
     public function addLineGroupGisContent(LineGroupGisContent $lineGroupGisContents)
@@ -129,7 +129,7 @@ class LineGroupGis
     /**
      * Set nbBus
      *
-     * @param string $nbBus
+     * @param  string $nbBus
      * @return LineGroupGis
      */
     public function setNbBus($nbBus)
@@ -152,7 +152,7 @@ class LineGroupGis
     /**
      * Set comment
      *
-     * @param string $comment
+     * @param  string $comment
      * @return LineGroupGis
      */
     public function setComment($comment)
@@ -182,8 +182,9 @@ class LineGroupGis
     public function getTotalPrintings()
     {
         $printings = 0;
-        foreach($this->printings as $printing)
+        foreach ($this->printings as $printing) {
             $printings += $printing->getQuantity();
+        }
 
         return $printings;
     }
@@ -191,7 +192,7 @@ class LineGroupGis
     /**
      * Set printings
      *
-     * @param Collection $printings
+     * @param  Collection $printings
      * @return LineGroupGis
      */
     public function setPrintings(Collection $printings)
@@ -216,7 +217,7 @@ class LineGroupGis
     /**
      * Add printings
      *
-     * @param Printing $printing
+     * @param  Printing $printing
      * @return LineGroupGis
      */
     public function addPrintings(Printing $printing)
@@ -247,5 +248,4 @@ class LineGroupGis
 
         return $this;
     }
-
 }

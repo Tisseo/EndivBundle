@@ -43,7 +43,7 @@ class LineStop
     /**
      * Set stopId
      *
-     * @param integer $stopId
+     * @param  integer $stopId
      * @return LineStop
      */
     public function setStopId($stopId)
@@ -66,7 +66,7 @@ class LineStop
     /**
      * Set lineId
      *
-     * @param integer $lineId
+     * @param  integer $lineId
      * @return LineStop
      */
     public function setLineId($lineId)
@@ -89,7 +89,7 @@ class LineStop
     /**
      * Set directionName
      *
-     * @param string $directionName
+     * @param  string $directionName
      * @return LineStop
      */
     public function setDirectionName($directionName)

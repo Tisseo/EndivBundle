@@ -29,8 +29,7 @@ class StopTimeManager extends SortManager
     //TODO: This seems to be bad, change/delete
     public function save(StopTime $Stop)
     {
-        if (!$Stop->getId())
-        {
+        if (!$Stop->getId()) {
             // new stop + new stop_history
             $this->om->persist($Stop);
             $this->om->flush();

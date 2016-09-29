@@ -74,8 +74,8 @@ abstract class OgiveManager
     /**
      * FindByLike
      *
-     * @param string $property
-     * @param string $term
+     * @param  string $property
+     * @param  string $term
      * @return mixed
      */
     public function findByLike($property, $term)
@@ -97,7 +97,7 @@ abstract class OgiveManager
     /**
      * Save the entity in database
      *
-     * @param OgiveEntity $entity
+     * @param  OgiveEntity $entity
      * @return OgiveEntity
      */
     public function save(OgiveEntity $entity)
@@ -112,7 +112,7 @@ abstract class OgiveManager
     /**
      * Remove the entity with specific identifier
      *
-     * @param integer $identifier
+     * @param  integer $identifier
      * @throws Exception if entity not found
      */
     public function remove($identifier)
@@ -140,8 +140,8 @@ abstract class OgiveManager
      * Manage the deleted entities from a collection
      *
      * @param OgiveEntity $entity
-     * @param string $accessor
-     * @param array $collection
+     * @param string      $accessor
+     * @param array       $collection
      */
     public function updateCollection(OgiveEntity $entity, $accessor, array $collection)
     {
@@ -163,14 +163,14 @@ abstract class OgiveManager
     /**
      * Normalize
      *
-     * @param mixed $data
+     * @param  mixed $data
      * @return array
      */
     public function normalize($data)
     {
         if ($data instanceof OgiveEntity) {
             $result = $this->doNormalize($data);
-        } else if (is_array($data) || $data instanceof Traversable) {
+        } elseif (is_array($data) || $data instanceof Traversable) {
             $result = array();
             foreach ($data as $entity) {
                 $result[] = $this->doNormalize($entity);
@@ -185,7 +185,7 @@ abstract class OgiveManager
     /**
      * Do normalize
      *
-     * @param OgiveEntity $entity
+     * @param  OgiveEntity $entity
      * @return array
      */
     private function doNormalize(OgiveEntity $entity)
@@ -210,5 +210,4 @@ abstract class OgiveManager
     {
         return $this->objectManager;
     }
-
 }

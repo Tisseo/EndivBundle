@@ -38,7 +38,7 @@ class TripAccessibility
     /**
      * Set accessibilityType
      *
-     * @param AccessibilityType $accessibilityType
+     * @param  AccessibilityType $accessibilityType
      * @return TripAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -61,7 +61,7 @@ class TripAccessibility
     /**
      * Set trip
      *
-     * @param Trip $trip
+     * @param  Trip $trip
      * @return TripAccessibility
      */
     public function setTrip(Trip $trip = null)

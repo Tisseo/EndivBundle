@@ -43,7 +43,7 @@ class LineDatasource
     /**
      * Set code
      *
-     * @param string $code
+     * @param  string $code
      * @return LineDatasource
      */
     public function setCode($code)
@@ -66,7 +66,7 @@ class LineDatasource
     /**
      * Set datasource
      *
-     * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     * @param  \Tisseo\EndivBundle\Entity\Datasource $datasource
      * @return LineDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -89,7 +89,7 @@ class LineDatasource
     /**
      * Set line
      *
-     * @param \Tisseo\EndivBundle\Entity\Line $line
+     * @param  \Tisseo\EndivBundle\Entity\Line $line
      * @return LineDatasource
      */
     public function setLine(\Tisseo\EndivBundle\Entity\Line $line = null)

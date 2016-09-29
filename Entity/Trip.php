@@ -94,7 +94,7 @@ class Trip extends ObjectDatasource
     /**
      * Get id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return Trip
      */
     public function setId($id)
@@ -107,7 +107,7 @@ class Trip extends ObjectDatasource
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Trip
      */
     public function setName($name)
@@ -155,7 +155,7 @@ class Trip extends ObjectDatasource
     /**
      * Set isPattern
      *
-     * @param boolean $isPattern
+     * @param  boolean $isPattern
      * @return Trip
      */
     public function setIsPattern($isPattern)
@@ -178,7 +178,7 @@ class Trip extends ObjectDatasource
     /**
      * Set pattern
      *
-     * @param Trip $pattern
+     * @param  Trip $pattern
      * @return Trip
      */
     public function setPattern($pattern)
@@ -201,7 +201,7 @@ class Trip extends ObjectDatasource
     /**
      * Set comment
      *
-     * @param Comment $comment
+     * @param  Comment $comment
      * @return Trip
      */
     public function setComment(Comment $comment = null)
@@ -224,7 +224,7 @@ class Trip extends ObjectDatasource
     /**
      * Set route
      *
-     * @param Route $route
+     * @param  Route $route
      * @return Trip
      */
     public function setRoute(Route $route = null)
@@ -247,7 +247,7 @@ class Trip extends ObjectDatasource
     /**
      * Set tripCalendar
      *
-     * @param TripCalendar $tripCalendar
+     * @param  TripCalendar $tripCalendar
      * @return Trip
      */
     public function setTripCalendar(TripCalendar $tripCalendar = null)
@@ -270,7 +270,7 @@ class Trip extends ObjectDatasource
     /**
      * Set periodCalendar
      *
-     * @param Calendar $periodCalendar
+     * @param  Calendar $periodCalendar
      * @return Trip
      */
     public function setPeriodCalendar(Calendar $periodCalendar = null)
@@ -293,7 +293,7 @@ class Trip extends ObjectDatasource
     /**
      * Set dayCalendar
      *
-     * @param Calendar $dayCalendar
+     * @param  Calendar $dayCalendar
      * @return Trip
      */
     public function setDayCalendar(Calendar $dayCalendar = null)
@@ -316,7 +316,7 @@ class Trip extends ObjectDatasource
     /**
      * Set stopTimes
      *
-     * @param Collection $stopTimes
+     * @param  Collection $stopTimes
      * @return Trip
      */
     public function setStopTimes(Collection $stopTimes)
@@ -341,7 +341,7 @@ class Trip extends ObjectDatasource
     /**
      * Add stopTime
      *
-     * @param StopTime $stopTime
+     * @param  StopTime $stopTime
      * @return Trip
      */
     public function addStopTime(StopTime $stopTime)
@@ -361,7 +361,8 @@ class Trip extends ObjectDatasource
         $this->stopTimes->removeElement($stopTime);
     }
 
-    /** Clear stopTimes
+    /**
+ * Clear stopTimes
      *
      * @return Trip
      */
@@ -373,7 +374,7 @@ class Trip extends ObjectDatasource
     /**
      * Set tripDatasources
      *
-     * @param Collection $tripDatasources
+     * @param  Collection $tripDatasources
      * @return Trip
      */
     public function setTripDatasources(Collection $tripDatasources)
@@ -398,7 +399,7 @@ class Trip extends ObjectDatasource
     /**
      * Add tripDatasource
      *
-     * @param \Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources
+     * @param  \Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources
      * @return Trip
      */
     public function addTripDatasource(\Tisseo\EndivBundle\Entity\TripDatasource $tripDatasource)
@@ -419,18 +420,20 @@ class Trip extends ObjectDatasource
         $this->tripDatasources->removeElement($tripDatasource);
     }
 
-    /** Criteria functions **/
+    /**
+ * Criteria functions
+**/
 
     /**
      * Getting a specific StopTime using a RouteStop
+     *
      * @param RouteStop $routeStop
      */
     public function getStopTime(RouteStop $routeStop)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('routeStop',$routeStop))
-            ->setMaxResults(1)
-        ;
+            ->where(Criteria::expr()->eq('routeStop', $routeStop))
+            ->setMaxResults(1);
 
         return $this->stopTimes->matching($criteria)->first();
     }
@@ -442,8 +445,7 @@ class Trip extends ObjectDatasource
     {
         $criteria = Criteria::create()
             ->orderBy(array('arrivalTime' => Criteria::ASC))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         return $this->stopTimes->matching($criteria)->first();
     }

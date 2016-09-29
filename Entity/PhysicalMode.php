@@ -38,7 +38,7 @@ class PhysicalMode
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return PhysicalMode
      */
     public function setName($name)
@@ -61,7 +61,7 @@ class PhysicalMode
     /**
      * Set type
      *
-     * @param string $type
+     * @param  string $type
      * @return PhysicalMode
      */
     public function setType($type)

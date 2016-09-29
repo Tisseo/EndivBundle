@@ -49,7 +49,7 @@ class ExportDestination
     /**
      * Set nam
      *
-     * @param string $name
+     * @param  string $name
      * @return ExportDestination
      */
     public function setName($name)
@@ -72,7 +72,7 @@ class ExportDestination
     /**
      * Set url
      *
-     * @param string $url
+     * @param  string $url
      * @return ExportDestination
      */
     public function setUrl($url)

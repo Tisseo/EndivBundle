@@ -50,7 +50,7 @@ class Property
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Property
      */
     public function setName($name)
@@ -73,7 +73,7 @@ class Property
     /**
      * Set default
      *
-     * @param integer $default
+     * @param  integer $default
      * @return Property
      */
     public function setDefault($default)
@@ -96,7 +96,7 @@ class Property
     /**
      * Add lineVersionProperties
      *
-     * @param \Tisseo\EndivBundle\Entity\LineVersionProperty $lineVersionProperties
+     * @param  \Tisseo\EndivBundle\Entity\LineVersionProperty $lineVersionProperties
      * @return Property
      */
     public function addLineVersionProperty(\Tisseo\EndivBundle\Entity\LineVersionProperty $lineVersionProperties)

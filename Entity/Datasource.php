@@ -50,7 +50,7 @@ class Datasource
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Datasource
      */
     public function setName($name)
@@ -73,7 +73,7 @@ class Datasource
     /**
      * Set agency
      *
-     * @param \Tisseo\EndivBundle\Entity\Agency $agency
+     * @param  \Tisseo\EndivBundle\Entity\Agency $agency
      * @return Datasource
      */
     public function setAgency(\Tisseo\EndivBundle\Entity\Agency $agency = null)

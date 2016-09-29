@@ -45,7 +45,7 @@ class LineGroup
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return LineGroup
      */
     public function setName($name)
@@ -68,7 +68,7 @@ class LineGroup
     /**
      * Add lineGroupContents
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
      * @return LineGroup
      */
     public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)

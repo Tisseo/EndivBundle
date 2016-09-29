@@ -77,7 +77,7 @@ class CalendarElement
     /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param  \DateTime $startDate
      * @return CalendarElement
      */
     public function setStartDate($startDate)
@@ -100,7 +100,7 @@ class CalendarElement
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param  \DateTime $endDate
      * @return CalendarElement
      */
     public function setEndDate($endDate)
@@ -123,7 +123,7 @@ class CalendarElement
     /**
      * Set rank
      *
-     * @param string $rank
+     * @param  string $rank
      * @return CalendarElement
      */
     public function setRank($rank)
@@ -146,13 +146,14 @@ class CalendarElement
     /**
      * Set operator
      *
-     * @param string $operator
+     * @param  string $operator
      * @return CalendarElement
      */
     public function setOperator($operator)
     {
-        if (in_array($operator, self::$operators))
+        if (in_array($operator, self::$operators)) {
             $this->operator = $operator;
+        }
 
         return $this;
     }
@@ -170,7 +171,7 @@ class CalendarElement
     /**
      * Set interval
      *
-     * @param integer $interval
+     * @param  integer $interval
      * @return CalendarElement
      */
     public function setInterval($interval)
@@ -193,7 +194,7 @@ class CalendarElement
     /**
      * Set includedCalendar
      *
-     * @param \Tisseo\EndivBundle\Entity\Calendar $includedCalendar
+     * @param  \Tisseo\EndivBundle\Entity\Calendar $includedCalendar
      * @return CalendarElement
      */
     public function setIncludedCalendar(Calendar $includedCalendar = null)
@@ -216,7 +217,7 @@ class CalendarElement
     /**
      * Set calendar
      *
-     * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
+     * @param  \Tisseo\EndivBundle\Entity\Calendar $calendar
      * @return CalendarElement
      */
     public function setCalendar(Calendar $calendar = null)

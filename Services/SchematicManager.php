@@ -12,7 +12,9 @@ class SchematicManager extends SortManager
 {
     private $om = null;
 
-    /** @var \Doctrine\ORM\EntityRepository $repository */
+    /**
+ * @var \Doctrine\ORM\EntityRepository $repository
+*/
     private $repository = null;
 
     public function __construct(ObjectManager $om)
@@ -33,6 +35,7 @@ class SchematicManager extends SortManager
 
     /**
      * Find multiple by Id
+     *
      * @param array $schematicIds
      */
     public function findMultipleById(array $schematicIds)
@@ -67,7 +70,8 @@ class SchematicManager extends SortManager
 
     /**
      * Update group gis
-     * @param array $schematicIds
+     *
+     * @param array   $schematicIds
      * @param boolean $groupGis
      *
      * Updating groupGis attribute for specified Schematics.
@@ -77,13 +81,10 @@ class SchematicManager extends SortManager
         $schematicsCollection = $this->findMultipleById($schematics);
 
         $sync = false;
-        foreach ($schematicsCollection as $schematic)
-        {
-            if ($schematic->getGroupGis() !== $groupGis)
-            {
+        foreach ($schematicsCollection as $schematic) {
+            if ($schematic->getGroupGis() !== $groupGis) {
                 $upSchematics = $this->repository->findBy(array('line' => $schematic->getLine()));
-                foreach ($upSchematics as $upSchematic)
-                {
+                foreach ($upSchematics as $upSchematic) {
                     $upSchematic->setGroupGis(!$groupGis);
                     $this->om->persist($upSchematic);
                 }
@@ -95,8 +96,9 @@ class SchematicManager extends SortManager
             }
         }
 
-        if ($sync)
+        if ($sync) {
             $this->om->flush();
+        }
     }
 
     public function getCsvExport($date)
@@ -115,12 +117,11 @@ class SchematicManager extends SortManager
         ";
 
         $query = $this->om->createQuery($sql)
-        ->setParameter('startDate', $startDate);
+            ->setParameter('startDate', $startDate);
 
         $content = $query->getArrayResult();
         $filename = 'schematic_'.$startDate->format('Y-m-d').'_to_'.$now->format('Y-m-d');
 
         return array($content, $filename);
     }
-
 }

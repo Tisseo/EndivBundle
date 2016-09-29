@@ -18,27 +18,26 @@ class MessageManager extends OgiveManager
         $this->objectManager = $objectManager;
         $this->channelRepository = $objectManager->getRepository('TisseoEndivBundle:Ogive\Channel');
         $this->lineTypes = [PtObjectType::PT_OBJECT_LINE, PtObjectType::PT_OBJECT_LINE_SECTION];
-
-
     }
 
     /**
      * Retrieve Message by Object Type
      *
-     * @param PtObjectType $objectType
+     * @param  PtObjectType $objectType
      * @return null
      */
     public function findMessagesByObjectType($objectType, $messageId = null, $filters = [])
     {
-
         if (!$objectType) {
             return null;
         }
 
-        $query = $this->buildQuery(array(
+        $query = $this->buildQuery(
+            array(
             'filters' => $filters,
             'messageId' => $messageId
-        ));
+            )
+        );
 
         $queryResults = $query->getResult();
         return $queryResults;
@@ -48,12 +47,11 @@ class MessageManager extends OgiveManager
     /**
      * Use to generate Custome DQL Query
      *
-     * @param $queryParameters
+     * @param  $queryParameters
      * @return mixed
      */
     private function buildQuery($queryParameters)
     {
-
         $queryBuilder = $this->objectManager->createQueryBuilder();
         $expr = $queryBuilder->expr();
         $queryParams = [];
@@ -85,19 +83,17 @@ class MessageManager extends OgiveManager
             $queryParams ['channel'] = $channel;
             $queryBuilder
                 ->andWhere(':channel MEMBER OF message.channels');
-
         }
 
         return $queryBuilder
             ->getQuery()
             ->setParameters($queryParams);
-
     }
 
     /**
      * Get a Channel by its Name
      *
-     * @param $name
+     * @param  $name
      * @return null
      */
     private function getChannelByItsName($name)
@@ -111,6 +107,4 @@ class MessageManager extends OgiveManager
         }
         return null;
     }
-
-
 }

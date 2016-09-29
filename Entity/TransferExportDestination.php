@@ -38,7 +38,7 @@ class TransferExportDestination
     /**
      * Set exportDestination
      *
-     * @param \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
+     * @param  \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
      * @return TransferExportDestination
      */
     public function setExportDestination(\Tisseo\EndivBundle\Entity\ExportDestination $exportDestination = null)
@@ -61,7 +61,7 @@ class TransferExportDestination
     /**
      * Set transfer
      *
-     * @param \Tisseo\EndivBundle\Entity\Transfer $transfer
+     * @param  \Tisseo\EndivBundle\Entity\Transfer $transfer
      * @return TransferExportDestination
      */
     public function setTransfer(\Tisseo\EndivBundle\Entity\Transfer $transfer = null)

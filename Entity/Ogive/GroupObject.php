@@ -55,7 +55,7 @@ class GroupObject
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return GroupObject
      */
     public function setName($name)
@@ -78,7 +78,7 @@ class GroupObject
     /**
      * Set groupType
      *
-     * @param string $groupType
+     * @param  string $groupType
      * @return GroupObject
      */
     public function setGroupType($groupType)
@@ -101,7 +101,7 @@ class GroupObject
     /**
      * Set isPrivate
      *
-     * @param boolean $isPrivate
+     * @param  boolean $isPrivate
      * @return GroupObject
      */
     public function setIsPrivate($isPrivate)
@@ -124,7 +124,7 @@ class GroupObject
     /**
      * Add objects
      *
-     * @param Object $objects
+     * @param  Object $objects
      * @return GroupObject
      */
     public function addObject(Object $objects)

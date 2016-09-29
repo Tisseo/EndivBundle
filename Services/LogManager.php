@@ -29,10 +29,10 @@ class LogManager extends SortManager
     public function count()
     {
         return $this->repository
-                ->createQueryBuilder('l')
-                ->select('count(l)')
-                ->getQuery()
-                ->getSingleScalarResult();
+            ->createQueryBuilder('l')
+            ->select('count(l)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function findLogEntries($offset, $limit)
@@ -47,7 +47,6 @@ class LogManager extends SortManager
 
     public function save(Log $Log)
     {
-
         $log->setTable($log->getTable());
         $this->om->persist($Log);
         $this->om->flush();

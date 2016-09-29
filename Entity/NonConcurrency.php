@@ -33,7 +33,7 @@ class NonConcurrency
     /**
      * Set time
      *
-     * @param integer $time
+     * @param  integer $time
      * @return NonConcurrency
      */
     public function setTime($time)
@@ -56,7 +56,7 @@ class NonConcurrency
     /**
      * Set priorityLine
      *
-     * @param \Tisseo\EndivBundle\Entity\Line $priorityLine
+     * @param  \Tisseo\EndivBundle\Entity\Line $priorityLine
      * @return NonConcurrency
      */
     public function setPriorityLine(\Tisseo\EndivBundle\Entity\Line $priorityLine)
@@ -79,7 +79,7 @@ class NonConcurrency
     /**
      * Set nonPriorityLine
      *
-     * @param \Tisseo\EndivBundle\Entity\Line $nonPriorityLine
+     * @param  \Tisseo\EndivBundle\Entity\Line $nonPriorityLine
      * @return NonConcurrency
      */
     public function setNonPriorityLine(\Tisseo\EndivBundle\Entity\Line $nonPriorityLine)
