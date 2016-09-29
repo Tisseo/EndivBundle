@@ -66,7 +66,7 @@ class CalendarManager extends SortManager
             foreach ($params as $key => $value) {
                 if (!empty($value)) {
                     if ($key === 'name') {
-                        $q->andWhere("UPPER(".$alias.".".$key.") LIKE UPPER('%".$value."%')");
+                        $q->andWhere("UPPER(UNACCENT(".$alias.".".$key.")) LIKE UPPER(UNACCENT('%".$value."%'))");
                     } else {
                         $q->andWhere(($alias.'.'.$key.' = :val_'.$key));
                         $q->setParameter('val_'.$key, $value);
@@ -95,50 +95,35 @@ class CalendarManager extends SortManager
         $this->em->flush();
     }
 
-    //If $lineVersionId argument is given, then only calendars with the same lineVersionId (or null) will be returned
-    public function findCalendarsLike($term, $calendarType = null, $limit = 0, $lineVersionId = null)
+    /**
+     * @param string $term
+     * @param mixed $calendarType
+     * @param int $limit
+     * @param int $lineVersionId
+     *
+     * Find calendars by name with optionnaly passed type and lineVersionId
+     */
+    public function findCalendarsLike($term, $calendarType = array(), $limit = 0, $lineVersionId = null)
     {
-        $connection = $this->em->getConnection()->getWrappedConnection();
-        $sql = "
-            SELECT name, id
-            FROM calendar
-            WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
+        $query = $this->repository->createQueryBuilder('c')
+                ->select('c.name, c.id')
+                ->where('UPPER(unaccent(c.name)) LIKE UPPER(unaccent(:term))')
+                ->setParameter('term', '%'.$term.'%');
 
-        if ($calendarType) {
-            if (is_array($calendarType)) {
-                $sql .= " and calendar_type in ('".implode("','", $calendarType)."')";
-            } else {
-                $sql .= " and calendar_type in ('".$calendarType."')";
-            }
+        if (count($calendarType) > 0) {
+            $query->andWhere('c.calendarType IN (:type)');
+            $query->setParameter('type', $calendarType);
         }
 
-        if (!empty($lineVersionId)) {
-            $sql .= " and (line_version_id IS NULL OR line_version_id = :lv_id)";
+        if ($lineVersionId !== null) {
+            $query->andWhere('c.lineVersion = :lvid')->setParameter('lvid', $lineVersionId);
         }
 
         if ($limit > 0) {
-            $sql .= " LIMIT ".number_format($limit);
+            $query->setMaxResults($limit);
         }
 
-        $stmt = $connection->prepare($sql);
-
-        if (!empty($lineVersionId)) {
-            $stmt->bindValue(':lv_id', $lineVersionId);
-        }
-
-        $stmt->execute();
-        $calendars = $stmt->fetchAll();
-
-        $result = array();
-
-        foreach ($calendars as $calendar) {
-            $result[] = array(
-                "name" => $calendar["name"],
-                "id" => $calendar["id"]
-            );
-        }
-
-        return $result;
+        return $query->getQuery()->getScalarResult();
     }
 
     public function getCalendarBitmask($calendarId, \Datetime $startDate, \Datetime $endDate)
