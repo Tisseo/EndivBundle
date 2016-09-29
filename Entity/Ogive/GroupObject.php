@@ -124,10 +124,10 @@ class GroupObject
     /**
      * Add objects
      *
-     * @param  Object $objects
+     * @param  OgiveObject $objects
      * @return GroupObject
      */
-    public function addObject(Object $objects)
+    public function addObject(OgiveObject $objects)
     {
         $this->objects[] = $objects;
 
@@ -137,9 +137,9 @@ class GroupObject
     /**
      * Remove objects
      *
-     * @param Object $objects
+     * @param OgiveObject $objects
      */
-    public function removeObject(Object $objects)
+    public function removeObject(OgiveObject $objects)
     {
         $this->objects->removeElement($objects);
     }

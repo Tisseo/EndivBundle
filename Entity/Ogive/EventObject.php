@@ -23,7 +23,7 @@ class EventObject extends OgiveEntity
     private $emergencyStatus;
 
     /**
-     * @var Object
+     * @var OgiveObject
      */
     private $object;
 
@@ -87,10 +87,10 @@ class EventObject extends OgiveEntity
     /**
      * Set object
      *
-     * @param  Object $object
+     * @param  OgiveObject $object
      * @return EventObject
      */
-    public function setObject(Object $object = null)
+    public function setObject(OgiveObject $object = null)
     {
         $this->object = $object;
 

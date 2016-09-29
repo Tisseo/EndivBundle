@@ -1,4 +1,4 @@
-Tisseo\EndivBundle\Entity\Ogive\Object:
+Tisseo\EndivBundle\Entity\Ogive\OgiveObject:
     type: entity
     table: ogive.object
     id:
@@ -11,11 +11,11 @@ Tisseo\EndivBundle\Entity\Ogive\Object:
             generator:
                 strategy: SEQUENCE
     fields:
-        objectType:
+        type:
             type: text
             nullable: false
             column: object_type
-        objectRef:
+        ref:
             type: string
             nullable: false
             length: 255

@@ -6,9 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Object
+ * OgiveObject
  */
-class Object extends OgiveEntity
+class OgiveObject extends OgiveEntity
 {
     const AGENCY = 'agency';
     const LINE = 'line';
@@ -18,7 +18,7 @@ class Object extends OgiveEntity
     /**
      * @var static array
      */
-    public static $objectTypes = array(
+    public static $types = array(
         self::AGENCY,
         self::LINE,
         self::STOP
@@ -32,12 +32,12 @@ class Object extends OgiveEntity
     /**
      * @var string
      */
-    private $objectType;
+    private $type;
 
     /**
      * @var string
      */
-    private $objectRef;
+    private $ref;
 
     /**
      * @var Collection
@@ -76,49 +76,49 @@ class Object extends OgiveEntity
     }
 
     /**
-     * Set objectType
+     * Set type
      *
-     * @param  string $objectType
+     * @param  string $type
      * @return Object
      */
-    public function setObjectType($objectType)
+    public function setType($type)
     {
-        $this->objectType = $objectType;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get objectType
+     * Get type
      *
      * @return string
      */
-    public function getObjectType()
+    public function getType()
     {
-        return $this->objectType;
+        return $this->type;
     }
 
     /**
-     * Set objectRef
+     * Set ref
      *
-     * @param  string $objectRef
+     * @param  string $ref
      * @return Object
      */
-    public function setObjectRef($objectRef)
+    public function setRef($ref)
     {
-        $this->objectRef = $objectRef;
+        $this->ref = $ref;
 
         return $this;
     }
 
     /**
-     * Get objectRef
+     * Get ref
      *
      * @return string
      */
-    public function getObjectRef()
+    public function getRef()
     {
-        return $this->objectRef;
+        return $this->ref;
     }
 
     /**

@@ -33,7 +33,7 @@ Tisseo\EndivBundle\Entity\Ogive\EventObject:
                 emergency_status:
                     referencedColumnName: id
         object:
-            targetEntity: Object
+            targetEntity: OgiveObject
             joinColumns:
                 object_id:
                     referencedColumnName: id

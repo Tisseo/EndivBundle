@@ -467,10 +467,10 @@ class Event extends OgiveEntity
     /**
      * Add event object
      *
-     * @param  Object $object
+     * @param  OgiveObject $object
      * @return Event
      */
-    public function addObject(Object $object)
+    public function addObject(OgiveObject $object)
     {
         $this->objects->add($object);
 

@@ -45,7 +45,7 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             column: end_datetime
     manyToOne:
         object:
-            targetEntity: Object
+            targetEntity: OgiveObject
             inversedBy: messages
             joinColumns:
                 object_id:

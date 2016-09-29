@@ -96,7 +96,7 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
             cascade: ['remove', 'persist']
     manyToMany:
       objects:
-        targetEntity: Object
+        targetEntity: OgiveObject
         joinTable:
           name: ogive.event_object
           joinColumns:

@@ -57,7 +57,7 @@ class Message
     private $event;
 
     /**
-     * @var Object
+     * @var OgiveObject
      */
     private $object;
 

@@ -35,7 +35,7 @@ Tisseo\EndivBundle\Entity\Ogive\GroupObject:
             column: is_private
     manyToMany:
         objects:
-            targetEntity: Object
+            targetEntity: OgiveObject
             cascade: {  }
             mappedBy: groupObject
             inversedBy: null
