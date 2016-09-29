@@ -394,15 +394,10 @@ class RouteStop
 
     public function getStopLabel()
     {
-        if ($this->isOdtAreaRouteStop())
-        {
+        if ($this->isOdtAreaRouteStop()) {
             $label = $this->waypoint->getOdtArea()->getName() . ' (zone)';
-        }
-        else
-        {
+        } else {
             $label = $this->waypoint->getStop()->getStopArea()->getShortName();
-            /*foreach ($this->waypoint->getStop()->getStopDatasources() as $stopDatasource)
-                $label .= ' (' . $stopDatasource->getCode() . ')';*/
         }
         return $label;
     }
