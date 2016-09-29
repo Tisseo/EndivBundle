@@ -428,7 +428,7 @@ class StopAreaManager extends SortManager
         }
 
         foreach ($aliases as $alias) {
-            if (empty($alias['id']) and !empty($alias['name'])) {
+            if (empty($alias['id']) && !empty($alias['name'])) {
                 $sync = true;
                 $newAlias = new Alias();
                 $newAlias->setName($alias['name']);

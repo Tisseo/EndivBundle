@@ -1246,7 +1246,7 @@ class LineVersion extends ObjectDatasource
         $result = array();
         foreach ($this->routes as $route) {
             foreach ($ways as $key => $way) {
-                if ($route->getWay() == $way and !in_array($key, $result)) {
+                if ($route->getWay() == $way && !in_array($key, $result)) {
                     $result[] = $key;
                     break;
                 }

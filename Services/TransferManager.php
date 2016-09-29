@@ -63,7 +63,7 @@ class TransferManager extends SortManager
                 $existing = array_filter(
                     $existingTransfers,
                     function ($object) use ($startStop, $endStop) {
-                        return ($object->getStartStop() == $startStop and $object->getEndStop() == $endStop);
+                        return ($object->getStartStop() == $startStop && $object->getEndStop() == $endStop);
                     }
                 );
                 if (empty($existing)) {
