@@ -52,7 +52,7 @@ class LineVersionManager extends SortManager
     {
         $finalResult = null;
 
-        if ($lineId == null) {
+        if ($lineId === null) {
             return $finalResult;
         }
 

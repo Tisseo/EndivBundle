@@ -50,10 +50,10 @@ abstract class SortManager
     {
         usort(
             $lines, function ($val1, $val2) {
-                $status1 = ($val1->getCurrentStatus() == null) ? null : $val1->getCurrentStatus()->getStatus();
-                $status2 = ($val2->getCurrentStatus() == null) ? null : $val2->getCurrentStatus()->getStatus();
+                $status1 = ($val1->getCurrentStatus() === null) ? null : $val1->getCurrentStatus()->getStatus();
+                $status2 = ($val2->getCurrentStatus() === null) ? null : $val2->getCurrentStatus()->getStatus();
 
-                if ($status1 == $status2) {
+                if ($status1 === $status2) {
                     if ($val1->getPriority() == $val2->getPriority()) {
                         return strnatcmp($val1->getNumber(), $val2->getNumber());
                     }
@@ -64,10 +64,10 @@ abstract class SortManager
                         return -1;
                     }
                 }
-                if ($status1 == null) {
+                if ($status1 === null) {
                     return 1;
                 }
-                if ($status2 == null) {
+                if ($status2 === null) {
                     return -1;
                 }
                 if ($status1 < $status2) {

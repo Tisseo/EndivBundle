@@ -44,8 +44,8 @@ class RouteManager extends SortManager
         $comment = $route->getComment();
 
         if (!empty($comment)
-            && $comment->getLabel() == null
-            && $comment->getCommentText() == null
+            && $comment->getLabel() === null
+            && $comment->getCommentText() === null
         ) {
             $route->setComment();
             $this->om->remove($comment);
@@ -391,7 +391,7 @@ class RouteManager extends SortManager
 
         $services_patterns = $route->getTrips()->filter(
             function ($t) {
-                return $t->getIsPattern() == true;
+                return $t->getIsPattern() === true;
             }
         );
 

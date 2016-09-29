@@ -28,7 +28,7 @@ class CalendarElementManager extends SortManager
 
     public function findbyCalendar($calendar)
     {
-        if ($calendar == null) {
+        if ($calendar === null) {
             return null;
         }
 
@@ -115,7 +115,7 @@ class CalendarElementManager extends SortManager
             $calendarElement = $this->serializer->deserialize(json_encode($calendarElement), 'Tisseo\EndivBundle\Entity\CalendarElement', 'json');
             $calendarElement->setCalendar($calendar);
 
-            if ($calendarElement->getIncludedCalendar() != null) {
+            if ($calendarElement->getIncludedCalendar() !== null) {
                 $includedCalendar = $this->em->createQuery(
                     "
                     SELECT c FROM Tisseo\EndivBundle\Entity\Calendar c
