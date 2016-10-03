@@ -9,6 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Channel
 {
+
+    const CHANNEL_NAME_INFO_WEB = "info_web";
+    const CHANNEL_NAME_PUSH_APPS = "push_apps";
+    const CHANNEL_NAME_PRE_HOME = "pre_home";
+
     /**
      * @var integer
      */

@@ -24,7 +24,7 @@ class ChannelManager extends OgiveManager
      * Find a particular channel by its channel's name
      *
      * @param null $channelName
-     * @return null| Array
+     * @return null| Channel
      */
     public function findByChannelName($channelName = null)
     {
@@ -32,17 +32,20 @@ class ChannelManager extends OgiveManager
             return null;
         }
 
-        $queryBuilder = $this->objectManager->createQueryBuilder();
-        $expr = $queryBuilder->expr();
-        $queryBuilder
+        $queryBuilder = $this->objectManager->createQueryBuilder()
+            ->select('channel')
             ->from('TisseoEndivBundle:Ogive\Channel', 'channel')
-            ->where($expr->eq('channel.name', ":channelName"));
+            ->where('channel.name = :channelName')
+            ->setParameter('channelName', $channelName);
 
-        $SQLResult = $queryBuilder
-            ->setParameter('channelName', $channelName)
-            ->getResult();
+        $results = $queryBuilder->getQuery()->getResult();
 
-        return $SQLResult;
+        if (count($results) == 1)
+        {
+            return $results[0];
+        }
+
+        return null;
     }
 
 }

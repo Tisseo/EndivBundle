@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * EventStep
@@ -392,6 +393,21 @@ class EventStep extends OgiveEntity
         $this->texts = $texts;
 
         return $this;
+    }
+
+    public function getText($type)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('type', $type))
+            ->setMaxResults(1)
+        ;
+
+        $texts = $this->texts->matching($criteria);
+
+        if (!$texts->isEmpty())
+            return $texts->first();
+        else
+            return '';
     }
 
     /**
