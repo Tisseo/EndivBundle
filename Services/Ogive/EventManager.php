@@ -92,4 +92,9 @@ class EventManager extends OgiveManager
 
         return $this->save($event);
     }
+
+
+    public function newEventFromExisting(Event $existingEvent){
+
+    }
 }
