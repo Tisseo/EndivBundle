@@ -225,7 +225,7 @@ class Message
      */
     public function addChannel(Channel $channel)
     {
-        $this->channel->add($channel);
+        $this->channels->add($channel);
 
         return $this;
     }
@@ -238,7 +238,7 @@ class Message
      */
     public function removeChannel(Channel $channel)
     {
-        $this->channel->removeElement($channel);
+        $this->channels->removeElement($channel);
 
         return $this;
     }
