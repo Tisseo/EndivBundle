@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cedric
- * Date: 22/09/16
- * Time: 10:40
- */
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Tisseo\EndivBundle\Entity\Ogive\Channel;
 
 
