@@ -13,9 +13,14 @@ class EventStepText extends OgiveEntity
     private $id;
 
     /**
+     * @var integer
+     */
+    private $type;
+
+    /**
      * @var string
      */
-    private $labelType;
+    private $label;
 
     /**
      * @var string
@@ -27,6 +32,10 @@ class EventStepText extends OgiveEntity
      */
     private $eventStep;
 
+    const TEXT_TYPE_GENERIC = 0;
+    const TEXT_TYPE_OBJECT = 1;
+    const TEXT_TYPE_BODY = 2;
+    const TEXT_TYPE_SUBTITLE = 3;
 
     /**
      * Get id
@@ -39,26 +48,49 @@ class EventStepText extends OgiveEntity
     }
 
     /**
-     * Set labelType
+     * Set type
      *
-     * @param string $labelType
+     * @param integer $type
      * @return EventStepText
      */
-    public function setLabelType($labelType)
+    public function setType($type)
     {
-        $this->labelType = $labelType;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get labelType
+     * Get type
+     *
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set label
+     *
+     * @param string $label
+     * @return EventStepText
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * Get label
      *
      * @return string
      */
-    public function getLabelType()
+    public function getLabel()
     {
-        return $this->labelType;
+        return $this->label;
     }
 
     /**

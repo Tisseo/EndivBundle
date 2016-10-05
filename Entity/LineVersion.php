@@ -10,7 +10,7 @@ use Tisseo\EndivBundle\Entity\Route;
 /**
  * LineVersion
  */
-class LineVersion
+class LineVersion extends ObjectDatasource
 {
     const NW = "new";
     const PB = "published";
@@ -79,6 +79,16 @@ class LineVersion
      * @var status
      */
     private $status;
+
+    /**
+     * @var numAudio
+     */
+    private $numAudio;
+
+    /**
+     * @var text2speech
+     */
+    private $text2speech;
 
     /**
      * @var Line
@@ -169,6 +179,8 @@ class LineVersion
             $this->bgColor = $previousLineVersion->getBgColor();
             $this->depot = $previousLineVersion->getDepot();
             $this->setLine($previousLineVersion->getLine());
+            $this->setNumAudio($previousLineVersion->getNumAudio());
+            $this->setText2speech($previousLineVersion->getText2speech());
             if (!$previousLineVersion->getLineVersionProperties()->isEmpty())
                 $this->setNewLineVersionProperties($previousLineVersion->getLineVersionProperties());
         }
@@ -721,6 +733,52 @@ class LineVersion
     }
 
     /**
+     * Set numAudio
+     *
+     * @param integer
+     * @return LineVersion
+     */
+    public function setNumAudio($numAudio)
+    {
+        $this->numAudio = $numAudio;
+
+        return $this;
+    }
+
+    /**
+     * Get numAudio
+     *
+     * @return integer
+     */
+    public function getNumAudio()
+    {
+        return $this->numAudio;
+    }
+
+    /**
+     * Set text2speech
+     *
+     * @param string
+     * @return LineVersion
+     */
+    public function setText2speech($text2speech)
+    {
+        $this->text2speech = $text2speech;
+
+        return $this;
+    }
+
+    /**
+     * Get text2speech
+     *
+     * @return string
+     */
+    public function getText2speech()
+    {
+        return $this->text2speech;
+    }
+
+    /**
      * Set gridCalendars
      *
      * @param Collection $gridCalendars
@@ -1109,23 +1167,23 @@ class LineVersion
     {
         foreach($lineVersionProperties as $lineVersionProperty)
         {
-            $newLineVersionProperty = new LineVersionProperty();
-            $newLineVersionProperty->setValue($lineVersionProperty->getValue());
-            $newLineVersionProperty->setProperty($lineVersionProperty->getProperty());
-            $newLineVersionProperty->setLineVersion($this);
-            $this->addLineVersionProperty($newLineVersionProperty);
+            $newProperty = new LineVersionProperty();
+            $newProperty->setValue($lineVersionProperty->getValue());
+            $newProperty->setProperty($lineVersionProperty->getProperty());
+            $newProperty->setLineVersion($this);
+            $this->addLineVersionProperty($newProperty);
         }
     }
 
     /**
      * Add lineVersionDatasource
      *
-     * @param LineVersionDatasource $lineVersionDatasource
+     * @param LineVersionDatasource $lvDatasource
      * @return LineVersion
      */
-    public function addLineVersionDatasource(LineVersionDatasource $lineVersionDatasource)
+    public function addLineVersionDatasource(LineVersionDatasource $lvDatasource)
     {
-        $this->lineVersionDatasources[] = $lineVersionDatasource;
+        $this->lineVersionDatasources->add($lvDatasource);
 
         return $this;
     }
@@ -1133,11 +1191,11 @@ class LineVersion
     /**
      * Remove lineVersionDatasource
      *
-     * @param LineVersionDatasource $lineVersionDatasource
+     * @param LineVersionDatasource $lvDatasource
      */
-    public function removeLineVersionDatasource(LineVersionDatasource $lineVersionDatasource)
+    public function removeLineVersionDatasource(LineVersionDatasource $lvDatasource)
     {
-        $this->lineVersionDatasources->removeElement($lineVersionDatasource);
+        $this->lineVersionDatasources->removeElement($lvDatasource);
     }
 
     /**
@@ -1153,9 +1211,9 @@ class LineVersion
     /**
      * Set lineVersionDatasources
      */
-    public function setLineVersionDatasources($lineVersionDatasources)
+    public function setLineVersionDatasources($lvDatasources)
     {
-        $this->lineVersionDatasources = $lineVersionDatasources;
+        $this->lineVersionDatasources = $lvDatasources;
     }
 
     /**

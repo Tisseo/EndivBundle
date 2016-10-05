@@ -16,7 +16,6 @@ parameters:
     tisseo_endiv.printing_manager.class: Tisseo\EndivBundle\Services\PrintingManager
     tisseo_endiv.trip_manager.class: Tisseo\EndivBundle\Services\TripManager
     tisseo_endiv.grid_calendar_manager.class: Tisseo\EndivBundle\Services\GridCalendarManager
-    tisseo_endiv.exception_type_manager.class: Tisseo\EndivBundle\Services\ExceptionTypeManager
     tisseo_endiv.stored_procedure_manager.class: Tisseo\EndivBundle\Services\StoredProcedureManager
     tisseo_endiv.route_manager.class: Tisseo\EndivBundle\Services\RouteManager
     tisseo_endiv.city_manager.class: Tisseo\EndivBundle\Services\CityManager
@@ -36,6 +35,7 @@ parameters:
     tisseo_endiv.modification_manager.class: Tisseo\EndivBundle\Services\ModificationManager
     tisseo_endiv.log_subscriber.class: Tisseo\EndivBundle\Listener\LogSubscriber
     tisseo_endiv.depot_manager.class: Tisseo\EndivBundle\Services\DepotManager
+    tisseo_endiv.line_status_manager.class: Tisseo\EndivBundle\Services\LineStatusManager
 services:
     tisseo_endiv.log_subscriber:
         class: %tisseo_endiv.log_subscriber.class%
@@ -185,4 +185,7 @@ services:
 
     tisseo_endiv.depot_manager:
         class: %tisseo_endiv.depot_manager.class%
+        arguments: ['@doctrine.orm.endiv_entity_manager']
+    tisseo_endiv.line_status_manager:
+        class: %tisseo_endiv.line_status_manager.class%
         arguments: ['@doctrine.orm.endiv_entity_manager']

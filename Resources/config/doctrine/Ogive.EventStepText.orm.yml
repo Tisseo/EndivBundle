@@ -15,17 +15,20 @@ Tisseo\EndivBundle\Entity\Ogive\EventStepText:
             generator:
                 strategy: SEQUENCE
     fields:
-        labelType:
+        label:
             type: string
             nullable: false
             length: 40
             fixed: false
             comment: ''
-            column: label_type
+        type:
+            type: integer
+            nullable: false
+            default: 0
+            column: text_type
         text:
             type: string
             nullable: false
-            length: 255
             fixed: false
             comment: ''
     manyToOne:

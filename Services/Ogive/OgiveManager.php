@@ -84,12 +84,12 @@ abstract class OgiveManager
             throw new Exception("This property isn't mapped for this entity");
         }
 
-        $data = $this->getRepository()->createQueryBuilder('o')
-            ->where(sprintf('lower(o.%s) like :term', $property))
-            ->setParameter('term', '%'.strtolower($term).'%')
-            ->getQuery()
-            ->getResult()
-        ;
+        $query = $this->getRepository()->createQueryBuilder('o')
+            ->where(sprintf('f_unaccent(lower(o.%s)) like f_unaccent(:term)', $property))
+            ->setParameter('term', '%' . strtolower($term) . '%')
+            ->getQuery();
+
+        $data = $query->getResult();
 
         return $this->normalize($data);
     }
@@ -145,15 +145,15 @@ abstract class OgiveManager
      */
     public function updateCollection(OgiveEntity $entity, $accessor, array $collection)
     {
-        foreach($entity->$accessor() as $childEntity) {
-            foreach($collection as $key => $toDelete) {
+        foreach ($entity->$accessor() as $childEntity) {
+            foreach ($collection as $key => $toDelete) {
                 if ($toDelete->getId() === $childEntity->getId()) {
                     unset($collection[$key]);
                 }
             }
         }
 
-        foreach($collection as $childEntity) {
+        foreach ($collection as $childEntity) {
             $this->objectManager->remove($childEntity);
         }
 

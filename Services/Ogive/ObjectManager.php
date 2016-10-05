@@ -6,13 +6,15 @@ use \Traversable;
 use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 
+
 class ObjectManager extends OgiveManager
 {
+
     /**
-    * set event object meta information
-    *
-    * @param Event $event
-    */
+     * set event object meta information
+     *
+     * @param Event $event
+     */
     public function setEventObjectsMetaInformation(Event $event)
     {
         // TODO: could use inheritance here and directly bring the relation when instanciating Object class
@@ -61,7 +63,12 @@ class ObjectManager extends OgiveManager
 
                 break;
             case OgiveObject::STOP:
-                $meta->label = $objectRef->getCurrentStopHistory($extrema['min'])->getShortName();
+                $stopHistory = $objectRef->getCurrentStopHistory($extrema['min']);
+                if (!empty($stopHistory)) {
+                    $meta->label = $stopHistory->getShortName();
+                } else {
+                    $meta->label = null;
+                }
                 $meta->code = $objectRef->getStopDatasources()->first()->getCode();
                 $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
                 break;

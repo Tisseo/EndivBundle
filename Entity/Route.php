@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Criteria;
 /**
  * Route
  */
-class Route
+class Route extends ObjectDatasource
 {
     const WAY_FORWARD = 'Aller';
     const WAY_BACKWARD = 'Retour';
@@ -61,7 +61,6 @@ class Route
      * @var Collection
      */
     private $routeStops;
-
 
     /**
      * @var Collection
@@ -358,7 +357,7 @@ class Route
     }
 
     /**
-     * Add routeDatasources
+     * Add routeDatasource
      *
      * @param RouteDatasource $routeDatasource
      * @return Route
@@ -372,7 +371,7 @@ class Route
     }
 
     /**
-     * Remove routeDatasources
+     * Remove routeDatasource
      *
      * @param RouteDatasource $routeDatasource
      */
@@ -610,4 +609,16 @@ class Route
         return $exportDestinations;
     }
 
+    /**
+     * Get Terminus Stop Area
+     *
+     * @return StopArea
+     *
+     * Getting the terminus stop area
+     */
+    
+    public function getTerminus()
+    {
+        return $this->getRouteStops()->last()->getWaypoint()->getStop()->getStopArea();
+    }
 }

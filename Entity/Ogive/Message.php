@@ -3,11 +3,13 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
- * Mailbox
+ * Message
  */
-class Mailbox
+class Message
 {
     /**
      * @var integer
@@ -27,37 +29,12 @@ class Mailbox
     /**
      * @var string
      */
-    private $mailText;
-
-    /**
-     * @var boolean
-     */
-    private $isForWebsite;
-
-    /**
-     * @var boolean
-     */
-    private $isForPti;
-
-    /**
-     * @var boolean
-     */
-    private $pushApps;
-
-    /**
-     * @var boolean
-     */
-    private $prehome;
+    private $content;
 
     /**
      * @var string
      */
     private $urlPj;
-
-    /**
-     * @var integer
-     */
-    private $eventId;
 
     /**
      * @var \DateTime
@@ -69,6 +46,28 @@ class Mailbox
      */
     private $endDatetime;
 
+    /**
+     * @var Collection
+     */
+    private $channels;
+
+    /**
+     * @var Event
+     */
+    private $event;
+
+    /**
+     * @var Object
+     */
+    private $object;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->channels = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -84,7 +83,7 @@ class Mailbox
      * Set title
      *
      * @param string $title
-     * @return Mailbox
+     * @return Message
      */
     public function setTitle($title)
     {
@@ -107,7 +106,7 @@ class Mailbox
      * Set subtitle
      *
      * @param string $subtitle
-     * @return Mailbox
+     * @return Message
      */
     public function setSubtitle($subtitle)
     {
@@ -127,102 +126,33 @@ class Mailbox
     }
 
     /**
-     * Set mailText
+     * Set content
      *
-     * @param string $mailText
-     * @return Mailbox
+     * @param string $content
+     * @return Message
      */
-    public function setMailText($mailText)
+    public function setContent($content)
     {
-        $this->mailText = $mailText;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get mailText
+     * Get content
      *
      * @return string
      */
-    public function getMailText()
+    public function getContent()
     {
-        return $this->mailText;
+        return $this->content;
     }
 
-    /**
-     * Set isForWebsite
-     *
-     * @param boolean $isForWebsite
-     * @return Mailbox
-     */
-    public function setIsForWebsite($isForWebsite)
-    {
-        $this->isForWebsite = $isForWebsite;
-
-        return $this;
-    }
-
-    /**
-     * Get isForWebsite
-     *
-     * @return boolean
-     */
-    public function getIsForWebsite()
-    {
-        return $this->isForWebsite;
-    }
-
-    /**
-     * Set isForPti
-     *
-     * @param boolean $isForPti
-     * @return Mailbox
-     */
-    public function setIsForPti($isForPti)
-    {
-        $this->isForPti = $isForPti;
-
-        return $this;
-    }
-
-    /**
-     * Get isForPti
-     *
-     * @return boolean
-     */
-    public function getIsForPti()
-    {
-        return $this->isForPti;
-    }
-
-    /**
-     * Set eventId
-     *
-     * @param integer $eventId
-     * @return Mailbox
-     */
-    public function setEventId($eventId)
-    {
-        $this->eventId = $eventId;
-
-        return $this;
-    }
-
-    /**
-     * Get eventId
-     *
-     * @return integer
-     */
-    public function getEventId()
-    {
-        return $this->eventId;
-    }
-
-    /**
+   /**
      * Set startDatetime
      *
      * @param \DateTime $startDatetime
-     * @return Mailbox
+     * @return Message
      */
     public function setStartDatetime($startDatetime)
     {
@@ -245,7 +175,7 @@ class Mailbox
      * Set endDatetime
      *
      * @param \DateTime $endDatetime
-     * @return Mailbox
+     * @return Message
      */
     public function setEndDatetime($endDatetime)
     {
@@ -278,7 +208,7 @@ class Mailbox
      * Set urlPj
      *
      * @param string $urlPj
-     * @return Mailbox
+     * @return Message
      */
     public function setUrlPj($urlPj)
     {
@@ -288,47 +218,83 @@ class Mailbox
     }
 
     /**
-     * Get prehome
+     * Add channel
      *
-     * @return boolean
+     * @param Channel $channel
+     * @return Message
      */
-    public function getPrehome()
+    public function addChannel(Channel $channel)
     {
-        return $this->prehome;
-    }
-
-    /**
-     * Set prehome
-     *
-     * @param boolean $prehome
-     * @return Mailbox
-     */
-    public function setPrehome($prehome)
-    {
-        $this->prehome = $prehome;
+        $this->channels->add($channel);
 
         return $this;
     }
 
     /**
-     * Get pushApps
+     * Remove channel
      *
-     * @return boolean pushApps
+     * @param Channel $channel
+     * @return Message
      */
-    public function getPushApps()
+    public function removeChannel(Channel $channel)
     {
-        return $this->pushApps;
+        $this->channels->removeElement($channel);
+
+        return $this;
     }
 
     /**
-     * Set pushApps
+     * Get channels
      *
-     * @param boolean pushApps
-     * @return Mailbox
+     * @return Collection
      */
-    public function setPushApps($pushApps)
+    public function getChannels()
     {
-        $this->pushApps = $pushApps;
+        return $this->channels;
+    }
+
+    /**
+     * Get event
+     *
+     * @return Event.
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Set event
+     *
+     * @param Event event
+     * @return Message
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * Get object
+     *
+     * @return Object.
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * Set object
+     *
+     * @param Object object
+     * @return Message
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
 
         return $this;
     }

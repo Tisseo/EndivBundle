@@ -12,6 +12,7 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
+use Tisseo\EndivBundle\Entity\StopArea;
 use Tisseo\EndivBundle\Entity\RouteExportDestination;
 use Tisseo\EndivBundle\Services\StopManager;
 
@@ -181,9 +182,7 @@ class RouteManager extends SortManager
      */
     public function linkTripCalendars($datas)
     {
-        $sync = false;
-        foreach ($datas as $data)
-        {
+        foreach ($datas as $data) {
             $tripCalendar = null;
 
             $gridMaskType = $this->om->createQuery("
@@ -195,8 +194,7 @@ class RouteManager extends SortManager
              ->setParameter("type", $data['calendarType'])
              ->getOneOrNullResult();
 
-            if (!empty($gridMaskType))
-            {
+            if (!empty($gridMaskType)) {
                 $pattern = implode(array_values($data['days']));
 
                 // Doctrine CAST(x, y) is transformed into (x || y). x and y have to be varchars.
@@ -211,8 +209,7 @@ class RouteManager extends SortManager
                 ->setParameter("pattern", $pattern)
                 ->getOneOrNullResult();
 
-                if (!empty($tripCalendar) && !empty($data['tripCalendar']))
-                {
+                if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
                     $oldTripCalendar = $this->om->createQuery("
                         SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                         WHERE tc.id = :tripCalendar
@@ -220,20 +217,19 @@ class RouteManager extends SortManager
                     ->setParameter("tripCalendar", $data['tripCalendar'])
                     ->getOneOrNullResult();
 
-                    if (!empty($oldTripCalendar) && $oldTripCalendar->getId() === $tripCalendar->getId())
+                    if (!empty($oldTripCalendar) && $oldTripCalendar->getId() === $tripCalendar->getId()) {
                         continue;
+                    }
                 }
             }
 
-            if (empty($gridMaskType))
-            {
+            if (empty($gridMaskType)) {
                 $gridMaskType = new GridMaskType();
                 $gridMaskType->setCalendarType($data['calendarType']);
                 $gridMaskType->setCalendarPeriod($data['calendarPeriod']);
             }
 
-            if (empty($tripCalendar))
-            {
+            if (empty($tripCalendar)) {
                 $tripCalendar = new TripCalendar();
                 $tripCalendar->setGridMaskType($gridMaskType);
 
@@ -258,16 +254,14 @@ class RouteManager extends SortManager
             ->setParameter("trips", $tripIds)
             ->getResult();
 
-            foreach ($trips as $trip)
-            {
+            foreach ($trips as $trip) {
                 $trip->setTripCalendar($tripCalendar);
                 $this->om->persist($trip);
             }
-            $sync = true;
+
+            $this->om->flush();
         }
 
-        if ($sync)
-            $this->om->flush();
     }
 
     public function updateExportDestinations($route, $exportDestinations)

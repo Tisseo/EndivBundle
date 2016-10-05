@@ -5,11 +5,12 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Calendar
  */
-class Calendar
+class Calendar extends ObjectDatasource
 {
     const CALENDAR_TYPE_HYBRID = 'mixte';
     const CALENDAR_TYPE_PERIOD = 'periode';
@@ -153,26 +154,26 @@ class Calendar
     }
 
     /**
-     * Add calendarDatasources
+     * Add calendarDatasource
      *
-     * @param CalendarDatasource $calendarDatasources
+     * @param CalendarDatasource $calendarDatasource
      * @return Calendar
      */
-    public function addCalendarDatasource(CalendarDatasource $calendarDatasources)
+    public function addCalendarDatasource(CalendarDatasource $calendarDatasource)
     {
-        $this->calendarDatasources[] = $calendarDatasources;
+        $this->calendarDatasources->add($calendarDatasource);
 
         return $this;
     }
 
     /**
-     * Remove calendarDatasources
+     * Remove calendarDatasource
      *
-     * @param CalendarDatasource $calendarDatasources
+     * @param CalendarDatasource $calendarDatasource
      */
-    public function removeCalendarDatasource(CalendarDatasource $calendarDatasources)
+    public function removeCalendarDatasource(CalendarDatasource $calendarDatasource)
     {
-        $this->calendarDatasources->removeElement($calendarDatasources);
+        $this->calendarDatasources->removeElement($calendarDatasource);
     }
 
     /**
@@ -371,10 +372,19 @@ class Calendar
     /**
      * Get calendarElements
      *
+     * @param $order (optional)
      * @return Collection
      */
-    public function getCalendarElements()
+    public function getCalendarElements($order = null)
     {
+        if (in_array($order, array(Criteria::ASC, Criteria::DESC))) {
+            $criteria = Criteria::create()
+                ->orderBy(array('rank' => $order))
+            ;
+
+            return $this->calendarElements->matching($criteria);
+        }
+
         return $this->calendarElements;
     }
 

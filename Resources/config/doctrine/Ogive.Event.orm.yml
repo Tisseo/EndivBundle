@@ -70,6 +70,10 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
                     referencedColumnName: id
             orphanRemoval: false
     oneToMany:
+        messages:
+            targetEntity: Message
+            mappedBy: event
+            orderBy: {'startDatetime': 'asc'}
         periods:
             targetEntity: Period
             mappedBy: event

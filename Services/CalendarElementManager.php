@@ -89,7 +89,7 @@ class CalendarElementManager extends SortManager
 
     public function updateCalendarElements($calendarElements, Calendar $calendar)
     {
-        foreach ($calendar->getCalendarElements() as $calendarElement)
+        foreach ($calendar->getCalendarElements('DESC') as $calendarElement)
         {
             $existing = array_filter(
                 $calendarElements,
@@ -98,8 +98,9 @@ class CalendarElementManager extends SortManager
                 }
             );
 
-            if (empty($existing))
+            if (empty($existing)) {
                 $this->delete($calendarElement->getId());
+            }
         }
 
         $newCalendarElements = array_filter(

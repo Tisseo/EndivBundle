@@ -1,6 +1,6 @@
-Tisseo\EndivBundle\Entity\Ogive\Mailbox:
+Tisseo\EndivBundle\Entity\Ogive\Message:
     type: entity
-    table: ogive.mailbox
+    table: ogive.message
     id:
         id:
             type: integer
@@ -23,44 +23,16 @@ Tisseo\EndivBundle\Entity\Ogive\Mailbox:
             length: 255
             fixed: false
             comment: ''
-        mailText:
+        content:
             type: text
             nullable: false
             length: null
             fixed: false
             comment: ''
-            column: mail_text
-        isForWebsite:
-            type: boolean
-            nullable: false
-            comment: 'Est à true si l''enregistrement est à mettre à disposition des info réseau'
-            default: false
-            column: is_for_website
-        isForPti:
-            type: boolean
-            nullable: false
-            comment: 'Est à true si l''enregistrement est à mettre à disposition de l''IV personnalisée'
-            default: false
-            column: is_for_pti
-        pushApps:
-            type: boolean
-            nullable: false
-            default: false
-            column: push_apps
-        prehome:
-            type: boolean
-            nullable: false
-            default: false
-            column: prehome
+            column: content
         urlPj:
             type: string
             column: url_pj
-        eventId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: event_id
         startDatetime:
             type: datetime
             nullable: true
@@ -71,4 +43,30 @@ Tisseo\EndivBundle\Entity\Ogive\Mailbox:
             nullable: true
             comment: ''
             column: end_datetime
+    manyToOne:
+        object:
+            targetEntity: Object
+            inversedBy: messages
+            joinColumns:
+                object_id:
+                    referencedColumnName: id
+        event:
+            targetEntity: Event
+            inversedBy: messages
+            joinColumns:
+                event_id:
+                    referencedColumnName: id
+    manyToMany:
+        channels:
+            targetEntity: Channel
+            joinTable:
+                name: ogive.channel_message
+                joinColumns:
+                    -
+                        name: message_id
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: channel_id
+                        referencedColumnName: id
     lifecycleCallbacks: {  }
