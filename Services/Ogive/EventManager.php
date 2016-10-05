@@ -9,7 +9,8 @@ class EventManager extends OgiveManager
     /**
      * Find parent event if exists
      *
-     * @param string $disruptionId
+     * @param $disruptionId
+     * @return Event|null
      */
     public function findParentEvent($disruptionId)
     {
@@ -38,7 +39,7 @@ class EventManager extends OgiveManager
     {
         $queryBuilder = $this->objectManager->createQueryBuilder()
             ->select('event')
-            ->from('Tisseo\EndivBundle\Entity\Ogive\Event','event')
+            ->from('Tisseo\EndivBundle\Entity\Ogive\Event', 'event')
             ->where('event.status != :status')
             ->setParameter('status', Event::STATUS_OPEN);
 
@@ -92,9 +93,5 @@ class EventManager extends OgiveManager
 
         return $this->save($event);
     }
-
-
-    public function newEventFromExisting(Event $existingEvent){
-
-    }
+    
 }
