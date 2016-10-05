@@ -85,7 +85,7 @@ abstract class OgiveManager
         }
 
         $query = $this->getRepository()->createQueryBuilder('o')
-            ->where(sprintf('f_unaccent(lower(o.%s)) like f_unaccent(:term)', $property))
+            ->where(sprintf('UNACCENT(lower(o.%s)) like UNACCENT(:term)', $property))
             ->setParameter('term', '%' . strtolower($term) . '%')
             ->getQuery();
 

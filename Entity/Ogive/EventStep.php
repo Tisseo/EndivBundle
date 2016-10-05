@@ -97,8 +97,8 @@ class EventStep extends OgiveEntity
 
     /**
      * Set id
-     *
-     * @param integer $id
+     * @param $id
+     * @return $this
      */
     public function setId($id)
     {

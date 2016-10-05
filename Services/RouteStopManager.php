@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\Serializer\Serializer;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\RouteStop;
@@ -43,7 +44,7 @@ class RouteStopManager extends SortManager {
     public function findStopMinRankByRouteId($routeId, $stopAreaId) {
         $rank = 0;
         $qb = $this->om->createQueryBuilder()
-                       ->select('rs.rank') 
+                       ->select('rs.rank')
                        ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
                        ->join('rs.route', 'r')
                        ->join('rs.waypoint', 'w')
@@ -53,19 +54,19 @@ class RouteStopManager extends SortManager {
                        ->orderBy('rs.rank', 'ASC')
                        ->setMaxResults( 1 )
                        ->setParameters(array(
-                           1 => $routeId, 
+                           1 => $routeId,
                            2 => $stopAreaId
                        ))
-            ; 
+            ;
         return $qb
             ->getQuery()
             ->getSingleScalarResult();
     }
-    
+
     public function findStopMaxRankByRouteId($routeId, $stopAreaId) {
         $rank = 0;
         $qb = $this->om->createQueryBuilder()
-                       ->select('rs.rank') 
+                       ->select('rs.rank')
                        ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
                        ->join('rs.route', 'r')
                        ->join('rs.waypoint', 'w')
@@ -75,7 +76,7 @@ class RouteStopManager extends SortManager {
                        ->orderBy('rs.rank', 'DESC')
                        ->setMaxResults( 1 )
                        ->setParameters(array(
-                           1 => $routeId, 
+                           1 => $routeId,
                            2 => $stopAreaId
                        ))
             ;
@@ -189,8 +190,23 @@ class RouteStopManager extends SortManager {
             }
         }
 
-        if ($sync)
+        if ($sync) {
             $this->om->flush();
+            $this->updateRouteSection($route);
+        }
+    }
+
+    /**
+     * Update route sections for the modified route
+     *
+     * @param Route $route
+     */
+    private function updateRouteSection(Route $route)
+    {
+        $rsm = new ResultSetMapping();
+        $query = $this->om->createNativeQuery('SELECT update_route_section_of_route(?)', $rsm);
+        $query->setParameter(1, intval($route->getId()));
+        $query->getResult();
     }
 
     // TODO: find something better, this is really bad
