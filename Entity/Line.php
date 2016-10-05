@@ -513,7 +513,7 @@ class Line extends ObjectDatasource
     // LineVersion Criteria functions
 
     /**
-     * getLastLineVersion
+     * Selecting the last version of LineVersions
      *
      * @return LineVersion
      */
@@ -525,26 +525,11 @@ class Line extends ObjectDatasource
 
         $lineVersions = $this->lineVersions->matching($criteria);
 
-        if (!$lineVersions->isEmpty()) {
+        if ($lineVersions->count() > 0) {
             return $lineVersions->first();
         }
 
         return null;
-    }
-
-    /**
-     * getHistoryLineVersions
-     *
-     * @param  \Datetime $now
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getHistoryLineVersions(\Datetime $now)
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->lt('endDate', $now))
-            ->orderBy(array('version' => Criteria::ASC));
-
-        return $this->lineVersions->matching($criteria);
     }
 
     /**
@@ -555,7 +540,7 @@ class Line extends ObjectDatasource
      */
     public function getCurrentLineVersion(\Datetime $now = null)
     {
-        if (is_null($now)) {
+        if ($now === null) {
             $now = new \Datetime();
         }
 

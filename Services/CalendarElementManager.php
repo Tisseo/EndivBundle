@@ -8,7 +8,7 @@ use JMS\Serializer\Serializer;
 use Tisseo\EndivBundle\Entity\Calendar;
 use Tisseo\EndivBundle\Entity\CalendarElement;
 
-class CalendarElementManager extends SortManager
+class CalendarElementManager
 {
     private $em = null;
     private $repository = null;

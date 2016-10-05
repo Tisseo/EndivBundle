@@ -1,16 +1,24 @@
 <?php
 
-namespace Tisseo\EndivBundle\Services;
+namespace Tisseo\EndivBundle\Utils;
 
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Line;
 
-abstract class SortManager
+class Sorting
 {
-    protected function sortLineVersionsByNumber($lineVersions)
+    const SPLIT_LINE = 'line';
+    const SPLIT_LINE_VERSION = 'line_version';
+
+    private static $splitModes = array(
+        self::SPLIT_LINE,
+        self::SPLIT_LINE_VERSION
+    );
+
+    public static function sortLineVersionsByNumber($lineVersions)
     {
         usort(
-            $lineVersions, function (LineVersion $val1, LineVersion $val2) {
+            $lineVersions, function(LineVersion $val1, LineVersion $val2) {
                 $line1 = $val1->getLine();
                 $line2 = $val2->getLine();
                 if ($line1->getPriority() == $line2->getPriority()) {
@@ -28,13 +36,14 @@ abstract class SortManager
                 }
             }
         );
+
         return $lineVersions;
     }
 
-    protected function sortLinesByNumber($lines)
+    public static function sortLinesByNumber($lines)
     {
         usort(
-            $lines, function (Line $val1, Line $val2) {
+            $lines, function($val1, $val2) {
                 if ($val1->getPriority() == $val2->getPriority()) {
                     return strnatcmp($val1->getNumber(), $val2->getNumber());
                 }
@@ -46,10 +55,11 @@ abstract class SortManager
                 }
             }
         );
+
         return $lines;
     }
 
-    public function sortLinesByStatus($lines)
+    public static function sortLinesByStatus($lines)
     {
         usort(
             $lines, function (Line $val1, Line $val2) {
@@ -85,27 +95,24 @@ abstract class SortManager
         return $lines;
     }
 
-    protected function splitByPhysicalMode($data, $physicalModes)
+    public static function splitByPhysicalMode($data, $type, $modes)
     {
-        if (empty($data) || !(method_exists($data[0], 'getPhysicalModeName'))) {
-            return null;
+        if (empty($data)) {
+            return array();
         }
 
-        $sortedResult = array();
-        foreach ($physicalModes as $physicalMode) {
-            $sortedResult[$physicalMode['name']] = array();
+        if (!in_array($type, self::$splitModes)) {
+            throw new \Exception(sprintf("Cannot split this type of data: %s", $type));
         }
 
         foreach ($data as $object) {
-            $sortedResult[$object->getPhysicalModeName()][] = $object;
-        }
-
-        foreach ($sortedResult as $key => $value) {
-            if (empty($value)) {
-                unset($sortedResult[$key]);
+            if ($type === self::SPLIT_LINE_VERSION) {
+                $modes[$object->getLine()->getPhysicalMode()->getName()][] = $object;
+            } else if ($type === self::SPLIT_LINE) {
+                $modes[$object->getPhysicalMode()->getName()][] = $object;
             }
         }
 
-        return $sortedResult;
+        return $modes;
     }
 }

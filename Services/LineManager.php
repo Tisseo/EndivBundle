@@ -2,100 +2,115 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\Line;
+use Tisseo\EndivBundle\Utils\Sorting;
 
-class LineManager extends SortManager
+class LineManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:Line');
-    }
-
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($lineId)
-    {
-        return empty($lineId) ? null : $this->repository->find($lineId);
-    }
-
     public function findByDataSource($dataSourceId)
     {
-        $query = $this->repository->createQueryBuilder('l')
+        $query = $this->getRepository()->createQueryBuilder('l')
             ->innerJoin('l.lineDatasources', 'lds')
             ->innerJoin('lds.datasource', 'ds')
             ->where('ds.id = :datasourceId')
             ->setParameter('datasourceId', $dataSourceId);
 
-        return $this->sortLinesByNumber($query->getQuery()->getResult());
+        return Sorting::sortLinesByNumber($query->getQuery()->getResult());
     }
 
     public function findByDataSourceSortByStatus($dataSourceId)
     {
-        $query = $this->repository->createQueryBuilder('l')
+        $query = $this->getRepository()->createQueryBuilder('l')
             ->innerJoin('l.lineDatasources', 'lds')
             ->innerJoin('lds.datasource', 'ds')
             ->where('ds.id = :datasourceId')
             ->setParameter('datasourceId', $dataSourceId);
 
-        return $this->sortLinesByStatus($query->getQuery()->getResult());
+        return Sorting::sortLinesByStatus($query->getQuery()->getResult());
     }
 
-    public function findExistingNumber($number, $id)
+    public function findExistingNumber($number, $identifier)
     {
-        $query = $this->repository->createQueryBuilder('l')
+        $query = $this->getRepository()->createQueryBuilder('l')
             ->where('l.number = :number AND l.id != :id')
             ->setParameter('number', $number)
-            ->setParameter('id', $id)
+            ->setParameter('id', $identifier)
             ->getQuery();
 
         return $query->getResult();
     }
 
-
-    public function findAllLinesByPriority()
+    /**
+     * Find all lines sorted by priority
+     * Add current or last LineVersion if it exists in order to get the colors and more
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAll()
     {
-        $query = $this->repository->createQueryBuilder('l')
-            ->addOrderBy('l.priority', 'ASC')
-            ->getQuery();
+        $query = $this->getRepository()->createQueryBuilder('l')
+            ->join('l.physicalMode', 'p')
+            ->orderBy('l.priority', 'ASC')
+            ->leftJoin('l.lineVersions', 'lv')
+            ->leftJoin('l.lineVersions', 'lv2')
+            ->leftJoin('lv.fgColor', 'fg')
+            ->leftJoin('lv.bgColor', 'bg')
+            ->groupBy('l.id, p.id, lv.id, fg.id, bg.id')
+            ->having('
+                (lv.startDate <= CURRENT_DATE() AND ((lv.endDate is null AND lv.plannedEndDate > CURRENT_DATE()) OR (lv.endDate) > CURRENT_DATE())) OR
+                (lv.plannedEndDate < CURRENT_DATE() AND lv.version = max(lv2.version)) OR
+                lv is NULL')
+            ->addSelect('lv, fg, bg, p');
 
-        return $this->sortLinesByNumber($query->getResult());
+        return Sorting::sortLinesByNumber($query->getQuery()->getResult());
     }
 
+    /**
+     * Find all lines sorted by priority
+     * Join past LineVersions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAllWithPastVersions()
+    {
+        $query = $this->getRepository()->createQueryBuilder('l')
+            ->join('l.physicalMode', 'p')
+            ->orderBy('l.priority', 'ASC')
+            ->leftJoin('l.lineVersions', 'lv')
+            ->leftJoin('lv.fgColor', 'fg')
+            ->leftJoin('lv.bgColor', 'bg')
+            ->groupBy('l.id, p.id, lv.id, fg.id, bg.id')
+            ->having('
+                (lv.startDate <= CURRENT_DATE() AND ((lv.endDate is null AND lv.plannedEndDate > CURRENT_DATE()) OR (lv.endDate) > CURRENT_DATE())) OR
+                (lv.plannedEndDate < CURRENT_DATE()) OR
+                lv is NULL')
+            ->addSelect('lv, fg, bg, p')
+            ->addOrderBy('lv.version', 'ASC');
+
+        return Sorting::sortLinesByNumber($query->getQuery()->getResult());
+    }
 
     public function findAllLinesWithSchematic($splitByPhysicalMode = false)
     {
-        $query = $this->repository->createQueryBuilder('l')
+        $query = $this->getRepository()->createQueryBuilder('l')
             ->leftJoin('l.schematics', 'sc')
             ->leftJoin('l.lineGroupGisContents', 'lgc')
+            ->orderBy('l.physicalMode')
             ->getQuery();
 
-        $result = $this->sortLinesByNumber($query->getResult());
+        $result = Sorting::sortLinesByNumber($query->getResult());
 
         if ($splitByPhysicalMode) {
-            $query = $this->om->createQuery(
-                "SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p"
-            );
+            $query = $this->getObjectManager()
+                        ->getRepository('Tisseo\EndivBundle\Entity\PhysicalMode')
+                        ->createQueryBuilder('p')
+                        ->select('p.name')
+                        ->getQuery();
+
             $physicalModes = $query->getResult();
 
-            $result = $this->splitByPhysicalMode($result, $physicalModes);
+            $result = Sorting::splitByPhysicalMode($result, $physicalModes);
         }
 
         return $result;
-    }
-
-    public function save(Line $line)
-    {
-        $this->om->persist($line);
-        $this->om->flush();
     }
 }

@@ -86,23 +86,18 @@ Tisseo\EndivBundle\Entity\LineVersion:
     manyToOne:
         bgColor:
             targetEntity: Color
-            mappedBy: null
-            inversedBy: null
             joinColumns:
                 bg_color_id:
                     referencedColumnName: id
             orphanRemoval: false
         fgColor:
             targetEntity: Color
-            mappedBy: null
-            inversedBy: null
             joinColumns:
                 fg_color_id:
                     referencedColumnName: id
             orphanRemoval: false
         depot:
             targetEntity: Depot
-            mappedBy: null
             inversedBy: lineVersions
             joinColumns:
                 depot_id:
@@ -110,14 +105,12 @@ Tisseo\EndivBundle\Entity\LineVersion:
             orphanRemoval: false
         line:
             targetEntity: Line
-            mappedBy: null
             inversedBy: lineVersions
             joinColumns:
                 line_id:
                     referencedColumnName: id
         schematic:
             targetEntity: Schematic
-            mappedBy: null
             inversedBy: lineVersions
             joinColumns:
                 schematic_id:

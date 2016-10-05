@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Datasource;
 use Tisseo\EndivBundle\Entity\ObjectDatasource;
 
-class DatasourceManager extends SortManager
+class DatasourceManager
 {
     private $om = null;
     private $repository = null;

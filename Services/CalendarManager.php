@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Tisseo\EndivBundle\Entity\Calendar;
 
-class CalendarManager extends SortManager
+class CalendarManager
 {
     private $em = null;
     private $repository = null;

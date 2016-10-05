@@ -2,82 +2,42 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
+use Tisseo\EndivBundle\Utils\Sorting;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Services\CalendarManager;
 
-class LineVersionManager extends SortManager
+class LineVersionManager extends AbstractManager
 {
-    private $om = null;
-    /**
- * @var \Doctrine\ORM\EntityRepository $repository
-*/
-    private $repository = null;
     private $calendarManager = null;
 
-    public function __construct(ObjectManager $om, CalendarManager $calendarManager)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
+    /**
+     * {inheritdoc}
+     *
+     * @param CalendarManager $calendarManager
+     */
+    public function __construct(
+        ManagerRegistry $managerRegistry,
+        CalendarManager $calendarManager
+    ) {
+        parent::__construct($managerRegistry);
         $this->calendarManager = $calendarManager;
     }
 
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($lineVersionId)
-    {
-        return empty($lineVersionId) ? null : $this->repository->find($lineVersionId);
-    }
-
+    /**
+     * Find all line versions and sort them
+     * using line priority and natural sort on line number
+     *
+     * @return Collection
+     */
     public function findAllSortedByLineNumber()
     {
-        return $this->sortLineVersionsByNumber($this->repository->findAll());
+        return Sorting::sortLineVersionsByNumber($this->getRepository()->findAll());
     }
 
-    /**
-     * findLastLineVersionOfLine
-     *
-     * @param  integer $lineId
-     * @return LineVersion or null
-     *
-     * Return the last version of LineVersion associated to the Line
-     */
-    public function findLastLineVersionOfLine($lineId)
-    {
-        $finalResult = null;
-
-        if ($lineId === null) {
-            return $finalResult;
-        }
-
-        $query = $this->repository->createQueryBuilder('lv')
-            ->where('lv.line = :line')
-            ->setParameter('line', $lineId)
-            ->getQuery();
-
-        try {
-            $results = $query->getResult();
-        } catch (\Exception $e) {
-            return $finalResult;
-        }
-
-        foreach ($results as $result) {
-            if ($result->getEndDate() === null) {
-                return $result;
-            } elseif ($finalResult !== null && ($finalResult->getEndDate() > $result->getEndDate())) {
-                continue;
-            }
-            $finalResult = $result;
-        }
-
-        return $finalResult;
-    }
-
+    // NOTE: used here
     /**
      * Find Previous LineVersion
      *
@@ -89,7 +49,7 @@ class LineVersionManager extends SortManager
      */
     public function findPreviousLineVersion(LineVersion $lineVersion)
     {
-        $query = $this->om->createQuery(
+        $query = $objectManager->createQuery(
             "
             SELECT lv FROM Tisseo\EndivBundle\Entity\LineVersion lv
             JOIN lv.line l
@@ -120,6 +80,7 @@ class LineVersionManager extends SortManager
         return $result;
     }
 
+    // NOTE: used by paon-bundle/Controller/CalendarController.php
     /**
      * findWithPreviousCalendars
      *
@@ -138,8 +99,8 @@ class LineVersionManager extends SortManager
             $previousLineVersion = $this->findPreviousLineVersion($lineVersion);
             if ($previousLineVersion !== null) {
                 $lineVersion->mergeGridCalendars($previousLineVersion);
-                $this->om->persist($lineVersion);
-                $this->om->flush();
+                $objectManager->persist($lineVersion);
+                $objectManager->flush();
             }
         }
 
@@ -147,98 +108,63 @@ class LineVersionManager extends SortManager
     }
 
     /*
-     * findActiveLineVersions
-     * @param Datetime $now
-     * @param string $filter default null
-     * @param Boolean $splitByPhysicalMode default false
-     * @return Collection $lineVersions
+     * Find active line versions (current or future)
      *
-     * Find LineVersion which are considered as active according to the current
+     * @param boolean $mode
+     * @return array
+     *
+     * Find LineVersions considered as active according to the current
      * date passed as parameter.
      */
-    public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
+    public function findActiveLineVersions($mode = false)
     {
-        $query = $this->repository->createQueryBuilder('lv')
-            ->where('lv.endDate is null OR (lv.endDate + 1) > :now')
-            ->setParameter('now', $now);
+        $query = $this->getRepository()->createQueryBuilder('lv')
+            ->select('lv')
+            ->where('lv.endDate IS NULL OR lv.endDate > CURRENT_DATE()')
+            ->join('lv.line', 'l')
+            ->join('l.physicalMode', 'p')
+            ->join('lv.fgColor', 'fg')
+            ->join('lv.bgColor', 'bg')
+            ->leftJoin('lv.printings', 'pr')
+            ->addSelect('l, p, fg, bg, pr');
 
-        if ($filter === 'grouplines') {
-            $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
-        } elseif ($filter === 'schematic') {
-            $query->leftJoin('lv.schematic', 'sc');
-        }
+        $result = Sorting::sortLineVersionsByNumber($query->getQuery()->getResult());
 
-        $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
+        if ($mode === true) {
+            $modes = $this->getRepository('TisseoEndivBundle:PhysicalMode')->createQueryBuilder('p')
+                ->select('p.name')->getQuery()->getScalarResult();
+            $modes = array_map('current', $modes);
+            $modeNames = array();
+            foreach ($modes as $mode) {
+                $modeNames[$mode] = array();
+            }
 
-        if ($splitByPhysicalMode) {
-            $query = $this->om->createQuery(
-                "
-                    SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
-            "
-            );
-            $physicalModes = $query->getResult();
-
-            $result = $this->splitByPhysicalMode($result, $physicalModes);
+            $result = Sorting::splitByPhysicalMode($result, Sorting::SPLIT_LINE_VERSION, $modeNames);
         }
 
         return $result;
     }
 
-    /**
-     * Get active line version by line number
-     */
-    public function findActiveLineVersionByLineNumber($lineNumber)
-    {
-        $query = $this->om->createQuery(
-            "
-            SELECT lv.id FROM Tisseo\EndivBundle\Entity\LineVersion lv
-            JOIN lv.line line
-            WHERE line.number = ?1
-        	   AND (lv.endDate is null OR (lv.endDate + 1) > CURRENT_TIMESTAMP())
-        	   AND lv.startDate <= CURRENT_TIMESTAMP()"
-        );
-
-        $query->setParameter(1, $lineNumber);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Find line names from line version ids
-     *
-     * @param array $ids
-     */
-    public function findLineNames($ids)
-    {
-        $queryBuilder = $this->om->createQueryBuilder()
-            ->select('lv.id', 'lv.name')
-            ->from('Tisseo\EndivBundle\Entity\LineVersion', 'lv');
-        $queryBuilder->where($queryBuilder->expr()->in('lv.id', $ids));
-
-        $results = $queryBuilder->getQuery()->getResult();
-
-        return $results;
-    }
-
     /*
-     * findUnlinkedGridMaskTypes
-     * @param LineVersion $lineVersion
+     * Find GridMaskTypes not linked to the LineVersion (also the trips/tripCalendars)
      *
-     * Find GridMaskTypes and their TripCalendars/Trips related to one
-     * LineVersion.
+     * @param LineVersion $lineVersion
      */
     public function findUnlinkedGridMaskTypes(LineVersion $lineVersion)
     {
-        /* if no gridCalendars linked to this lineVersion, search only for all related gridMaskTypes */
+        /* if no gridCalendars linked to this lineVersion,
+         * search only for all related GridMaskTypes */
         $notLinked = true;
         foreach ($lineVersion->getGridCalendars() as $gridCalendar) {
-            if (!$gridCalendar->getGridLinkCalendarMaskTypes()->isEmpty()) {
+            if ($gridCalendar->getGridLinkCalendarMaskTypes()->count() > 0) {
                 $notLinked = false;
                 break;
             }
         }
+
+        $objectManager = $this->getObjectManager();
         if ($notLinked) {
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT gmt FROM Tisseo\EndivBundle\Entity\GridMaskType gmt
                 JOIN gmt.tripCalendars tc
@@ -253,7 +179,7 @@ class LineVersionManager extends SortManager
         }
         /* else, search for all related gridMaskTypes which aren't already linked to a gridCalendar */
         else {
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT gmt FROM Tisseo\EndivBundle\Entity\GridMaskType gmt
                 JOIN gmt.tripCalendars tc
@@ -279,7 +205,7 @@ class LineVersionManager extends SortManager
         foreach ($gmts as $gmt) {
             $result[$cpt] = array($gmt, array());
 
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT tc, count(t) FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                 JOIN tc.trips t
@@ -316,6 +242,7 @@ class LineVersionManager extends SortManager
      */
     public function updateGridCalendars($gridCalendars, $lineVersionId)
     {
+        $objectManager = $this->getObjectManager();
         $lineVersion = $this->find($lineVersionId);
         $sync = false;
         $newGridCalendars = array();
@@ -336,8 +263,8 @@ class LineVersionManager extends SortManager
                 $gridCalendar->setDays($gridCalendarJson['days']);
                 $gridCalendar->setName($gridCalendarJson['name']);
                 $gridCalendar->setLineVersion($lineVersion);
-                $this->om->persist($gridCalendar);
-                $this->om->flush();
+                $objectManager->persist($gridCalendar);
+                $objectManager->flush($gridCalendar);
 
                 $newGridCalendars[$gridCalendar->getId()] = $gridCalendarJson['gmt'];
             } else {
@@ -346,39 +273,42 @@ class LineVersionManager extends SortManager
         }
 
         if ($sync) {
-            $this->om->persist($lineVersion);
+            $objectManager->persist($lineVersion);
         }
 
         return $newGridCalendars;
     }
 
     /*
-     * create
+     * Create a new LineVersion
      * @param LineVersion $lineVersion
      *
-     * Save a LineVersion after :
-     *  - closing previous LineVersion if it exists (using current LineVersion
-     *  startDate
-     *  - deleting all trips which don't belong anymore to the previous
-     *  LineVersion
+     * Doing these things before :
+     *  - closing previous LineVersion if it exists
+     *  - deleting all trips which don't belong anymore to the previous LineVersion
      */
     public function create(LineVersion $lineVersion)
     {
-        $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
-        if ($oldLineVersion) {
+        $objectManager = $this->getObjectManager();
+        $oldLineVersion = $lineVersion->getLine()->getLastLineVersion();
+        if ($oldLineVersion !== null) {
             if ($oldLineVersion->getEndDate() === null) {
                 $oldLineVersion->closeDate($lineVersion->getStartDate());
             } elseif ($oldLineVersion->getEndDate() > $lineVersion->getStartDate()) {
-                return;
+                throw new \Exception(sprintf(
+                    "The start date %s of the new LineVersion can't be < to the end date %s of the last one",
+                    $lineVersion->getStartDate(),
+                    $oldLineVersion->getEndDate()
+                ));
             }
-            $this->om->persist($oldLineVersion);
+            $objectManager->persist($oldLineVersion);
         }
 
         foreach ($lineVersion->getLineGroupContents() as $lineGroupContent) {
-            $this->om->persist($lineGroupContent->getLineGroup());
+            $objectManager->persist($lineGroupContent->getLineGroup());
         }
 
-        $this->om->flush();
+        $objectManager->flush();
 
         /* trick here, in order to resolve potential modifications
          * stape1: get resolved modifications from the new LineVersion
@@ -387,30 +317,18 @@ class LineVersionManager extends SortManager
          */
         $modifications = $lineVersion->getModifications();
         $lineVersion->setModifications(new ArrayCollection());
-        $this->om->persist($lineVersion);
+        $objectManager->persist($lineVersion);
 
         foreach ($modifications as $modification) {
             $modification->setResolvedIn($lineVersion);
-            $this->om->persist($modification->getLineVersion());
+            $objectManager->persist($modification->getLineVersion());
         }
 
         foreach ($lineVersion->getLineGroupContents() as $lineGroupContent) {
-            $this->om->persist($lineGroupContent);
+            $objectManager->persist($lineGroupContent);
         }
 
-        $this->om->flush();
-    }
-
-    /*
-     * save
-     * @param LineVersion $lineVersion
-     *
-     * Persist and save a LineVersion into database.
-     */
-    public function save(LineVersion $lineVersion)
-    {
-        $this->om->persist($lineVersion);
-        $this->om->flush();
+        $objectManager->flush();
     }
 
     /*
@@ -419,9 +337,10 @@ class LineVersionManager extends SortManager
      *
      * delete line version
      */
-    public function delete($lineVersionId)
+    public function remove($lineVersionId)
     {
         $lineVersion = $this->find($lineVersionId);
+        $objectManager = $this->getObjectManager();
 
         if (empty($lineVersion)) {
             throw new \Exception("The LineVersion with id: ".$lineVersionId." can't be found.");
@@ -431,32 +350,33 @@ class LineVersionManager extends SortManager
 
         if ($previousLineVersion !== null) {
             $previousLineVersion->setEndDate(null);
-            $this->om->persist($previousLineVersion);
+            $objectManager->persist($previousLineVersion);
         }
 
         // Calendars are just isolated not deleted
         foreach ($lineVersion->getCalendars() as $calendar) {
             $calendar->setLineVersion(null);
-            $this->om->persist($calendar);
+            $objectManager->persist($calendar);
         }
-        $this->om->flush();
+        $objectManager->flush();
 
         // Doctrine won't delete trips in a good order if parent/pattern relations exist
         foreach ($lineVersion->getRoutes() as $route) {
             foreach ($route->getTripsHavingParent() as $trip) {
-                $this->om->remove($trip);
+                $objectManager->remove($trip);
             }
 
             foreach ($route->getTripsHavingPattern() as $trip) {
-                $this->om->remove($trip);
+                $objectManager->remove($trip);
             }
         }
-        $this->om->flush();
+        $objectManager->flush();
 
-        $this->om->remove($lineVersion);
-        $this->om->flush();
+        $objectManager->remove($lineVersion);
+        $objectManager->flush();
     }
 
+    // NOTE : used by boa-bundle/Controller/AccessibilityMonitoringController.php
     public function getStopAccessibilityChangesByRoute($lineVersion, $startDate)
     {
         $result = array();
@@ -500,6 +420,7 @@ class LineVersionManager extends SortManager
         return $result;
     }
 
+    // NOTE: used by boa-bundle/Controller/PoiMonitoringController.php
     public function getPoiByStopArea($lineVersion)
     {
         $result = array();
@@ -526,7 +447,7 @@ class LineVersionManager extends SortManager
         foreach ($stopAreas as $stopArea) {
             $stopAreaIds[] = $stopArea->getId();
         }
-        $connection = $this->om->getConnection();
+        $connection = $objectManager->getConnection();
         $query = "SELECT DISTINCT p.name as poi_name, p.id as poi_id, s.stop_area_id as stop_area_id
             FROM poi p
             JOIN poi_stop ps ON ps.poi_id = p.id
@@ -538,7 +459,7 @@ class LineVersionManager extends SortManager
         $stmt = $connection->executeQuery($query, array($stopAreaIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
         $poiArray = $stmt->fetchAll();
 
-        $poiRepository = $this->om->getRepository('TisseoEndivBundle:Poi');
+        $poiRepository = $objectManager->getRepository('TisseoEndivBundle:Poi');
 
         foreach ($stopAreas as $stopArea) {
             $stopAreaPois = array();
@@ -559,8 +480,28 @@ class LineVersionManager extends SortManager
     }
 
     // used in 'getPoiByStop' method to sort an array of stops by their labels
-    private function usortStopArea($a, $b)
+    protected function usortStopArea($sa1, $sa2)
     {
-        return strcasecmp($a->getCity()->getName() . $a->getShortName(), $b->getCity()->getName() . $b->getShortName());
+        return strcasecmp($sa1->getCity()->getName() . $sa1->getShortName(), $sa2->getCity()->getName() . $sa2->getShortName());
+    }
+
+    /**
+     * Build a default query for 'active' line versions (i.e. current/future)
+     * looking at a date of reference
+     * Join line/physicalMode/colors by default (always needed for display)
+     *
+     * @param  \Datetime $date
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function createQueryForActiveLineVersions()
+    {
+        return $this->getRepository()->createQueryBuilder('lv')
+            ->select('lv, l, p, fg, bg')
+            ->where('lv.endDate is null OR (lv.endDate + 1) > :date')
+            ->join('lv.line', 'l')
+            ->join('l.physicalMode', 'p')
+            ->join('lv.fgColor', 'fg')
+            ->join('lv.bgColor', 'bg')
+            ->setParameter('date', $date);
     }
 }
