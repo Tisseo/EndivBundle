@@ -533,6 +533,23 @@ class Line extends ObjectDatasource
     }
 
     /**
+     * Selecting the past versions of LineVersions
+     *
+     * @return Collection
+     */
+    public function getPastLineVersions()
+    {
+        $now = new \Datetime();
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->lt('endDate', $now))
+            ->andWhere(Criteria::expr()->neq('endDate', null))
+            ->orderBy(array('version' => Criteria::ASC));
+
+        return $this->lineVersions->matching($criteria);
+    }
+
+    /**
      * Get current LineVersion
      *
      * @param  \Datetime $now
