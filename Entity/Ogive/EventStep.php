@@ -293,10 +293,10 @@ class EventStep extends OgiveEntity
     /**
      * Add status
      *
-     * @param LinkEventStepStatus $status
+     * @param EventStepStatus $status
      * @return EventStep
      */
-    public function addStatus(LinkEventStepStatus $status)
+    public function addStatus(EventStepStatus $status)
     {
         $this->statuses->add($status);
 
@@ -306,9 +306,9 @@ class EventStep extends OgiveEntity
     /**
      * Remove status
      *
-     * @param LinkEventStepStatus $status
+     * @param EventStepStatus $status
      */
-    public function removeStatus(LinkEventStepStatus $status)
+    public function removeStatus(EventStepStatus $status)
     {
         $this->statuses->removeElement($status);
     }
@@ -339,7 +339,7 @@ class EventStep extends OgiveEntity
     /**
      * Get last selected status for the event step
      *
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function getLastStatus(){
         if ($this->statuses->count() == 0) {
