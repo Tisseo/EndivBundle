@@ -24,8 +24,7 @@ class ChannelManager extends OgiveManager
 
         $results = $queryBuilder->getQuery()->getResult();
 
-        if (count($results) == 1)
-        {
+        if (count($results) == 1) {
             return $results[0];
         }
 

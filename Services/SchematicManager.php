@@ -2,34 +2,8 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\Schematic;
-
-class SchematicManager extends SortManager
+class SchematicManager extends AbstractManager
 {
-    private $om = null;
-
-    /**
- * @var \Doctrine\ORM\EntityRepository $repository
-*/
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:Schematic');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($schematicId)
-    {
-        return empty($schematicId) ? null : $this->repository->find($schematicId);
-    }
-
     /**
      * Find multiple by Id
      *
@@ -37,32 +11,7 @@ class SchematicManager extends SortManager
      */
     public function findMultipleById(array $schematicIds)
     {
-        return $this->repository->findById($schematicIds);
-    }
-
-    /*
-     * Save
-     * @param Schematic $schematic
-     *
-     * Saving a Schematic into database.
-     */
-    public function save(Schematic $schematic)
-    {
-        $this->om->persist($schematic);
-        $this->om->flush();
-    }
-
-    /*
-     * Remove
-     * @param integer $schematicId
-     *
-     * Removing a Schematic from database.
-     */
-    public function remove($schematicId)
-    {
-        $schematic = $this->find($schematicId);
-        $this->om->remove($schematic);
-        $this->om->flush();
+        return $this->getRepository->find($schematicIds);
     }
 
     /**
@@ -75,26 +24,27 @@ class SchematicManager extends SortManager
      */
     public function updateGroupGis(array $schematics, $groupGis)
     {
+        $objectManager = $this->getObjectManager();
         $schematicsCollection = $this->findMultipleById($schematics);
 
         $sync = false;
         foreach ($schematicsCollection as $schematic) {
             if ($schematic->getGroupGis() !== $groupGis) {
-                $upSchematics = $this->repository->findBy(array('line' => $schematic->getLine()));
+                $upSchematics = $this->getRepository->findBy(array('line' => $schematic->getLine()));
                 foreach ($upSchematics as $upSchematic) {
                     $upSchematic->setGroupGis(!$groupGis);
-                    $this->om->persist($upSchematic);
+                    $objectManager->persist($upSchematic);
                 }
 
                 $schematic->setGroupGis($groupGis);
 
-                $this->om->persist($schematic);
+                $objectManager->persist($schematic);
                 $sync = true;
             }
         }
 
         if ($sync) {
-            $this->om->flush();
+            $objectManager->flush();
         }
     }
 
@@ -113,7 +63,7 @@ class SchematicManager extends SortManager
             ORDER BY l.priority, l.number
         ";
 
-        $query = $this->om->createQuery($sql)
+        $query = $this->getObjectManager()->createQuery($sql)
             ->setParameter('startDate', $startDate);
 
         $content = $query->getArrayResult();

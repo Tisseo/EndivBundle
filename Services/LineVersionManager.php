@@ -7,25 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Utils\Sorting;
 use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\GridCalendar;
-use Tisseo\EndivBundle\Services\CalendarManager;
 
 class LineVersionManager extends AbstractManager
 {
-    private $calendarManager = null;
-
-    /**
-     * {inheritdoc}
-     *
-     * @param CalendarManager $calendarManager
-     */
-    public function __construct(
-        ManagerRegistry $managerRegistry,
-        CalendarManager $calendarManager
-    ) {
-        parent::__construct($managerRegistry);
-        $this->calendarManager = $calendarManager;
-    }
-
     /**
      * Find all line versions and sort them
      * using line priority and natural sort on line number
@@ -37,7 +21,6 @@ class LineVersionManager extends AbstractManager
         return Sorting::sortLineVersionsByNumber($this->getRepository()->findAll());
     }
 
-    // NOTE: used here
     /**
      * Find Previous LineVersion
      *
@@ -49,35 +32,14 @@ class LineVersionManager extends AbstractManager
      */
     public function findPreviousLineVersion(LineVersion $lineVersion)
     {
-        $query = $objectManager->createQuery(
-            "
-            SELECT lv FROM Tisseo\EndivBundle\Entity\LineVersion lv
-            JOIN lv.line l
-            WHERE l.number = ?1
-            AND lv.id != ?2
-        "
-        );
-        $query->setParameter(1, $lineVersion->getLine()->getNumber());
-        $query->setParameter(2, $lineVersion->getId());
+        $query = $this->getObjectManager()->createQueryBuilder('lv')
+            ->join('lv.line', 'l')
+            ->where('l.id = :id')
+            ->andWhere('lv.version = :version')
+            ->setParameter('id', $lineVersion->getLine()->getId())
+            ->setParameter('version', ($lineVersion->getVersion()-1));
 
-        $lineVersions = $query->getResult();
-
-        $result = null;
-        foreach ($lineVersions as $lv) {
-            if ($lv->getEndDate() === null) {
-                continue;
-            }
-
-            if (($lineVersion->getEndDate() !== null && $lv->getEndDate() > $lineVersion->getEndDate())
-                || (!empty($result) && $result->getEndDate() > $lv->getEndDate())
-            ) {
-                continue;
-            }
-
-            $result = $lv;
-        }
-
-        return $result;
+        return $query->getQuery()->getSingleResult();
     }
 
     // NOTE: used by paon-bundle/Controller/CalendarController.php
@@ -295,11 +257,13 @@ class LineVersionManager extends AbstractManager
             if ($oldLineVersion->getEndDate() === null) {
                 $oldLineVersion->closeDate($lineVersion->getStartDate());
             } elseif ($oldLineVersion->getEndDate() > $lineVersion->getStartDate()) {
-                throw new \Exception(sprintf(
-                    "The start date %s of the new LineVersion can't be < to the end date %s of the last one",
-                    $lineVersion->getStartDate(),
-                    $oldLineVersion->getEndDate()
-                ));
+                throw new \Exception(
+                    sprintf(
+                        "The start date %s of the new LineVersion can't be < to the end date %s of the last one",
+                        $lineVersion->getStartDate(),
+                        $oldLineVersion->getEndDate()
+                    )
+                );
             }
             $objectManager->persist($oldLineVersion);
         }
@@ -401,7 +365,7 @@ class LineVersionManager extends AbstractManager
             foreach ($stops as $stop) {
                 $accessibilityCalendar = $stop->getAccessibilityCalendar();
                 if (!empty($accessibilityCalendar)) {
-                    $bitmask = $this->calendarManager->getCalendarBitmask($accessibilityCalendar->getId(), $startDate, $now);
+                    $bitmask = $this->getService('calendar')->getCalendarBitmask($accessibilityCalendar->getId(), $startDate, $now);
                     $startBit = substr($bitmask, 0, 1);
                     $endBit = substr($bitmask, strlen($bitmask) - 1, 1);
                     if ($startBit != $endBit) {

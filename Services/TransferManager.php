@@ -2,42 +2,10 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Transfer;
-use Tisseo\EndivBundle\Services\StopAreaManager;
-use Tisseo\EndivBundle\Services\StopManager;
 
-class TransferManager extends SortManager
+class TransferManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-    private $stopManager = null;
-    private $stopAreaManager = null;
-
-    public function __construct(ObjectManager $om, StopManager $stopManager, StopAreaManager $stopAreaManager)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:Transfer');
-        $this->stopManager = $stopManager;
-        $this->stopAreaManager = $stopAreaManager;
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($TransferId)
-    {
-        return empty($TransferId) ? null : $this->repository->find($TransferId);
-    }
-
-    public function save(Transfer $transfer)
-    {
-        $this->om->persist($transfer);
-        $this->om->flush();
-    }
-
     /**
      * @return an array with all Transfer entities for this stopArea
      * Transfers that don't already exist are created
@@ -52,11 +20,11 @@ class TransferManager extends SortManager
             WHERE ss.stopArea = :sa
             AND es.stopArea = :sa";
 
-        $query = $this->om->createQuery($sql)
+        $query = $this->getObjectManager()->createQuery($sql)
             ->setParameter('sa', $stopArea);
         $existingTransfers = $query->getResult();
 
-        $stops = $this->stopAreaManager->getStopsOrderedByCode($stopArea, true);
+        $stops = $this->getService('stop_area')->getStopsOrderedByCode($stopArea, true);
         $transfers = array();
         foreach ($stops as $startStop) {
             foreach ($stops as $endStop) {
@@ -84,7 +52,7 @@ class TransferManager extends SortManager
      */
     public function getExternalTransfers($StopArea)
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "SELECT t
             FROM Tisseo\EndivBundle\Entity\Transfer t
             JOIN t.startStop ss
@@ -128,16 +96,16 @@ class TransferManager extends SortManager
         $endIsInternal = false;
 
         if ($startIsStopArea) {
-            $startStopArea = $this->stopAreaManager->find($data['startStopId']);
+            $startStopArea = $this->getService('stop_area')->find($data['startStopId']);
             if (is_null($startStopArea)) {
                 throw new \Exception('stop area with id ' . $endStopId . ' not found');
             }
             if ($startStopArea == $stopArea) {
                 $startIsInternal = true;
             }
-            $startStops = $this->stopAreaManager->getStopsOrderedByCode($startStopArea);
+            $startStops = $this->getService('stop_area')->getStopsOrderedByCode($startStopArea);
         } else {
-            $stop = $this->stopManager->find($data['startStopId']);
+            $stop = $this->getService('stop')->find($data['startStopId']);
             if (is_null($stop)) {
                 throw new \Exception('stop with id ' . $endStopId . ' not found');
             }
@@ -149,16 +117,16 @@ class TransferManager extends SortManager
         }
 
         if ($endIsStopArea) {
-            $endStopArea = $this->stopAreaManager->find($data['endStopId']);
+            $endStopArea = $this->getService('stop_area')->find($data['endStopId']);
             if (is_null($endStopArea)) {
                 throw new \Exception('stop area with id ' . $endStopId . ' not found');
             }
             if ($endStopArea == $stopArea) {
                 $endIsInternal = true;
             }
-            $endStops = $this->stopAreaManager->getStopsOrderedByCode($endStopArea);
+            $endStops = $this->getService('stop_area')->getStopsOrderedByCode($endStopArea);
         } else {
-            $stop = $this->stopManager->find($data['endStopId']);
+            $stop = $this->getService('stop')->find($data['endStopId']);
             if (is_null($stop)) {
                 throw new \Exception('stop with id ' . $endStopId . ' not found');
             }
@@ -211,7 +179,7 @@ class TransferManager extends SortManager
             WHERE ss.stopArea = :sa
             AND es.stopArea = :sa";
 
-        $query = $this->om->createQuery($sql)
+        $query = $this->getObjectManager()->createQuery($sql)
             ->setParameter('sa', $stopArea);
         $existingTransfers = $query->getResult();
 
@@ -227,6 +195,7 @@ class TransferManager extends SortManager
 
     public function updateTransfers($existingTransfers, $transfers)
     {
+        $objectManager = $this->getObjectManager();
         $sync = false;
         foreach ($existingTransfers as $transfer) {
             $existing = array_filter(
@@ -238,7 +207,7 @@ class TransferManager extends SortManager
 
             if (empty($existing)) {
                 $sync = true;
-                $this->om->remove($transfer);
+                $objectManager->remove($transfer);
             }
         }
 
@@ -253,11 +222,11 @@ class TransferManager extends SortManager
                 if (!empty($transfer['longName'])) {
                     $newTransfer->setLongName($transfer['longName']);
                 }
-                $startStop = $this->stopManager->find($transfer['startStopId']);
-                $endStop = $this->stopManager->find($transfer['endStopId']);
+                $startStop = $this->getService('stop')->find($transfer['startStopId']);
+                $endStop = $this->getService('stop')->find($transfer['endStopId']);
                 $newTransfer->setStartStop($startStop);
                 $newTransfer->setEndStop($endStop);
-                $this->om->persist($newTransfer);
+                $objectManager->persist($newTransfer);
             } else {
                 $existingTransfer = $this->find($transfer['id']);
                 $duration = null;
@@ -288,7 +257,7 @@ class TransferManager extends SortManager
         }
 
         if ($sync) {
-            $this->om->flush();
+            $objectManager->flush();
         }
     }
 
@@ -311,7 +280,7 @@ class TransferManager extends SortManager
             }
 
             $startIsInternal = false;
-            $startStop = $this->stopManager->find($startStopId);
+            $startStop = $this->getService('stop')->find($startStopId);
             if (is_null($startStop)) {
                 throw new \Exception('stop with id ' . $startStopId . ' not found');
             }
@@ -320,7 +289,7 @@ class TransferManager extends SortManager
             }
 
             $endIsInternal = false;
-            $endStop = $this->stopManager->find($endStopId);
+            $endStop = $this->getService('stop')->find($endStopId);
             if (is_null($endStop)) {
                 throw new \Exception('stop with id ' . $endStopId . ' not found');
             }

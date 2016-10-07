@@ -2,55 +2,37 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\StopHistory;
 use Tisseo\EndivBundle\Entity\StopAccessibility;
 
-class StopManager extends SortManager
+class StopManager extends AbstractManager
 {
-    private $em = null;
-    private $repository = null;
-
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-        $this->repository = $em->getRepository('TisseoEndivBundle:Stop');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($stopId)
-    {
-        return empty($stopId) ? null : $this->repository->find($stopId);
-    }
-
     public function create(Stop $stop)
     {
-        $connection = $this->em->getConnection()->getWrappedConnection();
+        $objectManager = $this->getObjectManager();
+
+        $connection = $objectManager->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("INSERT INTO waypoint(id) VALUES (nextval('waypoint_id_seq')) RETURNING waypoint.id");
         $stmt->execute();
         $stop->setId($stmt->fetch(\PDO::FETCH_ASSOC)["id"]);
 
-        $this->em->persist($stop);
-        $this->em->flush();
+        $objectManager->persist($stop);
+        $objectManager->flush();
 
         return $stop->getId();
     }
 
     public function save(Stop $stop)
     {
-        $this->em->persist($stop);
-        $this->em->flush();
+        $objectManager->persist($stop);
+        $objectManager->flush();
     }
 
     // TODO: Does this belong here ?
     public function getRouteStopsByRoute($routeId)
     {
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT rs.id, rs.rank, rs.pickup, rs.dropOff, wp.id as waypoint
             FROM Tisseo\EndivBundle\Entity\RouteStop rs
@@ -67,7 +49,7 @@ class StopManager extends SortManager
     // TODO: Investigate this function
     public function getStops($waypointId)
     {
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT st.id, ar.shortName, ar.id as zone, c.name as city, sd.code as code
             FROM Tisseo\EndivBundle\Entity\Stop st
@@ -85,7 +67,7 @@ class StopManager extends SortManager
     // TODO: WTF ?? route ??
     public function getStopArea($route)
     {
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT st.id, ar.shortName, ar.id as zone,  c.name as city
             FROM Tisseo\EndivBundle\Entity\Stop st
@@ -101,7 +83,7 @@ class StopManager extends SortManager
     // TODO: AAAAAAAAAAAAH !!
     public function getStopLabel(Stop $stop)
     {
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT sh.shortName as name, c.name as city,  sd.code as code, s.id as id
             FROM Tisseo\EndivBundle\Entity\StopHistory sh
@@ -135,7 +117,7 @@ class StopManager extends SortManager
      */
     public function getOrderedStopHistories($stop)
     {
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
             WHERE sh.stop = :stop
@@ -160,7 +142,7 @@ class StopManager extends SortManager
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);
 
-        $connection = $this->em->getConnection()->getWrappedConnection();
+        $connection = $this->getObjectManager()->getConnection()->getWrappedConnection();
 
         $query = "SELECT DISTINCT sh.short_name as name, c.name as city, sd.code as code, s.id as id
             FROM stop_history sh";
@@ -222,9 +204,9 @@ class StopManager extends SortManager
         $stopAccessibility->setStop($stop);
         $stop->addStopAccessibility($stopAccessibility);
 
-        $this->em->persist($stopAccessibility);
-        $this->em->persist($stop);
-        $this->em->flush();
+        $objectManager->persist($stopAccessibility);
+        $objectManager->persist($stop);
+        $objectManager->flush();
     }
 
     /**
@@ -250,9 +232,9 @@ class StopManager extends SortManager
         }
 
         $stop->removeStopAccessibility($stopAccessibility);
-        $this->em->remove($stopAccessibility);
-        $this->em->persist($stop);
-        $this->em->flush();
+        $objectManager->remove($stopAccessibility);
+        $objectManager->persist($stop);
+        $objectManager->flush();
     }
 
     /**
@@ -274,25 +256,25 @@ class StopManager extends SortManager
         if ($latestStopHistory->getStartDate() >= $stopHistory->getStartDate()) {
             $youngerStopHistories = $stopHistory->getStop()->getYoungerStopHistories($stopHistory->getStartDate());
             foreach ($youngerStopHistories as $youngerStopHistory) {
-                $this->em->remove($youngerStopHistory);
+                $objectManager->remove($youngerStopHistory);
             }
 
-            $this->em->flush();
+            $objectManager->flush();
 
             // updating end date
             $latestStopHistory = $stopHistory->getStop()->getLatestStopHistory();
             if ($latestStopHistory && $latestStopHistory->getEndDate() >= $stopHistory->getStartDate()) {
                 $latestStopHistory->closeDate($stopHistory->getStartDate());
-                $this->em->persist($latestStopHistory);
+                $objectManager->persist($latestStopHistory);
             }
         } elseif ($latestStopHistory->getEndDate() === null) {
             $latestStopHistory->closeDate($stopHistory->getStartDate());
-            $this->em->persist($latestStopHistory);
+            $objectManager->persist($latestStopHistory);
         }
 
-        $this->em->persist($stopHistory);
-        $this->em->persist($stopHistory->getStop());
-        $this->em->flush();
+        $objectManager->persist($stopHistory);
+        $objectManager->persist($stopHistory->getStop());
+        $objectManager->flush();
     }
 
     /**
@@ -304,8 +286,8 @@ class StopManager extends SortManager
      */
     public function saveStopHistory(StopHistory $stopHistory)
     {
-        $this->em->persist($stopHistory);
-        $this->em->flush();
+        $objectManager->persist($stopHistory);
+        $objectManager->flush();
     }
 
     /**
@@ -317,8 +299,8 @@ class StopManager extends SortManager
      */
     public function deleteStopHistory(StopHistory $stopHistory)
     {
-        $this->em->remove($stopHistory);
-        $this->em->flush();
+        $objectManager->remove($stopHistory);
+        $objectManager->flush();
     }
 
     /**
@@ -340,19 +322,19 @@ class StopManager extends SortManager
 
         $youngerStopHistories = $stop->getYoungerStopHistories($now);
         foreach ($youngerStopHistories as $youngerStopHistory) {
-            $this->em->remove($youngerStopHistory);
+            $objectManager->remove($youngerStopHistory);
         }
 
-        $this->em->flush();
+        $objectManager->flush();
 
         $stopHistory = $stop->getLatestStopHistory();
         $stopHistory->closeDate(new \Datetime());
-        $this->em->persist($stopHistory);
+        $objectManager->persist($stopHistory);
 
         $stopAreaId = $stop->getStopArea()->getId();
         $stop->setStopArea();
-        $this->em->persist($stop);
-        $this->em->flush();
+        $objectManager->persist($stop);
+        $objectManager->flush();
 
         return $stopAreaId;
     }
@@ -363,7 +345,7 @@ class StopManager extends SortManager
         foreach ($stops as $stop) {
             $stopIds[] = $stop->getId();
         }
-        $connection = $this->em->getConnection();
+        $connection = $objectManager->getConnection();
 
         if ($getPhantoms) {
             $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
@@ -393,7 +375,7 @@ class StopManager extends SortManager
      */
     public function getLinesByStop($stopId)
     {
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
            SELECT l.id as line
            FROM Tisseo\EndivBundle\Entity\Line l
@@ -416,7 +398,7 @@ class StopManager extends SortManager
             $lines[] = $item['line'];
         }
 
-        $query = $this->em->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT DISTINCT l
             FROM Tisseo\EndivBundle\Entity\Line l
@@ -439,7 +421,7 @@ class StopManager extends SortManager
      */
     public function findLockedStops($lock = true)
     {
-        return $this->repository->findBy(array('lock' => $lock));
+        return $this->getRepository()->findBy(array('lock' => $lock));
     }
 
     /**
@@ -447,13 +429,13 @@ class StopManager extends SortManager
      */
     public function toggleLock(array $stopIds)
     {
-        $stops = $this->repository->findById($stopIds);
+        $stops = $this->getRepository()->findById($stopIds);
 
         foreach ($stops as $stop) {
             $stop->setLock(!$stop->getLock());
-            $this->em->persist($stop);
+            $objectManager->persist($stop);
         }
 
-        $this->em->flush();
+        $objectManager->flush();
     }
 }

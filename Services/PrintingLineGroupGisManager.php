@@ -2,39 +2,11 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\PrintingLineGroupGis;
-
-class PrintingLineGroupGisManager
+class PrintingLineGroupGisManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:PrintingLineGroupGis');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($printingLineGroupGisId)
-    {
-        return empty($printingLineGroupGisId) ? null : $this->repository->find($printingLineGroupGisId);
-    }
-
-    public function save(PrintingLineGroupGis $printingLineGroupGis)
-    {
-        $this->om->persist($printingLineGroupGis);
-        $this->om->flush();
-    }
-
     public function getCsvExport()
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT
                 DISTINCT lgg.name AS line_group_gis_name,

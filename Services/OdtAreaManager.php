@@ -2,63 +2,43 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\OdtArea;
 
 class OdtAreaManager extends SortManager
 {
-    private $em = null;
-    private $repository = null;
-
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-        $this->repository = $em->getRepository('TisseoEndivBundle:OdtArea');
-    }
-
+    /**
+     * {inheritdoc}
+     */
     public function findAll()
     {
-        return $this->repository->findBy(array(), array('name' => 'ASC'));
-    }
-
-    public function find($odtAreaId)
-    {
-        return empty($odtAreaId) ? null : $this->repository->find($odtAreaId);
+        return $this->getRepository()->findBy(array(), array('name' => 'ASC'));
     }
 
     public function create(OdtArea $odtArea)
     {
-        $connection = $this->em->getConnection()->getWrappedConnection();
+        $objectManager = $this->getObjectManger();
+        $connection = $objectManager->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("INSERT INTO waypoint(id) VALUES (nextval('waypoint_id_seq')) RETURNING waypoint.id");
         $stmt->execute();
         $odtArea->setId($stmt->fetch(\PDO::FETCH_ASSOC)["id"]);
 
-        $this->em->persist($odtArea);
-        $this->em->flush();
+        $objectManager->persist($odtArea);
+        $objectManager->flush();
 
         return $odtArea->getId();
     }
 
-    public function save(OdtArea $odtArea)
-    {
-        $this->em->persist($odtArea);
-        $this->em->flush();
-    }
-
     /**
-     * delete
+     * Remove a OdtArea
      *
      * @param OdtArea $odtArea
-     *
-     * Delete a OdtArea from the database.
      */
-    ////////
-    //TODO : INVESTIGATE THIS METHOD to avoid using queries. There is a problem with the waypoint deletion when we use the method 'remove'.
-    ////////
-    public function delete(OdtArea $odtArea)
+    public function remove(OdtArea $odtArea)
     {
+        $objectManager = $this->getObjectManger();
+
         $waypoint = $odtArea->getWaypoint();
-        $query = $this->em->createQuery(
+        $query = $objectManager->createQuery(
             "
             SELECT count(r)
             FROM Tisseo\EndivBundle\Entity\RouteStop r
@@ -66,15 +46,17 @@ class OdtAreaManager extends SortManager
         "
         )
             ->setParameter('wp', $waypoint);
+
         $count = $query->getSingleScalarResult();
         if ($count > 0) {
             throw new \Exception('Suppression impossible au motif que la zone "'.$odtArea->getName().'" est encore utilisée dans un ou plusieurs itinéraires');
         }
+
         $odtArea->getOdtStops()->clear();
-        $this->em->remove($odtArea);
-        $this->em->refresh($waypoint);
-        $this->em->flush();
-        $query = $this->em->createQuery(
+        $objectManager->remove($odtArea);
+        $objectManager->refresh($waypoint);
+        $objectManager->flush();
+        $query = $objectManager->createQuery(
             "
             DELETE
             FROM Tisseo\EndivBundle\Entity\Waypoint w
@@ -87,7 +69,9 @@ class OdtAreaManager extends SortManager
 
     public function getLines(OdtArea $odtArea)
     {
-        $query = $this->em->createQuery(
+        $objectManager = $this->getObjectManger();
+
+        $query = $objectManager->createQuery(
             "
            SELECT l
            FROM Tisseo\EndivBundle\Entity\Line l
@@ -111,7 +95,9 @@ class OdtAreaManager extends SortManager
 
     public function getLinesByOdtArea()
     {
-        $query = $this->em->createQuery(
+        $objectManager = $this->getObjectManger();
+
+        $query = $objectManager->createQuery(
             "
             SELECT DISTINCT oar.id as odtArea, oar2.id as odtArea2, l.id as line, l.priority as priority, l.number as number
             FROM Tisseo\EndivBundle\Entity\Line l
@@ -135,7 +121,7 @@ class OdtAreaManager extends SortManager
             $lines[] = $item['line'];
         }
 
-        $query = $this->em->createQuery(
+        $query = $objectManager->createQuery(
             "
             SELECT DISTINCT l
             FROM Tisseo\EndivBundle\Entity\Line l
@@ -168,10 +154,12 @@ class OdtAreaManager extends SortManager
 
     public function findOdtAreasLike($term)
     {
+        $objectManager = $this->getObjectManger();
+
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);
 
-        $connection = $this->em->getConnection()->getWrappedConnection();
+        $connection = $objectManager->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare(
             "
             SELECT oa.name as name, oa.id as id
@@ -189,7 +177,9 @@ class OdtAreaManager extends SortManager
 
     public function getOdtStopsJson($odtArea)
     {
-        $connection = $this->em->getConnection()->getWrappedConnection();
+        $objectManager = $this->getObjectManger();
+
+        $connection = $objectManager->getConnection()->getWrappedConnection();
 
         $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
             FROM stop s

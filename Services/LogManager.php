@@ -5,50 +5,18 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Log;
 
-class LogManager extends SortManager
+class LogManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:Log');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findBy(array(), array('id' => 'desc')));
-    }
-
-    public function find($LogId)
-    {
-        return empty($LogId) ? null : $this->repository->find($LogId);
-    }
-
+    /**
+     * Count log entries
+     *
+     * @return array
+     */
     public function count()
     {
-        return $this->repository
-            ->createQueryBuilder('l')
-            ->select('count(l)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
+        $query = $this->getRepository()->createQueryBuilder('l')
+            ->select('count(l)');
 
-    public function findLogEntries($offset, $limit)
-    {
-        return $this->repository->findBy(
-            array(),
-            array('id' => 'desc'),
-            $limit,
-            $offset
-        );
-    }
-
-    public function save(Log $Log)
-    {
-        $log->setTable($log->getTable());
-        $this->om->persist($Log);
-        $this->om->flush();
+        return $query->getQuery()->getSingleScalarResult();
     }
 }

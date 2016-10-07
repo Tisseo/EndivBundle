@@ -2,58 +2,32 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\OdtArea;
 use Tisseo\EndivBundle\Entity\OdtStop;
 use Tisseo\EndivBundle\Types\DateId;
 use Tisseo\EndivBundle\Services\StopManager;
 use Tisseo\EndivBundle\Services\StopAreaManager;
 
-class OdtStopManager extends SortManager
+class OdtStopManager extends AbstractManager
 {
-    private $em = null;
-    private $repository = null;
-    private $stopManager = null;
-    private $stopAreaManager = null;
-
-    public function __construct(EntityManager $em, StopManager $stopManager, StopAreaManager $stopAreaManager)
-    {
-        $this->em = $em;
-        $this->repository = $em->getRepository('TisseoEndivBundle:OdtStop');
-        $this->stopManager = $stopManager;
-        $this->stopAreaManager = $stopAreaManager;
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
+    /**
+     * {inheritdoc}
+     */
     public function find($odtStopId)
     {
         if (empty($odtStopId)) {
             return null;
         }
+
         $args = explode("/", $odtStopId);
-        return $this->repository->find(
+
+        return $this->getRepository()->find(
             array(
             'startDate' => new DateId($args[0]),
             'stop' => $args[1],
             'odtArea' => $args[2]
             )
         );
-    }
-
-    public function save(OdtStop $odtStop)
-    {
-        $this->em->persist($odtStop);
-        $this->em->flush();
-    }
-
-    public function delete(OdtStop $odtStop)
-    {
-        $this->em->remove($odtStop);
-        $this->em->flush();
     }
 
     /**
@@ -68,6 +42,7 @@ class OdtStopManager extends SortManager
     public function updateOdtStops($odtStops, OdtArea $odtArea)
     {
         $sync = false;
+        $objectManager = $this->getObjectManager();
         foreach ($odtArea->getOdtStops() as $odtStop) {
             $existing = array_filter(
                 $odtStops,
@@ -91,7 +66,7 @@ class OdtStopManager extends SortManager
                 $odtStop = new OdtStop();
                 $startDateTime = \DateTime::createFromFormat('d/m/Y', $odtStopIter['startDate']);
                 $odtStop->setStartDate(new DateId($startDateTime->format('Y-m-d')));
-                $odtStop->setStop($this->stopManager->find($odtStopIter['stop']));
+                $odtStop->setStop($this->getService('stop')->find($odtStopIter['stop']));
                 $odtStop->setPickup($odtStopIter['pickup']);
                 $odtStop->setDropOff($odtStopIter['dropOff']);
                 if (strlen($odtStopIter['endDate']) > 0) {
@@ -99,11 +74,11 @@ class OdtStopManager extends SortManager
                     $odtStop->setEndDate(new DateId($endDateTime->format('Y-m-d')));
                 }
                 $odtStop->setOdtArea($odtArea);
-                $this->em->persist($odtStop);
+                $objectManager->persist($odtStop);
             }
         }
         if ($sync) {
-            $this->em->flush();
+            $objectManager->flush();
         }
     }
 
@@ -118,7 +93,7 @@ class OdtStopManager extends SortManager
     public function getGroupedOdtStops($data, $odtArea)
     {
         $odtStops = array();
-        $stopArea = $this->stopAreaManager->find($data['boa_odt_stop[stop]']);
+        $stopArea = $this->getService('stop_area')->find($data['boa_odt_stop[stop]']);
         if (!empty($stopArea)) {
             $stops = $stopArea->getStops();
             foreach ($stops as $stop) {

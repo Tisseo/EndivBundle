@@ -2,54 +2,23 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\City;
-
-class CityManager extends SortManager
+class CityManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:City');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($CityId)
-    {
-        return empty($CityId) ? null : $this->repository->find($CityId);
-    }
-
-    public function save(City $City)
-    {
-        $this->om->persist($City);
-        $this->om->flush();
-    }
-
+    /**
+     * Find a city usinglike function on its name
+     *
+     * @param  $term
+     * @return array
+     */
     public function findCityLike($term)
     {
-        $specials = array("-", " ", "'");
-        $cleanTerm = str_replace($specials, "_", $term);
+        // cleaning special characters
+        $term = str_replace(array("-", " ", "'"), "_", $term);
 
-        $query = $this->om->createQuery(
-            "
-            SELECT c.name as name, c.insee as insee, c.id as id
-            FROM Tisseo\EndivBundle\Entity\City c
-            WHERE UPPER(c.name) LIKE UPPER(:term)
-            OR UPPER(c.insee) LIKE UPPER(:term)
-            ORDER BY c.name
-        "
-        );
+        $query = $this->createLikeQueryBuilder(array('name', 'insee'), $term);
+        $query->orderBy('o.name');
 
-        $query->setParameter('term', '%'.$cleanTerm.'%');
-
-        $shs = $query->getResult();
+        $shs = $query->getQuery()->getResult();
         $array = array();
         foreach ($shs as $sh) {
             $label = $sh["name"]." (".$sh["insee"].")";

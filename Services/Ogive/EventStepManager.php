@@ -7,7 +7,6 @@ use Tisseo\EndivBundle\Entity\Ogive\EventStep;
 
 class EventStepManager extends OgiveManager
 {
-
     private $repository = null;
 
     public function __construct(DoctrineObjectManager $objectManager)
@@ -23,10 +22,8 @@ class EventStepManager extends OgiveManager
         $login,
         $less = null,
         $comment = null
-    )
-    {
+    ) {
         try {
-
             if (!($less instanceof EventStepStatus)) {
                 $less = new EventStepStatus;
             }
@@ -53,7 +50,7 @@ class EventStepManager extends OgiveManager
     /**
      * Find child steps
      *
-     * @param $parentStepId
+     * @param  $parentStepId
      * @return array
      * @throws \UnexpectedValueException
      */

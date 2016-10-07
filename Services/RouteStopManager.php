@@ -2,39 +2,15 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use JMS\Serializer\Serializer;
 use Doctrine\ORM\Query\ResultSetMapping;
-
 use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\RouteStop;
 
-class RouteStopManager extends SortManager
+class RouteStopManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-    private $serializer = null;
-
-    public function __construct(ObjectManager $om, Serializer $serializer)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository("TisseoEndivBundle:RouteStop");
-        $this->serializer = $serializer;
-    }
-
-    public function findAll()
-    {
-        return $this->repository->findAll();
-    }
-
-    public function find($routeStopId)
-    {
-        return empty($routeStopId) ? null : $this->repository->find($routeStopId);
-    }
-
     public function findByWaypoint($waypoint, $routeId)
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager->createQuery(
             "
             SELECT rs.id
             FROM Tisseo\EndivBundle\Entity\RouteStop rs
@@ -46,9 +22,10 @@ class RouteStopManager extends SortManager
 
         return $query->getResult();
     }
+
     public function findStopMinRankByRouteId($routeId, $stopAreaId)
     {
-        $qb = $this->om->createQueryBuilder()
+        $query = $this->getObjectManager->createQueryBuilder()
             ->select('rs.rank')
             ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
             ->join('rs.route', 'r')
@@ -60,18 +37,17 @@ class RouteStopManager extends SortManager
             ->setMaxResults(1)
             ->setParameters(
                 array(
-                           1 => $routeId,
-                           2 => $stopAreaId
-                           )
+                1 => $routeId,
+                2 => $stopAreaId
+                )
             );
-        return $qb
-            ->getQuery()
-            ->getSingleScalarResult();
+
+        return $query->getQuery()->getSingleScalarResult();
     }
 
     public function findStopMaxRankByRouteId($routeId, $stopAreaId)
     {
-        $qb = $this->om->createQueryBuilder()
+        $query = $this->getObjectManager->createQueryBuilder()
             ->select('rs.rank')
             ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
             ->join('rs.route', 'r')
@@ -83,18 +59,17 @@ class RouteStopManager extends SortManager
             ->setMaxResults(1)
             ->setParameters(
                 array(
-                           1 => $routeId,
-                           2 => $stopAreaId
-                           )
+                1 => $routeId,
+                2 => $stopAreaId
+                )
             );
-        return $qb
-            ->getQuery()
-            ->getSingleScalarResult();
+
+        return $query->getQuery()->getSingleScalarResult();
     }
 
     public function getStoptimes($trip)
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager->createQuery(
             "
             SELECT st.departureTime, st.arrivalTime, IDENTITY(st.routeStop) as routestop
             FROM Tisseo\EndivBundle\Entity\StopTime st
@@ -103,9 +78,10 @@ class RouteStopManager extends SortManager
 
         return $query->getResult();
     }
+
     public function getRouteStopsSectionByMinMaxRank($routeId, $minRank, $maxRank)
     {
-        $qb = $this->om->createQueryBuilder()
+        $query = $this->getObjectManager->createQueryBuilder()
             ->select('rs')
             ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
             ->join('rs.route', 'r')
@@ -116,9 +92,8 @@ class RouteStopManager extends SortManager
                 2 => $minRank,
                 3 => $maxRank
             ));
-        return $qb
-            ->getQuery()
-            ->getResult();
+
+        return $query->getQuery()->getResult();
     }
 
     public function save(RouteStop $routeStop)
@@ -127,28 +102,17 @@ class RouteStopManager extends SortManager
         $this->om->flush();
     }
 
-    public function remove(RouteStop $routeStop)
-    {
-        $this->om->remove($routeStop);
-        $this->om->flush();
-    }
-
-    /**
-     * VERIFIED USEFUL FUNCTIONS
-     */
-
     /**
      * Update RouteStops
      *
-     * @param  array $routeStops
-     * @param  Route $route
-     *
-     * Creating, updating, deleting RouteStop entities.
-     * @usedBy BOABundle
+     * @param array $routeStops
+     * @param Route $route
      */
     public function updateRouteStops($routeStops, Route $route)
     {
         $sync = false;
+        $objectManager = $this->getObjectManager();
+
         foreach ($route->getRouteStops() as $routeStop) {
             $existing = array_filter(
                 $routeStops,
@@ -166,8 +130,8 @@ class RouteStopManager extends SortManager
         foreach ($routeStops as $routeStop) {
             if (empty($routeStop['id'])) {
                 $sync = true;
-                $routeStop = $this->serializer->deserialize(json_encode($routeStop), 'Tisseo\EndivBundle\Entity\RouteStop', 'json');
-                $waypoint = $this->om->createQuery(
+                $routeStop = $this->getSerializer()->deserialize(json_encode($routeStop), 'Tisseo\EndivBundle\Entity\RouteStop', 'json');
+                $waypoint = $objectManager->createQuery(
                     "
                     SELECT w FROM Tisseo\EndivBundle\Entity\Waypoint w
                     WHERE w.id = :waypoint
@@ -182,21 +146,21 @@ class RouteStopManager extends SortManager
 
                 $routeStop->setWaypoint($waypoint);
                 $routeStop->setRoute($route);
-                $this->om->persist($routeStop);
+                $objectManager->persist($routeStop);
             }
-            // TODO: that's ugly, try using serializer in a better way
+            // TODO: find a better way
             else {
                 $realRouteStop = $this->find($routeStop['id']);
 
                 if ($this->updateRouteStop($realRouteStop, $routeStop)) {
                     $sync = true;
-                    $this->om->merge($realRouteStop);
+                    $objectManager->merge($realRouteStop);
                 }
             }
         }
 
         if ($sync) {
-            $this->om->flush();
+            $objectManager->flush();
             $this->updateRouteSection($route);
         }
     }
@@ -209,12 +173,12 @@ class RouteStopManager extends SortManager
     private function updateRouteSection(Route $route)
     {
         $rsm = new ResultSetMapping();
-        $query = $this->om->createNativeQuery('SELECT update_route_section_of_route(?)', $rsm);
+        $query = $this->getObjectManager()->createNativeQuery('SELECT update_route_section_of_route(?)', $rsm);
         $query->setParameter(1, intval($route->getId()));
         $query->getResult();
     }
 
-    // TODO: find something better, this is really bad
+    // TODO: improvement required here
     private function updateRouteStop(RouteStop $routeStop, $data)
     {
         $merged = false;

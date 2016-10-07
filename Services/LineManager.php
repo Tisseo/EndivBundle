@@ -6,7 +6,14 @@ use Tisseo\EndivBundle\Utils\Sorting;
 
 class LineManager extends AbstractManager
 {
-    public function findByDataSource($dataSourceId)
+    /**
+     * Find lines by datasource and sort them
+     *
+     * @param  integer $datasourceId
+     * @param  integer $sort
+     * @return Doctrine\Common\Collections\Collection;
+     */
+    public function findByDataSource($dataSourceId, $sort = null)
     {
         $query = $this->getRepository()->createQueryBuilder('l')
             ->innerJoin('l.lineDatasources', 'lds')
@@ -14,18 +21,13 @@ class LineManager extends AbstractManager
             ->where('ds.id = :datasourceId')
             ->setParameter('datasourceId', $dataSourceId);
 
-        return Sorting::sortLinesByNumber($query->getQuery()->getResult());
-    }
+        $result = $query->getQuery()->getResult();
 
-    public function findByDataSourceSortByStatus($dataSourceId)
-    {
-        $query = $this->getRepository()->createQueryBuilder('l')
-            ->innerJoin('l.lineDatasources', 'lds')
-            ->innerJoin('lds.datasource', 'ds')
-            ->where('ds.id = :datasourceId')
-            ->setParameter('datasourceId', $dataSourceId);
+        if ($sort === null) {
+            return $result;
+        }
 
-        return Sorting::sortLinesByStatus($query->getQuery()->getResult());
+        return Sorting::sortByMode($result, $sort);
     }
 
     public function findExistingNumber($number, $identifier)
@@ -55,10 +57,12 @@ class LineManager extends AbstractManager
             ->leftJoin('lv.fgColor', 'fg')
             ->leftJoin('lv.bgColor', 'bg')
             ->groupBy('l.id, p.id, lv.id, fg.id, bg.id')
-            ->having('
+            ->having(
+                '
                 (lv.startDate <= CURRENT_DATE() AND ((lv.endDate is null AND lv.plannedEndDate > CURRENT_DATE()) OR (lv.endDate) > CURRENT_DATE())) OR
                 (lv.plannedEndDate < CURRENT_DATE() AND lv.version = max(lv2.version)) OR
-                lv is NULL')
+                lv is NULL'
+            )
             ->addSelect('lv, fg, bg, p');
 
         return Sorting::sortLinesByNumber($query->getQuery()->getResult());
@@ -79,12 +83,14 @@ class LineManager extends AbstractManager
             ->leftJoin('lv.fgColor', 'fg')
             ->leftJoin('lv.bgColor', 'bg')
             ->groupBy('l.id, p.id, lv.id, fg.id, bg.id')
-            ->having('
+            ->having(
+                '
                 (lv.startDate <= CURRENT_DATE() AND ((lv.endDate is null AND lv.plannedEndDate > CURRENT_DATE()) OR (lv.endDate) > CURRENT_DATE())) OR
                 (lv.plannedEndDate < CURRENT_DATE()) OR
-                lv is NULL')
+                lv is NULL'
+            )
             ->addSelect('lv, fg, bg, p')
-            ->addOrderBy('lv.version', 'ASC');
+            ->addOrderBy('lv.version', 'DESC');
 
         return Sorting::sortLinesByNumber($query->getQuery()->getResult());
     }
@@ -101,10 +107,10 @@ class LineManager extends AbstractManager
 
         if ($splitByPhysicalMode) {
             $query = $this->getObjectManager()
-                        ->getRepository('Tisseo\EndivBundle\Entity\PhysicalMode')
-                        ->createQueryBuilder('p')
-                        ->select('p.name')
-                        ->getQuery();
+                ->getRepository('Tisseo\EndivBundle\Entity\PhysicalMode')
+                ->createQueryBuilder('p')
+                ->select('p.name')
+                ->getQuery();
 
             $physicalModes = $query->getResult();
 

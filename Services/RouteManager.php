@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\RouteStop;
 use Tisseo\EndivBundle\Entity\Trip;
@@ -15,31 +14,15 @@ use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\RouteExportDestination;
 use Tisseo\EndivBundle\Services\StopManager;
 
-class RouteManager extends SortManager
+class RouteManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-    private $stopManager = null;
-
-    public function __construct(ObjectManager $om, StopManager $stopManager)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository("TisseoEndivBundle:Route");
-        $this->stopManager = $stopManager;
-    }
-
-    public function findAll()
-    {
-        return $this->repository->findAll();
-    }
-
-    public function find($routeId)
-    {
-        return empty($routeId) ? null : $this->repository->find($routeId);
-    }
-
+    /**
+     * {inheritdoc}
+     */
     public function save(Route $route)
     {
+        $objectManager = $this->getObjectManager();
+
         $comment = $route->getComment();
 
         if (!empty($comment)
@@ -47,11 +30,11 @@ class RouteManager extends SortManager
             && $comment->getCommentText() === null
         ) {
             $route->setComment();
-            $this->om->remove($comment);
+            $objectManager->remove($comment);
         }
 
-        $this->om->persist($route);
-        $this->om->flush();
+        $objectManager->persist($route);
+        $objectManager->flush();
     }
 
     public function remove($routeId)
@@ -69,17 +52,18 @@ class RouteManager extends SortManager
             throw new \Exception("Can't delete this route because it has ".$trips." trips.");
         }
 
+        $objectManager = $this->getObjectManager();
         $lineVersionId = $route->getLineVersion()->getId();
 
-        $this->om->remove($route);
-        $this->om->flush();
+        $objectManager->remove($route);
+        $objectManager->flush();
 
         return $lineVersionId;
     }
 
     public function getInstantiatedServiceTemplates($route)
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT DISTINCT t1.id
             FROM Tisseo\EndivBundle\Entity\Trip t
@@ -103,7 +87,7 @@ class RouteManager extends SortManager
      */
     public function getTimetableCalendars($lineVersionId)
     {
-        $routes = $this->repository->findBy(array('lineVersion' => $lineVersionId));
+        $routes = $this->getRepository()->findBy(array('lineVersion' => $lineVersionId));
 
         $result = array();
         foreach ($routes as $route) {
@@ -135,7 +119,7 @@ class RouteManager extends SortManager
     public function getSortedTypesOfGridMaskType()
     {
         $result = array("Semaine", "Samedi", "Dimanche");
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT DISTINCT g.calendarType
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
@@ -147,13 +131,14 @@ class RouteManager extends SortManager
         foreach ($query->getResult() as $value) {
             $result[] = $value['calendarType'];
         }
+
         return $result;
     }
 
     public function getSortedPeriodsOfGridMaskType()
     {
         $result = array("Base", "Vacances", "Ete");
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT DISTINCT g.calendarPeriod
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
@@ -165,6 +150,7 @@ class RouteManager extends SortManager
         foreach ($query->getResult() as $value) {
             $result[] = $value['calendarPeriod'];
         }
+
         return $result;
     }
 
@@ -178,10 +164,12 @@ class RouteManager extends SortManager
      */
     public function linkTripCalendars($datas)
     {
+        $objectManager = $this->getObjectManager();
+
         foreach ($datas as $data) {
             $tripCalendar = null;
 
-            $gridMaskType = $this->om->createQuery(
+            $gridMaskType = $objectManager->createQuery(
                 "
                 SELECT gmt FROM Tisseo\EndivBundle\Entity\GridMaskType gmt
                 WHERE gmt.calendarPeriod = :period
@@ -196,7 +184,7 @@ class RouteManager extends SortManager
                 $pattern = implode(array_values($data['days']));
 
                 // Doctrine CAST(x, y) is transformed into (x || y). x and y have to be varchars.
-                $tripCalendar = $this->om->createQuery(
+                $tripCalendar = $objectManager->createQuery(
                     "
                     SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                     WHERE tc.gridMaskType = :gridMaskType
@@ -210,7 +198,7 @@ class RouteManager extends SortManager
                     ->getOneOrNullResult();
 
                 if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
-                    $oldTripCalendar = $this->om->createQuery(
+                    $oldTripCalendar = $objectManager->createQuery(
                         "
                         SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                         WHERE tc.id = :tripCalendar
@@ -244,12 +232,12 @@ class RouteManager extends SortManager
                 $tripCalendar->setSaturday(filter_var($data['days'][6], FILTER_VALIDATE_BOOLEAN));
                 $tripCalendar->setSunday(filter_var($data['days'][7], FILTER_VALIDATE_BOOLEAN));
 
-                $this->om->persist($tripCalendar);
+                $objectManager->persist($tripCalendar);
             }
 
             $tripIds = array_values($data['trips']);
 
-            $trips = $this->om->createQuery(
+            $trips = $objectManager->createQuery(
                 "
                 SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
                 WHERE t.id IN(:trips)
@@ -260,21 +248,22 @@ class RouteManager extends SortManager
 
             foreach ($trips as $trip) {
                 $trip->setTripCalendar($tripCalendar);
-                $this->om->persist($trip);
+                $objectManager->persist($trip);
             }
 
-            $this->om->flush();
+            $objectManager->flush();
         }
     }
 
     public function updateExportDestinations($route, $exportDestinations)
     {
         $sync = false;
+        $objectManager = $this->getObjectManager();
         foreach ($route->getRouteExportDestinations() as $routeExportDestination) {
             if (!($exportDestinations->contains($routeExportDestination->getExportDestination()))) {
                 $sync = true;
                 $route->removeRouteExportDestination($routeExportDestination);
-                $this->om->remove($routeExportDestination);
+                $objectManager->remove($routeExportDestination);
             }
         }
 
@@ -285,11 +274,11 @@ class RouteManager extends SortManager
                 $routeExportDestination->setRoute($route);
                 $sync = true;
                 $route->addRouteExportDestination($routeExportDestination);
-                $this->om->persist($routeExportDestination);
+                $objectManager->persist($routeExportDestination);
             }
         }
         if ($sync) {
-            $this->om->flush();
+            $objectManager->flush();
         }
     }
 
@@ -312,11 +301,12 @@ class RouteManager extends SortManager
                     $stops[] = $routeStop->getWaypoint()->getStop();
                 }
             }
-            return $this->stopManager->getStopsJson($stops, true);
+
+            return $this->getService('stop')->getStopsJson($stops, true);
         }
         //otherwise, we return a list of stops with their WKT
         else {
-            $connection = $this->om->getConnection()->getWrappedConnection();
+            $connection = $this->ObjectManager()->getConnection()->getWrappedConnection();
 
             $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
                 FROM stop s
@@ -340,7 +330,8 @@ class RouteManager extends SortManager
     // TODO: CHANGE THIS
     public function duplicate($route, $lineVersion, $userName)
     {
-        $query = $this->om->createQuery(
+        $objectManager = $this->getObjectManager();
+        $query = $objectManager->createQuery(
             "
             SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
             WHERE ds.name = ?1
@@ -370,7 +361,7 @@ class RouteManager extends SortManager
             $newRS->setRoute($newRoute);
             $newRS->setRouteSection($rs->getRouteSection());
             $newRS->setWaypoint($rs->getWaypoint());
-            $this->om->persist($newRS);
+            $objectManager->persist($newRS);
 
             $route_stops[$rs->getId()] = $newRS;
         }
@@ -401,7 +392,7 @@ class RouteManager extends SortManager
                 $newST->setRouteStop($route_stops[ $st->getRouteStop()->getId() ]);
                 $newST->setTrip($newTrip);
                 $newTrip->addStopTime($newST);
-                $this->om->persist($newST);
+                $objectManager->persist($newST);
             }
 
             if (!empty($datasource)) {
@@ -409,10 +400,10 @@ class RouteManager extends SortManager
                 $tripDatasource->setDatasource($datasource);
                 $tripDatasource->setTrip($newTrip);
                 $tripDatasource->setCode($userName);
-                $this->om->persist($tripDatasource);
+                $objectManager->persist($tripDatasource);
                 $newTrip->addTripDatasource($tripDatasource);
             }
-            $this->om->persist($newTrip);
+            $objectManager->persist($newTrip);
         }
 
         if (!empty($datasource)) {
@@ -420,10 +411,10 @@ class RouteManager extends SortManager
             $routeDatasource->setDatasource($datasource);
             $routeDatasource->setRoute($newRoute);
             $routeDatasource->setCode($userName);
-            $this->om->persist($routeDatasource);
+            $objectManager->persist($routeDatasource);
             $newRoute->addRouteDatasource($routeDatasource);
         }
-        $this->om->persist($newRoute);
-        $this->om->flush();
+        $objectManager->persist($newRoute);
+        $objectManager->flush();
     }
 }

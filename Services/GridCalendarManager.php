@@ -2,33 +2,11 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\Collection;
-
-use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Entity\GridLinkCalendarMaskType;
 
-class GridCalendarManager extends SortManager
+class GridCalendarManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:GridCalendar');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($gridCalendarId)
-    {
-        return empty($gridCalendarId) ? null : $this->repository->find($gridCalendarId);
-    }
-
     /**
      * findRelatedGridMaskTypes
      *
@@ -42,8 +20,9 @@ class GridCalendarManager extends SortManager
     public function findRelatedGridMaskTypes(Collection $gridCalendars, $lineVersionId)
     {
         $result = array();
+        $objectManager = $this->getObjectManager();
         foreach ($gridCalendars as $gridCalendar) {
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT gmt FROM Tisseo\EndivBundle\Entity\GridMaskType gmt
                 JOIN gmt.gridLinkCalendarMaskTypes glcmt
@@ -65,7 +44,7 @@ class GridCalendarManager extends SortManager
 
             foreach ($gmts as $gmt) {
                 $relatedGridMaskTypes[$cpt] = array($gmt, array());
-                $query = $this->om->createQuery(
+                $query = $objectManager->createQuery(
                     "
                     SELECT tc, count(t) FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                     JOIN tc.trips t
@@ -105,19 +84,21 @@ class GridCalendarManager extends SortManager
      */
     public function attachGridCalendars($data)
     {
-        $gridMaskTypeRepository = $this->om->getRepository('TisseoEndivBundle:GridMaskType');
+        $gmtRepository = $this->getRepository('TisseoEndivBundle:GridMaskType');
+        $objectManager = $this->getObjectManager();
+
         foreach ($data as $gridCalendarId => $gridMaskTypeIds) {
-            $gridCalendar = $this->repository->find($gridCalendarId);
+            $gridCalendar = $this->find($gridCalendarId);
             if (empty($gridMaskTypeIds)) {
                 if (!$gridCalendar->getGridLinkCalendarMaskTypes()->isEmpty()) {
-                    foreach ($gridCalendar->getGridLinkCalendarMaskTypes() as $gridLinkCalendarMaskType) {
-                        $gridCalendar->removeGridLinkCalendarMaskType($gridLinkCalendarMaskType);
+                    foreach ($gridCalendar->getGridLinkCalendarMaskTypes() as $glcmt) {
+                        $gridCalendar->removeGridLinkCalendarMaskType($glcmt);
                     }
-                    $this->om->persist($gridCalendar);
+                    $objectManager->persist($gridCalendar);
                 }
             } else {
                 if ($gridCalendar->updateLinks($gridMaskTypeIds)) {
-                    $this->om->persist($gridCalendar);
+                    $objectManager->persist($gridCalendar);
                 }
 
                 foreach ($gridMaskTypeIds as $gridMaskTypeId) {
@@ -125,13 +106,13 @@ class GridCalendarManager extends SortManager
                         continue;
                     }
 
-                    $gridMaskType = $gridMaskTypeRepository->find($gridMaskTypeId);
-                    $gridLinkCalendarMaskType = new GridLinkCalendarMaskType($gridCalendar, $gridMaskType, true);
-                    $this->om->persist($gridLinkCalendarMaskType);
+                    $gridMaskType = $gmtRepository->find($gridMaskTypeId);
+                    $glcmt = new GridLinkCalendarMaskType($gridCalendar, $gridMaskType, true);
+                    $objectManager->persist($glcmt);
                 }
             }
         }
-        $this->om->flush();
+        $objectManager->flush();
     }
 
     /*
@@ -143,8 +124,9 @@ class GridCalendarManager extends SortManager
     public function findRelatedTrips(Collection $gridCalendars)
     {
         $result = array();
+        $objectManager = $this->getObjectManager();
         foreach ($gridCalendars as $gridCalendar) {
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
                 JOIN t.route r
@@ -163,7 +145,7 @@ class GridCalendarManager extends SortManager
                 $trips[$trip->getId()] = array("trip" => $trip);
             }
 
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT t.id, rs.rank, sh.shortName, st.departureTime FROM Tisseo\EndivBundle\Entity\Trip t
                 JOIN t.stopTimes st
@@ -210,18 +192,5 @@ class GridCalendarManager extends SortManager
         }
 
         return $hours.":".$minutes;
-    }
-
-    /*
-     * save
-     * @param GridCalendar $gridCalendar
-     * @return boolean
-     */
-    public function save(GridCalendar $gridCalendar)
-    {
-        $this->om->persist($gridCalendar);
-        $this->om->flush();
-
-        return true;
     }
 }

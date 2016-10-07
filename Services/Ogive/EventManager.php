@@ -9,7 +9,7 @@ class EventManager extends OgiveManager
     /**
      * Find parent event if exists
      *
-     * @param $disruptionId
+     * @param  $disruptionId
      * @return Event|null
      */
     public function findParentEvent($disruptionId)
@@ -100,5 +100,4 @@ class EventManager extends OgiveManager
 
         return $this->save($event);
     }
-    
 }

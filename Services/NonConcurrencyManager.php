@@ -2,79 +2,37 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\NonConcurrency;
-
-class NonConcurrencyManager extends SortManager
+class NonConcurrencyManager extends AbstractManager
 {
     /**
-     * @var ObjectManager $om
+     * {inheritdoc}
      */
-    private $om = null;
-
-    /**
- * @var \Doctrine\ORM\EntityRepository $repository
-*/
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
+    public function find($nonConcurrencyId)
     {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:NonConcurrency');
+        if ($nonConcurrencyId === null) {
+            return null;
+        }
+
+        $idArray = explode("/", $nonConcurrencyId);
+
+        return $this->findByLines($idArray[0], $idArray[1]);
     }
 
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
 
     /**
-     * @param $priorityLineId, $nonPriorityLineId
+     * Find NonConcurrency rule by lines
+     *
+     * @param  integer $priorityLineId
+     * @param  integer $nonPriorityLineId
      * @return array
      */
-    public function find($priorityLineId, $nonPriorityLineId)
+    protected function findByLines($priorityLineId, $nonPriorityLineId)
     {
-        return $this->repository->findOneBy(
+        return $this->getRepository()->findOneBy(
             array(
             'priorityLine' => $priorityLineId,
             'nonPriorityLine' => $nonPriorityLineId,
             )
         );
-    }
-
-    public function findById($nonConcurrencyId)
-    {
-        if ($nonConcurrencyId === null) {
-            return null;
-        }
-        $idArray = explode("/", $nonConcurrencyId);
-
-        return $this->find($idArray[0], $idArray[1]);
-    }
-
-    /**
-       * delete
-     *
-       * @param NonConcurrency $nonConcurrency
-       *
-       * Delete a NonConcurrency from the database.
-       */
-    public function delete(NonConcurrency $nonConcurrency)
-    {
-        $this->om->remove($nonConcurrency);
-        $this->om->flush();
-    }
-
-    /**
-     * save
-     *
-     * @param NonConcurrency $nonConcurrency
-     *
-     * Persist and save a NonConcurrency into database.
-     */
-    public function save(NonConcurrency $nonConcurrency)
-    {
-        $this->om->persist($nonConcurrency);
-        $this->om->flush();
     }
 }

@@ -26,6 +26,11 @@ abstract class AbstractManager
     protected $serializer;
 
     /**
+     * @var array
+     */
+    protected $services;
+
+    /**
      * Constructor
      *
      * @param ManagerRegistry $managerRegistry
@@ -34,6 +39,7 @@ abstract class AbstractManager
         ManagerRegistry $managerRegistry
     ) {
         $this->managerRegistry = $managerRegistry;
+        $this->services = array();
     }
 
     /**
@@ -44,6 +50,33 @@ abstract class AbstractManager
     public function setClass($class)
     {
         $this->class = $class;
+    }
+
+    /**
+     * Add extra service
+     *
+     * @param $service
+     */
+    public function addService($name, $service)
+    {
+        if (!array_key_exists($name, $this->services)) {
+            $this->services[$name] = $service;
+        }
+    }
+
+    /**
+     * Get a linked service
+     *
+     * @param  string $name
+     * @return object
+     */
+    protected function getService($name)
+    {
+        if (array_key_exists($name, $this->services)) {
+            return $this->services[$name];
+        }
+
+        throw new \Exception(sprintf('The service %s is not accessible from this manager', $name));
     }
 
     /**
@@ -112,16 +145,16 @@ abstract class AbstractManager
     /**
      * Find data with like function
      *
-     * @param  string $property
-     * @param  string $term
-     * @param  integer $identifier
-     * @param  integer $offset
-     * @param  integer $limit
-     * @param  integer $hydratationMode
+     * @param  string|array $property
+     * @param  string       $term
+     * @param  integer      $identifier
+     * @param  integer      $offset
+     * @param  integer      $limit
+     * @param  integer      $hydratationMode
      * @return mixed
      */
     public function findByLike(
-        $property,
+        $properties,
         $term,
         $identifier = null,
         $offset = 0,
@@ -129,7 +162,11 @@ abstract class AbstractManager
         $normalized = false,
         $hydratationMode = Query::HYDRATE_OBJECT
     ) {
-        $query = $this->createLikeQueryBuilder($property, $term, $offset, $limit);
+        if (!is_array($properties)) {
+            $properties = array($properties);
+        }
+
+        $query = $this->createLikeQueryBuilder($properties, $term, $offset, $limit);
 
         if ($identifier !== null) {
             $query->andWhere('o.id != :identifier')->setParameter('identifier', $identifier);
@@ -144,11 +181,11 @@ abstract class AbstractManager
         return $result;
     }
 
-
     /**
      * Encapsulated find
      */
-    public function find($identifier) {
+    public function find($identifier)
+    {
         if (empty($identifier)) {
             return null;
         }
@@ -159,7 +196,8 @@ abstract class AbstractManager
     /**
      * Encapsulated findAll
      */
-    public function findAll() {
+    public function findAll()
+    {
         return $this->getRepository()->findAll();
     }
 
@@ -168,10 +206,6 @@ abstract class AbstractManager
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        if (empty($criteria) || !is_array($criteria)) {
-            return array();
-        }
-
         return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
@@ -186,23 +220,28 @@ abstract class AbstractManager
     /**
      * Create a query with a like statement in it
      *
-     * @param  string $property
-     * @param  string $term
+     * @param  string  $property
+     * @param  string  $term
      * @param  integer $offset
      * @param  integer $limit
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function createLikeQueryBuilder($property, $term, $offset = 0, $limit = 0)
+    protected function createLikeQueryBuilder(array $properties, $term, $offset = 0, $limit = 0)
     {
-        $objectManager = $this->managerRegistry->getManagerForClass($this->class);
-
-        if (!$objectManager->getClassMetadata($this->class)->hasField($property)) {
-            throw new Exception("This property isn't mapped for this entity");
+        if (count($properties) === 0) {
+            throw new Exception("You must add at least one property used in the find like");
         }
 
-        $query = $this->getRepository()->createQueryBuilder('o')
-            ->where(sprintf('unaccent(lower(o.%s)) like unaccent(:term)', $property))
-            ->setParameter('term', '%' . strtolower($term) . '%');
+        $objectManager = $this->managerRegistry->getManagerForClass($this->class);
+
+        $query = $this->getRepository()->createQueryBuilder('o');
+        foreach ($properties as $property) {
+            if (!$objectManager->getClassMetadata($this->class)->hasField($property)) {
+                throw new Exception("This property isn't mapped for this entity");
+            }
+            $query->where(sprintf('unaccent(lower(o.%s)) like unaccent(:term)', $property));
+        }
+        $query->setParameter('term', '%' . strtolower($term) . '%');
 
         if ($offset > 0) {
             $query->setFirstResult($offset);
@@ -235,7 +274,8 @@ abstract class AbstractManager
      * @param  boolean $flush
      * @return $model
      */
-    public function save($model, $flush = true) {
+    public function save($model, $flush = true)
+    {
         $this->_check($model);
 
         return $this->_save($model, $flush);
@@ -314,7 +354,7 @@ abstract class AbstractManager
      *
      * @param $model
      * @param string $accessor
-     * @param array $collection
+     * @param array  $collection
      */
     public function updateCollection($model, $accessor, array $collection)
     {

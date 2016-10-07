@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\Collection;
 use Tisseo\EndivBundle\Entity\Trip;
 use Tisseo\EndivBundle\Entity\TripDatasource;
@@ -11,35 +10,16 @@ use Tisseo\EndivBundle\Entity\LineVersion;
 use Tisseo\EndivBundle\Entity\Comment;
 use Tisseo\EndivBundle\Entity\StopTime;
 
-class TripManager
+class TripManager extends AbstractManager
 {
-    private $om = null;
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:Trip');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($tripId)
-    {
-        return empty($tripId) ? null : $this->repository->find($tripId);
-    }
-
     public function findByName($tripName)
     {
-        return empty($tripName) ? null : $this->repository->findOneBy(array('name'=>$tripName));
+        return empty($tripName) ? null : $this->getRepository()->findOneBy(array('name' => $tripName));
     }
 
     public function findByRoute($routeId)
     {
-        return empty($routeId) ? null : $this->repository->findBy(array('route'=>$routeId));
+        return empty($routeId) ? null : $this->getRepository()->findBy(array('route' => $routeId));
     }
 
     public function getTripTemplates($term, $routeId)
@@ -47,7 +27,7 @@ class TripManager
         $specials = array("-", " ", "'");
         $cleanTerm = str_replace($specials, "_", $term);
 
-        $connection = $this->om->getConnection()->getWrappedConnection();
+        $connection = $this->getObjectManager()->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare(
             "
             SELECT DISTINCT t.id, t.name
@@ -73,7 +53,7 @@ class TripManager
 
     public function hasTrips($id)
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
              SELECT count(t.parent) FROM Tisseo\EndivBundle\Entity\Trip t
              WHERE t.parent = :id
@@ -84,12 +64,6 @@ class TripManager
         $res = $query->getResult();
 
         return $res[0][1] > 0 ? true : false;
-    }
-
-    public function deleteTrip(Trip $trip)
-    {
-        $this->om->remove($trip);
-        $this->om->flush();
     }
 
     /**
@@ -126,21 +100,22 @@ class TripManager
     public function deleteTripsFromRoute(Route $route, array $selectedTrips = array())
     {
         $trips = $route->getTripsHavingParent();
+        $objectManager = $this->getObjectManager();
 
         if (!empty($selectedTrips)) {
             foreach ($selectedTrips as $key => $selectedTripId) {
                 $existingTrip = $this->isTripIdExist($trips, $selectedTripId);
                 if ($existingTrip) {
-                    $this->om->remove($existingTrip);
+                    $objectManager->remove($existingTrip);
                 }
             }
         } else {
             foreach ($trips as $trip) {
-                $this->om->remove($trip);
+                $objectManager->remove($trip);
             }
         }
 
-        $this->om->flush();
+        $objectManager->flush();
 
         $trips = $route->getTripsNotPattern();
 
@@ -148,21 +123,22 @@ class TripManager
             foreach ($selectedTrips as $key => $selectedTripId) {
                 $existingTrip = $this->isTripIdExist($trips, $selectedTripId);
                 if ($existingTrip) {
-                    $this->om->remove($existingTrip);
+                    $objectManager->remove($existingTrip);
                 }
             }
         } else {
             foreach ($trips as $trip) {
-                $this->om->remove($trip);
+                $objectManager->remove($trip);
             }
         }
 
-        $this->om->flush();
+        $objectManager->flush();
     }
 
     public function deleteTrips(LineVersion $lineVersion)
     {
-        $query = $this->om->createQuery(
+        $objectManager = $this->getObjectManager();
+        $query = $objectManager->createQuery(
             "
             SELECT t, MIN(ce.startDate) as min_start_date FROM Tisseo\EndivBundle\Entity\Trip t
             JOIN t.route r
@@ -185,18 +161,18 @@ class TripManager
             if (strnatcmp($trip['min_start_date'], $lineVersion->getEndDate()->format('Y-m-d')) > 0) {
                 $cpt++;
                 foreach ($trip[0]->getStopTimes() as $stopTime) {
-                    $this->om->remove($stopTime);
+                    $objectManager->remove($stopTime);
                 }
-                $this->om->remove($trip[0]);
+                $objectManager->remove($trip[0]);
 
                 if ($cpt % $flushSize == 0) {
-                    $this->om->flush();
+                    $objectManager->flush();
                 }
             } else {
                 break;
             }
         }
-        $this->om->flush();
+        $objectManager->flush();
     }
 
     public function updateComments(array $comments)
@@ -205,17 +181,17 @@ class TripManager
 
         foreach ($comments as $label => $content) {
             if ($content['comment'] === "none" || $label === "none") {
-                $trips = $this->repository->findById($content["trips"]);
+                $trips = $this->getRepository()->findById($content["trips"]);
 
                 foreach ($trips as $trip) {
                     if ($trip->getComment() !== null) {
                         $commentsToDelete[] = $trip->getComment()->getId();
                         $trip->setComment(null);
-                        $this->om->persist($trip);
+                        $objectManager->persist($trip);
                     }
                 }
             } else {
-                $query = $this->om->createQuery(
+                $query = $objectManager->createQuery(
                     "
                     SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
                     WHERE c.label = ?1
@@ -231,19 +207,19 @@ class TripManager
                     $comment = $result[0];
                 }
 
-                $trips = $this->repository->findById($content["trips"]);
+                $trips = $this->getRepository()->findById($content["trips"]);
                 foreach ($trips as $trip) {
                     $comment->addTrip($trip);
                 }
 
-                $this->om->persist($comment);
+                $objectManager->persist($comment);
             }
         }
-        $this->om->flush();
+        $objectManager->flush();
 
         if (count($commentsToDelete) > 0) {
             $commentsToDelete = array_unique($commentsToDelete);
-            $query = $this->om->createQuery(
+            $query = $objectManager->createQuery(
                 "
                 SELECT c FROM Tisseo\EndivBundle\Entity\Comment c
                 WHERE c.id IN (?1)
@@ -254,28 +230,12 @@ class TripManager
 
             foreach ($comments as $comment) {
                 if ($comment->getTrips()->isEmpty()) {
-                    $this->om->remove($comment);
+                    $objectManager->remove($comment);
                 }
             }
-            $this->om->flush();
+            $objectManager->flush();
         }
     }
-
-    public function save(Trip $trip)
-    {
-        $this->om->persist($trip);
-        $this->om->flush();
-    }
-
-    public function remove(Trip $trip)
-    {
-        $this->om->remove($trip);
-        $this->om->flush();
-    }
-
-    /**
-     * VERIFIED USEFUL FUNCTIONS
-     */
 
     /**
      * Update Trip patterns
@@ -290,6 +250,7 @@ class TripManager
     public function updateTripPatterns($tripPatterns, Route $route, TripDatasource $tripDatasource)
     {
         $sync = false;
+        $objectManager = $this->getObjectManager();
 
         // Checking data first
         foreach ($tripPatterns as $tripPattern) {
@@ -316,7 +277,7 @@ class TripManager
             if (empty($existing)) {
                 if (!$this->patternIsUsed($tripPattern->getId())) {
                     $sync = true;
-                    $this->om->remove($tripPattern);
+                    $objectManager->remove($tripPattern);
                 } else {
                     throw new \Exception("Can't remove trip pattern with id: ".$tripPattern->getId()." because it is used by other trips");
                 }
@@ -338,7 +299,7 @@ class TripManager
                 $newTripDatasource = clone $tripDatasource;
                 $trip->addTripDatasource($newTripDatasource);
 
-                $this->om->persist($trip);
+                $objectManager->persist($trip);
             } else {
                 $trip = $route->getTrip($tripPattern['id']);
                 // updating trip name if different
@@ -366,7 +327,7 @@ class TripManager
                     $stopTime->setDepartureTime($totalTime);
                     $stopTime->setArrivalTime($arrivalTime);
 
-                    $this->om->persist($stopTime);
+                    $objectManager->persist($stopTime);
                 } else {
                     $stopTime = $routeStops[$key]->getStopTime($jsonStopTime['id']);
                     if ($stopTime->getDepartureTime() !== $totalTime || $stopTime->getArrivalTime() !== $arrivalTime) {
@@ -374,14 +335,14 @@ class TripManager
                         $stopTime->setDepartureTime($totalTime);
                         $stopTime->setArrivalTime($arrivalTime);
 
-                        $this->om->merge($stopTime);
+                        $objectManager->merge($stopTime);
                     }
                 }
             }
         }
 
         if ($sync) {
-            $this->om->flush();
+            $objectManager->flush();
         }
     }
 
@@ -395,7 +356,7 @@ class TripManager
      */
     public function patternIsUsed($tripPattern)
     {
-        $result = $this->repository->createQueryBuilder('t')
+        $result = $this->getRepository()->createQueryBuilder('t')
             ->select('count(t)')
             ->where('t.pattern = :pattern')
             ->setParameter('pattern', $tripPattern)
@@ -407,7 +368,7 @@ class TripManager
 
     public function getDateBounds(Route $route)
     {
-        $connection = $this->om->getConnection()->getWrappedConnection();
+        $connection = $this->getObjectManager()->getConnection()->getWrappedConnection();
 
         $stmt = $connection->prepare(
             "
@@ -447,6 +408,8 @@ class TripManager
             throw new \Exception('StopTimes are empty, please provide at least one row');
         }
 
+        $objectManager = $this->getObjectManager();
+
         foreach ($stopTimes as $stopTime) {
             if (empty($stopTime['begin'])) {
                 throw new \Exception('Start StopTime field is empty');
@@ -478,7 +441,7 @@ class TripManager
                 $newTrip->addTripDatasource($newTripDatasource);
 
                 $this->createStopTimes($newTrip, $beginTime);
-                $this->om->persist($newTrip);
+                $objectManager->persist($newTrip);
             } else {
                 $endTimings = explode(":", $jsonStopTime['end']);
                 $endTime = $endTimings[0]*3600 + $endTimings[1]*60;
@@ -502,13 +465,13 @@ class TripManager
 
                     $this->createStopTimes($newTrip, $beginTime);
 
-                    $this->om->persist($newTrip);
+                    $objectManager->persist($newTrip);
                     $beginTime += $jsonStopTime['frequency']*60;
                 }
             }
         }
 
-        $this->om->flush();
+        $objectManager->flush();
     }
 
     private function createStopTimes(Trip $trip, $time)

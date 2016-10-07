@@ -2,78 +2,42 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\LineGroupGis;
 
-class LineGroupGisManager extends SortManager
+class LineGroupGisManager extends AbstractManager
 {
     /**
-     * @var ObjectManager $om
-     */
-    private $om = null;
-
-    /**
- * @var \Doctrine\ORM\EntityRepository $repository
-*/
-    private $repository = null;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->repository = $om->getRepository('TisseoEndivBundle:LineGroupGis');
-    }
-
-    public function findAll()
-    {
-        return ($this->repository->findAll());
-    }
-
-    public function find($lineGroupGisId)
-    {
-        return empty($lineGroupGisId) ? null : $this->repository->find($lineGroupGisId);
-    }
-
-    /**
-     * save
+     * Save a LineGroupGis
      *
-     * @param  LineGroupGis $lineGroupGis
-     * @return array(boolean, string message, LineGroupGis)
-     *
-     * Persist and save a LineGroupGis into database.
+     * @param LineGroupGis $lineGroupGis
      */
     public function save(LineGroupGis $lineGroupGis)
     {
+        $objectManager = $this->getObjectManager();
         $lineGroupGisContents = clone $lineGroupGis->getLineGroupGisContents();
 
         if ($lineGroupGis->getId() === null) {
             $lineGroupGis->clearLineGroupGisContents();
-            $this->om->persist($lineGroupGis);
+            $objectManager->persist($lineGroupGis);
         }
 
         foreach ($lineGroupGisContents as $lineGroupGisContent) {
             $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-            $this->om->persist($lineGroupGisContent);
+            $objectManager->persist($lineGroupGisContent);
         }
 
-        $this->om->persist($lineGroupGis);
-        $this->om->flush();
+        $objectManager->persist($lineGroupGis);
+        $objectManager->flush();
     }
 
     /**
-     * @param LineGroupGis $lineGroupGis
-     * @return array(boolean, string message)
+     * Get specific data for an export
      *
-     * Remove LineGroupGis into database
+     * @return array
      */
-    public function remove(LineGroupGis $lineGroupGis)
-    {
-        $this->om->remove($lineGroupGis);
-        $this->om->flush();
-    }
-
     public function getCsvExport()
     {
-        $query = $this->om->createQuery(
+        $query = $this->getObjectManager()->createQuery(
             "
             SELECT
                 DISTINCT lgg.name as line_group_gis_name,
