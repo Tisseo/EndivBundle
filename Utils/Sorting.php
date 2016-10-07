@@ -10,15 +10,51 @@ class Sorting
     const SPLIT_LINE = 'line';
     const SPLIT_LINE_VERSION = 'line_version';
 
+    /**
+     * @var static array
+     */
     private static $splitModes = array(
         self::SPLIT_LINE,
         self::SPLIT_LINE_VERSION
     );
 
+    const SORT_LINES_BY_STATUS = 0;
+    const SORT_LINES_BY_NUMBER = 1;
+    const SORT_LINE_VERSIONS_BY_NUMBER = 2;
+
+    /**
+     * Use the sort function linked to the mode
+     *
+     * @param  Doctrine\Common\Collections\Collection $data
+     * @param  integer                                $mode
+     * @return Doctrine\Common\Collections\Collection
+     */
+
+    public static function sortByMode($data, $mode)
+    {
+        if ($mode === null) {
+            return $data;
+        }
+
+        switch ($mode) {
+        case self::SORT_LINES_BY_NUMBER:
+            return self::sortLinesByNumber($data);
+                break;
+        case self::SORT_LINES_BY_STATUS:
+            return self::sortLinesByStatus($data);
+                break;
+        case self::SORT_LINE_VERSIONS_BY_NUMBER:
+            return self::sortLineVersionsByNumber($data);
+                break;
+        default:
+            throw new \Exception("Can't sort because of unknown mode");
+        }
+    }
+
     public static function sortLineVersionsByNumber($lineVersions)
     {
         usort(
-            $lineVersions, function(LineVersion $val1, LineVersion $val2) {
+            $lineVersions, function (LineVersion $val1, LineVersion $val2) {
                 $line1 = $val1->getLine();
                 $line2 = $val2->getLine();
                 if ($line1->getPriority() == $line2->getPriority()) {
@@ -43,7 +79,7 @@ class Sorting
     public static function sortLinesByNumber($lines)
     {
         usort(
-            $lines, function($val1, $val2) {
+            $lines, function (Line $val1, Line $val2) {
                 if ($val1->getPriority() == $val2->getPriority()) {
                     return strnatcmp($val1->getNumber(), $val2->getNumber());
                 }
@@ -108,7 +144,7 @@ class Sorting
         foreach ($data as $object) {
             if ($type === self::SPLIT_LINE_VERSION) {
                 $modes[$object->getLine()->getPhysicalMode()->getName()][] = $object;
-            } else if ($type === self::SPLIT_LINE) {
+            } elseif ($type === self::SPLIT_LINE) {
                 $modes[$object->getPhysicalMode()->getName()][] = $object;
             }
         }
