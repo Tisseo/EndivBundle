@@ -614,7 +614,7 @@ class Route extends ObjectDatasource
      *
      * Getting the terminus stop area
      */
-    
+
     public function getTerminus()
     {
         return $this->getRouteStops()->last()->getWaypoint()->getStop()->getStopArea();

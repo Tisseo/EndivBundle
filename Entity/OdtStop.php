@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-
 /**
  * OdtStop
  */

@@ -98,7 +98,8 @@ class EventStep extends OgiveEntity
 
     /**
      * Set id
-     * @param $id
+     *
+     * @param  $id
      * @return $this
      */
     public function setId($id)
@@ -401,15 +402,15 @@ class EventStep extends OgiveEntity
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('type', $type))
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $texts = $this->texts->matching($criteria);
 
-        if (!$texts->isEmpty())
+        if (!$texts->isEmpty()) {
             return $texts->first();
-        else
+        } else {
             return '';
+        }
     }
 
     /**

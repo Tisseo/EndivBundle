@@ -26,7 +26,7 @@ class LogSubscriber implements EventSubscriber
 
     /**
      * @param TokenStorageInterace $token
-     * @param RequestStack $requestStack
+     * @param RequestStack         $requestStack
      */
     public function __construct(
         TokenStorageInterface $token,
