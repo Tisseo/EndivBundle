@@ -7,7 +7,7 @@ class TextType
     const GENERIC = 0;
     const OBJECT = 1;
     const CONTENT = 2;
-    const SUBTITLE = 3;
+    const ATTACHEMENT = 3;
 
     /** 
      * @var static array
@@ -17,6 +17,6 @@ class TextType
         self::GENERIC,
         self::OBJECT,
         self::CONTENT,
-        self::SUBTITLE
+        self::ATTACHEMENT
     );
 }
