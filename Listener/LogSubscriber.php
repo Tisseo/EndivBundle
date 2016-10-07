@@ -93,11 +93,10 @@ class LogSubscriber implements EventSubscriber
     }
 
     /**
-     * Log
+     * Writing log for each detected action in database
      *
      * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
-     *
-     * Writing log for each detected action in database.
+     * @param string $action
      */
     private function log(LifeCycleEventArgs $args, $action)
     {
