@@ -4,7 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Tisseo\EndivBundle\Entity\OdtArea;
 
-class OdtAreaManager extends SortManager
+class OdtAreaManager extends AbstractManager
 {
     /**
      * {inheritdoc}

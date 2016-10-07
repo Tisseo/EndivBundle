@@ -4,7 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Tisseo\EndivBundle\Entity\StopTime;
 
-class StopTimeManager extends SortManager
+class StopTimeManager extends AbstractManager
 {
     //TODO: This function may be improved
     public function save(StopTime $Stop)
