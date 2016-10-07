@@ -10,7 +10,7 @@ use Tisseo\EndivBundle\Entity\Ogive\Board;
 /**
  * Line
  */
-class Line extends ObjectDatasource
+class Line extends Datasourced
 {
     /**
      * @var integer
@@ -50,7 +50,7 @@ class Line extends ObjectDatasource
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $lineGroupGisContents;
+    private $lineGroupGis;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -70,7 +70,7 @@ class Line extends ObjectDatasource
         $this->lineDatasources = new ArrayCollection();
         $this->lineVersions = new ArrayCollection();
         $this->schematics = new ArrayCollection();
-        $this->lineGroupGisContents = new ArrayCollection();
+        $this->lineGroupGis = new ArrayCollection();
         $this->boards = new ArrayCollection();
         $this->lineStatuses = new ArrayCollection();
     }
@@ -373,36 +373,36 @@ class Line extends ObjectDatasource
     }
 
     /**
-     * Add lineGroupGisContents
+     * Add lineGroupGis
      *
-     * @param  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
      * @return Line
      */
-    public function addLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
+    public function addLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis)
     {
-        $this->lineGroupGisContents[] = $lineGroupGisContents;
+        $this->lineGroupGis[] = $lineGroupGis;
 
         return $this;
     }
 
     /**
-     * Remove lineGroupGisContents
+     * Remove lineGroupGis
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @param \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
      */
-    public function removeLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
+    public function removeLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis)
     {
-        $this->lineGroupGisContents->removeElement($lineGroupGisContents);
+        $this->lineGroupGis->removeElement($lineGroupGis);
     }
 
     /**
-     * Get lineGroupGisContents
+     * Get lineGroupGis
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getLineGroupGisContents()
+    public function getLineGroupGis()
     {
-        return $this->lineGroupGisContents;
+        return $this->lineGroupGis;
     }
 
     /**

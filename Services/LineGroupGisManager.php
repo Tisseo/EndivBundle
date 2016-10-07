@@ -7,27 +7,22 @@ use Tisseo\EndivBundle\Entity\LineGroupGis;
 class LineGroupGisManager extends AbstractManager
 {
     /**
-     * Save a LineGroupGis
-     *
-     * @param LineGroupGis $lineGroupGis
+     * Find All with more data
      */
-    public function save(LineGroupGis $lineGroupGis)
+    public function findAll()
     {
-        $objectManager = $this->getObjectManager();
-        $lineGroupGisContents = clone $lineGroupGis->getLineGroupGisContents();
+        $query = $this->getRepository()->createQueryBuilder('lgg')
+            ->leftJoin('lgg.printings', 'p')
+            ->leftjoin('lgg.lines', 'l')
+            ->leftJoin('l.schematics', 's')
+            ->leftJoin('l.lineVersions', 'lv')
+            ->leftJoin('l.lineVersions', 'lv2')
+            ->groupBy('lgg.id, p.id, l.id, s.id, lv.id')
+            ->having('lv.version = max(lv2.version)')
+            ->addSelect('p, l, s, lv')
+            ->getQuery();
 
-        if ($lineGroupGis->getId() === null) {
-            $lineGroupGis->clearLineGroupGisContents();
-            $objectManager->persist($lineGroupGis);
-        }
-
-        foreach ($lineGroupGisContents as $lineGroupGisContent) {
-            $lineGroupGisContent->setLineGroupGis($lineGroupGis);
-            $objectManager->persist($lineGroupGisContent);
-        }
-
-        $objectManager->persist($lineGroupGis);
-        $objectManager->flush();
+        return $query->getResult();
     }
 
     /**
@@ -51,8 +46,7 @@ class LineGroupGisManager extends AbstractManager
             FROM Tisseo\EndivBundle\Entity\Line l
             JOIN l.lineVersions lv
             LEFT JOIN lv.depot d
-            JOIN l.lineGroupGisContents lggc
-            JOIN lggc.lineGroupGis lgg
+            JOIN l.lineGroupGis lgg
             JOIN l.schematics s1 WITH s1.line = l AND s1.date = (
                 SELECT max(subs1.date) FROM Tisseo\EndivBundle\Entity\Schematic subs1
                 WHERE subs1.line = l AND subs1.deprecated != true AND subs1.groupGis = true

@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 /**
  * Trip
  */
-class Trip extends ObjectDatasource
+class Trip extends Datasourced
 {
     /**
      * @var integer

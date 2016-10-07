@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 /**
  * Calendar
  */
-class Calendar extends ObjectDatasource
+class Calendar extends Datasourced
 {
     const CALENDAR_TYPE_HYBRID = 'mixte';
     const CALENDAR_TYPE_PERIOD = 'periode';

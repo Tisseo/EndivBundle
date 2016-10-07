@@ -7,21 +7,38 @@ use Tisseo\EndivBundle\Utils\Sorting;
 class LineManager extends AbstractManager
 {
     /**
-     * Find lines by datasource and sort them
+     * Find lines and their LineVersions using Datasources as filter
+     * Only lines having current/future LineVersions will be fetch
      *
-     * @param  integer $datasourceId
-     * @param  integer $sort
-     * @return Doctrine\Common\Collections\Collection;
+     * @param array $datasources
+     * @param integer $sort
      */
-    public function findByDataSource($dataSourceId, $sort = null)
+    public function findImportable(array $datasources, $sort = null)
     {
-        $query = $this->getRepository()->createQueryBuilder('l')
-            ->innerJoin('l.lineDatasources', 'lds')
-            ->innerJoin('lds.datasource', 'ds')
-            ->where('ds.id = :datasourceId')
-            ->setParameter('datasourceId', $dataSourceId);
+        // ensure lower comparison
+        $datasources = array_map(
+            function ($datasource) {
+                return strtolower($datasource);
+            },
+            $datasources
+        );
 
-        $result = $query->getQuery()->getResult();
+        $query = $this->getRepository()->createQueryBuilder('l')
+            ->orderBy('l.priority', 'ASC')
+            ->join('l.lineDatasources', 'lds')
+            ->join('lds.datasource', 'da')
+            ->join('l.lineVersions', 'lv')
+            ->join('lv.depot', 'd')
+            ->join('lv.fgColor', 'fg')
+            ->join('lv.bgColor', 'bg')
+            ->leftJoin('l.lineStatuses', 'ls')
+            ->addSelect('lv, fg, bg, ls, lds, d')
+            ->where('lower(da.name) IN (:datasources)')
+            ->andWhere('lv.endDate IS NULL OR lv.endDate > CURRENT_DATE()')
+            ->setParameter('datasources', $datasources)
+            ->getQuery();
+
+        $result = $query->getResult();
 
         if ($sort === null) {
             return $result;
@@ -30,19 +47,27 @@ class LineManager extends AbstractManager
         return Sorting::sortByMode($result, $sort);
     }
 
-    public function findExistingNumber($number, $identifier)
+    /**
+     * Find a line
+     *
+     * @param  integer $identifier
+     * @return Tisseo\EndivBundle\Entity\Line
+     */
+    public function find($identifier)
     {
         $query = $this->getRepository()->createQueryBuilder('l')
-            ->where('l.number = :number AND l.id != :id')
-            ->setParameter('number', $number)
-            ->setParameter('id', $identifier)
+            ->join('l.physicalMode', 'p')
+            ->join('l.lineDatasources', 'ld')
+            ->addSelect('p, ld')
+            ->where('l.id = :identifier')
+            ->setParameter('identifier', $identifier)
             ->getQuery();
 
-        return $query->getResult();
+        return $query->getOneOrNullResult();
     }
 
     /**
-     * Find all lines sorted by priority
+     * Find all lines sorted by number/priority
      * Add current or last LineVersion if it exists in order to get the colors and more
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -63,13 +88,14 @@ class LineManager extends AbstractManager
                 (lv.plannedEndDate < CURRENT_DATE() AND lv.version = max(lv2.version)) OR
                 lv is NULL'
             )
-            ->addSelect('lv, fg, bg, p');
+            ->addSelect('lv, fg, bg, p')
+            ->getQuery();
 
-        return Sorting::sortLinesByNumber($query->getQuery()->getResult());
+        return Sorting::sortLinesByNumber($query->getResult());
     }
 
     /**
-     * Find all lines sorted by priority
+     * Find all lines sorted by number/priority
      * Join past LineVersions
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -78,10 +104,9 @@ class LineManager extends AbstractManager
     {
         $query = $this->getRepository()->createQueryBuilder('l')
             ->join('l.physicalMode', 'p')
-            ->orderBy('l.priority', 'ASC')
-            ->leftJoin('l.lineVersions', 'lv')
-            ->leftJoin('lv.fgColor', 'fg')
-            ->leftJoin('lv.bgColor', 'bg')
+            ->join('l.lineVersions', 'lv')
+            ->join('lv.fgColor', 'fg')
+            ->join('lv.bgColor', 'bg')
             ->groupBy('l.id, p.id, lv.id, fg.id, bg.id')
             ->having(
                 '
@@ -89,32 +114,46 @@ class LineManager extends AbstractManager
                 (lv.plannedEndDate < CURRENT_DATE()) OR
                 lv is NULL'
             )
+            ->orderBy('l.priority', 'ASC')
             ->addSelect('lv, fg, bg, p')
-            ->addOrderBy('lv.version', 'DESC');
+            ->addOrderBy('lv.version', 'DESC')
+            ->getQuery();
 
-        return Sorting::sortLinesByNumber($query->getQuery()->getResult());
+        return Sorting::sortLinesByNumber($query->getResult());
     }
 
-    public function findAllLinesWithSchematic($splitByPhysicalMode = false)
+    /**
+     * Find all lines with their schematics
+     *
+     * @param  boolean $mode
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function findAllWithSchematic($mode = false)
     {
         $query = $this->getRepository()->createQueryBuilder('l')
+            ->join('l.lineVersions', 'lv')
+            ->join('lv.fgColor', 'fg')
+            ->join('lv.bgColor', 'bg')
+            ->join('l.physicalMode', 'p')
             ->leftJoin('l.schematics', 'sc')
             ->leftJoin('l.lineGroupGisContents', 'lgc')
+            ->leftJoin('lgc.lineGroupGis', 'lgg')
             ->orderBy('l.physicalMode')
+            ->addSelect('lv, p, fg, bg, sc, lgc, lgg')
             ->getQuery();
 
         $result = Sorting::sortLinesByNumber($query->getResult());
 
-        if ($splitByPhysicalMode) {
-            $query = $this->getObjectManager()
-                ->getRepository('Tisseo\EndivBundle\Entity\PhysicalMode')
-                ->createQueryBuilder('p')
-                ->select('p.name')
-                ->getQuery();
+        if ($mode === true) {
+            $modes = $this->getRepository('TisseoEndivBundle:PhysicalMode')->createQueryBuilder('p')
+                ->select('p.name')->getQuery()->getScalarResult();
+            $modes = array_map('current', $modes);
+            $modeNames = array();
+            foreach ($modes as $mode) {
+                $modeNames[$mode] = array();
+            }
 
-            $physicalModes = $query->getResult();
-
-            $result = Sorting::splitByPhysicalMode($result, $physicalModes);
+            $result = Sorting::splitByPhysicalMode($result, Sorting::SPLIT_LINE, $modeNames);
         }
 
         return $result;

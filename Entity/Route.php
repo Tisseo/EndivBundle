@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 /**
  * Route
  */
-class Route extends ObjectDatasource
+class Route extends Datasourced
 {
     const WAY_FORWARD = 'Aller';
     const WAY_BACKWARD = 'Retour';

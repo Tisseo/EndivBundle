@@ -10,7 +10,7 @@ use Tisseo\EndivBundle\Entity\AccessibilityMode;
 /**
  * Stop
  */
-class Stop extends ObjectDatasource
+class Stop extends Datasourced
 {
     /**
      * @var integer

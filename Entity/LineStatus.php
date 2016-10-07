@@ -7,6 +7,10 @@ namespace Tisseo\EndivBundle\Entity;
  */
 class LineStatus
 {
+    const VALIDATED = 1;
+    const IMPORTED = 2;
+    const SUSPENDED = 3;
+
     /**
      * @var integer
      */

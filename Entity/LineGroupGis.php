@@ -33,7 +33,7 @@ class LineGroupGis
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    private $lineGroupGisContents;
+    private $lines;
 
     /**
      * @var Collection
@@ -45,7 +45,7 @@ class LineGroupGis
      */
     public function __construct()
     {
-        $this->lineGroupGisContents = new ArrayCollection();
+        $this->lines = new ArrayCollection();
         $this->printings = new ArrayCollection();
     }
 
@@ -83,46 +83,46 @@ class LineGroupGis
     }
 
     /**
-     * Add lineGroupGisContents
+     * Add line
      *
-     * @param  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @param  \Tisseo\EndivBundle\Entity\Line $line
      * @return LineGroupGis
      */
-    public function addLineGroupGisContent(LineGroupGisContent $lineGroupGisContents)
+    public function addLine(Line $line)
     {
-        $this->setLineGroupGisContents($lineGroupGisContents);
-        $this->lineGroupGisContents[] = $lineGroupGisContents;
+        $this->lines->add($line);
+        
         return $this;
     }
 
     /**
-     * Remove lineGroupGisContents
+     * Remove line
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     * @param \Tisseo\EndivBundle\Entity\Line $line
      */
-    public function removeLineGroupGisContent(LineGroupGisContent $lineGroupGisContents)
+    public function removeLine(Line $line)
     {
-        $this->lineGroupGisContents->removeElement($lineGroupGisContents);
+        $this->lines->removeElement($line);
     }
 
     /**
-     * Get lineGroupGisContents
+     * Get lines
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getLineGroupGisContents()
+    public function getLines()
     {
-        return $this->lineGroupGisContents;
+        return $this->lines;
     }
 
-    public function setLineGroupGisContents(LineGroupGisContent $lineGroupGisContent)
+    public function setLines(Collection $lines)
     {
-        $lineGroupGisContent->setLineGroupGis($this);
+        $this->lines = $lines;
     }
 
-    public function clearLineGroupGisContents()
+    public function clearLines()
     {
-        $this->lineGroupGisContents->clear();
+        $this->lines->clear();
     }
 
     /**
@@ -172,20 +172,18 @@ class LineGroupGis
     }
 
     /**
-     * getTotalPrintings
+     * Calculating the total amount of printings (i.e. printing.quantity)
      *
      * @return integer
-     *
-     * Return the total amount of printings (i.e. printing.quantity)
      */
     public function getTotalPrintings()
     {
-        $printings = 0;
+        $amount = 0;
         foreach ($this->printings as $printing) {
-            $printings += $printing->getQuantity();
+            $amount += $printing->getQuantity();
         }
 
-        return $printings;
+        return $amount;
     }
 
     /**

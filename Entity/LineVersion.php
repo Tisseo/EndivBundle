@@ -9,7 +9,7 @@ use Tisseo\EndivBundle\Entity\Route;
 /**
  * LineVersion
  */
-class LineVersion extends ObjectDatasource
+class LineVersion extends Datasourced
 {
     const NW = "new";
     const PB = "published";

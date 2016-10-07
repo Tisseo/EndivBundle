@@ -2,7 +2,7 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-abstract class ObjectDatasource
+abstract class Datasourced
 {
     public function linkNewDatasource()
     {

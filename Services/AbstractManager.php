@@ -5,8 +5,7 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
 use JMS\Serializer\Serializer;
-use Traversable;
-use Exception;
+use Tisseo\EndivBundle\Entity\Datasourced;
 
 abstract class AbstractManager
 {
@@ -40,6 +39,20 @@ abstract class AbstractManager
     ) {
         $this->managerRegistry = $managerRegistry;
         $this->services = array();
+    }
+
+    /**
+     * Create the managed entity
+     */
+    public function create()
+    {
+        $model = new $this->class();
+
+        if ($model instanceof Datasourced) {
+            $model->linkNewDatasource();
+        }
+
+        return $model;
     }
 
     /**
@@ -125,7 +138,7 @@ abstract class AbstractManager
             return $this->serializer;
         }
 
-        throw new Exception("Serializer not instanciated in this manager");
+        throw new \Exception("Serializer not instanciated in this manager");
     }
 
     /**
@@ -137,7 +150,7 @@ abstract class AbstractManager
     {
         try {
             return $this->getSerializer() instanceof Serializer;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -229,7 +242,7 @@ abstract class AbstractManager
     protected function createLikeQueryBuilder(array $properties, $term, $offset = 0, $limit = 0)
     {
         if (count($properties) === 0) {
-            throw new Exception("You must add at least one property used in the find like");
+            throw new \Exception("You must add at least one property used in the find like");
         }
 
         $objectManager = $this->managerRegistry->getManagerForClass($this->class);
@@ -237,7 +250,7 @@ abstract class AbstractManager
         $query = $this->getRepository()->createQueryBuilder('o');
         foreach ($properties as $property) {
             if (!$objectManager->getClassMetadata($this->class)->hasField($property)) {
-                throw new Exception("This property isn't mapped for this entity");
+                throw new \Exception("This property isn't mapped for this entity");
             }
             $query->where(sprintf('unaccent(lower(o.%s)) like unaccent(:term)', $property));
         }
@@ -263,7 +276,7 @@ abstract class AbstractManager
     protected function _check($model)
     {
         if (get_class($model) !== $this->class) {
-            throw new Exception(sprintf("The entity %s can't be managed by this manager", get_class($model)));
+            throw new \Exception(sprintf("The entity %s can't be managed by this manager", get_class($model)));
         }
     }
 
@@ -318,7 +331,7 @@ abstract class AbstractManager
         }
 
         if (empty($model)) {
-            throw new Exception("Entity not found");
+            throw new \Exception("Entity not found");
         }
 
         $this->_remove($model, $flush);
@@ -385,13 +398,13 @@ abstract class AbstractManager
     {
         if (get_class($data) === $this->class) {
             $result = $this->_normalize($data);
-        } elseif (is_array($data) || $data instanceof Traversable) {
+        } elseif (is_array($data) || $data instanceof \Traversable) {
             $result = array();
             foreach ($data as $model) {
                 $result[] = $this->_normalize($model);
             }
         } else {
-            throw new Exception("Can't normalize unrecognized data type");
+            throw new \Exception("Can't normalize unrecognized data type");
         }
 
         return $result;

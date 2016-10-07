@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * StopArea
  */
-class StopArea extends ObjectDatasource
+class StopArea extends Datasourced
 {
     /**
      * @var integer
