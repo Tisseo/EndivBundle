@@ -1,6 +1,6 @@
 <?php
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-class LinkEventStepStatusManager extends OgiveManager
+class EventStepStatusManager extends OgiveManager
 {
 }

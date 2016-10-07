@@ -2,7 +2,7 @@
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Tisseo\EndivBundle\Entity\Ogive\Event;
-use Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus;
+use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
 
 class EventManager extends OgiveManager
 {
@@ -73,11 +73,11 @@ class EventManager extends OgiveManager
             if ($eventClosed) {
                 $eventStepStatus = $eventStep->getLastStatus();
 
-                if ($eventStepStatus->getStatus() == LinkEventStepStatus::STATUS_TODO) {
+                if ($eventStepStatus->getStatus() == EventStepStatus::STATUS_TODO) {
                     $eventStepStatus->setLogin($login);
                     $eventStepStatus->setdateTime(new \DateTime());
                     $eventStepStatus->setUserComment($message);
-                    $eventStepStatus->setStatus(LinkEventStepStatus::STATUS_REJECTED);
+                    $eventStepStatus->setStatus(EventStepStatus::STATUS_REJECTED);
 
                     $eventStep->addStatus($eventStepStatus);
                 }
