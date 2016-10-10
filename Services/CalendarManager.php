@@ -53,31 +53,28 @@ class CalendarManager extends AbstractManager
     }
 
     /**
-     * @param string $term
-     * @param mixed  $calendarType
-     * @param int    $limit
-     * @param int    $lineVersionId
-     *
      * Find calendars by name with optionnaly passed type and lineVersionId
+     *
+     * @param  string $term
+     * @param  array  $calendarTypes
+     * @param  int    $lineVersionId
+     * @param  int    $limit
+     * @param  int    $offset
+     * @return array
      */
-    public function findCalendarsLike($term, $calendarType = array(), $limit = 0, $lineVersionId = null)
+    public function findCalendarsLike($term, $calendarTypes = array(), $lineVersionId = null, $offset = 0, $limit = 0)
     {
-        $query = $this->getRepository()->createQueryBuilder('c')
-            ->select('c.name, c.id')
-            ->where('UPPER(unaccent(c.name)) LIKE UPPER(unaccent(:term))')
-            ->setParameter('term', '%'.$term.'%');
+        $query = $this->createLikeQueryBuilder(array('name'), $term, $offset, $limit);
 
-        if (count($calendarType) > 0) {
-            $query->andWhere('c.calendarType IN (:type)');
-            $query->setParameter('type', $calendarType);
+        $query->select('o.name, o.id');
+
+        if (count($calendarTypes) > 0) {
+            $query->andWhere('o.calendarType IN (:type)');
+            $query->setParameter('type', $calendarTypes);
         }
 
         if ($lineVersionId !== null) {
-            $query->andWhere('c.lineVersion = :lvid')->setParameter('lvid', $lineVersionId);
-        }
-
-        if ($limit > 0) {
-            $query->setMaxResults($limit);
+            $query->andWhere('o.lineVersion = :lvid')->setParameter('lvid', $lineVersionId);
         }
 
         return $query->getQuery()->getScalarResult();

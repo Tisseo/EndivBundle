@@ -78,7 +78,7 @@ class LineVersionManager extends AbstractManager
      * Find LineVersions considered as active according to the current
      * date passed as parameter.
      */
-    public function findActiveLineVersions($mode = false)
+    public function findActiveLineVersions($mode = false, $datasources = false)
     {
         $query = $this->getRepository()->createQueryBuilder('lv')
             ->select('lv')
@@ -89,6 +89,13 @@ class LineVersionManager extends AbstractManager
             ->join('lv.bgColor', 'bg')
             ->leftJoin('lv.printings', 'pr')
             ->addSelect('l, p, fg, bg, pr');
+
+        if ($datasources === true) {
+            $query
+                ->join('l.lineDatasources', 'ld')
+                ->join('ld.datasource', 'd')
+                ->addSelect('ld, d');
+        }
 
         $result = Sorting::sortLineVersionsByNumber($query->getQuery()->getResult());
 

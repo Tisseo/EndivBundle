@@ -252,7 +252,7 @@ abstract class AbstractManager
             if (!$objectManager->getClassMetadata($this->class)->hasField($property)) {
                 throw new \Exception("This property isn't mapped for this entity");
             }
-            $query->where(sprintf('unaccent(lower(o.%s)) like unaccent(:term)', $property));
+            $query->orWhere(sprintf('unaccent(lower(o.%s)) like unaccent(:term)', $property));
         }
         $query->setParameter('term', '%' . strtolower($term) . '%');
 
