@@ -50,7 +50,7 @@ class Line extends Datasourced
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $lineGroupGis;
+    private $lineGroupGisContents;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -70,7 +70,7 @@ class Line extends Datasourced
         $this->lineDatasources = new ArrayCollection();
         $this->lineVersions = new ArrayCollection();
         $this->schematics = new ArrayCollection();
-        $this->lineGroupGis = new ArrayCollection();
+        $this->lineGroupGisContents = new ArrayCollection();
         $this->boards = new ArrayCollection();
         $this->lineStatuses = new ArrayCollection();
     }
@@ -373,36 +373,36 @@ class Line extends Datasourced
     }
 
     /**
-     * Add lineGroupGis
+     * Add lineGroupGisContents
      *
-     * @param  \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
+     * @param  \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
      * @return Line
      */
-    public function addLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis)
+    public function addLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
     {
-        $this->lineGroupGis[] = $lineGroupGis;
+        $this->lineGroupGisContents[] = $lineGroupGisContents;
 
         return $this;
     }
 
     /**
-     * Remove lineGroupGis
+     * Remove lineGroupGisContents
      *
-     * @param \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
+     * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
      */
-    public function removeLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis)
+    public function removeLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
     {
-        $this->lineGroupGis->removeElement($lineGroupGis);
+        $this->lineGroupGisContents->removeElement($lineGroupGisContents);
     }
 
     /**
-     * Get lineGroupGis
+     * Get lineGroupGisContents
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getLineGroupGis()
+    public function getLineGroupGisContents()
     {
-        return $this->lineGroupGis;
+        return $this->lineGroupGisContents;
     }
 
     /**

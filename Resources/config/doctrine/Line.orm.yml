@@ -31,20 +31,29 @@ Tisseo\EndivBundle\Entity\Line:
             targetEntity: LineDatasource
             cascade: ['persist', 'remove']
             mappedBy: line
+            inversedBy: null
         lineVersions:
             targetEntity: LineVersion
             cascade: ['persist', 'remove']
             mappedBy: line
+            inversedBy: null
         schematics:
             orderBy: { 'date': 'DESC' }
             targetEntity: Schematic
             cascade: ['persist', 'remove']
             mappedBy: line
+            inversedBy: null
+        lineGroupGisContents:
+            targetEntity: LineGroupGisContent
+            cascade: ['persist', 'remove']
+            mappedBy: line
+            inversedBy: null
         lineStatuses:
             orderBy: { 'dateTime': 'DESC' }
             targetEntity: LineStatus
             cascade: ['persist', 'remove']
             mappedBy: line
+            inversedBy: null
     manyToOne:
         physicalMode:
             targetEntity: PhysicalMode
@@ -64,19 +73,5 @@ Tisseo\EndivBundle\Entity\Line:
                 inverseJoinColumns:
                     -
                         name: board_id
-                        referencedColumnName: id
-        lineGroupGis:
-            targetEntity: Tisseo\EndivBundle\Entity\LineGroupGis
-            inversedBy: lines
-            cascade: ['persist', 'remove']
-            joinTable:
-                name: line_group_gis_content
-                joinColumns:
-                    -
-                        name: line_id
-                        referencesColumn: id
-                inverseJoinColumns:
-                    -
-                        name: line_group_gis_id
                         referencedColumnName: id
     lifecycleCallbacks: {  }
