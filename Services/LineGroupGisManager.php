@@ -13,13 +13,14 @@ class LineGroupGisManager extends AbstractManager
     {
         $query = $this->getRepository()->createQueryBuilder('lgg')
             ->leftJoin('lgg.printings', 'p')
-            ->leftjoin('lgg.lines', 'l')
+            ->leftjoin('lgg.lineGroupGisContents', 'lggc')
+            ->leftJoin('lggc.line', 'l')
             ->leftJoin('l.schematics', 's')
             ->leftJoin('l.lineVersions', 'lv')
             ->leftJoin('l.lineVersions', 'lv2')
-            ->groupBy('lgg.id, p.id, l.id, s.id, lv.id')
+            ->groupBy('lgg.id, lggc, p.id, l.id, s.id, lv.id')
             ->having('lv.version = max(lv2.version)')
-            ->addSelect('p, l, s, lv')
+            ->addSelect('p, l, lggc, s, lv')
             ->getQuery();
 
         return $query->getResult();
