@@ -26,6 +26,21 @@ class LineGroupContent
      */
     private $lineGroup;
 
+    /**
+     * Get Id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get childLines
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
     public function getChildLines()
     {
         if ($this->isParent) {
