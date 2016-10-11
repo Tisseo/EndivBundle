@@ -30,6 +30,9 @@ class ExportDestination
      */
     private $routeExportDestinations;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->routeExportDestinations = new ArrayCollection();
@@ -89,5 +92,28 @@ class ExportDestination
     public function getUrl()
     {
         return $this->url;
+    }
+    
+    /**
+     * Get routeExportDestinations.
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getRouteExportDestinations()
+    {
+        return $this->routeExportDestinations;
+    }
+    
+    /**
+     * Set routeExportDestinations
+     *
+     * @param  Doctrine\Common\Collections\Collection routeExportDestinations
+     * @return ExportDestination
+     */
+    public function setRouteExportDestinations(Collection $rExportDestinations)
+    {
+        $this->routeExportDestinations = $rExportDestinations;
+
+        return $this;
     }
 }
