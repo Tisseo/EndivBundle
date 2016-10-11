@@ -327,7 +327,6 @@ class RouteManager extends AbstractManager
         }
     }
 
-    // TODO: CHANGE THIS
     public function duplicate($route, $lineVersion, $userName)
     {
         $objectManager = $this->getObjectManager();
@@ -368,15 +367,15 @@ class RouteManager extends AbstractManager
 
         $services_patterns = $route->getTrips()->filter(
             function (Trip $t) {
-                return $t->getIsPattern() === true;
+                return $t->getPattern() === true;
             }
         );
 
         foreach ($services_patterns as $t) {
             $newTrip = new Trip();
             $newTrip->setName($t->getName());
-            $newTrip->setIsPattern($t->getIsPattern());
-            $newTrip->setPattern($t->getPattern());
+            $newTrip->setPattern($t->isPattern());
+            $newTrip->setTripPattern($t->getTripPattern());
             $newTrip->setComment($t->getComment());
             $newTrip->setRoute($newRoute);
             $newTrip->setTripCalendar($t->getTripCalendar());
@@ -414,6 +413,7 @@ class RouteManager extends AbstractManager
             $objectManager->persist($routeDatasource);
             $newRoute->addRouteDatasource($routeDatasource);
         }
+
         $objectManager->persist($newRoute);
         $objectManager->flush();
     }

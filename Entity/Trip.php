@@ -29,7 +29,7 @@ class Trip extends Datasourced
     /**
      * @var Trip
      */
-    private $pattern;
+    private $tripPattern;
 
     /**
      * @var Comment
@@ -175,26 +175,26 @@ class Trip extends Datasourced
     }
 
     /**
-     * Set pattern
+     * Set trip pattern
      *
-     * @param  Trip $pattern
+     * @param  Trip $tripPattern
      * @return Trip
      */
-    public function setPattern($pattern)
+    public function setTripPattern($tripPattern)
     {
-        $this->pattern = $pattern;
+        $this->tripPattern = $tripPattern;
 
         return $this;
     }
 
     /**
-     * Get pattern
+     * Get trip pattern
      *
      * @return Trip
      */
-    public function getPattern()
+    public function getTripPattern()
     {
-        return $this->pattern;
+        return $this->tripPattern;
     }
 
     /**

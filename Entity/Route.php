@@ -424,7 +424,7 @@ class Route extends Datasourced
     public function getTripsPattern()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('isPattern', true));
+            ->where(Criteria::expr()->eq('pattern', true));
 
         return $this->trips->matching($criteria);
     }
@@ -435,7 +435,7 @@ class Route extends Datasourced
     public function getTripsNotPattern()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('isPattern', true));
+            ->where(Criteria::expr()->neq('pattern', true));
 
         return $this->trips->matching($criteria);
     }
@@ -446,7 +446,7 @@ class Route extends Datasourced
     public function getTripsNotPatternWithCalendars()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('isPattern', true))
+            ->where(Criteria::expr()->neq('pattern', true))
             ->andWhere(Criteria::expr()->neq('dayCalendar', null))
             ->andWhere(Criteria::expr()->neq('periodCalendar', null));
 
@@ -512,7 +512,7 @@ class Route extends Datasourced
     public function isPatternLocked(Trip $pattern)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('pattern', $pattern));
+            ->where(Criteria::expr()->eq('tripPattern', $pattern));
 
         return $this->trips->matching($criteria)->count() > 0;
     }
@@ -534,7 +534,7 @@ class Route extends Datasourced
     public function getTripsHavingPattern()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('pattern', null));
+            ->where(Criteria::expr()->neq('tripPattern', null));
 
         return $this->trips->matching($criteria);
     }

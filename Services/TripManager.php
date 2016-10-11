@@ -34,7 +34,7 @@ class TripManager extends AbstractManager
             FROM trip t
             WHERE UPPER(unaccent(t.name)) LIKE UPPER(unaccent(:term))
             AND t.route_id = :routeId
-            AND t.is_pattern = TRUE
+            AND t.pattern = TRUE
             ORDER BY t.name
         "
         );
@@ -295,7 +295,7 @@ class TripManager extends AbstractManager
                 $trip = new Trip();
                 $trip->setName($tripPattern['name']);
                 $trip->setRoute($route);
-                $trip->setIsPattern(true);
+                $trip->setPattern(true);
                 $newTripDatasource = clone $tripDatasource;
                 $trip->addTripDatasource($newTripDatasource);
 
@@ -476,7 +476,7 @@ class TripManager extends AbstractManager
 
     private function createStopTimes(Trip $trip, $time)
     {
-        foreach ($trip->getPattern()->getStopTimes() as $stopTime) {
+        foreach ($trip->getTripPattern()->getStopTimes() as $stopTime) {
             $newDepartureTime = $time + $stopTime->getDepartureTime();
             $newArrivalTime = $time + $stopTime->getArrivalTime();
             $newStopTime = new StopTime();
