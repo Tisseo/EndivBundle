@@ -29,7 +29,7 @@ class TisseoEndivExtension extends Extension Implements PrependExtensionInterfac
     /**
      * {@inheritdoc}
      */
-    function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container)
     {
         // mapping functions for DQL
         $DQLExtensions = array(
