@@ -273,7 +273,7 @@ abstract class AbstractManager
      * @param  $model
      * @throws Exception if model doesn't have the right class
      */
-    protected function _check($model)
+    protected function check($model)
     {
         if (get_class($model) !== $this->class) {
             throw new \Exception(sprintf("The entity %s can't be managed by this manager", get_class($model)));
@@ -289,20 +289,8 @@ abstract class AbstractManager
      */
     public function save($model, $flush = true)
     {
-        $this->_check($model);
+        $this->check($model);
 
-        return $this->_save($model, $flush);
-    }
-
-    /**
-     * Save function persist/flush/refresh
-     *
-     * @param  $model
-     * @param  boolean $flush
-     * @return $model
-     */
-    protected function _save($model, $flush = true)
-    {
         $objectManager = $this->getObjectManager();
         $objectManager->persist($model);
 
@@ -327,24 +315,13 @@ abstract class AbstractManager
         if (!is_object($model)) {
             $model = $this->getRepository()->find($model);
         } else {
-            $this->_check($model);
+            $this->check($model);
         }
 
         if (empty($model)) {
             throw new \Exception("Entity not found");
         }
 
-        $this->_remove($model, $flush);
-    }
-
-    /**
-     * Remove function remove/flush
-     *
-     * @param $model
-     * @param boolean $flush
-     */
-    protected function _remove($model, $flush = true)
-    {
         $objectManager = $this->getObjectManager();
 
         $objectManager->remove($model);
@@ -397,11 +374,11 @@ abstract class AbstractManager
     public function normalize($data)
     {
         if (get_class($data) === $this->class) {
-            $result = $this->_normalize($data);
+            $result = $this->doNormalize($data);
         } elseif (is_array($data) || $data instanceof \Traversable) {
             $result = array();
             foreach ($data as $model) {
-                $result[] = $this->_normalize($model);
+                $result[] = $this->doNormalize($model);
             }
         } else {
             throw new \Exception("Can't normalize unrecognized data type");
@@ -416,7 +393,7 @@ abstract class AbstractManager
      * @param  $model
      * @return array
      */
-    protected function _normalize($model)
+    protected function doNormalize($model)
     {
         return json_decode($this->getSerializer()->serialize($model, 'json'));
     }
