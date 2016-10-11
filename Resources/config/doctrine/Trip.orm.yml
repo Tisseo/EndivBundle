@@ -33,7 +33,7 @@ Tisseo\EndivBundle\Entity\Trip:
             length: 20
             fixed: false
             comment: 'Nom de l''objet. Si vient d''Hastus, identiques a la datasource.'
-        isPattern:
+        pattern:
             type: boolean
             nullable: true
             comment: ''

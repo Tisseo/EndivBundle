@@ -20,7 +20,7 @@ class Datasource extends OgiveEntity
     /**
      * @var boolean
      */
-    private $isEditable;
+    private $editable;
 
 
     /**
@@ -57,25 +57,25 @@ class Datasource extends OgiveEntity
     }
 
     /**
-     * Set isEditable
+     * Set editable
      *
-     * @param  boolean $isEditable
+     * @param  boolean $editable
      * @return Datasource
      */
-    public function setIsEditable($isEditable)
+    public function setEditable($editable)
     {
-        $this->isEditable = $isEditable;
+        $this->editable = $editable;
 
         return $this;
     }
 
     /**
-     * Get isEditable
+     * Is editable
      *
      * @return boolean
      */
-    public function getIsEditable()
+    public function isEditable()
     {
-        return $this->isEditable;
+        return $this->editable;
     }
 }

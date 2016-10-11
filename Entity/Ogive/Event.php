@@ -50,7 +50,7 @@ class Event extends OgiveEntity
     /**
      * @var boolean
      */
-    private $isPublished;
+    private $published;
 
     /**
      * @var guid
@@ -65,7 +65,7 @@ class Event extends OgiveEntity
     /**
      * @var boolean
      */
-    private $isEmergency;
+    private $emergency;
 
     /**
      * @var unknown
@@ -223,26 +223,26 @@ class Event extends OgiveEntity
     }
 
     /**
-     * Set isEmergency
+     * Set emergency
      *
-     * @param  boolean $isEmergency
+     * @param  boolean $emergency
      * @return Event
      */
-    public function setIsEmergency($isEmergency)
+    public function setEmergency($emergency)
     {
-        $this->isEmergency = $isEmergency;
+        $this->emergency = $emergency;
 
         return $this;
     }
 
     /**
-     * Get isEmergency
+     * Is emergency
      *
      * @return boolean
      */
-    public function getIsEmergency()
+    public function isEmergency()
     {
-        return $this->isEmergency;
+        return $this->emergency;
     }
 
     /**
@@ -314,24 +314,24 @@ class Event extends OgiveEntity
     }
 
     /**
-     * Get isPublished.
+     * Is published.
      *
      * @return boolean
      */
     public function isPublished()
     {
-        return $this->isPublished;
+        return $this->published;
     }
 
     /**
-     * Set isPublished.
+     * Set published.
      *
-     * @param  boolean isPublished
+     * @param  boolean published
      * @return Event
      */
-    public function setIsPublished($isPublished)
+    public function setPublished($published)
     {
-        $this->isPublished = $isPublished;
+        $this->published = $published;
 
         return $this;
     }

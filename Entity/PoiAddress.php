@@ -20,7 +20,7 @@ class PoiAddress
     /**
      * @var boolean
      */
-    private $isEntrance;
+    private $entrance;
 
     /**
      * @var geometry
@@ -67,26 +67,26 @@ class PoiAddress
     }
 
     /**
-     * Set isEntrance
+     * Set entrance
      *
-     * @param  boolean $isEntrance
+     * @param  boolean $entrance
      * @return PoiAddress
      */
-    public function setIsEntrance($isEntrance)
+    public function setEntrance($entrance)
     {
-        $this->isEntrance = $isEntrance;
+        $this->entrance = $entrance;
 
         return $this;
     }
 
     /**
-     * Get isEntrance
+     * Is entrance
      *
      * @return boolean
      */
-    public function getIsEntrance()
+    public function isEntrance()
     {
-        return $this->isEntrance;
+        return $this->entrance;
     }
 
     /**

@@ -17,7 +17,7 @@ Tisseo\EndivBundle\Entity\Ogive\Datasource:
             length: 40
             fixed: false
             comment: ''
-        isEditable:
+        editable:
             type: boolean
             nullable: false
             comment: 'Certaines datasources sont figées si elles proviennent d''ailleurs (TR). Le booléen est à false dans ce cas là, à true sinon.'

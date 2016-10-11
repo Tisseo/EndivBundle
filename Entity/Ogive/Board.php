@@ -48,12 +48,12 @@ class Board extends OgiveEntity
     /**
      * @var boolean
      */
-    private $isOffice;
+    private $office;
 
     /**
      * @var boolean
      */
-    private $isWaitingRoom;
+    private $waitingRoom;
 
 
     /**
@@ -163,48 +163,48 @@ class Board extends OgiveEntity
     }
 
     /**
-     * Set isOffice
+     * Set office
      *
-     * @param  boolean $isOffice
+     * @param  boolean $office
      * @return Board
      */
-    public function setIsOffice($isOffice)
+    public function setOffice($office)
     {
-        $this->isOffice = $isOffice;
+        $this->office = $office;
 
         return $this;
     }
 
     /**
-     * Get isOffice
+     * Is office
      *
      * @return boolean
      */
-    public function getIsOffice()
+    public function isOffice()
     {
-        return $this->isOffice;
+        return $this->office;
     }
 
     /**
-     * Set isWaitingRoom
+     * Set waitingRoom
      *
-     * @param  boolean $isWaitingRoom
+     * @param  boolean $waitingRoom
      * @return Board
      */
-    public function setIsWaitingRoom($isWaitingRoom)
+    public function setWaitingRoom($waitingRoom)
     {
-        $this->isWaitingRoom = $isWaitingRoom;
+        $this->waitingRoom = $waitingRoom;
 
         return $this;
     }
 
     /**
-     * Get isWaitingRoom
+     * Is waitingRoom
      *
      * @return boolean
      */
-    public function getIsWaitingRoom()
+    public function isWaitingRoom()
     {
-        return $this->isWaitingRoom;
+        return $this->waitingRoom;
     }
 }

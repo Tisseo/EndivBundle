@@ -14,7 +14,7 @@ Tisseo\EndivBundle\Entity\LineGroupContent:
         lineVersion:
             associationKey: true
     fields:
-        isParent:
+        parent:
             type: boolean
             nullable: true
             comment: ''

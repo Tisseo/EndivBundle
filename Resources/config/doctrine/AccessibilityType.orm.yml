@@ -30,7 +30,7 @@ Tisseo\EndivBundle\Entity\AccessibilityType:
             unsigned: false
             comment: 'Temps en seconde apres minuit de la date. Peut depasser 23h59. Explicite l''heure de fin de l''innaccessibilité du calendrier'
             column: end_time
-        isRecursive:
+        recursive:
             type: boolean
             nullable: true
             comment: 'Si vrai, les heures de departs et fin s''appliquent tous les jours du calendier. Sinon, l''heure de depart s''applique au premier jour du calendrier et l''heure de fin au dernier'

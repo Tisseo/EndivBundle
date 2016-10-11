@@ -24,7 +24,7 @@ class Trip extends Datasourced
     /**
      * @var boolean
      */
-    private $isPattern;
+    private $pattern;
 
     /**
      * @var Trip
@@ -152,26 +152,26 @@ class Trip extends Datasourced
 
 
     /**
-     * Set isPattern
+     * Set pattern
      *
-     * @param  boolean $isPattern
+     * @param  boolean $pattern
      * @return Trip
      */
-    public function setIsPattern($isPattern)
+    public function setPattern($pattern)
     {
-        $this->isPattern = $isPattern;
+        $this->pattern = $pattern;
 
         return $this;
     }
 
     /**
-     * Get isPattern
+     * Is pattern
      *
      * @return boolean
      */
-    public function getIsPattern()
+    public function isPattern()
     {
-        return $this->isPattern;
+        return $this->pattern;
     }
 
     /**

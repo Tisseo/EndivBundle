@@ -37,13 +37,13 @@ Tisseo\EndivBundle\Entity\Ogive\Board:
             nullable: false
             comment: ''
             column: status
-        isOffice:
+        office:
             type: boolean
             nullable: false
             comment: 'Le lieu est-il une agence ?'
             default: false
             column: is_office
-        isWaitingRoom:
+        waitingRoom:
             type: boolean
             nullable: false
             comment: 'Le lieu est-il une salle d''attente ?'

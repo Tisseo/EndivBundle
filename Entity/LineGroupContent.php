@@ -14,7 +14,7 @@ class LineGroupContent
     /**
      * @var boolean
      */
-    private $isParent;
+    private $parent;
 
     /**
      * @var \Tisseo\EndivBundle\Entity\LineVersion
@@ -43,7 +43,7 @@ class LineGroupContent
      */
     public function getChildLines()
     {
-        if ($this->isParent) {
+        if ($this->parent) {
             $childLines = new ArrayCollection();
 
             foreach ($this->lineGroup->getLineGroupContents() as $otherGroupContent) {
@@ -59,26 +59,26 @@ class LineGroupContent
     }
 
     /**
-     * Set isParent
+     * Set parent
      *
-     * @param  boolean $isParent
+     * @param  boolean $parent
      * @return LineGroupContent
      */
-    public function setIsParent($isParent)
+    public function setParent($parent)
     {
-        $this->isParent = $isParent;
+        $this->parent = $parent;
 
         return $this;
     }
 
     /**
-     * Get isParent
+     * Is parent
      *
      * @return boolean
      */
-    public function getIsParent()
+    public function isParent()
     {
-        return $this->isParent;
+        return $this->parent;
     }
 
     /**

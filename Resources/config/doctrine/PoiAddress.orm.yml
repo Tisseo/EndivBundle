@@ -21,7 +21,7 @@ Tisseo\EndivBundle\Entity\PoiAddress:
             length: null
             fixed: false
             comment: 'Adresse postale de la localisation du POI.'
-        isEntrance:
+        entrance:
             type: boolean
             nullable: false
             comment: 'Indique sil la localisation est une entree du POI ou le barycentre du POI.'

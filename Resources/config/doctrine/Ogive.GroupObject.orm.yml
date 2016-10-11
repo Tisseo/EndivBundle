@@ -28,7 +28,7 @@ Tisseo\EndivBundle\Entity\Ogive\GroupObject:
             fixed: false
             comment: 'Correspond au type du groupe d''objets, par exemple pole d''échange, batiment public, groupe d''exploitation, secteur géographique... '
             column: group_type
-        isPrivate:
+        private:
             type: boolean
             nullable: false
             comment: 'Est à true si le groupe est interne à Tisséo (pas d''affichage à l''extérieur dans de futures listes de choix)'

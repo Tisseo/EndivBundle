@@ -28,7 +28,7 @@ class AccessibilityType
     /**
      * @var boolean
      */
-    private $isRecursive;
+    private $recursive;
 
     /**
      * @var AccessibilityMode
@@ -110,26 +110,26 @@ class AccessibilityType
     }
 
     /**
-     * Set isRecursive
+     * Set recursive
      *
-     * @param  boolean $isRecursive
+     * @param  boolean $recursive
      * @return AccessibilityType
      */
-    public function setIsRecursive($isRecursive)
+    public function setRecursive($recursive)
     {
-        $this->isRecursive = $isRecursive;
+        $this->recursive = $recursive;
 
         return $this;
     }
 
     /**
-     * Get isRecursive
+     * Is recursive
      *
      * @return boolean
      */
-    public function getIsRecursive()
+    public function isRecursive()
     {
-        return $this->isRecursive;
+        return $this->recursive;
     }
 
     /**

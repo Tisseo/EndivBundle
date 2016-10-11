@@ -25,7 +25,7 @@ class GroupObject
     /**
      * @var boolean
      */
-    private $isPrivate;
+    private $private;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -97,26 +97,26 @@ class GroupObject
     }
 
     /**
-     * Set isPrivate
+     * Set private
      *
-     * @param  boolean $isPrivate
+     * @param  boolean $private
      * @return GroupObject
      */
-    public function setIsPrivate($isPrivate)
+    public function setPrivate($private)
     {
-        $this->isPrivate = $isPrivate;
+        $this->private = $private;
 
         return $this;
     }
 
     /**
-     * Get isPrivate
+     * Is private
      *
      * @return boolean
      */
-    public function getIsPrivate()
+    public function isPrivate()
     {
-        return $this->isPrivate;
+        return $this->private;
     }
 
     /**
