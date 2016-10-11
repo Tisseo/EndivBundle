@@ -169,42 +169,37 @@ class RouteManager extends AbstractManager
         foreach ($datas as $data) {
             $tripCalendar = null;
 
-            $gridMaskType = $objectManager->createQuery(
-                "
-                SELECT gmt FROM Tisseo\EndivBundle\Entity\GridMaskType gmt
-                WHERE gmt.calendarPeriod = :period
-                AND gmt.calendarType = :type
-            "
-            )
+            $gridMaskType = $this->getRepository('Tisseo\EndivBundle\Entity\GridMaskType')
+                ->createQueryBuilder('gmt')
+                ->where('gmt.calendarPeriod = :period')
+                ->andWhere('gmt.calendarType = :type')
                 ->setParameter("period", $data['calendarPeriod'])
                 ->setParameter("type", $data['calendarType'])
+                ->getQuery()
                 ->getOneOrNullResult();
 
             if (!empty($gridMaskType)) {
                 $pattern = implode(array_values($data['days']));
 
                 // Doctrine CAST(x, y) is transformed into (x || y). x and y have to be varchars.
-                $tripCalendar = $objectManager->createQuery(
-                    "
-                    SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
-                    WHERE tc.gridMaskType = :gridMaskType
-                    AND CONCAT(CAST(CAST(tc.monday AS INTEGER) AS CHAR), CAST(CAST(tc.tuesday AS INTEGER) AS  CHAR), CAST(CAST(tc.wednesday AS INTEGER) AS CHAR),
-                               CAST(CAST(tc.thursday AS INTEGER) AS CHAR), CAST(CAST(tc.friday AS INTEGER) AS CHAR), CAST(CAST(tc.saturday AS INTEGER) AS CHAR),
-                               CAST(CAST(tc.sunday AS INTEGER) AS CHAR)) = :pattern
-                "
-                )
-                    ->setParameter("gridMaskType", $gridMaskType)
+                $tripCalendar = $this->getRepository('Tisseo\EndivBundle\Entity\TripCalendar')
+                    ->createQueryBuilder('tc')
+                    ->where('tc.gridMaskType = :gmt')
+                    ->andWhere('concat(cast(cast(tc.monday as integer) as char), cast(cast(tc.tuesday as integer) as char),
+                        cast(cast(tc.wednesday as integer) as char), cast(cast(tc.thursday as integer) as char),
+                        cast(cast(tc.friday as integer) as char), cast(cast(tc.saturday as integer) as char),
+                        cast(cast(tc.sunday as integer) as char)) = :pattern')
+                    ->setParameter("gmt", $gridMaskType)
                     ->setParameter("pattern", $pattern)
+                    ->getQuery()
                     ->getOneOrNullResult();
 
                 if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
-                    $oldTripCalendar = $objectManager->createQuery(
-                        "
-                        SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
-                        WHERE tc.id = :tripCalendar
-                    "
-                    )
-                        ->setParameter("tripCalendar", $data['tripCalendar'])
+                    $oldTripCalendar = $this->getRepository('Tisseo\EndivBundle\Entity\TripCalendar')
+                        ->createQueryBuilder('tc')
+                        ->where('tc.id = :tc')
+                        ->setParameter('tc', $data['tripCalendar'])
+                        ->getQuery()
                         ->getOneOrNullResult();
 
                     if (!empty($oldTripCalendar) && $oldTripCalendar->getId() === $tripCalendar->getId()) {
@@ -217,13 +212,15 @@ class RouteManager extends AbstractManager
                 $gridMaskType = new GridMaskType();
                 $gridMaskType->setCalendarType($data['calendarType']);
                 $gridMaskType->setCalendarPeriod($data['calendarPeriod']);
+
+                $objectManager->persist($gridMaskType);
+                $objectManager->flush($gridMaskType);
             }
 
             if (empty($tripCalendar)) {
                 $tripCalendar = new TripCalendar();
                 $tripCalendar->setGridMaskType($gridMaskType);
 
-                //TODO: Find something better (for loop over attributes using an array ?)
                 $tripCalendar->setMonday(filter_var($data['days'][1], FILTER_VALIDATE_BOOLEAN));
                 $tripCalendar->setTuesday(filter_var($data['days'][2], FILTER_VALIDATE_BOOLEAN));
                 $tripCalendar->setWednesday(filter_var($data['days'][3], FILTER_VALIDATE_BOOLEAN));
@@ -233,48 +230,47 @@ class RouteManager extends AbstractManager
                 $tripCalendar->setSunday(filter_var($data['days'][7], FILTER_VALIDATE_BOOLEAN));
 
                 $objectManager->persist($tripCalendar);
+                $objectManager->flush($tripCalendar);
             }
 
             $tripIds = array_values($data['trips']);
 
-            $trips = $objectManager->createQuery(
-                "
-                SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
-                WHERE t.id IN(:trips)
-            "
-            )
-                ->setParameter("trips", $tripIds)
+            $trips = $this->getRepository('Tisseo\EndivBundle\Entity\Trip')
+                ->createQueryBuilder('t')
+                ->where('t.id IN (:trips)')
+                ->setParameter('trips', $tripIds)
+                ->getQuery()
                 ->getResult();
 
             foreach ($trips as $trip) {
                 $trip->setTripCalendar($tripCalendar);
                 $objectManager->persist($trip);
             }
-
-            $objectManager->flush();
         }
+
+        $objectManager->flush();
     }
 
     public function updateExportDestinations($route, $exportDestinations)
     {
         $sync = false;
         $objectManager = $this->getObjectManager();
-        foreach ($route->getRouteExportDestinations() as $routeExportDestination) {
-            if (!($exportDestinations->contains($routeExportDestination->getExportDestination()))) {
+        foreach ($route->getRouteExportDestinations() as $rExportDest) {
+            if (!($exportDestinations->contains($rExportDest->getExportDestination()))) {
                 $sync = true;
-                $route->removeRouteExportDestination($routeExportDestination);
-                $objectManager->remove($routeExportDestination);
+                $route->removeRouteExportDestination($rExportDest);
+                $objectManager->remove($rExportDest);
             }
         }
 
         foreach ($exportDestinations as $exportDestination) {
             if (!($route->getExportDestinations()->contains($exportDestination))) {
-                $routeExportDestination = new RouteExportDestination();
-                $routeExportDestination->setExportDestination($exportDestination);
-                $routeExportDestination->setRoute($route);
+                $rExportDest = new RouteExportDestination();
+                $rExportDest->setExportDestination($exportDestination);
+                $rExportDest->setRoute($route);
                 $sync = true;
-                $route->addRouteExportDestination($routeExportDestination);
-                $objectManager->persist($routeExportDestination);
+                $route->addRouteExportDestination($rExportDest);
+                $objectManager->persist($rExportDest);
             }
         }
         if ($sync) {
