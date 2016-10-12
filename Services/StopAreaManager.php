@@ -115,7 +115,7 @@ class StopAreaManager extends AbstractManager
             FROM Tisseo\EndivBundle\Entity\Stop s
             JOIN s.stopDatasources sd ";
 
-        if (! $getPhantoms) {
+        if (!$getPhantoms) {
             $queryString .= "JOIN s.stopHistories sh ";
         }
         $queryString .= "WHERE s.stopArea = :sa

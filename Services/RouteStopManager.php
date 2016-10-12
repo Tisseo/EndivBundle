@@ -8,92 +8,60 @@ use Tisseo\EndivBundle\Entity\RouteStop;
 
 class RouteStopManager extends AbstractManager
 {
-    public function findByWaypoint($waypoint, $routeId)
+    /**
+     * Get the min or max RouteStop of a Route and a StopArea
+     *
+     * @param  integer   $routeId
+     * @param  integer   $stopAreaId
+     * @param  string    $rank
+     * @return RouteStop
+     */
+    public function findMinOrMax($routeId, $stopAreaId, $rank = 'min')
     {
-        $query = $this->getObjectManager->createQuery(
-            "
-            SELECT rs.id
-            FROM Tisseo\EndivBundle\Entity\RouteStop rs
-            JOIN rs.waypoint wp
-            JOIN rs.route r
-            WHERE wp= :waypoint AND r= :route"
-        )
-            ->setParameters(array('waypoint' => $waypoint, 'route' => $routeId));
+        if (!in_array($rank, array('min', 'max'))) {
+            throw new \Exception("Rank must be set to 'min' or 'max'");
+        }
 
-        return $query->getResult();
-    }
+        $order = $rank === 'max' ? 'DESC' : 'ASC';
 
-    public function findStopMinRankByRouteId($routeId, $stopAreaId)
-    {
-        $query = $this->getObjectManager->createQueryBuilder()
+        $query = $this->getRepository()->createQueryBuilder('rs')
             ->select('rs.rank')
-            ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
             ->join('rs.route', 'r')
             ->join('rs.waypoint', 'w')
             ->join('w.stop', 's')
             ->join('s.stopArea', 'sa')
             ->where('r.id = ?1 AND sa.id = ?2')
-            ->orderBy('rs.rank', 'ASC')
+            ->orderBy('rs.rank', $order)
             ->setMaxResults(1)
-            ->setParameters(
-                array(
+            ->setParameters(array(
                 1 => $routeId,
                 2 => $stopAreaId
-                )
-            );
+            ))->getQuery();
 
-        return $query->getQuery()->getSingleScalarResult();
+        return $query->getSingleScalarResult();
     }
 
-    public function findStopMaxRankByRouteId($routeId, $stopAreaId)
+    /**
+     * Find a section of route
+     *
+     * @param  integer $routeId
+     * @param  integer $minRank
+     * @param  integer $maxRank
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function findSection($routeId, $minRank, $maxRank)
     {
-        $query = $this->getObjectManager->createQueryBuilder()
-            ->select('rs.rank')
-            ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
+        $query = $this->getRepository()->createQueryBuilder('rs')
             ->join('rs.route', 'r')
-            ->join('rs.waypoint', 'w')
-            ->join('w.stop', 's')
-            ->join('s.stopArea', 'sa')
-            ->where('r.id = ?1 AND sa.id = ?2')
-            ->orderBy('rs.rank', 'DESC')
-            ->setMaxResults(1)
-            ->setParameters(
-                array(
-                1 => $routeId,
-                2 => $stopAreaId
-                )
-            );
-
-        return $query->getQuery()->getSingleScalarResult();
-    }
-
-    public function getStoptimes($trip)
-    {
-        $query = $this->getObjectManager->createQuery(
-            "
-            SELECT st.departureTime, st.arrivalTime, IDENTITY(st.routeStop) as routestop
-            FROM Tisseo\EndivBundle\Entity\StopTime st
-            WHERE st.trip =:trip"
-        )->setParameter("trip", $trip);
-
-        return $query->getResult();
-    }
-
-    public function getRouteStopsSectionByMinMaxRank($routeId, $minRank, $maxRank)
-    {
-        $query = $this->getObjectManager->createQueryBuilder()
-            ->select('rs')
-            ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
-            ->join('rs.route', 'r')
-            ->where('r.id = ?1 AND rs.rank BETWEEN ?2 AND ?3')
-            ->orderBy('rs.rank', 'ASC')
+            ->where('r.id = ?1')
+            ->andWhere('rs.rank between ?2 and ?3')
             ->setParameters(array(
                 1 => $routeId,
                 2 => $minRank,
                 3 => $maxRank
-            ));
+            ))->getQuery();
 
-        return $query->getQuery()->getResult();
+        return $query->getResult();
     }
 
     public function save(RouteStop $routeStop)
@@ -108,7 +76,7 @@ class RouteStopManager extends AbstractManager
      * @param array $routeStops
      * @param Route $route
      */
-    public function updateRouteStops($routeStops, Route $route)
+    public function updateRouteStops(array $routeStops, Route $route)
     {
         $sync = false;
         $objectManager = $this->getObjectManager();
@@ -127,16 +95,14 @@ class RouteStopManager extends AbstractManager
             }
         }
 
+        $waypointRepository = $this->getRepository('Tisseo\EndivBundle\Entity\Waypoint');
         foreach ($routeStops as $routeStop) {
             if (empty($routeStop['id'])) {
                 $sync = true;
                 $routeStop = $this->getSerializer()->deserialize(json_encode($routeStop), 'Tisseo\EndivBundle\Entity\RouteStop', 'json');
-                $waypoint = $objectManager->createQuery(
-                    "
-                    SELECT w FROM Tisseo\EndivBundle\Entity\Waypoint w
-                    WHERE w.id = :waypoint
-                "
-                )
+                $waypoint = $waypointRepository
+                    ->createQueryBuilder('w')
+                    ->where('w.id = :waypoint')
                     ->setParameter('waypoint', $routeStop->getWaypoint()->getId())
                     ->getOneOrNullResult();
 
@@ -147,9 +113,7 @@ class RouteStopManager extends AbstractManager
                 $routeStop->setWaypoint($waypoint);
                 $routeStop->setRoute($route);
                 $objectManager->persist($routeStop);
-            }
-            // TODO: find a better way
-            else {
+            } else {
                 $realRouteStop = $this->find($routeStop['id']);
 
                 if ($this->updateRouteStop($realRouteStop, $routeStop)) {
@@ -161,49 +125,58 @@ class RouteStopManager extends AbstractManager
 
         if ($sync) {
             $objectManager->flush();
-            $this->updateRouteSection($route);
+            $this->updateRouteSection($route->getId());
         }
     }
 
     /**
-     * Update route sections for the modified route
+     * Update a RouteStop values comparing to datas received
      *
-     * @param Route $route
+     * @param  RouteStop $routeStop
+     * @param  array $datas
+     * @return boolean
      */
-    private function updateRouteSection(Route $route)
-    {
-        $rsm = new ResultSetMapping();
-        $query = $this->getObjectManager()->createNativeQuery('SELECT update_route_section_of_route(?)', $rsm);
-        $query->setParameter(1, intval($route->getId()));
-        $query->getResult();
-    }
-
-    // TODO: improvement required here
     private function updateRouteStop(RouteStop $routeStop, $data)
     {
-        $merged = false;
+        $updated = false;
 
         if ($routeStop->getRank() !== $data['rank']) {
             $routeStop->setRank($data['rank']);
-            $merged = true;
+            $updated = true;
         }
         if ($routeStop->getScheduledStop() !== $data['scheduledStop']) {
             $routeStop->setScheduledStop($data['scheduledStop']);
-            $merged = true;
+            $updated = true;
         }
         if ($routeStop->getPickup() !== $data['pickup']) {
             $routeStop->setPickup($data['pickup']);
-            $merged = true;
+            $updated = true;
         }
         if ($routeStop->getDropOff() !== $data['dropOff']) {
             $routeStop->setDropOff($data['dropOff']);
-            $merged = true;
+            $updated = true;
         }
         if (array_key_exists('internalService', $data) && $routeStop->getInternalService() !== $data['internalService']) {
             $routeStop->setInternalService($data['internalService']);
-            $merged = true;
+            $updated = true;
         }
 
-        return $merged;
+        return $updated;
+    }
+
+    /**
+     * Update route sections for the modified route
+     * This function calls a stored procedure which will
+     * update all the RouteSection of the Route
+     *
+     * @param integer $routeId
+     */
+    private function updateRouteSection($routeId)
+    {
+        $query = $this->getObjectManager()
+            ->createNativeQuery('SELECT update_route_section_of_route(?)', new ResultSetMapping())
+            ->setParameter(1, intval($routeId));
+
+        $query->getResult();
     }
 }

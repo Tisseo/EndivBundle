@@ -6,22 +6,20 @@ use Tisseo\EndivBundle\Entity\StopTime;
 
 class StopTimeManager extends AbstractManager
 {
-    //TODO: This function may be improved
-    public function save(StopTime $Stop)
+    /**
+     * Find times and RouteStop id using a Trip id
+     *
+     * @param  integer $tripId
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function findTimesAndRouteStopByTrip($tripId)
     {
-        $objectManager = $this->getObjectManager();
+        $query = $this->getRepository()->createQueryBuilder('st')
+            ->select('st.departureTime, st.arrivalTime, IDENTITY(st.routeStop) as routestop')
+            ->where('st.trip = :trip')
+            ->setParameter("trip", $tripId)
+            ->getQuery();
 
-        if (!$Stop->getId()) {
-            // new stop + new stop_history
-            $objectManager->persist($Stop);
-            $objectManager->flush();
-            $objectManager->refresh($Stop);
-            $newId = $Stop->getId();
-            $Stop->setId($newId);
-        }
-
-        $objectManager->persist($Stop);
-        $objectManager->flush();
-        $objectManager->refresh($Stop);
+        return $query->getResult();
     }
 }

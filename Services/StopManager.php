@@ -29,7 +29,6 @@ class StopManager extends AbstractManager
         $objectManager->flush();
     }
 
-    // TODO: Does this belong here ?
     public function getRouteStopsByRoute($routeId)
     {
         $query = $this->getObjectManager()->createQuery(
@@ -46,7 +45,6 @@ class StopManager extends AbstractManager
         return $query->getResult();
     }
 
-    // TODO: Investigate this function
     public function getStops($waypointId)
     {
         $query = $this->getObjectManager()->createQuery(
@@ -64,7 +62,6 @@ class StopManager extends AbstractManager
         return $query->getResult();
     }
 
-    // TODO: WTF ?? route ??
     public function getStopArea($route)
     {
         $query = $this->getObjectManager()->createQuery(
@@ -80,7 +77,6 @@ class StopManager extends AbstractManager
         return $query->getResult();
     }
 
-    // TODO: AAAAAAAAAAAAH !!
     public function getStopLabel(Stop $stop)
     {
         $query = $this->getObjectManager()->createQuery(
@@ -107,15 +103,11 @@ class StopManager extends AbstractManager
         return $label;
     }
 
-    //
-    // VERIFIED USEFUL FUNCTIONS
-    //
-
     /**
      * TODO: REPLACE BY CRITERIA IN STOP ENTITY
      * OR USE A DOCTRINE RULE IN MAPPING FILE
      */
-    public function getOrderedStopHistories($stop)
+    /*public function getOrderedStopHistories($stop)
     {
         $query = $this->getObjectManager()->createQuery(
             "
@@ -127,7 +119,7 @@ class StopManager extends AbstractManager
         $query->setParameter('stop', $stop);
 
         return $query->getResult();
-    }
+    }*/
 
     /**
      * TODO: COMMENT
@@ -181,17 +173,10 @@ class StopManager extends AbstractManager
     }
 
     /**
-     * TODO: CREATE A NEW SPECIFIC MANAGER ?
-     * StopAccessibility functions below
-     */
-
-    /**
-     * Save
+     * Add a new StopAccecssibility to a Stop
      *
      * @param integer           $stopId
      * @param StopAccessibility $stopAccessibility
-     *
-     * TODO: COMMENT
      */
     public function saveStopAccessibility($stopId, StopAccessibility $stopAccessibility)
     {
@@ -206,16 +191,15 @@ class StopManager extends AbstractManager
 
         $objectManager->persist($stopAccessibility);
         $objectManager->persist($stop);
+
         $objectManager->flush();
     }
 
     /**
-     * Delete
+     * Delete a StopAccessibility of a Stop
      *
      * @param integer $stopId
      * @param integer $stopAccessibilityId
-     *
-     * TODO: COMMENT
      */
     public function deleteStopAccessibility($stopId, $stopAccessibilityId)
     {
@@ -234,81 +218,15 @@ class StopManager extends AbstractManager
         $stop->removeStopAccessibility($stopAccessibility);
         $objectManager->remove($stopAccessibility);
         $objectManager->persist($stop);
+
         $objectManager->flush();
     }
 
     /**
-     * TODO: CREATE A NEW SPECIFIC MANAGER ?
-     * StopHistory functions below
-     */
-
-    /**
-     * Save
+     * Close last StopHistory of a Stop and unlink its StopArea.
      *
-     * @param StopHistory $stopHistory
-     * @param StopHistory $latestStopHistory
-     *
-     * TODO: COMMENT
-     */
-    public function createStopHistory(StopHistory $stopHistory, StopHistory $latestStopHistory)
-    {
-        // the new startDate is before some StopHistories startDate, delete them
-        if ($latestStopHistory->getStartDate() >= $stopHistory->getStartDate()) {
-            $youngerStopHistories = $stopHistory->getStop()->getYoungerStopHistories($stopHistory->getStartDate());
-            foreach ($youngerStopHistories as $youngerStopHistory) {
-                $objectManager->remove($youngerStopHistory);
-            }
-
-            $objectManager->flush();
-
-            // updating end date
-            $latestStopHistory = $stopHistory->getStop()->getLatestStopHistory();
-            if ($latestStopHistory && $latestStopHistory->getEndDate() >= $stopHistory->getStartDate()) {
-                $latestStopHistory->closeDate($stopHistory->getStartDate());
-                $objectManager->persist($latestStopHistory);
-            }
-        } elseif ($latestStopHistory->getEndDate() === null) {
-            $latestStopHistory->closeDate($stopHistory->getStartDate());
-            $objectManager->persist($latestStopHistory);
-        }
-
-        $objectManager->persist($stopHistory);
-        $objectManager->persist($stopHistory->getStop());
-        $objectManager->flush();
-    }
-
-    /**
-     * Save StopHistory
-     *
-     * @param StopHistory $stopHistory
-     *
-     * TODO: Create StopHistoryManager ?
-     */
-    public function saveStopHistory(StopHistory $stopHistory)
-    {
-        $objectManager->persist($stopHistory);
-        $objectManager->flush();
-    }
-
-    /**
-     * Delete StopHistory
-     *
-     * @param StopHistory $stopHistory
-     *
-     * TODO: Create StopHistoryManager ?
-     */
-    public function deleteStopHistory(StopHistory $stopHistory)
-    {
-        $objectManager->remove($stopHistory);
-        $objectManager->flush();
-    }
-
-    /**
-     * Detach
-     *
-     * @param integer $stopId
-     *
-     * Close last Stop's history and delete its link with its StopArea.
+     * @param  integer $stopId
+     * @return integer
      */
     public function detach($stopId)
     {
@@ -328,7 +246,7 @@ class StopManager extends AbstractManager
         $objectManager->flush();
 
         $stopHistory = $stop->getLatestStopHistory();
-        $stopHistory->closeDate(new \Datetime());
+        $stopHistory->closeDate($now);
         $objectManager->persist($stopHistory);
 
         $stopAreaId = $stop->getStopArea()->getId();
@@ -345,7 +263,7 @@ class StopManager extends AbstractManager
         foreach ($stops as $stop) {
             $stopIds[] = $stop->getId();
         }
-        $connection = $objectManager->getConnection();
+        $connection = $this->getObjectManager()->getConnection();
 
         if ($getPhantoms) {
             $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
@@ -437,5 +355,27 @@ class StopManager extends AbstractManager
         }
 
         $objectManager->flush();
+    }
+
+    /**
+     * Get all related stops of a stopArea ordered by code
+     *
+     * @param  integer $stopAreaId
+     * @param  boolean $getPhantoms
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getStopsOrderedByCode($stopAreaId, $getPhantoms = false)
+    {
+        $query = $this->getRepository()->createQueryBuilder('s')
+            ->join('s.stopDatasources', 'sd')
+            ->where('s.stopArea = :sa')
+            ->orderBy('sd.code')
+            ->setParameter('sa', $stopAreaId);
+
+        if ($getPhantoms === false) {
+            $query->join('s.stopHistories', 'sh');
+        }
+
+        return $query->getQuery()->getResult();
     }
 }
