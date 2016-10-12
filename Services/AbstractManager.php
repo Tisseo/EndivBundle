@@ -160,6 +160,7 @@ abstract class AbstractManager
      *
      * @param  string|array $property
      * @param  string       $term
+     * @param  boolean      $specials
      * @param  integer      $identifier
      * @param  integer      $offset
      * @param  integer      $limit
@@ -169,6 +170,7 @@ abstract class AbstractManager
     public function findByLike(
         $properties,
         $term,
+        $specials = false,
         $identifier = null,
         $offset = 0,
         $limit = 0,
@@ -179,7 +181,7 @@ abstract class AbstractManager
             $properties = array($properties);
         }
 
-        $query = $this->createLikeQueryBuilder($properties, $term, $offset, $limit);
+        $query = $this->createLikeQueryBuilder($properties, $term, $specials, $offset, $limit);
 
         if ($identifier !== null) {
             $query->andWhere('o.id != :identifier')->setParameter('identifier', $identifier);
@@ -235,17 +237,23 @@ abstract class AbstractManager
      *
      * @param  string  $property
      * @param  string  $term
+     * @param  boolean $specials
      * @param  integer $offset
      * @param  integer $limit
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function createLikeQueryBuilder(array $properties, $term, $offset = 0, $limit = 0)
+    protected function createLikeQueryBuilder(array $properties, $term, $specials = false, $offset = 0, $limit = 0)
     {
         if (count($properties) === 0) {
             throw new \Exception("You must add at least one property used in the find like");
         }
 
         $objectManager = $this->managerRegistry->getManagerForClass($this->class);
+
+        // filter some characters from the sent term
+        if ($specials === true) {
+            $term = str_replace(array("-", " ", "'"), "_", $term);
+        }
 
         $query = $this->getRepository()->createQueryBuilder('o');
         foreach ($properties as $property) {

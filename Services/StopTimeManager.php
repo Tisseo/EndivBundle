@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Tisseo\EndivBundle\Entity\StopTime;
-
 class StopTimeManager extends AbstractManager
 {
     /**

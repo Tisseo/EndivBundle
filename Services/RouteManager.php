@@ -46,7 +46,7 @@ class RouteManager extends AbstractManager
 
         $trips = $route->getTripsNotPattern();
 
-        // TODO: Later, condition is if ACTIVE (calendar_start_date > now > calendar_end_date) trips found, can't delete
+        // Later, condition is if ACTIVE (calendar_start_date > now > calendar_end_date) trips found, can't delete
         if ($trips->count() > 0) {
             throw new \Exception("Can't delete this route because it has ".$trips." trips.");
         }

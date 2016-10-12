@@ -3,7 +3,6 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Tisseo\EndivBundle\Entity\Stop;
-use Tisseo\EndivBundle\Entity\StopHistory;
 use Tisseo\EndivBundle\Entity\StopAccessibility;
 
 class StopManager extends AbstractManager
@@ -104,29 +103,6 @@ class StopManager extends AbstractManager
     }
 
     /**
-     * TODO: REPLACE BY CRITERIA IN STOP ENTITY
-     * OR USE A DOCTRINE RULE IN MAPPING FILE
-     */
-    /*public function getOrderedStopHistories($stop)
-    {
-        $query = $this->getObjectManager()->createQuery(
-            "
-            SELECT sh FROM Tisseo\EndivBundle\Entity\StopHistory sh
-            WHERE sh.stop = :stop
-            ORDER BY sh.startDate DESC, sh.endDate DESC
-        "
-        );
-        $query->setParameter('stop', $stop);
-
-        return $query->getResult();
-    }*/
-
-    /**
-     * TODO: COMMENT
-     * TODO: Investigate why use of connection + is this function good ?
-     * TODO: THERE IS A JSONCONTROLLER WHICH CALL FUNCTIONS LIKE THIS ONE:
-     *       JSONMANAGER CENTRALIZATION THEN ? CAPSLOCK IS GOOD.
-     *
      * if $stopAreaId argument is given, then stops that belong to this stopArea won't be returned
      */
     public function findStopsLike($term, $stopAreaId = null, $getPhantoms = false)
