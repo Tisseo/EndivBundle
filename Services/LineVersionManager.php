@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Utils\Sorting;
 use Tisseo\EndivBundle\Entity\LineVersion;

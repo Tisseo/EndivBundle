@@ -12,7 +12,6 @@ use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\RouteExportDestination;
-use Tisseo\EndivBundle\Services\StopManager;
 
 class RouteManager extends AbstractManager
 {

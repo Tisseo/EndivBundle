@@ -2,9 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Tisseo\EndivBundle\Entity\Log;
-
 class LogManager extends AbstractManager
 {
     /**

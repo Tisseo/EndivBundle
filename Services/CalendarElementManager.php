@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\ORM\Query\ResultSetMapping;
 use Tisseo\EndivBundle\Entity\Calendar;
 use Tisseo\EndivBundle\Entity\CalendarElement;
 

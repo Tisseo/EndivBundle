@@ -5,8 +5,6 @@ namespace Tisseo\EndivBundle\Services;
 use Tisseo\EndivBundle\Entity\OdtArea;
 use Tisseo\EndivBundle\Entity\OdtStop;
 use Tisseo\EndivBundle\Types\DateId;
-use Tisseo\EndivBundle\Services\StopManager;
-use Tisseo\EndivBundle\Services\StopAreaManager;
 
 class OdtStopManager extends AbstractManager
 {
