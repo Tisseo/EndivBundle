@@ -102,7 +102,7 @@ class RouteStopManager extends SortManager {
             ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
             ->join('rs.route', 'r')
             ->where('r.id = ?1 AND rs.rank BETWEEN ?2 AND ?3')
-            ->orderBy('rs.rank', A)
+            ->orderBy('rs.rank', 'ASC')
             ->setParameters(array(
                 1 => $routeId,
                 2 => $minRank,
