@@ -555,8 +555,11 @@ class Stop extends ObjectDatasource
      *
      * @param \Datetime $date
      */
-    public function getCurrentOrLatestStopHistory($date)
+    public function getCurrentOrLatestStopHistory($date = null)
     {
+        if ($date === null){
+            $date = new \Datetime();
+        }
         $stopHistory = $this->getCurrentStopHistory($date);
 
         return (empty($stopHistory) ? $this->getLatestStopHistory() : $stopHistory);
