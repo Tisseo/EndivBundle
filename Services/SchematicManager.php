@@ -2,8 +2,10 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-class SchematicManager extends AbstractManager
+class SchematicManager extends AbstractManager implements CsvExportInterface
 {
+    private $date;
+
     /**
      * Find multiple by Id
      *
@@ -48,23 +50,30 @@ class SchematicManager extends AbstractManager
         }
     }
 
-    public function getCsvExport($date)
+    public function configureForCsvExport(array $parameters = array())
     {
-        $startDate = \DateTime::createFromFormat('d-m-Y', $date);
-        $now = new \Datetime();
-        $sql ="
-            SELECT
-                l.number as line_number,
-                s.date as schematic_date,
-                s.comment as schematic_comment
-            FROM Tisseo\EndivBundle\Entity\Schematic s
-            JOIN s.line l
-            WHERE s.date >= :startDate
-            ORDER BY l.priority, l.number
-        ";
+        if (!empty($parameters['date'])) {
+            $this->date = $parameters['date'];
+        }
+    }
 
-        $query = $this->getObjectManager()->createQuery($sql)
-            ->setParameter('startDate', $startDate);
+    public function getCsvExport()
+    {
+        if (empty($this->date)) {
+            throw new \Exception('You must configure the service reference date before using export function');
+        }
+
+        $startDate = \DateTime::createFromFormat('d-m-Y', $this->date);
+        $now = new \Datetime();
+
+        $query = $this->getRepository()
+            ->createQueryBuilder('s')
+            ->select('s.comment as schematic_comment, s.date as schematic_date, l.number as line_number')
+            ->join('s.line', 'l')
+            ->where('s.date >= :startDate')
+            ->orderBy('l.priority, l.number')
+            ->setParameter('startDate', $startDate)
+            ->getQuery();
 
         $content = $query->getArrayResult();
         $filename = 'schematic_'.$startDate->format('Y-m-d').'_to_'.$now->format('Y-m-d');

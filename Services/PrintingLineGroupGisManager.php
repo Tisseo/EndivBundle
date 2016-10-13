@@ -2,7 +2,7 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-class PrintingLineGroupGisManager extends AbstractManager
+class PrintingLineGroupGisManager extends AbstractManager implements CsvExportInterface
 {
     public function getCsvExport()
     {

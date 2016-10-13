@@ -2,7 +2,7 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-class LineGroupGisManager extends AbstractManager
+class LineGroupGisManager extends AbstractManager implements CsvExportInterface
 {
     /**
      * Find All with more data
