@@ -6,7 +6,6 @@ Tisseo\EndivBundle\Entity\Schematic:
             type: integer
             nullable: false
             unsigned: false
-            comment: ''
             id: true
             generator:
                 strategy: SEQUENCE
@@ -16,37 +15,30 @@ Tisseo\EndivBundle\Entity\Schematic:
             nullable: true
             length: 255
             fixed: false
-            comment: ''
         comment:
             type: string
             nullable: false
             length: 255
             fixed: false
-            comment: ''
         date:
             type: datetime
             nullable: false
-            comment: ''
         deprecated:
             type: boolean
             nullable: true
-            comment: ''
         groupGis:
             type: boolean
             nullable: false
-            comment: ''
             column: group_gis
-        filePath:
+        file:
             type: text
             nullable: true
             length: null
             fixed: false
-            comment: ''
             column: file_path
     manyToOne:
         line:
             targetEntity: Line
-            mappedBy: null
             inversedBy: schematics
             joinColumns:
                 line_id:
@@ -57,13 +49,7 @@ Tisseo\EndivBundle\Entity\Schematic:
             targetEntity: LineVersion
             cascade: ['persist']
             mappedBy: schematic
-            inversedBy: null
             fetch: 'EXTRA_LAZY'
-    lifecycleCallbacks:
-        prePersist: [ preUpload ]
-        preUpdate: [ preUpload ]
-        postPersist: [ upload ]
-        postUpdate: [ upload ]
     properties:
         file:
             - File:

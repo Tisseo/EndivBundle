@@ -32,11 +32,6 @@ class Schematic
     /**
      * @var string
      */
-    private $filePath;
-
-    /**
-     * @var string
-     */
     public $file;
 
     /**
@@ -147,74 +142,6 @@ class Schematic
     }
 
     /**
-     * Set filePath
-     *
-     * @param  string $filePath
-     * @return Schematic
-     */
-    public function setFilePath($filePath)
-    {
-        $this->filePath = $filePath;
-
-        return $this;
-    }
-
-    /**
-     * Get filePath
-     *
-     * @return string
-     */
-    public function getFilePath()
-    {
-        return $this->filePath;
-    }
-
-    public function getAbsolutePath()
-    {
-        return null === $this->filePath ? null : $this->getUploadRootDir().'/'.$this->filePath;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->filePath ? null : $this->getUploadDir().'/'.$this->filePath;
-    }
-
-    protected function getUploadRootDir()
-    {
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-        return 'uploads/schematics';
-    }
-
-    public function upload()
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        $this->file->move($this->getUploadRootDir(), $this->getFilePath());
-        unset($this->file);
-    }
-
-    /**
-     * Rename file
-     */
-    public function preUpload()
-    {
-        if (null !== $this->file) {
-            $this->setFilePath(
-                $this->getLine()->getNumber() .
-                '_' . date_format($this->getDate(), 'Ymd') .
-                '_' . sha1(uniqid(mt_rand(), true)) .
-                '.' . $this->file->guessExtension()
-            );
-        }
-    }
-
-    /**
      * Set line
      *
      * @param  \Tisseo\EndivBundle\Entity\Line $line
@@ -251,11 +178,11 @@ class Schematic
     }
 
     /**
-     * Get deprecated
+     * Is deprecated
      *
      * @return boolean
      */
-    public function getDeprecated()
+    public function isDeprecated()
     {
         return $this->deprecated;
     }
@@ -274,11 +201,11 @@ class Schematic
     }
 
     /**
-     * Get groupGis
+     * Is groupGis
      *
      * @return boolean
      */
-    public function getGroupGis()
+    public function isGroupGis()
     {
         return $this->groupGis;
     }
@@ -296,5 +223,25 @@ class Schematic
     public function getDateString()
     {
         return $this->date->format('d/m/Y');
+    }
+
+    /**
+     * Get file
+     *
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set file
+     *
+     * @param string $file
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
     }
 }

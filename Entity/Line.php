@@ -640,7 +640,7 @@ class Line extends Datasourced
     // Schematics Criteria functions
 
     /**
-     * Get last schematic (priority on schematic with a filePath).
+     * Get last schematic (priority on schematic with a file).
      *
      * @param  boolean withFile
      * @return \Datetime
@@ -653,7 +653,7 @@ class Line extends Datasourced
 
         if ($withFile) {
             $criteria = Criteria::create()
-                ->where(Criteria::expr()->neq('filePath', null))
+                ->where(Criteria::expr()->neq('file', null))
                 ->setMaxResults(1);
 
             $schematics = $this->schematics->matching($criteria);
@@ -679,7 +679,7 @@ class Line extends Datasourced
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('deprecated', true))
-            ->andWhere(Criteria::expr()->neq('filePath', null))
+            ->andWhere(Criteria::expr()->neq('file', null))
             ->orderBy(array('date' => Criteria::ASC))
             ->setMaxResults(1);
 
@@ -704,7 +704,7 @@ class Line extends Datasourced
         }
 
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('filePath', null));
+            ->where(Criteria::expr()->neq('file', null));
         if (!is_null($max)) {
             $criteria->setMaxResults($max);
         }
@@ -729,7 +729,7 @@ class Line extends Datasourced
         }
 
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('filePath', null))
+            ->where(Criteria::expr()->neq('file', null))
             ->andWhere(Criteria::expr()->neq('deprecated', true))
             ->andWhere(Criteria::expr()->eq('groupGis', true));
 
@@ -754,7 +754,7 @@ class Line extends Datasourced
         }
 
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('filePath', null))
+            ->where(Criteria::expr()->neq('file', null))
             ->andWhere(Criteria::expr()->neq('deprecated', true));
 
         $result = array();
