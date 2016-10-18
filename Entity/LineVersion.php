@@ -254,7 +254,7 @@ class LineVersion extends Datasourced
     public function isParent()
     {
         foreach ($this->lineGroupContents as $lineGroupContent) {
-            if ($lineGroupContent->getIsParent()) {
+            if ($lineGroupContent->isParent()) {
                 return true;
             }
         }
