@@ -32,21 +32,28 @@ class EventManager extends OgiveManager
         return $results ? $results[0] : null;
     }
 
-    /**
-     * Find all closed events ie not open (closed or rejected)
-     */
-    public function findAllClosed()
-    {
+    public function findEventList($archive = false) {
+        $status = ($archive === true) ? Event::STATUS_CLOSED : Event::STATUS_OPEN;
+
         $queryBuilder = $this->objectManager->createQueryBuilder()
             ->select('event')
             ->from('Tisseo\EndivBundle\Entity\Ogive\Event', 'event')
-            ->where('event.status != :status')
-            ->setParameter('status', Event::STATUS_OPEN);
+            ->leftJoin('event.periods', 'p')
+            ->leftJoin('event.eventSteps', 'es')
+            ->where('event.status = :status')
+            ->setParameter('status', $status)
+            ->addSelect('p, es');
 
-        $results = $queryBuilder->getQuery()->getResult();
+        if ($archive === true) {
+            $queryBuilder
+                ->leftJoin('es.statuses', 's')
+                ->addSelect('s');
+        }
 
-        return $results;
+        return $queryBuilder->getQuery()->getResult();
+
     }
+
 
     /**
      * Manage event data and save it
