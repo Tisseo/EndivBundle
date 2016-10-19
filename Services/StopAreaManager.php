@@ -152,7 +152,7 @@ class StopAreaManager extends SortManager
                ORDER BY sd.code";
         $query = $this->em->createQuery($queryString)->setParameter('sa', $stopArea);
 
-        return $query->getFirstResult();
+        return $query->getResult();
     }
 
     public function getStopsOrderedByShortName($stopArea) {
