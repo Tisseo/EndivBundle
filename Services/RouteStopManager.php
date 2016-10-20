@@ -98,15 +98,16 @@ class RouteStopManager extends SortManager {
     public function getRouteStopsSectionByMinMaxRank($routeId, $minRank, $maxRank)
     {
         $qb = $this->om->createQueryBuilder()
-                       ->select('rs')
-                       ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
-                       ->join('rs.route', 'r')
-                       ->where('r.id = ?1 AND rs.rank BETWEEN ?2 AND ?3')
-                       ->setParameters(array(
-                           1 => $routeId,
-                           2 => $minRank,
-                           3 => $maxRank
-                       ));
+            ->select('rs')
+            ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
+            ->join('rs.route', 'r')
+            ->where('r.id = ?1 AND rs.rank BETWEEN ?2 AND ?3')
+            ->orderBy('rs.rank', 'ASC')
+            ->setParameters(array(
+                1 => $routeId,
+                2 => $minRank,
+                3 => $maxRank
+            ));
         return $qb
             ->getQuery()
             ->getResult()

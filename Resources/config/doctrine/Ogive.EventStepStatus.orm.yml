@@ -1,6 +1,6 @@
-Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus:
+Tisseo\EndivBundle\Entity\Ogive\EventStepStatus:
     type: entity
-    table: ogive.link_event_step_status
+    table: ogive.event_step_status
     indexes:
         IDX_65CE976DF7EFF44D:
             columns:

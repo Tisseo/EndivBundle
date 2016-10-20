@@ -2,7 +2,7 @@
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
-use Tisseo\EndivBundle\Entity\Ogive\LinkEventStepStatus;
+use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
 use Tisseo\EndivBundle\Entity\Ogive\EventStep;
 
 class EventStepManager extends OgiveManager
@@ -25,8 +25,8 @@ class EventStepManager extends OgiveManager
         $comment = null
     )
     {
-        if (!($less instanceof LinkEventStepStatus)) {
-            $less = new LinkEventStepStatus;
+        if (!($less instanceof EventStepStatus)) {
+            $less = new EventStepStatus;
         }
 
         if (!empty($comment)) {

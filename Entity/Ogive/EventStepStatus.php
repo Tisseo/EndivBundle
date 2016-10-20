@@ -3,9 +3,9 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 /**
- * LinkEventStepStatus
+ * EventStepStatus
  */
-class LinkEventStepStatus extends OgiveEntity
+class EventStepStatus extends OgiveEntity
 {
     const STATUS_TODO = 1;
     const STATUS_VALIDATED = 2;
@@ -65,7 +65,7 @@ class LinkEventStepStatus extends OgiveEntity
      * Set id
      *
      * @param integer $id
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function setId($id)
     {
@@ -86,7 +86,7 @@ class LinkEventStepStatus extends OgiveEntity
      * Set Status
      *
      * @param integer $status
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function setStatus($status)
     {
@@ -111,7 +111,7 @@ class LinkEventStepStatus extends OgiveEntity
      * Set dateTime
      *
      * @param \DateTime $dateTime
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function setDateTime(\DateTime $dateTime)
     {
@@ -132,7 +132,7 @@ class LinkEventStepStatus extends OgiveEntity
      * Set userComment
      *
      * @param string $userComment
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function setUserComment($userComment)
     {
@@ -153,7 +153,7 @@ class LinkEventStepStatus extends OgiveEntity
      * Set login
      *
      * @param string $login
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function setLogin($login)
     {
@@ -176,7 +176,7 @@ class LinkEventStepStatus extends OgiveEntity
      * Set eventStep
      *
      * @param EventStep $eventStep
-     * @return LinkEventStepStatus
+     * @return EventStepStatus
      */
     public function setEventStep($eventStep)
     {
