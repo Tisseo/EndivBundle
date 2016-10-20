@@ -40,18 +40,17 @@ class EventManager extends OgiveManager
             ->from('Tisseo\EndivBundle\Entity\Ogive\Event', 'event')
             ->leftJoin('event.periods', 'p')
             ->leftJoin('event.eventSteps', 'es')
+            ->leftJoin('es.statuses', 's')
             ->where('event.status = :status')
             ->setParameter('status', $status)
-            ->addSelect('p, es');
+            ->addSelect('p, es', 's');
 
         if ($archive === true) {
             $queryBuilder
-                ->leftJoin('es.statuses', 's')
-                ->addSelect('s');
+                ->leftJoin('event.objects', 'eo')->addSelect('eo');
         }
 
         return $queryBuilder->getQuery()->getResult();
-
     }
 
 
