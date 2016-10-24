@@ -17,4 +17,10 @@ Tisseo\EndivBundle\Entity\PoiType:
             length: 50
             fixed: false
             comment: ''
+        long_name:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
     lifecycleCallbacks: {  }
