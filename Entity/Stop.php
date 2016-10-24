@@ -516,7 +516,13 @@ class Stop extends ObjectDatasource
             ->setMaxResults(1)
         ;
 
-        return $this->stopHistories->matching($criteria)->first();
+        $results = $this->stopHistories->matching($criteria);
+
+        if ($results->count() === 0) {
+            return null;
+        }
+
+        return $results->first();
     }
 
     public function getYoungerStopHistories(\Datetime $date)
@@ -547,7 +553,13 @@ class Stop extends ObjectDatasource
             ->setMaxResults(1)
         ;
 
-        return $this->stopHistories->matching($criteria)->first();
+        $results = $this->stopHistories->matching($criteria);
+
+        if ($results->count() === 0) {
+            return null;
+        }
+
+        return $results->first();
     }
 
     /**
