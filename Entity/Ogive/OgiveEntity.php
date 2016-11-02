@@ -17,6 +17,7 @@ class OgiveEntity
      * @param OgiveEntity $entity
      * @param array $mapper
      * @param boolean $withId
+     * @throws \Exception
      */
     public function merge(OgiveEntity $entity, array $mapper = array(), $withId = true)
     {
