@@ -634,15 +634,21 @@ class Stop extends ObjectDatasource
     public function getAccessibilityCalendar()
     {
         $calendar = null;
-        foreach ($this->stopAccessibilities as $stopAccessibility)
-        {
+
+        if ($this->masterStop instanceof Stop) {
+            $stopAccessibilities = $this->masterStop->getStopAccessibilities();
+        } else {
+            $stopAccessibilities = $this->getStopAccessibilities();
+        }
+
+        foreach ($stopAccessibilities as $stopAccessibility) {
             $accessibilityType = $stopAccessibility->getAccessibilityType();
-            if ($accessibilityType->getAccessibilityMode()->getName() == AccessibilityMode::MODE_PMR)
-            {
+            if ($accessibilityType->getAccessibilityMode()->getName() === AccessibilityMode::MODE_PMR) {
                 $calendar = $accessibilityType->getCalendar();
                 break;
             }
         }
+
         return $calendar;
     }
 
