@@ -5,22 +5,9 @@
     "keywords" : ["Tisseo tid endiv"],
     "homepage": "https://github.com/Tisseo/EndivBundle",
     "license": "AGPLv3",
-    "authors" : [
-        {
-            "name" : "Vincent Passama",
-            "email" : "vincent.passama@gmail.com"
-        },
-        {
-            "name" : "Rodolphe Duval",
-            "email" : "rdldvl@gmail.com"
-        },
-        {
-            "name" : "Pierre-Yves Claitte",
-            "email" : "pierre.cl@gmail.com"
-        }
-    ],
     "require" : {
         "php": ">=5.4.3",
+        "doctrine/dbal": "~2.4",
         "creof/doctrine2-spatial": "~0.0.1",
         "oro/doctrine-extensions": "~1.0.8",
         "jms/serializer-bundle": "~0.13.0"
