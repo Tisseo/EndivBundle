@@ -7,7 +7,7 @@
     "license": "AGPLv3",
     "require" : {
         "php": ">=5.4.3",
-        "doctrine/dbal": "~2.4",
+        "doctrine/dbal": "~2.4.0",
         "creof/doctrine2-spatial": "~0.0.1",
         "oro/doctrine-extensions": "~1.0.8",
         "jms/serializer-bundle": "~0.13.0"
