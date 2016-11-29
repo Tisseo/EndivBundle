@@ -23,4 +23,10 @@ Tisseo\EndivBundle\Entity\PhysicalMode:
             length: 30
             fixed: false
             comment: ''
+        co2Emission:
+            type: float
+            nullable: true
+            default: 0.0
+            column: co2_emission
+
     lifecycleCallbacks: {  }

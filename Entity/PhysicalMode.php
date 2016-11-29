@@ -24,6 +24,10 @@ class PhysicalMode
      */
     private $type;
 
+    /**
+     * @var float
+     */
+    private $co2Emission;
 
     /**
      * Get id
@@ -79,5 +83,28 @@ class PhysicalMode
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Get co2Emission
+     *
+     * @return float
+     */
+    public function getCo2Emission()
+    {
+        return $this->co2Emission;
+    }
+
+    /**
+     * Set co2Emission
+     *
+     * @param  float co2Emission
+     * @return PhysicalMode
+     */
+    public function setCo2Emission($co2Emission)
+    {
+        $this->co2Emission = $co2Emission;
+
+        return $this;
     }
 }
