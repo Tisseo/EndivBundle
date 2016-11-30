@@ -335,7 +335,11 @@ class Trip extends ObjectDatasource
      */
     public function getStopTimes()
     {
-        return $this->stopTimes;
+        $criteria = Criteria::create()
+            ->orderBy(array('departureTime' => Criteria::ASC))
+        ;
+
+        return $this->stopTimes->matching($criteria);
     }
 
     /**
