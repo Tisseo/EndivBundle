@@ -414,6 +414,7 @@ class TripManager
                 FROM trip t
                 JOIN calendar c ON c.id = t.period_calendar_id
                 WHERE t.route_id = :routeId
+                AND t.is_pattern = false
                 GROUP BY t.period_calendar_id, t.day_calendar_id, c.computed_start_date, c.computed_end_date
             ) AS trip_date;
         ");
@@ -427,6 +428,28 @@ class TripManager
         }
 
         return $result;
+    }
+
+    /**
+     * Get the trip lists for one route
+     *
+     * @param Route $route
+     * @return ArrayCollection
+     */
+    public function getTripsListForOneRoute(Route $route) {
+        $query = $this->repository->createQueryBuilder('t')
+            ->select('t, st, pc, dc')
+            ->where('t.isPattern = false')
+            ->andWhere('r.id = :routeId')
+            ->join('t.route', 'r')
+            ->join('r.routeStops', 'rs', 'with', 'rs.rank = 1')
+            ->join('t.stopTimes', 'st', 'with', 'st.routeStop = rs')
+            ->leftJoin('t.periodCalendar', 'pc')
+            ->leftJoin('t.dayCalendar', 'dc')
+            ->setParameter('routeId', $route->getId())
+            ->getQuery();
+
+        return $query->getResult();
     }
 
     /**
