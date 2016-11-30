@@ -410,11 +410,10 @@ class TripManager
 
         $stmt = $connection->prepare("
             SELECT UNNEST(trips) as id, (bounds).start_date AS start, (bounds).end_date AS end FROM (
-                SELECT CASE WHEN t.day_calendar_id IS NOT NULL THEN getdateboundsbeetweencalendars(t.period_calendar_id, t.day_calendar_id) ELSE (c.computed_start_date, c.computed_end_date, null, null)::date_pair END as bounds, array_agg(t.id) as trips
+                SELECT CASE WHEN t.day_calendar_id IS NOT NULL THEN get_date_bounds_beetween_calendars_optimized(t.period_calendar_id, t.day_calendar_id) ELSE (c.computed_start_date, c.computed_end_date, null, null)::date_pair END as bounds, array_agg(t.id) as trips
                 FROM trip t
                 JOIN calendar c ON c.id = t.period_calendar_id
                 WHERE t.route_id = :routeId
-                AND t.is_pattern = false
                 GROUP BY t.period_calendar_id, t.day_calendar_id, c.computed_start_date, c.computed_end_date
             ) AS trip_date;
         ");
@@ -444,7 +443,7 @@ class TripManager
             ->join('t.route', 'r')
             ->join('r.routeStops', 'rs', 'with', 'rs.rank = 1')
             ->join('t.stopTimes', 'st', 'with', 'st.routeStop = rs')
-            ->leftJoin('t.periodCalendar', 'pc')
+            ->join('t.periodCalendar', 'pc')
             ->leftJoin('t.dayCalendar', 'dc')
             ->setParameter('routeId', $route->getId())
             ->getQuery();
