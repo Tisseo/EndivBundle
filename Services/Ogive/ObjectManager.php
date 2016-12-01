@@ -19,11 +19,11 @@ class ObjectManager extends OgiveManager
     {
         // TODO: could use inheritance here and directly bring the relation when instanciating Object class
         $extrema = null;
-        foreach ($event->getEventObjects() as $eventObject) {
-            if ($eventObject->getObject()->getObjectType() === OgiveObject::STOP && empty($extrema)) {
-                $extrema = $eventObject->getEvent()->getExtremaPeriodDates();
+        foreach ($event->getObjects() as $object) {
+            if ($object->getObjectType() === OgiveObject::STOP && empty($extrema)) {
+                $extrema = $event->getExtremaPeriodDates();
             }
-            $this->setMetaInformation($eventObject->getObject(), $extrema);
+            $this->setMetaInformation($object, $extrema);
         }
     }
 

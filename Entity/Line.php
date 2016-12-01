@@ -280,29 +280,6 @@ class Line extends ObjectDatasource
     }
 
     /**
-     * Add lineDatasources
-     *
-     * @param LineDatasource $lineDatasource
-     * @return Line
-     */
-    public function addLineDatasources(LineDatasource $lineDatasource)
-    {
-        $this->lineDatasources->add($lineDatasource);
-
-        return $this;
-    }
-
-    /**
-     * Remove lineDatasources
-     *
-     * @param LineDatasource $lineDatasource
-     */
-    public function removeLineDatasources(LineDatasource $lineDatasource)
-    {
-        $this->lineDatasources->removeElement($lineDatasource);
-    }
-
-    /**
      * Add lineVersions
      *
      * @param LineVersion $lineVersions

@@ -410,7 +410,7 @@ class TripManager
 
         $stmt = $connection->prepare("
             SELECT UNNEST(trips) as id, (bounds).start_date AS start, (bounds).end_date AS end FROM (
-                SELECT CASE WHEN t.day_calendar_id IS NOT NULL THEN getdateboundsbeetweencalendars(t.period_calendar_id, t.day_calendar_id) ELSE (c.computed_start_date, c.computed_end_date, null, null)::date_pair END as bounds, array_agg(t.id) as trips
+                SELECT CASE WHEN t.day_calendar_id IS NOT NULL THEN get_date_bounds_beetween_calendars_optimized(t.period_calendar_id, t.day_calendar_id) ELSE (c.computed_start_date, c.computed_end_date, null, null)::date_pair END as bounds, array_agg(t.id) as trips
                 FROM trip t
                 JOIN calendar c ON c.id = t.period_calendar_id
                 WHERE t.route_id = :routeId
@@ -427,6 +427,28 @@ class TripManager
         }
 
         return $result;
+    }
+
+    /**
+     * Get the trip lists for one route
+     *
+     * @param Route $route
+     * @return ArrayCollection
+     */
+    public function getTripsListForOneRoute(Route $route) {
+        $query = $this->repository->createQueryBuilder('t')
+            ->select('t, st, pc, dc')
+            ->where('t.isPattern = false')
+            ->andWhere('r.id = :routeId')
+            ->join('t.route', 'r')
+            ->join('r.routeStops', 'rs', 'with', 'rs.rank = 1')
+            ->join('t.stopTimes', 'st', 'with', 'st.routeStop = rs')
+            ->join('t.periodCalendar', 'pc')
+            ->leftJoin('t.dayCalendar', 'dc')
+            ->setParameter('routeId', $route->getId())
+            ->getQuery();
+
+        return $query->getResult();
     }
 
     /**

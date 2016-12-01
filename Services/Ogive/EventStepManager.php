@@ -25,21 +25,28 @@ class EventStepManager extends OgiveManager
         $comment = null
     )
     {
-        if (!($less instanceof EventStepStatus)) {
-            $less = new EventStepStatus;
+        try {
+
+            if (!($less instanceof EventStepStatus)) {
+                $less = new EventStepStatus;
+            }
+
+            if (!empty($comment)) {
+                $less->setUserComment($comment);
+            }
+
+            $less->setEventStep($eventStep);
+            $less->setStatus($status);
+            $less->setLogin($login);
+            $less->setDateTime(new \Datetime());
+
+            $eventStep->addStatus($less);
+            $this->save($eventStep);
+
+            return true;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
-
-        if (!empty($comment)) {
-            $less->setUserComment($comment);
-        }
-
-        $less->setEventStep($eventStep);
-        $less->setStatus($status);
-        $less->setLogin($login);
-        $less->setDateTime(new \Datetime());
-
-        $eventStep->addStatus($less);
-        $this->save($eventStep);
     }
 
 
@@ -48,6 +55,7 @@ class EventStepManager extends OgiveManager
      *
      * @param $parentStepId
      * @return array
+     * @throws \UnexpectedValueException
      */
     public function findChildSteps($parentStepId)
     {
@@ -59,6 +67,7 @@ class EventStepManager extends OgiveManager
         if (count($all) > 0) {
             return $all;
         }
+
         return null;
     }
 }

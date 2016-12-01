@@ -19,6 +19,11 @@ class PoiType
      */
     private $name;
 
+    /**
+     * @var string
+     */
+    private $long_name;
+
 
     /**
      * Get id
@@ -51,5 +56,22 @@ class PoiType
     public function getName()
     {
         return $this->name;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getLongName()
+    {
+        return $this->long_name;
+    }
+
+    /**
+     * @param string $long_name
+     */
+    public function setLongName($long_name)
+    {
+        $this->long_name = $long_name;
     }
 }

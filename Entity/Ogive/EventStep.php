@@ -76,6 +76,7 @@ class EventStep extends OgiveEntity
      */
     private $scenarioStepParentId;
 
+
     /**
      * Constructor
      */

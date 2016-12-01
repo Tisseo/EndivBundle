@@ -64,6 +64,11 @@ class Stop extends ObjectDatasource
     private $pois;
 
     /**
+     * @var \Tisseo\EndivBundle\Entity\Waypoint
+     */
+    private $waypoint;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -188,11 +193,6 @@ class Stop extends ObjectDatasource
     {
         return $this->stopArea;
     }
-    /**
-     * @var \Tisseo\EndivBundle\Entity\Waypoint
-     */
-    private $waypoint;
-
 
     /**
      * Set waypoint
@@ -516,7 +516,13 @@ class Stop extends ObjectDatasource
             ->setMaxResults(1)
         ;
 
-        return $this->stopHistories->matching($criteria)->first();
+        $results = $this->stopHistories->matching($criteria);
+
+        if ($results->count() === 0) {
+            return null;
+        }
+
+        return $results->first();
     }
 
     public function getYoungerStopHistories(\Datetime $date)
@@ -547,7 +553,13 @@ class Stop extends ObjectDatasource
             ->setMaxResults(1)
         ;
 
-        return $this->stopHistories->matching($criteria)->first();
+        $results = $this->stopHistories->matching($criteria);
+
+        if ($results->count() === 0) {
+            return null;
+        }
+
+        return $results->first();
     }
 
     /**
@@ -598,23 +610,24 @@ class Stop extends ObjectDatasource
     public function getStopDisplayLabel()
     {
         $now = new \Datetime();
-        if (empty($this->masterStop))
-        {
+        if (empty($this->masterStop)) {
             $stopHistory = $this->getCurrentOrLatestStopHistory($now);
-        }
-        else
-        {
+        } else {
             $stopHistory = $this->masterStop->getCurrentOrLatestStopHistory($now);
         }
 
-        if (empty($stopHistory))
-        {
+        if (empty($stopHistory)) {
             return "";
         }
+
         $result = $stopHistory->getShortName();
-        $result .= " ".$this->getStopArea()->getCity()->getName();
-        foreach ($this->stopDatasources as $stopDatasource)
+
+        if ($this->stopArea !== null) {
+            $result .= " ".$this->stopArea->getCity()->getName();
+        }
+        foreach ($this->stopDatasources as $stopDatasource) {
             $result .= " (".$stopDatasource->getCode().")";
+        }
 
         return $result;
     }
@@ -622,15 +635,21 @@ class Stop extends ObjectDatasource
     public function getAccessibilityCalendar()
     {
         $calendar = null;
-        foreach ($this->stopAccessibilities as $stopAccessibility)
-        {
+
+        if ($this->masterStop instanceof Stop) {
+            $stopAccessibilities = $this->masterStop->getStopAccessibilities();
+        } else {
+            $stopAccessibilities = $this->getStopAccessibilities();
+        }
+
+        foreach ($stopAccessibilities as $stopAccessibility) {
             $accessibilityType = $stopAccessibility->getAccessibilityType();
-            if ($accessibilityType->getAccessibilityMode()->getName() == AccessibilityMode::MODE_PMR)
-            {
+            if ($accessibilityType->getAccessibilityMode()->getName() === AccessibilityMode::MODE_PMR) {
                 $calendar = $accessibilityType->getCalendar();
                 break;
             }
         }
+
         return $calendar;
     }
 
