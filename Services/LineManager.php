@@ -61,7 +61,6 @@ class LineManager extends SortManager
         return $query->getResult();
     }
 
-
     public function findAllLinesByPriority()
     {
         $query = $this->repository->createQueryBuilder('l')
@@ -71,23 +70,24 @@ class LineManager extends SortManager
         return $this->sortLinesByNumber($query->getResult());
     }
 
-
-    public function findAllLinesWithSchematic($splitByPhysicalMode = false) {
+    public function findAllWithSchematics() {
         $query = $this->repository->createQueryBuilder('l')
+            ->select('l, sc, lgc, lgg, p, lv, bgc, fgc')
+            ->join('l.lineVersions', 'lv', 'with', 'lv.endDate is null or (lv.endDate + 1) > current_date()')
+            ->join('l.physicalMode', 'p')
             ->leftJoin('l.schematics', 'sc')
+            ->leftJoin('lv.fgColor', 'fgc')
+            ->leftJoin('lv.bgColor', 'bgc')
             ->leftJoin('l.lineGroupGisContents', 'lgc')
+            ->leftJoin('lgc.lineGroupGis', 'lgg')
             ->getQuery();
-
         $result = $this->sortLinesByNumber($query->getResult());
 
-        if ($splitByPhysicalMode) {
-            $query = $this->om->createQuery(
-                "SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p"
-            );
-            $physicalModes = $query->getResult();
-
-            $result = $this->splitByPhysicalMode($result, $physicalModes);
-        }
+        $query = $this->repository->createQueryBuilder('pm')
+            ->select('p.name')
+            ->from('Tisseo\EndivBundle\Entity\PhysicalMode', 'p')
+            ->getQuery();
+        $result = $this->splitByPhysicalMode($result, $query->getResult());
 
         return $result;
     }

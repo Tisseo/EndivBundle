@@ -347,7 +347,15 @@ class Line extends ObjectDatasource
      */
     public function getSchematics()
     {
-        return $this->schematics;
+        if ($this->schematics->count() === 0) {
+            return $this->schematics;
+        }
+
+        $criteria = Criteria::create()
+            ->orderBy(array('date' => Criteria::DESC))
+        ;
+
+        return $this->schematics->matching($criteria);
     }
 
     /**
@@ -622,23 +630,25 @@ class Line extends ObjectDatasource
      */
     public function getLastSchematic($withFile = false)
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
-
-        if ($withFile)
-        {
-            $criteria = Criteria::create()
-                ->where(Criteria::expr()->neq('filePath', null))
-                ->setMaxResults(1)
-            ;
-
-            $schematics = $this->schematics->matching($criteria);
-
-            if (!$schematics->isEmpty())
-                return $schematics->first();
         }
 
-        return $this->schematics->first();
+        $criteria = Criteria::create()
+            ->orderBy(array('date' => Criteria::DESC))
+            ->setMaxResults(1)
+        ;
+
+        if ($withFile) {
+            $criteria->where(Criteria::expr()->neq('filePath', null));
+        }
+
+        $schematics = $this->schematics->matching($criteria);
+        if ($schematics->count() === 0) {
+            return null;
+        }
+
+        return $schematics->first();
     }
 
     /**
@@ -671,20 +681,20 @@ class Line extends ObjectDatasource
      */
     public function getFileSchematics($max = null)
     {
-        if ($this->schematics->count() === 0)
-            return null;
+        if ($this->schematics->count() === 0) {
+            return $this->schematics;
+        }
 
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq('filePath', null));
+            ->where(Criteria::expr()->neq('filePath', null))
+            ->orderBy(array('date' => Criteria::DESC))
+        ;
+
         if (!is_null($max)) {
-           $criteria->setMaxResults($max);
+            $criteria->setMaxResults($max);
         }
-        $schematics = $this->schematics->matching($criteria);
 
-        if ($schematics->isEmpty())
-            return null;
-
-        return $schematics;
+        return $this->schematics->matching($criteria);
     }
 
     /**
@@ -693,21 +703,24 @@ class Line extends ObjectDatasource
      */
     public function getLastGisSchematic()
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('filePath', null))
             ->andWhere(Criteria::expr()->neq('deprecated', true))
             ->andWhere(Criteria::expr()->eq('groupGis', true))
+            ->orderBy(array('date' => Criteria::DESC))
         ;
 
         $schematics = $this->schematics->matching($criteria);
 
-        if (!$schematics->isEmpty())
-            return $schematics->first();
+        if ($schematics->count() === 0) {
+            return null;
+        }
 
-        return null;
+        return $schematics->first();
     }
 
     /**
@@ -716,17 +729,20 @@ class Line extends ObjectDatasource
      */
     public function getGisSchematics()
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('filePath', null))
             ->andWhere(Criteria::expr()->neq('deprecated', true))
+            ->orderBy(array('date' => Criteria::DESC))
         ;
 
         $result = array();
-        foreach ($this->schematics->matching($criteria) as $schematic)
+        foreach ($this->schematics->matching($criteria) as $schematic) {
             $result[$schematic->getId()] = $schematic->getDateString();
+        }
 
         return $result;
     }
