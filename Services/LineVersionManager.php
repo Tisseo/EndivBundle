@@ -176,10 +176,52 @@ class LineVersionManager extends SortManager
     }
 
     /**
+     * @param \Datetime $date
+     * @param string $filter
+     * @param bool $splitByPhysicalMode
+     * @return array|mixed|null
+     */
+    public function findInactiveLineVersions(\DateTime $date, $filter = '', $splitByPhysicalMode = false)
+    {
+
+        $query = $this->repository->createQueryBuilder('lv');
+        $expr = $query->expr();
+
+        $query
+            ->select('lv', 'sc', 'l', 'c', 'c_2', 'ld', 'pm')
+            ->join('lv.schematic', 'sc')
+            ->join('lv.line', 'l')
+            ->join('lv.fgColor', 'c')
+            ->join('lv.bgColor', 'c_2')
+            ->join('l.lineDatasources', 'ld')
+            ->join('l.physicalMode', 'pm')
+            ->andWhere(
+                $expr->andX(
+                    $expr->lt('lv.endDate', ':now'),
+                    $expr->isNotNull('lv.endDate')
+                )
+            )
+            ->setParameter('now', $date);
+
+        if ($filter === 'grouplines') {
+            $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
+        }
+        $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
+
+        if ($splitByPhysicalMode) {
+            $query = $this->om->createQuery("SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p");
+            $physicalModes = $query->getResult();
+
+            $result = $this->splitByPhysicalMode($result, $physicalModes);
+        }
+
+        return $result;
+    }
+
+    /**
      * Get active line version by line number
      */
-    public function findActiveLineVersionByLineNumber($lineNumber)
-    {
+    public function findActiveLineVersionByLineNumber($lineNumber) {
         $query = $this->om->createQuery("
             SELECT lv.id FROM Tisseo\EndivBundle\Entity\LineVersion lv
             JOIN lv.line line
