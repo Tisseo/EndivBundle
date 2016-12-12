@@ -327,8 +327,8 @@ class RouteManager extends SortManager
             //Hack
             if (is_array($data[0])) {
                 $_odtStop = array();
-                foreach ($data as $d => $stopData) {
-                    foreach ($odtStops as $k => $stops) {
+                foreach ($odtStops as $k => $stops) {
+                    foreach ($data as $d => $stopData) {
                         foreach ($stops as $s => $stop) {
                             if (is_object($stop)) {
                                 if ($stop->getId() === $stopData['id']) {
