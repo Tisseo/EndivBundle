@@ -406,15 +406,6 @@ class RouteManager extends SortManager
         return array_merge($odtStops, $stops);
     }
 
-
-    /**
-     *
-     */
-    private function addOdtAreaId($stopList)
-    {
-
-    }
-
     // TODO: CHANGE THIS
     public function duplicate($route, $lineVersion, $userName)
     {
