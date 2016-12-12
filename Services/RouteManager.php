@@ -60,14 +60,16 @@ class RouteManager extends SortManager
     {
         $route = $this->find($routeId);
 
-        if (empty($route))
-            throw new \Exception("Can't find the route with ID: ".$routeId);
+        if (empty($route)) {
+            throw new \Exception("Can't find the route with ID: " . $routeId);
+        }
 
         $trips = $route->getTripsNotPattern();
 
         // TODO: Later, condition is if ACTIVE (calendar_start_date > now > calendar_end_date) trips found, can't delete
-        if ($trips->count() > 0)
-            throw new \Exception("Can't delete this route because it has ".$trips." trips.");
+        if ($trips->count() > 0) {
+            throw new \Exception("Can't delete this route because it has " . $trips . " trips.");
+        }
 
         $lineVersionId = $route->getLineVersion()->getId();
 
@@ -85,6 +87,7 @@ class RouteManager extends SortManager
         ");
         $stmt->bindValue(':rsId', $routeSectionId, \PDO::PARAM_INT);
         $stmt->execute();
+
         return $stmt->fetchColumn();
     }
 
@@ -97,14 +100,16 @@ class RouteManager extends SortManager
             WITH t.pattern = t1
             WHERE t1.route = :route
         ")
-        ->setParameter("route", $route);
+            ->setParameter("route", $route);
         //convert associative array of in to array of strings
         $tmp = array_map('current', $query->getArrayResult());
+
         return array_map('strval', $tmp);
     }
 
     /**
      * Get Timetable Calendars
+     *
      * @param integer lineVersionId
      *
      * Creating an array with grouped Trips by Route with their calendar/trip_calendar.
@@ -114,18 +119,16 @@ class RouteManager extends SortManager
         $routes = $this->repository->findBy(array('lineVersion' => $lineVersionId));
 
         $result = array();
-        foreach ($routes as $route)
-        {
+        foreach ($routes as $route) {
             $way = $route->getWay();
-            if (!array_key_exists($way, $result))
+            if (!array_key_exists($way, $result)) {
                 $result[$way] = array();
+            }
 
-            foreach ($route->getTripsNotPatternWithCalendars() as $trip)
-            {
-                $calendarKey = $trip->getDayCalendar()->getName().'_'.$trip->getPeriodCalendar()->getName();
+            foreach ($route->getTripsNotPatternWithCalendars() as $trip) {
+                $calendarKey = $trip->getDayCalendar()->getName() . '_' . $trip->getPeriodCalendar()->getName();
 
-                if (!array_key_exists($calendarKey, $result[$way]))
-                {
+                if (!array_key_exists($calendarKey, $result[$way])) {
                     $result[$way][$calendarKey]['dayCalendar'] = $trip->getDayCalendar();
                     $result[$way][$calendarKey]['periodCalendar'] = $trip->getPeriodCalendar();
                     $result[$way][$calendarKey]['route'] = $route->getId();
@@ -133,8 +136,9 @@ class RouteManager extends SortManager
 
                 $result[$way][$calendarKey]['trips'][] = $trip;
 
-                if ($trip->getTripCalendar() && !array_key_exists('tripCalendar', $result[$way][$calendarKey]))
+                if ($trip->getTripCalendar() && !array_key_exists('tripCalendar', $result[$way][$calendarKey])) {
                     $result[$way][$calendarKey]['tripCalendar'] = $trip->getTripCalendar();
+                }
             }
         }
 
@@ -149,11 +153,12 @@ class RouteManager extends SortManager
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
             WHERE g.calendarType NOT IN (:type)
         ")
-        ->setParameter("type", $result);
+            ->setParameter("type", $result);
 
         foreach ($query->getResult() as $value) {
             $result[] = $value['calendarType'];
         }
+
         return $result;
     }
 
@@ -165,16 +170,18 @@ class RouteManager extends SortManager
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
             WHERE g.calendarPeriod NOT IN (:period)
         ")
-        ->setParameter("period", $result);
+            ->setParameter("period", $result);
 
         foreach ($query->getResult() as $value) {
             $result[] = $value['calendarPeriod'];
         }
+
         return $result;
     }
 
     /**
      * Link TripCalendars
+     *
      * @param array $datas
      *
      * Linking existing TripCalendars to Trip entities.
@@ -190,9 +197,9 @@ class RouteManager extends SortManager
                 WHERE gmt.calendarPeriod = :period
                 AND gmt.calendarType = :type
             ")
-             ->setParameter("period", $data['calendarPeriod'])
-             ->setParameter("type", $data['calendarType'])
-             ->getOneOrNullResult();
+                ->setParameter("period", $data['calendarPeriod'])
+                ->setParameter("type", $data['calendarType'])
+                ->getOneOrNullResult();
 
             if (!empty($gridMaskType)) {
                 $pattern = implode(array_values($data['days']));
@@ -205,17 +212,17 @@ class RouteManager extends SortManager
                                CAST(CAST(tc.thursday AS INTEGER) AS CHAR), CAST(CAST(tc.friday AS INTEGER) AS CHAR), CAST(CAST(tc.saturday AS INTEGER) AS CHAR),
                                CAST(CAST(tc.sunday AS INTEGER) AS CHAR)) = :pattern
                 ")
-                ->setParameter("gridMaskType", $gridMaskType)
-                ->setParameter("pattern", $pattern)
-                ->getOneOrNullResult();
+                    ->setParameter("gridMaskType", $gridMaskType)
+                    ->setParameter("pattern", $pattern)
+                    ->getOneOrNullResult();
 
                 if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
                     $oldTripCalendar = $this->om->createQuery("
                         SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                         WHERE tc.id = :tripCalendar
                     ")
-                    ->setParameter("tripCalendar", $data['tripCalendar'])
-                    ->getOneOrNullResult();
+                        ->setParameter("tripCalendar", $data['tripCalendar'])
+                        ->getOneOrNullResult();
 
                     if (!empty($oldTripCalendar) && $oldTripCalendar->getId() === $tripCalendar->getId()) {
                         continue;
@@ -251,8 +258,8 @@ class RouteManager extends SortManager
                 SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
                 WHERE t.id IN(:trips)
             ")
-            ->setParameter("trips", $tripIds)
-            ->getResult();
+                ->setParameter("trips", $tripIds)
+                ->getResult();
 
             foreach ($trips as $trip) {
                 $trip->setTripCalendar($tripCalendar);
@@ -267,20 +274,16 @@ class RouteManager extends SortManager
     public function updateExportDestinations($route, $exportDestinations)
     {
         $sync = false;
-        foreach ($route->getRouteExportDestinations() as $routeExportDestination)
-        {
-            if (!($exportDestinations->contains($routeExportDestination->getExportDestination())))
-            {
+        foreach ($route->getRouteExportDestinations() as $routeExportDestination) {
+            if (!($exportDestinations->contains($routeExportDestination->getExportDestination()))) {
                 $sync = true;
                 $route->removeRouteExportDestination($routeExportDestination);
                 $this->om->remove($routeExportDestination);
             }
         }
 
-        foreach ($exportDestinations as $exportDestination )
-        {
-            if (!($route->getExportDestinations()->contains($exportDestination)))
-            {
+        foreach ($exportDestinations as $exportDestination) {
+            if (!($route->getExportDestinations()->contains($exportDestination))) {
                 $routeExportDestination = new RouteExportDestination();
                 $routeExportDestination->setExportDestination($exportDestination);
                 $routeExportDestination->setRoute($route);
@@ -289,43 +292,61 @@ class RouteManager extends SortManager
                 $this->om->persist($routeExportDestination);
             }
         }
-        if ($sync)
+        if ($sync) {
             $this->om->flush();
+        }
     }
 
     public function getRouteStopsJson($route)
     {
-        if (empty($route))
-        {
+        if (empty($route)) {
             return null;
         }
 
+        $odtStops = array();
         // if the route is a 'TAD zonal' route, then returns a list of stops whitout geometry,
         // with all stops from 'stop' routeStops, concatenated will all stops from 'odtArea' routeStops
         if ($route->getWay() == Route::WAY_AREA) {
             $stops = array();
-            foreach ($route->getRouteStops() as $routeStop)
-            {
-                if ($routeStop->isOdtAreaRouteStop())
-                {
-                   foreach ($routeStop->getWaypoint()->getOdtArea()->getOpenedOdtStops() as $odtStop)
-                    {
+
+            foreach ($route->getRouteStops() as $routeStop) {
+                if ($routeStop->isOdtAreaRouteStop()) {
+                    $odtArea = $routeStop->getWaypoint()->getOdtArea();
+                    $id = $odtArea->getId();
+                    foreach ($odtArea->getOpenedOdtStops() as $odtStop) {
+                        $odtStops[$id][] = $odtStop->getStop();
                         $stops[] = $odtStop->getStop();
                     }
-                }
-                else
-                {
+                } else {
                     $stops[] = $routeStop->getWaypoint()->getStop();
                 }
             }
-            return $this->stopManager->getStopsJson($stops, true);
-        }
-        //otherwise, we return a list of stops with their WKT
-        else
-        {
+
+            $data = $this->stopManager->getStopsJson($stops, true);
+
+            //Hack
+            if (is_array($data[0])) {
+                $_odtStop = array();
+                foreach ($data as $d => $stopData) {
+                    foreach ($odtStops as $k => $stops) {
+                        foreach ($stops as $s => $stop) {
+                            if (is_object($stop)) {
+                                if ($stop->getId() === $stopData['id']) {
+                                    $_odtStop[$k][] = $data[$d];
+                                    unset($data[$d]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                $odtStops = $_odtStop;
+            }
+        } //otherwise, we return a list of stops with their WKT
+        else {
             $connection = $this->om->getConnection()->getWrappedConnection();
 
-            $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
+            $query = "SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
                 FROM stop s
                 JOIN waypoint w on s.id = w.id
                 JOIN route_stop rs on w.id = rs.waypoint_id
@@ -340,8 +361,58 @@ class RouteManager extends SortManager
             $stmt = $connection->prepare($query);
             $stmt->bindValue(':route_id', $route->getId());
             $stmt->execute();
-            return $stmt->fetchAll();
+
+            $data = $stmt->fetchAll();
         }
+
+        return $this->setStopsColorShade($data, $odtStops);
+
+    }
+
+
+    /**
+     * @param $stops
+     * @param array $odtStopsByArea
+     * @return array
+     */
+    private function setStopsColorShade($stops, $odtStopsByArea = array())
+    {
+
+        $num = count($odtStopsByArea) + count($stops);
+        $shadeList = array();
+        $odtStops = array();
+
+        for ($i = 1; $i < ($num + 1); $i++) {
+            $shadeList[] = round($i * (1 / $num), 4);
+        }
+
+        if (count($odtStopsByArea)) {
+            foreach ($odtStopsByArea as $i => $odtAreaId) {
+                $shade = array_shift($shadeList);
+                foreach ($odtAreaId as $k => $odtStop) {
+                    $meta = $odtStopsByArea[$i][$k];
+                    $meta['shade'] = $shade;
+                    $odtStops[] = $meta;
+                }
+            }
+        }
+
+        if (count($stops)) {
+            foreach ($stops as $k => $stop) {
+                $stops[$k]['shade'] = array_shift($shadeList);
+            }
+        }
+
+        return array_merge($odtStops, $stops);
+    }
+
+
+    /**
+     *
+     */
+    private function addOdtAreaId($stopList)
+    {
+
     }
 
     // TODO: CHANGE THIS
@@ -356,9 +427,9 @@ class RouteManager extends SortManager
 
         $newRoute = new Route();
         $newRoute->setWay($route->getWay());
-        $newRoute->setName($route->getName()." (Copie)");
+        $newRoute->setName($route->getName() . " (Copie)");
         $newRoute->setDirection($route->getDirection());
-        if( $route->getComment() ) {
+        if ($route->getComment()) {
             $newRoute->setComment($route->getComment());
         }
         $newRoute->setLineVersion($lineVersion);
@@ -380,7 +451,7 @@ class RouteManager extends SortManager
             $route_stops[$rs->getId()] = $newRS;
         }
 
-        $services_patterns = $route->getTrips()->filter( function($t) {
+        $services_patterns = $route->getTrips()->filter(function ($t) {
             return $t->getIsPattern() == true;
         });
 
@@ -401,7 +472,7 @@ class RouteManager extends SortManager
                 $newST->setArrivalTime($st->getArrivalTime());
                 $newST->setDepartureTime($st->getDepartureTime());
 
-                $newST->setRouteStop( $route_stops[ $st->getRouteStop()->getId() ] );
+                $newST->setRouteStop($route_stops[$st->getRouteStop()->getId()]);
                 $newST->setTrip($newTrip);
                 $newTrip->addStopTime($newST);
                 $this->om->persist($newST);
@@ -429,4 +500,5 @@ class RouteManager extends SortManager
         $this->om->persist($newRoute);
         $this->om->flush();
     }
+
 }
