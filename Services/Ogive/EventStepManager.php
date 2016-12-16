@@ -2,19 +2,33 @@
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
-use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
 use Tisseo\EndivBundle\Entity\Ogive\EventStep;
+use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
+use Tisseo\OgiveBundle\Service\TextService;
 
 class EventStepManager extends OgiveManager
 {
 
     private $repository = null;
+    private $textRepository;
+    private $textService;
 
-    public function __construct(DoctrineObjectManager $objectManager)
-    {
+    /**
+     * EventStepManager constructor.
+     *
+     * @param DoctrineObjectManager $objectManager
+     * @param TextManager $textManager
+     */
+    public function __construct(
+        DoctrineObjectManager $objectManager,
+        TextManager $textManager,
+        TextService $textService
+    ) {
         parent::__construct($objectManager);
 
         $this->repository = $objectManager->getRepository('TisseoEndivBundle:Ogive\EventStep');
+        $this->textRepository = $objectManager->getRepository('TisseoEndivBundle:Ogive\Text');
+        $this->textService = $textService;
     }
 
     public function setStatus(
@@ -23,8 +37,7 @@ class EventStepManager extends OgiveManager
         $login,
         $less = null,
         $comment = null
-    )
-    {
+    ) {
         try {
 
             if (!($less instanceof EventStepStatus)) {
@@ -69,5 +82,44 @@ class EventStepManager extends OgiveManager
         }
 
         return null;
+    }
+
+    /**
+     * Manage the collection of StepTexts
+     *
+     * @param EventStep $eventStep
+     * @param array $originalTexts
+     * @return \Tisseo\EndivBundle\Entity\Ogive\OgiveEntity
+     */
+    public function manage(EventStep $eventStep, array $originalTexts)
+    {
+        $this->updateCollection($eventStep, 'getTexts', $originalTexts);
+
+        return $this->save($eventStep);
+    }
+
+    /**
+     * Fill the EventStepText with correct data
+     *
+     * @param EventStep $entity
+     * @param string $accessor
+     * @param array $collection
+     */
+    public function updateCollection(EventStep $entity, $accessor, array $collection)
+    {
+        $eventStepTexts = $entity->getTexts()->toArray();
+        if (count($eventStepTexts)) {
+            foreach ($eventStepTexts as $eventStepText) {
+                if (is_null($eventStepText->getId())) {
+                    $text = $this->textRepository->findByLabel($eventStepText->getLabel())[0];
+                    $eventStepText->setText($text->getText());
+                    $eventStepText->setEventStep($entity);
+                    $disruptionId = $entity->getEvent()->getChaosDisruptionId();
+                    $this->textService->processTextFromEventStepText($eventStepText, $text, $disruptionId);
+                }
+            }
+        }
+
+        parent::updateCollection($entity, $accessor, $collection);
     }
 }

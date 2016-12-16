@@ -32,6 +32,9 @@ services:
     tisseo_endiv.ogive.manager.event_step:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\EventStepManager'
+        arguments:
+            - '@tisseo_endiv.ogive.manager.text'
+            - '@tisseo_ogive.service.text'
     tisseo_endiv.ogive.manager.event_step_text:
         parent: 'tisseo_endiv.ogive.manager.ogive'
         class: 'Tisseo\EndivBundle\Services\Ogive\EventStepTextManager'
