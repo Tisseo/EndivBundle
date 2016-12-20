@@ -2,7 +2,7 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Tisseo\EndivBundle\Entity\Ogive\Channel;
 
 
@@ -12,7 +12,7 @@ class ChannelManager extends OgiveManager
     private $repository = null;
     protected $objectManager = null;
 
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(DoctrineObjectManager $objectManager)
     {
         parent::__construct($objectManager);
 
