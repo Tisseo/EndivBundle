@@ -77,6 +77,7 @@ abstract class OgiveManager
      * @param string $property
      * @param string $term
      * @return mixed
+     * @throws Exception
      */
     public function findByLike($property, $term)
     {
