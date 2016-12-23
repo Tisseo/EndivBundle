@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Entity\LineVersion;
-use Doctrine\DBAL\Types\DateTimeType as DateTimeType;
 
 class LineVersionManager extends SortManager
 {
@@ -146,7 +145,7 @@ class LineVersionManager extends SortManager
 
     /*
      * findActiveLineVersions
-     * @param Datetime $now
+     * @param Datetime $now TODO: remove
      * @param string $filter default null
      * @param Boolean $splitByPhysicalMode default false
      * @return Collection $lineVersions
@@ -156,34 +155,21 @@ class LineVersionManager extends SortManager
      */
     public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
     {
-        $query = $this->repository->createQueryBuilder('lv');
-        $expr = $query->expr();
-
-        $query
-            ->select('lv', 'sc', 'l', 'c', 'c_2', 'ld', 'pm')
-            ->join('lv.schematic', 'sc')
-            ->join('lv.line', 'l')
-            ->join('lv.fgColor', 'c')
-            ->join('lv.bgColor', 'c_2')
-            ->join('l.lineDatasources', 'ld')
-            ->join('l.physicalMode', 'pm')
-            ->andWhere(
-                $expr->orX(
-                    $expr->lt('lv.endDate + 1', ':now'),
-                    $expr->isNull('lv.endDate')
-                )
-            )
+        $query = $this->repository->createQueryBuilder('lv')
+            ->where('lv.endDate is null OR (lv.endDate + 1) > :now')
             ->setParameter('now', $now);
 
         if ($filter === 'grouplines') {
             $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
+        } else if ($filter === 'schematic') {
+            $query->leftJoin('lv.schematic', 'sc');
         }
 
         $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
 
         if ($splitByPhysicalMode) {
             $query = $this->om->createQuery("
-                    SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
+                SELECT p.name FROM Tisseo\EndivBundle\Entity\PhysicalMode p
             ");
             $physicalModes = $query->getResult();
 
@@ -202,7 +188,6 @@ class LineVersionManager extends SortManager
      */
     public function findInactiveLineVersions(\DateTime $date, $filter = '', $splitByPhysicalMode = false)
     {
-
         $query = $this->repository->createQueryBuilder('lv');
         $expr = $query->expr();
 
@@ -240,7 +225,8 @@ class LineVersionManager extends SortManager
     /**
      * Get active line version by line number
      */
-    public function findActiveLineVersionByLineNumber($lineNumber) {
+    public function findActiveLineVersionByLineNumber($lineNumber)
+    {
         $query = $this->om->createQuery("
             SELECT lv.id FROM Tisseo\EndivBundle\Entity\LineVersion lv
             JOIN lv.line line
@@ -258,10 +244,8 @@ class LineVersionManager extends SortManager
      *
      * @param array $ids
      */
-    public
-    function findLineNames(
-        $ids
-    ) {
+    public function findLineNames($ids)
+    {
         $queryBuilder = $this->om->createQueryBuilder()
             ->select('lv.id', 'lv.name')
             ->from('Tisseo\EndivBundle\Entity\LineVersion', 'lv');
@@ -280,9 +264,8 @@ class LineVersionManager extends SortManager
      * LineVersion.
      */
     public
-    function findUnlinkedGridMaskTypes(
-        LineVersion $lineVersion
-    ) {
+    function findUnlinkedGridMaskTypes(LineVersion $lineVersion)
+    {
         /* if no gridCalendars linked to this lineVersion, search only for all related gridMaskTypes */
         $notLinked = true;
         foreach ($lineVersion->getGridCalendars() as $gridCalendar) {
@@ -361,11 +344,8 @@ class LineVersionManager extends SortManager
      * returned from calendars form view. (i.e. delete GridCalendars if their id
      * is not present in $gridCalendarsIds and add new ones)
      */
-    public
-    function updateGridCalendars(
-        $gridCalendars,
-        $lineVersionId
-    ) {
+    public function updateGridCalendars($gridCalendars, $lineVersionId)
+    {
         $lineVersion = $this->find($lineVersionId);
         $sync = false;
         $newGridCalendars = array();
@@ -412,10 +392,8 @@ class LineVersionManager extends SortManager
      *  - deleting all trips which don't belong anymore to the previous
      *  LineVersion
      */
-    public
-    function create(
-        LineVersion $lineVersion
-    ) {
+    public function create(LineVersion $lineVersion)
+    {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
         if ($oldLineVersion) {
             if ($oldLineVersion->getEndDate() === null) {
@@ -461,10 +439,8 @@ class LineVersionManager extends SortManager
      *
      * Persist and save a LineVersion into database.
      */
-    public
-    function save(
-        LineVersion $lineVersion
-    ) {
+    public function save(LineVersion $lineVersion)
+    {
         $this->om->persist($lineVersion);
         $this->om->flush();
     }
@@ -475,10 +451,8 @@ class LineVersionManager extends SortManager
      *
      * delete line version
      */
-    public
-    function delete(
-        $lineVersionId
-    ) {
+    public function delete($lineVersionId)
+    {
         $lineVersion = $this->find($lineVersionId);
 
         if (empty($lineVersion)) {
@@ -518,11 +492,8 @@ class LineVersionManager extends SortManager
         $this->om->flush();
     }
 
-    public
-    function getStopAccessibilityChangesByRoute(
-        $lineVersion,
-        $startDate
-    ) {
+    public function getStopAccessibilityChangesByRoute($lineVersion, $startDate)
+    {
         $result = array();
         $now = new \DateTime();
         foreach ($lineVersion->getRoutes() as $route) {
@@ -568,10 +539,8 @@ class LineVersionManager extends SortManager
         return $result;
     }
 
-    public
-    function getPoiByStopArea(
-        $lineVersion
-    ) {
+    public function getPoiByStopArea($lineVersion)
+    {
         $result = array();
         $stopAreas = array();
 
@@ -631,7 +600,7 @@ class LineVersionManager extends SortManager
         return $result;
     }
 
-// used in 'getPoiByStop' method to sort an array of stops by their labels
+    // used in 'getPoiByStop' method to sort an array of stops by their labels
     function usortStopArea($a, $b)
     {
         return strcasecmp($a->getCity()->getName() . $a->getShortName(), $b->getCity()->getName() . $b->getShortName());
