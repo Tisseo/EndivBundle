@@ -254,6 +254,23 @@ class Message
     }
 
     /**
+     * Set channels
+     *
+     * @param  Collection $channels
+     * @return Message
+     */
+    public function setChannels($channels)
+    {
+        if ($channels instanceof Collection) {
+            $this->channels = $channels;
+        } else if (is_array($channels)) {
+            $this->channels = new ArrayCollection($channels);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get event
      *
      * @return Event.
