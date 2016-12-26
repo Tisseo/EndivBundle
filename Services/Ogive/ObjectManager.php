@@ -6,10 +6,8 @@ use \Traversable;
 use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 
-
 class ObjectManager extends OgiveManager
 {
-
     /**
      * set event object meta information
      *
