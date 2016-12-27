@@ -101,13 +101,24 @@ abstract class OgiveManager
      * @param OgiveEntity $entity
      * @return OgiveEntity
      */
-    public function save(OgiveEntity $entity)
+    public function save(OgiveEntity $entity, $flush = true)
     {
         $this->objectManager->persist($entity);
-        $this->objectManager->flush();
-        $this->objectManager->refresh($entity);
+
+        if ($flush) {
+            $this->objectManager->flush();
+            $this->objectManager->refresh($entity);
+        }
 
         return $entity;
+    }
+
+    /**
+     * Save current transaction in database
+     */
+    public function commit()
+    {
+        $this->objectManager->flush();
     }
 
     /**

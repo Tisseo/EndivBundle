@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Message
  */
-class Message
+class Message extends OgiveEntity
 {
     /**
      * @var integer
