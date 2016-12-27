@@ -30,7 +30,6 @@ class MessageManager extends OgiveManager
                 ->setParameter('names', $channels);
         }
 
-
         return $queryBuilder->getQuery()->getResult();
     }
 }

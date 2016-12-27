@@ -405,10 +405,11 @@ class EventStep extends OgiveEntity
 
         $texts = $this->texts->matching($criteria);
 
-        if (!$texts->isEmpty())
-            return $texts->first();
-        else
-            return '';
+        if ($texts->count() !== 1) {
+            return null;
+        }
+
+        return $texts->first();
     }
 
     /**
