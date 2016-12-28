@@ -225,7 +225,9 @@ class Message extends OgiveEntity
      */
     public function addChannel(Channel $channel)
     {
-        $this->channels->add($channel);
+        if (!$this->channels->contains($channel)) {
+            $this->channels->add($channel);
+        }
 
         return $this;
     }

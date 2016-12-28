@@ -106,7 +106,7 @@ abstract class OgiveManager
         $this->objectManager->persist($entity);
 
         if ($flush) {
-            $this->objectManager->flush();
+            $this->objectManager->flush($entity);
             $this->objectManager->refresh($entity);
         }
 
@@ -119,6 +119,14 @@ abstract class OgiveManager
     public function commit()
     {
         $this->objectManager->flush();
+    }
+
+    /**
+     * Cancel current transaction
+     */
+    public function rollback()
+    {
+        $this->objectManager->clear();
     }
 
     /**

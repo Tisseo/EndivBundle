@@ -13,7 +13,7 @@ class MessageManager extends OgiveManager
      * @param  array $channels
      * @return array
      */
-    public function findLinkedWithLineByChannels(array $channels = array())
+    public function findNetworkPublications(array $channels = array())
     {
         $queryBuilder = $this->objectManager->createQueryBuilder('m');
         $expr = $queryBuilder->expr();
@@ -22,8 +22,11 @@ class MessageManager extends OgiveManager
             ->select('m')
             ->from('TisseoEndivBundle:Ogive\Message', 'm')
             ->join('m.object', 'o', 'with', $expr->eq('o.objectType', ':type'))
+            ->where($expr->lte('m.startDatetime', 'current_timestamp()'))
+            ->andWhere($expr->gt('m.endDatetime', 'current_timestamp()'))
             ->setParameter('type', OgiveObject::LINE);
 
+        // If no channels provided, no filters added
         if (count($channels) > 0) {
             $queryBuilder
                 ->join('m.channels', 'c', 'with', $expr->in('c.name', ':names'))
