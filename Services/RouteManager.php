@@ -303,45 +303,32 @@ class RouteManager extends SortManager
             return null;
         }
 
-        $odtStops = array();
         // if the route is a 'TAD zonal' route, then returns a list of stops whitout geometry,
         // with all stops from 'stop' routeStops, concatenated will all stops from 'odtArea' routeStops
         if ($route->getWay() == Route::WAY_AREA) {
             $stops = array();
 
             foreach ($route->getRouteStops() as $routeStop) {
+                $rank = $routeStop->getRank();
                 if ($routeStop->isOdtAreaRouteStop()) {
                     $odtArea = $routeStop->getWaypoint()->getOdtArea();
-                    $id = $odtArea->getId();
                     foreach ($odtArea->getOpenedOdtStops() as $odtStop) {
-                        $odtStops[$id][] = $odtStop->getStop();
-                        $stops[] = $odtStop->getStop();
+                        $stops[] = array(
+                            'stop' => $odtStop->getStop(),
+                            'rank' => $rank
+                        );
+
                     }
                 } else {
-                    $stops[] = $routeStop->getWaypoint()->getStop();
+                    $stops[] = array(
+                        'stop' => $routeStop->getWaypoint()->getStop(),
+                        'rank' => $rank
+                    );
                 }
             }
 
             $data = $this->stopManager->getStopsJson($stops, true);
 
-            //Hack
-            if (is_array($data[0])) {
-                $_odtStop = array();
-                foreach ($odtStops as $k => $stops) {
-                    foreach ($data as $d => $stopData) {
-                        foreach ($stops as $s => $stop) {
-                            if (is_object($stop)) {
-                                if ($stop->getId() === $stopData['id']) {
-                                    $_odtStop[$k][] = $data[$d];
-                                    unset($data[$d]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                $odtStops = $_odtStop;
-            }
         } //otherwise, we return a list of stops with their WKT
         else {
             $connection = $this->om->getConnection()->getWrappedConnection();
@@ -365,7 +352,7 @@ class RouteManager extends SortManager
             $data = $stmt->fetchAll();
         }
 
-        return $this->setStopsColorShade($data, $odtStops);
+        return $this->setShades($data);
 
     }
 
@@ -375,35 +362,27 @@ class RouteManager extends SortManager
      * @param array $odtStopsByArea
      * @return array
      */
-    private function setStopsColorShade($stops, $odtStopsByArea = array())
+    private function setShades($stops)
     {
+        $ranks = array();
+        foreach ($stops as $stop) {
+            if (!in_array($stop['rank'], $ranks, true)) {
+                $ranks[] = $stop['rank'];
+            }
+        }
 
-        $num = count($odtStopsByArea) + count($stops);
+        $num = count($ranks);
         $shadeList = array();
-        $odtStops = array();
-
         for ($i = 1; $i < ($num + 1); $i++) {
             $shadeList[] = round($i * (1 / $num), 4);
         }
 
-        if (count($odtStopsByArea)) {
-            foreach ($odtStopsByArea as $i => $odtAreaId) {
-                $shade = array_shift($shadeList);
-                foreach ($odtAreaId as $k => $odtStop) {
-                    $meta = $odtStopsByArea[$i][$k];
-                    $meta['shade'] = $shade;
-                    $odtStops[] = $meta;
-                }
-            }
+        foreach ($stops as $k => $stop) {
+            $stops[$k]['shade'] = $shadeList[$stop['rank'] - 1];
         }
 
-        if (count($stops)) {
-            foreach ($stops as $k => $stop) {
-                $stops[$k]['shade'] = array_shift($shadeList);
-            }
-        }
+        return $stops;
 
-        return array_merge($odtStops, $stops);
     }
 
     // TODO: CHANGE THIS
