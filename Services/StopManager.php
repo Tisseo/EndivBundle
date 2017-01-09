@@ -362,7 +362,7 @@ class StopManager extends SortManager
         $odtStops = array();
 
         foreach ($stops as $stop) {
-            $stopIds[] = $stop->getId();
+            $stopIds[] = $stop['stop']->getId();
         }
 
         $connection = $this->em->getConnection();
@@ -386,8 +386,18 @@ class StopManager extends SortManager
         }
 
         $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+        $results = $stmt->fetchAll();
 
-        return $stmt->fetchAll();
+        # Map rank to Results
+        foreach ($results as $k=>$result) {
+            foreach ($stops as $s) {
+                if ($result['id'] === $s['stop']->getId() ){
+                    $results[$k]['rank'] = $s['rank'];
+                }
+            }
+        }
+
+        return $results;
     }
 
     /**
