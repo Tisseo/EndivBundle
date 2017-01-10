@@ -362,7 +362,11 @@ class StopManager extends SortManager
         $odtStops = array();
 
         foreach ($stops as $stop) {
-            $stopIds[] = $stop['stop']->getId();
+            if(is_array($stop)){
+                $stopIds[] = $stop['stop']->getId();
+            }else{
+                $stopIds[] = $stop->getId();
+            }
         }
 
         $connection = $this->em->getConnection();
@@ -391,6 +395,9 @@ class StopManager extends SortManager
         # Map rank to Results
         foreach ($results as $k=>$result) {
             foreach ($stops as $s) {
+                if(!is_array($s)){
+                    break;
+                }
                 if ($result['id'] === $s['stop']->getId() ){
                     $results[$k]['rank'] = $s['rank'];
                 }
