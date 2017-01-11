@@ -193,13 +193,13 @@ class LineVersionManager extends SortManager
 
         $query
             ->select('lv', 'sc', 'l', 'c', 'c_2', 'ld', 'pm')
-            ->join('lv.schematic', 'sc')
             ->join('lv.line', 'l')
             ->join('lv.fgColor', 'c')
             ->join('lv.bgColor', 'c_2')
             ->join('l.lineDatasources', 'ld')
             ->join('l.physicalMode', 'pm')
-            ->andWhere(
+            ->leftJoin('lv.schematic', 'sc')
+            ->where(
                 $expr->andX(
                     $expr->lt('lv.endDate', ':now'),
                     $expr->isNotNull('lv.endDate')
