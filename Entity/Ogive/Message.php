@@ -47,6 +47,11 @@ class Message extends OgiveEntity
     private $endDatetime;
 
     /**
+     * @var \DateTime
+     */
+    private $modificationDatetime;
+
+    /**
      * @var Collection
      */
     private $channels;
@@ -67,6 +72,7 @@ class Message extends OgiveEntity
     public function __construct()
     {
         $this->channels = new ArrayCollection();
+        $this->modificationDatetime = new \Datetime();
     }
 
     /**
@@ -192,6 +198,29 @@ class Message extends OgiveEntity
     public function getEndDatetime()
     {
         return $this->endDatetime;
+    }
+
+    /**
+     * Get modificationDatetime
+     *
+     * @return \Datetime
+     */
+    public function getModificationDatetime()
+    {
+        return $this->modificationDatetime;
+    }
+
+    /**
+     * Set modificationDatetime
+     *
+     * @param \Datetime $modificationDatetime
+     * @return Message
+     */
+    public function setModificationDatetime($modificationDatetime)
+    {
+        $this->modificationDatetime = $modificationDatetime;
+
+        return $this;
     }
 
     /**
