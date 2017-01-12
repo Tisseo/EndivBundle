@@ -57,6 +57,7 @@ class ObjectManager extends OgiveManager
                 if (!empty($lineVersion)) {
                     $meta->background_color = $lineVersion->getBgColor()->getHtml();
                     $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
+                    $meta->name = $lineVersion->getName();
                 }
 
                 break;
