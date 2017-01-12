@@ -43,6 +43,13 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             nullable: true
             comment: ''
             column: end_datetime
+        modificationDatetime:
+            type: datetime
+            nullable: false
+            column: modification_datetime
+            gedmo:
+                timestampable:
+                    on: update
     manyToOne:
         object:
             targetEntity: Object
