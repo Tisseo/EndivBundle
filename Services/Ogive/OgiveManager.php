@@ -106,7 +106,7 @@ abstract class OgiveManager
         $this->objectManager->persist($entity);
 
         if ($flush) {
-            $this->objectManager->flush($entity);
+            $this->objectManager->flush();
             $this->objectManager->refresh($entity);
         }
 
