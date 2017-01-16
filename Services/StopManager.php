@@ -359,7 +359,6 @@ class StopManager extends SortManager
     public function getStopsJson($stops, $getPhantoms = false)
     {
         $stopIds = array();
-        $odtStops = array();
 
         foreach ($stops as $stop) {
             if(is_array($stop)){
@@ -390,11 +389,49 @@ class StopManager extends SortManager
         }
 
         $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * @param $stopsData
+     * @param bool $getPhantoms
+     * @return array
+     */
+    public function getStopJsonWithRankAndOdtArea ($stopsData, $getPhantoms = false) {
+
+        $stopIds = array();
+        foreach ($stopsData as $stop) {
+                $stopIds[] = $stop['stop']->getId();
+        }
+
+        $connection = $this->em->getConnection();
+
+        if ($getPhantoms) {
+            $query = "SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, os.odt_area_id as odt_area, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+                FROM stop s
+                JOIN stop_datasource sd on s.id = sd.stop_id
+                JOIN stop_history sh on (sh.stop_id = COALESCE(s.master_stop_id, s.id))                
+                LEFT JOIN odt_stop os on os.stop_id = s.id
+                WHERE s.id IN (?)
+                  AND sh.start_date <= CURRENT_DATE
+                  AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+        } else {
+            $query = "SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, os.odt_area_id as odt_area, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+                FROM stop s
+                JOIN stop_datasource sd on sd.stop_id = s.id
+                JOIN stop_history sh on sh.stop_id = s.id
+                WHERE s.id IN (?)
+                  AND sh.start_date <= CURRENT_DATE
+                  AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+        }
+
+        $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
         $results = $stmt->fetchAll();
 
         # Map rank to Results
         foreach ($results as $k=>$result) {
-            foreach ($stops as $s) {
+            foreach ($stopsData as $s) {
                 if(!is_array($s)){
                     break;
                 }

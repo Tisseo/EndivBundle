@@ -317,7 +317,6 @@ class RouteManager extends SortManager
                             'stop' => $odtStop->getStop(),
                             'rank' => $rank
                         );
-
                     }
                 } else {
                     $stops[] = array(
@@ -327,7 +326,7 @@ class RouteManager extends SortManager
                 }
             }
 
-            $data = $this->stopManager->getStopsJson($stops, true);
+            $data = $this->stopManager->getStopJsonWithRankAndOdtArea($stops, true);
 
         } //otherwise, we return a list of stops with their WKT
         else {
@@ -371,18 +370,18 @@ class RouteManager extends SortManager
             }
         }
 
+        sort($ranks);
         $num = count($ranks);
         $shadeList = array();
         for ($i = 1; $i < ($num + 1); $i++) {
-            $shadeList[] = round($i * (1 / $num), 4);
+            $shadeList[$ranks[$i - 1]] = round($i * (1 / $num), 4);
         }
 
         foreach ($stops as $k => $stop) {
-            $stops[$k]['shade'] = $shadeList[$stop['rank'] - 1];
+            $stops[$k]['shade'] = $shadeList[$stop['rank']];
         }
 
         return $stops;
-
     }
 
     // TODO: CHANGE THIS
