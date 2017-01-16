@@ -12,9 +12,7 @@ use Doctrine\Common\Collections\Criteria;
 class Event extends OgiveEntity
 {
     const STATUS_OPEN = 1;
-
     const STATUS_CLOSED = 2;
-
     const STATUS_REJECTED = 3;
 
     /**

@@ -230,5 +230,4 @@ abstract class OgiveManager
     {
         return $this->objectManager;
     }
-
 }

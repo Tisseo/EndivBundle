@@ -95,15 +95,15 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
             mappedBy: event
             cascade: ['remove', 'persist']
     manyToMany:
-      objects:
-        targetEntity: Object
-        joinTable:
-          name: ogive.event_object
-          joinColumns:
-            event_id:
-              referencedColumnName: id
-          inverseJoinColumns:
-            object_id:
-              referencedColumnName: id
-              unique: true
+        objects:
+            targetEntity: Object
+            joinTable:
+                name: ogive.event_object
+                joinColumns:
+                    event_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    object_id:
+                        referencedColumnName: id
+                        unique: true
     lifecycleCallbacks: {  }

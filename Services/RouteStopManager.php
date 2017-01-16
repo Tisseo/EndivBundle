@@ -41,8 +41,8 @@ class RouteStopManager extends SortManager {
 
         return $query->getResult();
     }
+
     public function findStopMinRankByRouteId($routeId, $stopAreaId) {
-        $rank = 0;
         $qb = $this->om->createQueryBuilder()
                        ->select('rs.rank')
                        ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
@@ -64,7 +64,6 @@ class RouteStopManager extends SortManager {
     }
 
     public function findStopMaxRankByRouteId($routeId, $stopAreaId) {
-        $rank = 0;
         $qb = $this->om->createQueryBuilder()
                        ->select('rs.rank')
                        ->from('Tisseo\EndivBundle\Entity\RouteStop', 'rs')
