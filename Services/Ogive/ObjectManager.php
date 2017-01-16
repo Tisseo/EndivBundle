@@ -92,6 +92,7 @@ class ObjectManager extends OgiveManager
     {
         $entityName = ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $object->getObjectType()))));
         $entityClass = sprintf('TisseoEndivBundle:%s', $entityName);
+
         return $this->objectManager->getRepository($entityClass)->find($object->getObjectRef());
     }
 }

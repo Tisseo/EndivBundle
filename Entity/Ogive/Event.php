@@ -12,9 +12,7 @@ use Doctrine\Common\Collections\Criteria;
 class Event extends OgiveEntity
 {
     const STATUS_OPEN = 1;
-
     const STATUS_CLOSED = 2;
-
     const STATUS_REJECTED = 3;
 
     /**
@@ -514,7 +512,7 @@ class Event extends OgiveEntity
      */
     public function addMessage(Message $message)
     {
-        $this->message->add($message);
+        $this->messages->add($message);
 
         return $this;
     }
@@ -527,7 +525,7 @@ class Event extends OgiveEntity
      */
     public function removeMessage(Message $message)
     {
-        $this->message->removeElement($message);
+        $this->messages->removeElement($message);
 
         return $this;
     }
