@@ -27,6 +27,16 @@ class EventStepManager extends OgiveManager
         $less->setDateTime(new \Datetime());
 
         $eventStep->addStatus($less);
+
+        foreach ($this->findChildSteps($eventStep->getId()) as $step) {
+            $status = clone ($less);
+            $status->setId(null);
+            $status->setEventStep($step);
+            $step->addStatus($status);
+
+            $this->objectManager->persist($step);
+        }
+
         $this->save($eventStep);
     }
 
