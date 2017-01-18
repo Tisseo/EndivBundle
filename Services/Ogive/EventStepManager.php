@@ -38,7 +38,7 @@ class EventStepManager extends OgiveManager
      */
     public function findChildSteps($parentStepId)
     {
-        return $this->repository->findBy(
+        return $this->getRepository()->findBy(
             array('eventStepParent' => $parentStepId)
         );
     }
