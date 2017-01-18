@@ -361,11 +361,7 @@ class StopManager extends SortManager
         $stopIds = array();
 
         foreach ($stops as $stop) {
-            if(is_array($stop)){
-                $stopIds[] = $stop['stop']->getId();
-            }else{
-                $stopIds[] = $stop->getId();
-            }
+            $stopIds[] = $stop->getId();
         }
 
         $connection = $this->em->getConnection();
@@ -400,34 +396,11 @@ class StopManager extends SortManager
      */
     public function getStopJsonWithRankAndOdtArea ($stopsData, $getPhantoms = false) {
 
-        $stopIds = array();
-        foreach ($stopsData as $stop) {
-                $stopIds[] = $stop['stop']->getId();
-        }
+        $stops = array_map(function ($stop){
+            return $stop['stop'];
+        },$stopsData);
 
-        $connection = $this->em->getConnection();
-
-        if ($getPhantoms) {
-            $query = "SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, os.odt_area_id as odt_area, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
-                FROM stop s
-                JOIN stop_datasource sd on s.id = sd.stop_id
-                JOIN stop_history sh on (sh.stop_id = COALESCE(s.master_stop_id, s.id))                
-                LEFT JOIN odt_stop os on os.stop_id = s.id
-                WHERE s.id IN (?)
-                  AND sh.start_date <= CURRENT_DATE
-                  AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
-        } else {
-            $query = "SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, os.odt_area_id as odt_area, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
-                FROM stop s
-                JOIN stop_datasource sd on sd.stop_id = s.id
-                JOIN stop_history sh on sh.stop_id = s.id
-                WHERE s.id IN (?)
-                  AND sh.start_date <= CURRENT_DATE
-                  AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
-        }
-
-        $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
-        $results = $stmt->fetchAll();
+        $results = $this->getStopsJson($stops, $getPhantoms);
 
         # Map rank to Results
         foreach ($results as $k=>$result) {
@@ -436,8 +409,16 @@ class StopManager extends SortManager
                     break;
                 }
                 if ($result['id'] === $s['stop']->getId() ){
-                    $results[$k]['rank'] = $s['rank'];
+                    if(!isset($results[$k]['rank'])){
+                        $results[$k]['rank'] = $s['rank'];
+                    }else{
+                        $results[$k]['rank'] .= '-'.$s['rank'];
+                    }
+                    if (isset($s['odt_area']) ){
+                        $results[$k]['odt_area'] = $s['odt_area'];
+                    }
                 }
+
             }
         }
 
