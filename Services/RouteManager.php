@@ -315,7 +315,8 @@ class RouteManager extends SortManager
                     foreach ($odtArea->getOpenedOdtStops() as $odtStop) {
                         $stops[] = array(
                             'stop' => $odtStop->getStop(),
-                            'rank' => $rank
+                            'rank' => $rank,
+                            'odt_area' => $odtArea->getId()
                         );
                     }
                 } else {
