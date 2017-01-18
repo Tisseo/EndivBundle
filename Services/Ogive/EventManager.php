@@ -140,26 +140,28 @@ class EventManager extends OgiveManager
     public function close(Event $event, $login, $message)
     {
         $event->setStatus(Event::STATUS_CLOSED);
+        $closingDatetime = new \DateTime();
 
         // Manage event status: If status goes to rejected or closed change event steps status
         foreach ($event->getEventSteps() as $eventStep) {
             $eventStepStatus = $eventStep->getLastStatus();
 
             if ($eventStepStatus->getStatus() !== EventStepStatus::STATUS_VALIDATED) {
-                $eventStepStatus->setLogin($login);
-                $eventStepStatus->setdateTime(new \DateTime());
-                $eventStepStatus->setUserComment($message);
-                $eventStepStatus->setStatus(EventStepStatus::STATUS_REJECTED);
+                $ess = new EventStepStatus();
+                $ess->setLogin($login);
+                $ess->setDateTime($closingDatetime);
+                $ess->setUserComment($message);
+                $ess->setStatus(EventStepStatus::STATUS_REJECTED);
+                $ess->setEventStep($eventStep);
 
-                $eventStep->addStatus($eventStepStatus);
+                $eventStep->addStatus($ess);
             }
 
             $this->objectManager->persist($eventStep);
         }
 
-        $now = new \Datetime();
         foreach ($event->getPeriods() as $period) {
-            $period->setEndDate($now);
+            $period->setEndDate($closingDatetime);
             $this->objectManager->persist($period);
         }
 
