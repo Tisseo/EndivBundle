@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Message
@@ -299,6 +300,25 @@ class Message extends OgiveEntity
         }
 
         return $this;
+    }
+
+    /**
+     * Get Channel by name
+     */
+    public function getChannelByName($name)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('name', $name))
+            ->setMaxResults(1)
+        ;
+
+        $channels = $this->channels->matching($criteria);
+
+        if (count($channels) === 0) {
+            return null;
+        }
+
+        return $channels->first();
     }
 
     /**
