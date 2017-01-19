@@ -28,6 +28,9 @@ Tisseo\EndivBundle\Entity\LineGroupGis:
             length: null
             fixed: false
             comment: ''
+        deprecated:
+            column: deprecated
+            type: boolean
     oneToMany:
         lineGroupGisContents:
             targetEntity: LineGroupGisContent

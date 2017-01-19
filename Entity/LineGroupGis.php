@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,6 +41,12 @@ class LineGroupGis
      * @var Collection
      */
     private $printings;
+
+    /**
+     * @var boolean
+     */
+    private $deprecated;
+
 
     /**
      * Constructor
@@ -81,6 +88,22 @@ class LineGroupGis
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDeprecated()
+    {
+        return $this->deprecated;
+    }
+
+    /**
+     * @param boolean $deprecated
+     */
+    public function setDeprecated($deprecated)
+    {
+        $this->deprecated = $deprecated;
     }
 
     /**
