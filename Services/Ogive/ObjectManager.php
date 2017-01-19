@@ -6,10 +6,8 @@ use \Traversable;
 use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 
-
 class ObjectManager extends OgiveManager
 {
-
     /**
      * set event object meta information
      *
@@ -59,6 +57,7 @@ class ObjectManager extends OgiveManager
                 if (!empty($lineVersion)) {
                     $meta->background_color = $lineVersion->getBgColor()->getHtml();
                     $meta->foreground_color = $lineVersion->getFgColor()->getHtml();
+                    $meta->name = $lineVersion->getName();
                 }
 
                 break;
@@ -93,6 +92,7 @@ class ObjectManager extends OgiveManager
     {
         $entityName = ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $object->getObjectType()))));
         $entityClass = sprintf('TisseoEndivBundle:%s', $entityName);
+
         return $this->objectManager->getRepository($entityClass)->find($object->getObjectRef());
     }
 }

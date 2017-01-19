@@ -6,7 +6,6 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             type: integer
             nullable: false
             unsigned: false
-            comment: ''
             id: true
             generator:
                 strategy: SEQUENCE
@@ -16,19 +15,16 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             nullable: false
             length: 60
             fixed: false
-            comment: ''
         subtitle:
             type: string
             nullable: false
             length: 255
             fixed: false
-            comment: ''
         content:
             type: text
             nullable: false
             length: null
             fixed: false
-            comment: ''
             column: content
         urlPj:
             type: string
@@ -36,13 +32,18 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
         startDatetime:
             type: datetime
             nullable: true
-            comment: ''
             column: start_datetime
         endDatetime:
             type: datetime
             nullable: true
-            comment: ''
             column: end_datetime
+        modificationDatetime:
+            type: datetime
+            nullable: false
+            column: modification_datetime
+            gedmo:
+                timestampable:
+                    on: update
     manyToOne:
         object:
             targetEntity: Object

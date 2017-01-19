@@ -359,7 +359,6 @@ class StopManager extends SortManager
     public function getStopsJson($stops, $getPhantoms = false)
     {
         $stopIds = array();
-        $odtStops = array();
 
         foreach ($stops as $stop) {
             $stopIds[] = $stop->getId();
@@ -388,6 +387,42 @@ class StopManager extends SortManager
         $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * @param $stopsData
+     * @param bool $getPhantoms
+     * @return array
+     */
+    public function getStopJsonWithRankAndOdtArea ($stopsData, $getPhantoms = false) {
+
+        $stops = array_map(function ($stop){
+            return $stop['stop'];
+        },$stopsData);
+
+        $results = $this->getStopsJson($stops, $getPhantoms);
+
+        # Map rank to Results
+        foreach ($results as $k=>$result) {
+            foreach ($stopsData as $s) {
+                if(!is_array($s)){
+                    break;
+                }
+                if ($result['id'] === $s['stop']->getId() ){
+                    if(!isset($results[$k]['rank'])){
+                        $results[$k]['rank'] = $s['rank'];
+                    }else{
+                        $results[$k]['rank'] .= '-'.$s['rank'];
+                    }
+                    if (isset($s['odt_area']) ){
+                        $results[$k]['odt_area'] = $s['odt_area'];
+                    }
+                }
+
+            }
+        }
+
+        return $results;
     }
 
     /**

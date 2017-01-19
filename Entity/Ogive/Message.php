@@ -5,11 +5,12 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Message
  */
-class Message
+class Message extends OgiveEntity
 {
     /**
      * @var integer
@@ -47,6 +48,11 @@ class Message
     private $endDatetime;
 
     /**
+     * @var \DateTime
+     */
+    private $modificationDatetime;
+
+    /**
      * @var Collection
      */
     private $channels;
@@ -67,6 +73,7 @@ class Message
     public function __construct()
     {
         $this->channels = new ArrayCollection();
+        $this->modificationDatetime = new \Datetime();
     }
 
     /**
@@ -195,6 +202,29 @@ class Message
     }
 
     /**
+     * Get modificationDatetime
+     *
+     * @return \Datetime
+     */
+    public function getModificationDatetime()
+    {
+        return $this->modificationDatetime;
+    }
+
+    /**
+     * Set modificationDatetime
+     *
+     * @param \Datetime $modificationDatetime
+     * @return Message
+     */
+    public function setModificationDatetime($modificationDatetime)
+    {
+        $this->modificationDatetime = $modificationDatetime;
+
+        return $this;
+    }
+
+    /**
      * Get urlPj
      *
      * @return string
@@ -225,7 +255,9 @@ class Message
      */
     public function addChannel(Channel $channel)
     {
-        $this->channels->add($channel);
+        if (!$this->channels->contains($channel)) {
+            $this->channels->add($channel);
+        }
 
         return $this;
     }
@@ -251,6 +283,42 @@ class Message
     public function getChannels()
     {
         return $this->channels;
+    }
+
+    /**
+     * Set channels
+     *
+     * @param  Collection $channels
+     * @return Message
+     */
+    public function setChannels($channels)
+    {
+        if ($channels instanceof Collection) {
+            $this->channels = $channels;
+        } else if (is_array($channels)) {
+            $this->channels = new ArrayCollection($channels);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Channel by name
+     */
+    public function getChannelByName($name)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('name', $name))
+            ->setMaxResults(1)
+        ;
+
+        $channels = $this->channels->matching($criteria);
+
+        if (count($channels) === 0) {
+            return null;
+        }
+
+        return $channels->first();
     }
 
     /**

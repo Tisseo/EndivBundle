@@ -3,6 +3,7 @@ namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
+use Tisseo\EndivBundle\Types\Ogive\MomentType;
 
 class EventManager extends OgiveManager
 {
@@ -14,22 +15,26 @@ class EventManager extends OgiveManager
      */
     public function findParentEvent($disruptionId)
     {
-        $query = $this->objectManager->createQuery(
-            "
-            SELECT event FROM Tisseo\EndivBundle\Entity\Ogive\Event event
-            WHERE event.chaosDisruptionId = ?1
-                AND event.id NOT IN
-                (
-                    SELECT IDENTITY(pEvent.eventParent) FROM Tisseo\EndivBundle\Entity\Ogive\Event pEvent
-                    WHERE pEvent.eventParent IS NOT NULL
-                )
-            "
-        )->setMaxResults(1);
+        $subQueryBuilder = $this->objectManager->createQueryBuilder()
+            ->select('identity(e.eventParent)')
+            ->from('Tisseo\EndivBundle\Entity\Ogive\Event', 'e')
+            ->where('e.eventParent is not null')
+            ->distinct();
 
-        $query->setParameter(1, $disruptionId);
-        $results = $query->getResult();
+        $queryBuilder = $this->objectManager->createQueryBuilder();
+        $queryBuilder
+            ->select('event')
+            ->from('Tisseo\EndivBundle\Entity\Ogive\Event', 'event')
+            ->where('event.chaosDisruptionId = :disruptionId')
+            ->andWhere('event.status = :status')
+            ->andWhere($queryBuilder->expr()->notIn('event.id', $subQueryBuilder->getDQL()))
+            ->setParameters(array(
+                'disruptionId' => $disruptionId,
+                'status' => Event::STATUS_OPEN
+            ))
+            ->setMaxResults(1);
 
-        return $results ? $results[0] : null;
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     public function findEventList($archive = false) {
@@ -43,7 +48,7 @@ class EventManager extends OgiveManager
             ->leftJoin('es.statuses', 's')
             ->where('event.status = :status')
             ->setParameter('status', $status)
-            ->addSelect('p, es', 's');
+            ->addSelect('p, es, s');
 
         if ($archive === true) {
             $queryBuilder
@@ -53,18 +58,56 @@ class EventManager extends OgiveManager
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * Check alerts and nbr of finished event steps.
+     *
+     * @param  array $events
+     * @return array
+     */
+    public function checkEventSteps(array $events)
+    {
+        $eventsInfos = array();
+        $now = new \Datetime();
+
+        foreach ($events as $event) {
+            $extrema = $event->getExtremaPeriodDates();
+            $nbrFinished = 0;
+            $alert = false;
+
+            foreach ($event->getEventSteps() as $eventStep) {
+                if ($eventStep->getLastStatus()->getStatus() != EventStepStatus::STATUS_TODO) {
+                    $nbrFinished++;
+                } elseif (!$alert) {
+                    $moment = $eventStep->getMoment();
+
+                    if ($moment == MomentType::BEFORE) {
+                        $alert = true;
+                    } elseif (!empty($extrema) && (
+                        ($moment == MomentType::NOW && $extrema['min'] < $now) ||
+                        ($moment == MomentType::AFTER && $extrema['max'] < $now)
+                    )) {
+                        $alert = true;
+                    }
+                }
+            }
+
+            $eventsInfos[$event->getId()] = array(
+                'nbrFinished' => $nbrFinished,
+                'alert' => $alert,
+            );
+        }
+
+        return $eventsInfos;
+    }
 
     /**
-     * Manage event data and save it
-     * @param Event $event
-     * @param integer $previousStatus
+     * Update event data and save it
+     * @param  Event $event
      * @return Event
      */
-    public function manage(Event $event, $previousStatus, $login, $message)
+    public function update(Event $event)
     {
         $createdEventSteps = array();
-        $eventClosed = ($previousStatus == Event::STATUS_OPEN && $event->getStatus() != Event::STATUS_OPEN);
-
         foreach ($event->getEventSteps() as $eventStep) {
             $scenarioStepParentId = $eventStep->getScenarioStepParentId();
             $scenarioStepId = $eventStep->getScenarioStepId();
@@ -72,20 +115,6 @@ class EventManager extends OgiveManager
             if (isset($scenarioStepId)) {
                 if (isset($scenarioStepParentId) && array_key_exists($scenarioStepParentId, $createdEventSteps)) {
                     $eventStep->setEventStepParent($createdEventSteps[$scenarioStepParentId]);
-                }
-            }
-
-            // Manage event status: If status goes to rejected or closed change event steps status
-            if ($eventClosed) {
-                $eventStepStatus = $eventStep->getLastStatus();
-
-                if ($eventStepStatus->getStatus() == EventStepStatus::STATUS_TODO) {
-                    $eventStepStatus->setLogin($login);
-                    $eventStepStatus->setdateTime(new \DateTime());
-                    $eventStepStatus->setUserComment($message);
-                    $eventStepStatus->setStatus(EventStepStatus::STATUS_REJECTED);
-
-                    $eventStep->addStatus($eventStepStatus);
                 }
             }
 
@@ -99,5 +128,51 @@ class EventManager extends OgiveManager
 
         return $this->save($event);
     }
-    
+
+    /**
+     * Closing an event
+     *
+     * @param  Event $event
+     * @param  string $login
+     * @param  string $message
+     * @return Event
+     */
+    public function close(Event $event, $login, $message)
+    {
+        $event->setStatus(Event::STATUS_CLOSED);
+        $closingDatetime = new \DateTime();
+
+        // Manage event status: If status goes to rejected or closed change event steps status
+        foreach ($event->getEventSteps() as $eventStep) {
+            $eventStepStatus = $eventStep->getLastStatus();
+
+            if ($eventStepStatus->getStatus() !== EventStepStatus::STATUS_VALIDATED) {
+                $ess = new EventStepStatus();
+                $ess->setLogin($login);
+                $ess->setDateTime($closingDatetime);
+                $ess->setUserComment($message);
+                $ess->setStatus(EventStepStatus::STATUS_REJECTED);
+                $ess->setEventStep($eventStep);
+
+                $eventStep->addStatus($ess);
+            }
+
+            $this->objectManager->persist($eventStep);
+        }
+
+        foreach ($event->getPeriods() as $period) {
+            $period->setEndDate($closingDatetime);
+            $this->objectManager->persist($period);
+        }
+
+        foreach ($event->getMessages() as $msg) {
+            foreach ($msg->getChannels() as $channel) {
+                $msg->removeChannel($channel);
+            }
+            $event->removeMessage($msg);
+            $this->objectManager->remove($msg);
+        }
+
+        return $this->save($event);
+    }
 }

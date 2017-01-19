@@ -2,115 +2,48 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-use Tisseo\ChaosComponent\Type\PtObjectType;
-use Doctrine\Common\Persistence\ObjectManager;
+use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 
 class MessageManager extends OgiveManager
 {
-    private $channelRepository = null;
-    protected $objectManager = null;
-    private $lineTypes = null;
-
-    public function __construct(ObjectManager $objectManager)
-    {
-        parent::__construct($objectManager);
-
-        $this->objectManager = $objectManager;
-        $this->channelRepository = $objectManager->getRepository('TisseoEndivBundle:Ogive\Channel');
-        $this->lineTypes = [PtObjectType::PT_OBJECT_LINE, PtObjectType::PT_OBJECT_LINE_SECTION];
-
-
-    }
-
     /**
-     * Retrieve Message by Object Type
+     * Retrieve Message linked to line objects
+     * optional channels filter
      *
-     * @param PtObjectType $objectType
-     * @return null
+     * @param  array $channels
+     * @return array
      */
-    public function findMessagesByObjectType($objectType, $messageId = null, $filters = [])
+    public function findNetworkPublications(array $channels = array(), array $objectTypes = array())
     {
-
-        if (!$objectType) {
-            return null;
-        }
-
-        $query = $this->buildQuery(array(
-            'filters' => $filters,
-            'messageId' => $messageId
-        ));
-
-        $queryResults = $query->getResult();
-        return $queryResults;
-    }
-
-
-    /**
-     * Use to generate Custome DQL Query
-     *
-     * @param $queryParameters
-     * @return mixed
-     */
-    private function buildQuery($queryParameters)
-    {
-
-        $queryBuilder = $this->objectManager->createQueryBuilder();
+        $queryBuilder = $this->objectManager->createQueryBuilder('m');
         $expr = $queryBuilder->expr();
-        $queryParams = [];
 
         $queryBuilder
-            ->select('message')
-            ->from('TisseoEndivBundle:Ogive\Message', 'message')
-            ->join('TisseoEndivBundle:Ogive\Object', 'object', 'WITH', 'message.object = object');
+            ->select('m, o, c')
+            ->from('TisseoEndivBundle:Ogive\Message', 'm')
+            ->where($expr->lte('m.startDatetime', 'current_timestamp()'))
+            ->andWhere($expr->gt('m.endDatetime', 'current_timestamp()'));
 
-        if (!empty($queryParameters['messageId'])) {
-            $queryParams ['messageId'] = $queryParameters['messageId'];
+        // Filter by channels if requested
+        if (count($channels) > 0) {
             $queryBuilder
-                ->where($expr->eq('message.id', ':messageId'));
+                ->join('m.channels', 'c', 'with', $expr->in('c.name', ':names'))
+                ->setParameter('names', $channels);
+        } else {
+            $queryBuilder
+                ->join('m.channels', 'c');
         }
 
-        if (!empty($queryParameters['objectType'])) {
-            if (in_array($queryParameters['objectType'], $this->lineTypes)) {
-                $queryParams ['objectType'] = $this->lineTypes;
-            } else {
-                $queryParams ['objectType'] = $queryParameters['objectType'];
-            }
+        // Filter by objects type if requested
+        if (count($objectTypes) > 0) {
             $queryBuilder
-                ->andWhere($expr->in('object.objectType', ':objectType'));
+                ->join('m.object', 'o', 'with', $expr->in('o.objectType', ':types'))
+                ->setParameter('types', $objectTypes);
+        } else {
+            $queryBuilder
+                ->join('m.object', 'o');
         }
 
-        if (sizeof($queryParameters['filters']) > 0) {
-            $channelFilter = $queryParameters['filters'];
-            $channel = $this->getChannelByItsName($channelFilter);
-            $queryParams ['channel'] = $channel;
-            $queryBuilder
-                ->andWhere(':channel MEMBER OF message.channels');
-
-        }
-
-        return $queryBuilder
-            ->getQuery()
-            ->setParameters($queryParams);
-
+        return $queryBuilder->getQuery()->getResult();
     }
-
-    /**
-     * Get a Channel by its Name
-     *
-     * @param $name
-     * @return null
-     */
-    private function getChannelByItsName($name)
-    {
-        if ($name) {
-            $channels = $this->channelRepository->findByName($name);
-            if (empty($channels)) {
-                return null;
-            }
-            return $channels[0];
-        }
-        return null;
-    }
-
-
 }

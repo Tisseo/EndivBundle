@@ -21,7 +21,8 @@ class Object extends OgiveEntity
     public static $objectTypes = array(
         self::AGENCY,
         self::LINE,
-        self::STOP
+        self::STOP,
+        self::STOP_AREA
     );
 
     /**

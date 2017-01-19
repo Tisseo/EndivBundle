@@ -32,11 +32,6 @@ class EventStepText extends OgiveEntity
      */
     private $eventStep;
 
-    const TEXT_TYPE_GENERIC = 0;
-    const TEXT_TYPE_OBJECT = 1;
-    const TEXT_TYPE_BODY = 2;
-    const TEXT_TYPE_SUBTITLE = 3;
-
     /**
      * Get id
      *
