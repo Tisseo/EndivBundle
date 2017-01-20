@@ -101,6 +101,7 @@ class LineGroupGisManager extends SortManager
                 SELECT min(subs2.date) FROM Tisseo\EndivBundle\Entity\Schematic subs2
                 WHERE subs2.line = l AND subs2.deprecated != true AND subs2.groupGis = true
             )
+            WHERE lgg.deprecated = FALSE
         ");
 
         $content = $query->getArrayResult();
