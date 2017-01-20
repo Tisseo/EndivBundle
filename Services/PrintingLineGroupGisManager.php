@@ -42,6 +42,7 @@ class PrintingLineGroupGisManager
                 p.comment AS printing_comment
             FROM Tisseo\EndivBundle\Entity\LineGroupGis lgg
             JOIN lgg.printings p
+            WHERE lgg.deprecated = FALSE
             ORDER BY lgg.name
         ");
 
