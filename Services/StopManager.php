@@ -468,6 +468,27 @@ class StopManager extends SortManager
     }
 
     /**
+     * @param  integer $stopId
+     * @return array
+     */
+    public function getPhantomsByStop($stopId)
+    {
+        if ($stopId === null) {
+            return array();
+        }
+
+        $query = $this->em->createQueryBuilder('s')
+            ->select('s, sd')
+            ->from('Tisseo\EndivBundle\Entity\Stop', 's')
+            ->leftJoin('s.stopDatasources', 'sd')
+            ->where('s.masterStop = :stopId')
+            ->setParameter('stopId', $stopId)
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    /**
      * find locked stops
      */
     public function findLockedStops($lock = true)
