@@ -1,8 +1,6 @@
 <?php
-
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -33,11 +31,6 @@ class Message extends OgiveEntity
     private $content;
 
     /**
-     * @var string
-     */
-    private $urlPj;
-
-    /**
      * @var \DateTime
      */
     private $startDatetime;
@@ -58,6 +51,11 @@ class Message extends OgiveEntity
     private $channels;
 
     /**
+     * @var Collection
+     */
+    private $files;
+
+    /**
      * @var Event
      */
     private $event;
@@ -73,6 +71,7 @@ class Message extends OgiveEntity
     public function __construct()
     {
         $this->channels = new ArrayCollection();
+        $this->files = new ArrayCollection();
         $this->modificationDatetime = new \Datetime();
     }
 
@@ -225,24 +224,56 @@ class Message extends OgiveEntity
     }
 
     /**
-     * Get urlPj
+     * Add file
      *
-     * @return string
+     * @param  MessageFile $file
+     * @return Message
      */
-    public function getUrlPj()
+    public function addFile(MessageFile $file)
     {
-        return $this->urlPj;
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+        }
+
+        return $this;
     }
 
     /**
-     * Set urlPj
+     * Remove file
      *
-     * @param string $urlPj
+     * @param  MessageFile $file
      * @return Message
      */
-    public function setUrlPj($urlPj)
+    public function removeFile(MessageFile $file)
     {
-        $this->urlPj = $urlPj;
+        $this->files->removeElement($file);
+
+        return $this;
+    }
+
+    /**
+     * Get files
+     *
+     * @return Collection
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Set files
+     *
+     * @param  Collection $files
+     * @return Message
+     */
+    public function setFiles($files)
+    {
+        if ($files instanceof Collection) {
+            $this->files = $files;
+        } else if (is_array($files)) {
+            $this->files = new ArrayCollection($files);
+        }
 
         return $this;
     }
