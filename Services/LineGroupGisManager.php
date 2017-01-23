@@ -27,6 +27,11 @@ class LineGroupGisManager extends SortManager
         return ($this->repository->findAll());
     }
 
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        return ($this->repository->findBy($criteria,$orderBy,$limit,$offset));
+    }
+
     public function find($lineGroupGisId)
     {
         return empty($lineGroupGisId) ? null : $this->repository->find($lineGroupGisId);
@@ -96,6 +101,7 @@ class LineGroupGisManager extends SortManager
                 SELECT min(subs2.date) FROM Tisseo\EndivBundle\Entity\Schematic subs2
                 WHERE subs2.line = l AND subs2.deprecated != true AND subs2.groupGis = true
             )
+            WHERE lgg.deprecated = FALSE
         ");
 
         $content = $query->getArrayResult();
