@@ -26,9 +26,6 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             length: null
             fixed: false
             column: content
-        urlPj:
-            type: string
-            column: url_pj
         startDatetime:
             type: datetime
             nullable: true
@@ -44,6 +41,11 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             gedmo:
                 timestampable:
                     on: update
+    oneToMany:
+        files:
+            targetEntity: MessageFile
+            mappedBy: message
+            cascade: ['persist', 'remove']
     manyToOne:
         object:
             targetEntity: Object
