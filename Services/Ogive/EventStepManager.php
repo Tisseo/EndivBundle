@@ -14,7 +14,7 @@ class EventStepManager extends OgiveManager
         $comment = null
     ) {
         if (!($less instanceof EventStepStatus)) {
-            $less = new EventStepStatus;
+            $less = new EventStepStatus();
         }
 
         if (!empty($comment)) {
@@ -28,13 +28,17 @@ class EventStepManager extends OgiveManager
 
         $eventStep->addStatus($less);
 
-        foreach ($this->findChildSteps($eventStep->getId()) as $step) {
-            $status = clone ($less);
-            $status->setId(null);
-            $status->setEventStep($step);
-            $step->addStatus($status);
+        if ($status !== EventStepStatus::STATUS_VALIDATED) {
+            foreach ($this->findChildSteps($eventStep->getId()) as $step) {
+                if ($step->getLastStatus()->getStatus() !== $status) {
+                    $status = clone ($less);
+                    $status->setId(null);
+                    $status->setEventStep($step);
+                    $step->addStatus($status);
 
-            $this->objectManager->persist($step);
+                    $this->objectManager->persist($step);
+                }
+            }
         }
 
         $this->save($eventStep);
