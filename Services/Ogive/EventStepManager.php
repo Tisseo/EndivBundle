@@ -10,31 +10,28 @@ class EventStepManager extends OgiveManager
         EventStep $eventStep,
         $status,
         $login,
-        $less = null,
-        $comment = null
+        $comment
     ) {
-        if (!($less instanceof EventStepStatus)) {
-            $less = new EventStepStatus;
-        }
-
-        if (!empty($comment)) {
-            $less->setUserComment($comment);
-        }
-
+        $less = new EventStepStatus();
         $less->setEventStep($eventStep);
         $less->setStatus($status);
         $less->setLogin($login);
+        $less->setUserComment($comment);
         $less->setDateTime(new \Datetime());
 
         $eventStep->addStatus($less);
 
-        foreach ($this->findChildSteps($eventStep->getId()) as $step) {
-            $status = clone ($less);
-            $status->setId(null);
-            $status->setEventStep($step);
-            $step->addStatus($status);
+        if ($status !== EventStepStatus::STATUS_VALIDATED) {
+            foreach ($this->findChildSteps($eventStep->getId()) as $step) {
+                if ($step->getLastStatus()->getStatus() !== $status) {
+                    $status = clone ($less);
+                    $status->setId(null);
+                    $status->setEventStep($step);
+                    $step->addStatus($status);
 
-            $this->objectManager->persist($step);
+                    $this->objectManager->persist($step);
+                }
+            }
         }
 
         $this->save($eventStep);

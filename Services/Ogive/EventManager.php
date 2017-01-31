@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Services\Ogive;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
 use Tisseo\EndivBundle\Types\Ogive\MomentType;
+use Tisseo\EndivBundle\Entity\Ogive\Channel;
 
 class EventManager extends OgiveManager
 {
@@ -139,7 +140,6 @@ class EventManager extends OgiveManager
      */
     public function close(Event $event, $login, $message)
     {
-        $event->setStatus(Event::STATUS_CLOSED);
         $closingDatetime = new \DateTime();
 
         // Manage event status: If status goes to rejected or closed change event steps status
@@ -174,5 +174,47 @@ class EventManager extends OgiveManager
         }
 
         return $this->save($event);
+    }
+
+    /**
+     * Detect if the event has an active prehome channel
+     */
+    public function hasActivePrehome(Event $event)
+    {
+        // search for prehome message linked to this event
+        $prehome = $this->objectManager->createQueryBuilder()
+            ->select('m.id')
+            ->from('Tisseo\EndivBundle\Entity\Ogive\Message', 'm')
+            ->join('m.channels', 'c')
+            ->where('m.event = :event')
+            ->andWhere('c.name = :channel')
+            ->setParameters(array(
+                'event' => $event,
+                'channel' => Channel::PRE_HOME
+            ))
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($prehome === null) {
+            return false;
+        }
+
+        // search for the last message which is a prehome
+        $activePrehome = $this->objectManager->createQueryBuilder()
+            ->select('m.id')
+            ->from('Tisseo\EndivBundle\Entity\Ogive\Message', 'm')
+            ->join('m.channels', 'c')
+            ->where('c.name = :channel')
+            ->orderBy('m.modificationDatetime', 'DESC')
+            ->setParameter('channel', Channel::PRE_HOME)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+
+        if ($activePrehome === null) {
+            return false;
+        }
+
+        return $prehome === $activePrehome;
     }
 }

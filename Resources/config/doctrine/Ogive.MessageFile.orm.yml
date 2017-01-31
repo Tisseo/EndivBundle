@@ -1,0 +1,28 @@
+Tisseo\EndivBundle\Entity\Ogive\MessageFile:
+    type: entity
+    table: ogive.message_file
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        filename:
+            type: string
+            nullable: false
+            length: 255
+        link:
+            type: string
+            nullable: false
+            length: 255
+    manyToOne:
+        message:
+            targetEntity: Message
+            inversedBy: files
+            joinColumns:
+                message_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

@@ -1,8 +1,5 @@
 <?php
-
 namespace Tisseo\EndivBundle\Services\Ogive;
-
-use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 
 class MessageManager extends OgiveManager
 {
@@ -15,12 +12,11 @@ class MessageManager extends OgiveManager
      */
     public function findNetworkPublications(array $channels = array(), array $objectTypes = array())
     {
-        $queryBuilder = $this->objectManager->createQueryBuilder('m');
+        $queryBuilder = $this->getRepository()->createQueryBuilder('m');
         $expr = $queryBuilder->expr();
 
         $queryBuilder
             ->select('m, o, c')
-            ->from('TisseoEndivBundle:Ogive\Message', 'm')
             ->where($expr->lte('m.startDatetime', 'current_timestamp()'))
             ->andWhere($expr->gt('m.endDatetime', 'current_timestamp()'));
 
