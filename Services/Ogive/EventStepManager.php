@@ -10,20 +10,13 @@ class EventStepManager extends OgiveManager
         EventStep $eventStep,
         $status,
         $login,
-        $less = null,
-        $comment = null
+        $comment
     ) {
-        if (!($less instanceof EventStepStatus)) {
-            $less = new EventStepStatus();
-        }
-
-        if (!empty($comment)) {
-            $less->setUserComment($comment);
-        }
-
+        $less = new EventStepStatus();
         $less->setEventStep($eventStep);
         $less->setStatus($status);
         $less->setLogin($login);
+        $less->setUserComment($comment);
         $less->setDateTime(new \Datetime());
 
         $eventStep->addStatus($less);
