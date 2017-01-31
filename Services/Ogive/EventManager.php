@@ -190,7 +190,7 @@ class EventManager extends OgiveManager
             ->andWhere('c.name = :channel')
             ->setParameters(array(
                 'event' => $event,
-                'channel' => CHannel::PRE_HOME
+                'channel' => Channel::PRE_HOME
             ))
             ->getQuery()
             ->getOneOrNullResult();
