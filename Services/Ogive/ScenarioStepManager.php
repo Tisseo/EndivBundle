@@ -26,7 +26,6 @@ class ScenarioStepManager extends OgiveManager
         $mapper = array(
             'name',
             'moment',
-            'mandatory',
             'connector',
             'connectorParamList'
         );

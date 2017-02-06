@@ -32,11 +32,6 @@ class ScenarioStep extends OgiveEntity
     private $moment;
 
     /**
-     * @var boolean
-     */
-    private $mandatory;
-
-    /**
      * @var ScenarioStep
      */
     private $scenarioStepParent;
@@ -168,39 +163,6 @@ class ScenarioStep extends OgiveEntity
     public function getMoment()
     {
         return $this->moment;
-    }
-
-    /**
-     * Set mandatory
-     *
-     * @param boolean $mandatory
-     * @return ScenarioStep
-     */
-    public function setMandatory($mandatory)
-    {
-        $this->mandatory = $mandatory;
-
-        return $this;
-    }
-
-    /**
-     * Is mandatory
-     *
-     * @return boolean
-     */
-    public function isMandatory()
-    {
-        return $this->mandatory;
-    }
-
-    /**
-     * Get mandatory
-     *
-     * @return boolean
-     */
-    public function getMandatory()
-    {
-        return $this->mandatory;
     }
 
     /**
