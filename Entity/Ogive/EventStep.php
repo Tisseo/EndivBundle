@@ -32,11 +32,6 @@ class EventStep extends OgiveEntity
     private $moment;
 
     /**
-     * @var boolean
-     */
-    private $mandatory;
-
-    /**
      * @var EventStep
      */
     private $eventStepParent;
@@ -174,29 +169,6 @@ class EventStep extends OgiveEntity
     public function getMoment()
     {
         return $this->moment;
-    }
-
-    /**
-     * Set mandatory
-     *
-     * @param boolean $mandatory
-     * @return EventStep
-     */
-    public function setMandatory($mandatory)
-    {
-        $this->mandatory = $mandatory;
-
-        return $this;
-    }
-
-    /**
-     * Get mandatory
-     *
-     * @return boolean
-     */
-    public function getMandatory()
-    {
-        return $this->mandatory;
     }
 
     /**

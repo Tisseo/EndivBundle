@@ -39,10 +39,6 @@ Tisseo\EndivBundle\Entity\Ogive\ScenarioStep:
             type: integer
             nullable: false
             column: moment
-        mandatory:
-            type: boolean
-            nullable: false
-            comment: ''
     manyToOne:
         scenarioStepParent:
             targetEntity: ScenarioStep
