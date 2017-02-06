@@ -14,14 +14,14 @@ class EventStepManager extends OgiveManager
     ) {
         $less = new EventStepStatus();
         $less->setEventStep($eventStep);
-        $less->setStatus($status);
+        $less->setStatus((int)$status);
         $less->setLogin($login);
         $less->setUserComment($comment);
         $less->setDateTime(new \Datetime());
 
         $eventStep->addStatus($less);
 
-        if ($status !== EventStepStatus::STATUS_VALIDATED) {
+        if ((int)$status !== EventStepStatus::STATUS_VALIDATED) {
             foreach ($this->findChildSteps($eventStep->getId()) as $step) {
                 if ($step->getLastStatus()->getStatus() !== $status) {
                     $status = clone ($less);
