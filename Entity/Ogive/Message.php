@@ -46,9 +46,14 @@ class Message extends OgiveEntity
     private $modificationDatetime;
 
     /**
-     * @var Collection
+     * @var boolean
      */
-    private $channels;
+    private $prehome;
+
+    /**
+     * @var push
+     */
+    private $push;
 
     /**
      * @var Collection
@@ -61,18 +66,14 @@ class Message extends OgiveEntity
     private $event;
 
     /**
-     * @var Object
-     */
-    private $object;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->channels = new ArrayCollection();
         $this->files = new ArrayCollection();
         $this->modificationDatetime = new \Datetime();
+        $this->prehome = false;
+        $this->push = false;
     }
 
     /**
@@ -279,80 +280,6 @@ class Message extends OgiveEntity
     }
 
     /**
-     * Add channel
-     *
-     * @param Channel $channel
-     * @return Message
-     */
-    public function addChannel(Channel $channel)
-    {
-        if (!$this->channels->contains($channel)) {
-            $this->channels->add($channel);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove channel
-     *
-     * @param Channel $channel
-     * @return Message
-     */
-    public function removeChannel(Channel $channel)
-    {
-        $this->channels->removeElement($channel);
-
-        return $this;
-    }
-
-    /**
-     * Get channels
-     *
-     * @return Collection
-     */
-    public function getChannels()
-    {
-        return $this->channels;
-    }
-
-    /**
-     * Set channels
-     *
-     * @param  Collection $channels
-     * @return Message
-     */
-    public function setChannels($channels)
-    {
-        if ($channels instanceof Collection) {
-            $this->channels = $channels;
-        } else if (is_array($channels)) {
-            $this->channels = new ArrayCollection($channels);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get Channel by name
-     */
-    public function getChannelByName($name)
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('name', $name))
-            ->setMaxResults(1)
-        ;
-
-        $channels = $this->channels->matching($criteria);
-
-        if (count($channels) === 0) {
-            return null;
-        }
-
-        return $channels->first();
-    }
-
-    /**
      * Get event
      *
      * @return Event.
@@ -376,24 +303,47 @@ class Message extends OgiveEntity
     }
 
     /**
-     * Get object
+     * Get prehome
      *
-     * @return Object.
+     * @return boolean
      */
-    public function getObject()
+    public function isPrehome()
     {
-        return $this->object;
+        return $this->prehome;
     }
 
     /**
-     * Set object
+     * Set prehome
      *
-     * @param Object object
+     * @param  boolean $prehome
      * @return Message
      */
-    public function setObject($object)
+    public function setPrehome($prehome)
     {
-        $this->object = $object;
+        $this->prehome = $prehome;
+
+        return $this;
+    }
+
+    /**
+     * Is push
+     *
+     * @return boolean
+     */
+    public function isPush()
+    {
+        return $this->push;
+    }
+
+    /**
+     * Set push
+     *
+     * @param  boolean push
+     * @return Message
+     */
+    public function setPush($push)
+    {
+        $this->push = $push;
 
         return $this;
     }
