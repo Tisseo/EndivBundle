@@ -41,35 +41,24 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             gedmo:
                 timestampable:
                     on: update
+        prehome:
+            type: boolean
+            nullable: false
+            column: is_prehome
+        push:
+            type: boolean
+            nullable: false
+            column: is_push
     oneToMany:
         files:
             targetEntity: MessageFile
             mappedBy: message
             cascade: ['persist', 'remove']
     manyToOne:
-        object:
-            targetEntity: Object
-            inversedBy: messages
-            joinColumns:
-                object_id:
-                    referencedColumnName: id
         event:
             targetEntity: Event
             inversedBy: messages
             joinColumns:
                 event_id:
                     referencedColumnName: id
-    manyToMany:
-        channels:
-            targetEntity: Channel
-            joinTable:
-                name: ogive.channel_message
-                joinColumns:
-                    -
-                        name: message_id
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    -
-                        name: channel_id
-                        referencedColumnName: id
     lifecycleCallbacks: {  }
