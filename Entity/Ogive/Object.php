@@ -46,11 +46,6 @@ class Object extends OgiveEntity
     private $groupObject;
 
     /**
-     * @var Collection
-     */
-    private $messages;
-
-    /**
      * @var stdclass (unmapped)
      * References the meta info of the ENDIV object
      */
@@ -63,7 +58,6 @@ class Object extends OgiveEntity
     public function __construct()
     {
         $this->groupObject = new ArrayCollection();
-        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -176,41 +170,5 @@ class Object extends OgiveEntity
     public function setMeta(\stdclass $meta)
     {
         $this->_meta = $meta;
-    }
-
-    /**
-     * Add message
-     *
-     * @param Message $message
-     * @return Message
-     */
-    public function addMessage(Message $message)
-    {
-        $this->message->add($message);
-
-        return $this;
-    }
-
-    /**
-     * Remove message
-     *
-     * @param Message $message
-     * @return Message
-     */
-    public function removeMessage(Message $message)
-    {
-        $this->message->removeElement($message);
-
-        return $this;
-    }
-
-    /**
-     * Get messages
-     *
-     * @return Collection
-     */
-    public function getMessages()
-    {
-        return $this->messages;
     }
 }
