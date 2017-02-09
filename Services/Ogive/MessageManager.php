@@ -1,43 +1,38 @@
 <?php
 namespace Tisseo\EndivBundle\Services\Ogive;
 
+use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
+
 class MessageManager extends OgiveManager
 {
     /**
-     * Retrieve Message linked to line objects
-     * optional channels filter
+     * Retrieve Messages
      *
-     * @param  array $channels
+     * @param  boolean $prehome
      * @return array
      */
-    public function findNetworkPublications(array $channels = array(), array $objectTypes = array())
+    public function findNetworkPublications($filterPrehome = false, $prehome = false)
     {
         $queryBuilder = $this->getRepository()->createQueryBuilder('m');
         $expr = $queryBuilder->expr();
 
         $queryBuilder
-            ->select('m, o, c')
+            ->select('m, e, o')
+            ->join('m.event', 'e')
+            ->join('e.objects', 'o')
             ->where($expr->lte('m.startDatetime', 'current_timestamp()'))
-            ->andWhere($expr->gt('m.endDatetime', 'current_timestamp()'));
+            ->andWhere($expr->gt('m.endDatetime', 'current_timestamp()'))
+        ;
 
-        // Filter by channels if requested
-        if (count($channels) > 0) {
+        if ($filterPrehome) {
             $queryBuilder
-                ->join('m.channels', 'c', 'with', $expr->in('c.name', ':names'))
-                ->setParameter('names', $channels);
-        } else {
-            $queryBuilder
-                ->join('m.channels', 'c');
+                ->andWhere($expr->eq('m.prehome', ':prehome'))
+                ->setParameter('prehome', $prehome)
+            ;
         }
 
-        // Filter by objects type if requested
-        if (count($objectTypes) > 0) {
-            $queryBuilder
-                ->join('m.object', 'o', 'with', $expr->in('o.objectType', ':types'))
-                ->setParameter('types', $objectTypes);
-        } else {
-            $queryBuilder
-                ->join('m.object', 'o');
+        if ($filterPrehome) {
+            return $queryBuilder->getQuery()->getOneOrNullResult();
         }
 
         return $queryBuilder->getQuery()->getResult();

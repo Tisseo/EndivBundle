@@ -40,10 +40,6 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             type: integer
             nullable: false
             comment: ''
-        mandatory:
-            type: boolean
-            nullable: false
-            comment: ''
     manyToOne:
         eventStepParent:
             targetEntity: EventStep

@@ -26,14 +26,12 @@ class UniqueFieldsInCollectionValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'array or Traversable and ArrayAccess');
         }
 
-        $context = $this->context;
         $accessor = PropertyAccess::createPropertyAccessor();
 
         $check = array();
         $stop = false;
         foreach ($value as $data) {
             foreach ($constraint->fields as $field) {
-                dump($field);
                 $check[$field][] = $accessor->getValue($data, $field);
 
                 if (count(array_unique($check[$field])) < count($check[$field])) {
