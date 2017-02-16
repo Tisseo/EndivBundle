@@ -43,4 +43,20 @@ class ScenarioManager extends OgiveManager
 
         return $this->save($scenario);
     }
+
+    /**
+     * Customized findAll
+     *
+     * @return array
+     */
+    public function findAll()
+    {
+        $queryBuilder = $this->getRepository()->createQueryBuilder('s')
+            ->select('s, st')
+            ->leftJoin('s.scenarioSteps', 'st')
+            ->orderBy('s.name', 'asc')
+        ;
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
