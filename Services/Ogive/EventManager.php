@@ -145,7 +145,7 @@ class EventManager extends OgiveManager
         foreach ($event->getEventSteps() as $eventStep) {
             $eventStepStatus = $eventStep->getLastStatus();
 
-            if ($eventStepStatus->getStatus() !== EventStepStatus::STATUS_VALIDATED) {
+            if ($eventStepStatus->getStatus() === EventStepStatus::STATUS_TODO) {
                 $ess = new EventStepStatus();
                 $ess->setLogin($login);
                 $ess->setDateTime($closingDatetime);
