@@ -38,7 +38,13 @@ class EventManager extends OgiveManager
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function findEventList($archive = false, $limit = null, $offset = 0) {
+    public function findEventList(
+        $archive = false,
+        $limit = null,
+        $offset = 0,
+        $search = null,
+        $orderBy = array()
+    ) {
         $status = ($archive === true) ? array(Event::STATUS_CLOSED, Event::STATUS_REJECTED) : array(Event::STATUS_OPEN);
 
         $queryBuilder = $this->objectManager->createQueryBuilder()
@@ -59,6 +65,17 @@ class EventManager extends OgiveManager
         $queryBuilder->orderBy('event.id', 'ASC');
 
         if ($limit !== null) {
+            if ($search !== null) {
+                $queryBuilder->andWhere(
+                    'unaccent(lower(event.reference)) LIKE unaccent(lower(:search)) OR
+                     unaccent(lower(event.chaosInternalCause)) LIKE unaccent(lower(:search))');
+                $queryBuilder->setParameter('search', '%'.$search.'%');
+            }
+
+            foreach ($orderBy as $field => $direction) {
+                $queryBuilder->orderBy($field, $direction);
+            }
+
             $queryBuilder->setFirstResult($offset);
             $queryBuilder->setMaxResults($limit);
             $paginator = new Paginator($queryBuilder->getQuery(), true);
