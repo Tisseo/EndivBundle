@@ -1,6 +1,7 @@
 <?php
 namespace Tisseo\EndivBundle\Services\Ogive;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
 use Tisseo\EndivBundle\Types\Ogive\MomentType;
@@ -37,8 +38,14 @@ class EventManager extends OgiveManager
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function findEventList($archive = false) {
-        $status = ($archive === true) ? Event::STATUS_CLOSED : Event::STATUS_OPEN;
+    public function findEventList(
+        $archive = false,
+        $limit = null,
+        $offset = 0,
+        $search = null,
+        $orderBy = array()
+    ) {
+        $status = ($archive === true) ? array(Event::STATUS_CLOSED, Event::STATUS_REJECTED) : array(Event::STATUS_OPEN);
 
         $queryBuilder = $this->objectManager->createQueryBuilder()
             ->select('event')
@@ -46,13 +53,34 @@ class EventManager extends OgiveManager
             ->leftJoin('event.periods', 'p')
             ->leftJoin('event.eventSteps', 'es')
             ->leftJoin('es.statuses', 's')
-            ->where('event.status = :status')
+            ->where('event.status in (:status)')
             ->setParameter('status', $status)
             ->addSelect('p, es, s');
 
         if ($archive === true) {
             $queryBuilder
                 ->leftJoin('event.objects', 'eo')->addSelect('eo');
+        }
+
+        $queryBuilder->orderBy('event.id', 'ASC');
+
+        if ($limit !== null) {
+            if ($search !== null) {
+                $queryBuilder->andWhere(
+                    'unaccent(lower(event.reference)) LIKE unaccent(lower(:search)) OR
+                     unaccent(lower(event.chaosInternalCause)) LIKE unaccent(lower(:search))');
+                $queryBuilder->setParameter('search', '%'.$search.'%');
+            }
+
+            foreach ($orderBy as $field => $direction) {
+                $queryBuilder->orderBy($field, $direction);
+            }
+
+            $queryBuilder->setFirstResult($offset);
+            $queryBuilder->setMaxResults($limit);
+            $paginator = new Paginator($queryBuilder->getQuery(), true);
+
+            return $paginator;
         }
 
         return $queryBuilder->getQuery()->getResult();
@@ -145,7 +173,7 @@ class EventManager extends OgiveManager
         foreach ($event->getEventSteps() as $eventStep) {
             $eventStepStatus = $eventStep->getLastStatus();
 
-            if ($eventStepStatus->getStatus() !== EventStepStatus::STATUS_VALIDATED) {
+            if ($eventStepStatus->getStatus() === EventStepStatus::STATUS_TODO) {
                 $ess = new EventStepStatus();
                 $ess->setLogin($login);
                 $ess->setDateTime($closingDatetime);
