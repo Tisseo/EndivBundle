@@ -100,21 +100,25 @@ class EventManager extends OgiveManager
         foreach ($events as $event) {
             $extrema = $event->getExtremaPeriodDates();
             $nbrFinished = 0;
-            $alert = false;
+            $alert = null;
+
+            if ($extrema['max'] < $now) {
+                $alert = 'warning';
+            }
 
             foreach ($event->getEventSteps() as $eventStep) {
                 if ($eventStep->getLastStatus()->getStatus() != EventStepStatus::STATUS_TODO) {
                     $nbrFinished++;
-                } elseif (!$alert) {
+                } elseif ($alert === null) {
                     $moment = $eventStep->getMoment();
 
                     if ($moment == MomentType::BEFORE) {
-                        $alert = true;
+                        $alert = 'urgent';
                     } elseif (!empty($extrema) && (
                         ($moment == MomentType::NOW && $extrema['min'] < $now) ||
                         ($moment == MomentType::AFTER && $extrema['max'] < $now)
                     )) {
-                        $alert = true;
+                        $alert = 'urgent';
                     }
                 }
             }
