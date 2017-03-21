@@ -539,4 +539,19 @@ class Event extends OgiveEntity
     {
         return $this->messages;
     }
+
+    public function getPrehome()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('prehome', true))
+            ->setMaxResults(1)
+        ;
+
+        $prehome = $this->messages->matching($criteria);
+        if ($prehome->count() == 1) {
+            return $prehome->first();
+        }
+
+        return null;
+    }
 }

@@ -201,6 +201,10 @@ class EventManager extends OgiveManager
             $this->objectManager->remove($msg);
         }
 
+        if ($event->getStatus() === Event::STATUS_OPEN) {
+            $event->setStatus(Event::STATUS_CLOSED);
+        }
+
         return $this->save($event);
     }
 
