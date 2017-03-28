@@ -503,6 +503,25 @@ class Event extends OgiveEntity
     }
 
     /**
+     * Get objects by type
+     *
+     * @param  array
+     * @return Collection
+     */
+    public function getObjectsByType(array $types)
+    {
+        if (!empty($types)) {
+            $filter = Criteria::create()
+                ->where(Criteria::expr()->in('objectType', $types))
+            ;
+
+            return $this->objects->matching($filter);
+        }
+
+        return $this->objects;
+    }
+
+    /**
      * Set objects
      *
      * @param Collection objects
