@@ -41,6 +41,11 @@ class Event extends OgiveEntity
     private $chaosInternalCause;
 
     /**
+     * @var string
+     */
+    private $chaosCause;
+
+    /**
      * @var integer
      */
     private $status;
@@ -69,6 +74,11 @@ class Event extends OgiveEntity
      * @var unknown
      */
     private $login;
+
+    /**
+     * @var string
+     */
+    private $comment;
 
     /**
      * @var Event
@@ -105,9 +115,6 @@ class Event extends OgiveEntity
      */
     private $messages;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->periods = new ArrayCollection();
@@ -307,6 +314,52 @@ class Event extends OgiveEntity
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param  string $comment
+     * @return Event
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get chaosCause
+     *
+     * @return string
+     */
+    public function getChaosCause()
+    {
+        return $this->chaosCause;
+    }
+
+    /**
+     * Set chaosCause
+     *
+     * @param  string $chaosCause
+     * @return Event
+     */
+    public function setChaosCause($chaosCause)
+    {
+        $this->chaosCause = $chaosCause;
 
         return $this;
     }
