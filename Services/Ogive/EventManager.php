@@ -66,9 +66,10 @@ class EventManager extends OgiveManager
 
         if ($limit !== null) {
             if ($search !== null) {
-                $queryBuilder->andWhere(
-                    'unaccent(lower(event.reference)) LIKE unaccent(lower(:search)) OR
-                     unaccent(lower(event.chaosInternalCause)) LIKE unaccent(lower(:search))');
+                $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                    'unaccent(lower(event.reference)) LIKE unaccent(lower(:search))',
+                    'unaccent(lower(event.chaosInternalCause)) LIKE unaccent(lower(:search))'
+                ));
                 $queryBuilder->setParameter('search', '%'.$search.'%');
             }
 
