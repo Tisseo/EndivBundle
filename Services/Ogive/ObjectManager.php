@@ -13,11 +13,18 @@ class ObjectManager extends OgiveManager
      *
      * @param Event $event
      */
-    public function setEventObjectsMetaInformation(Event $event)
+    public function setEventObjectsMetaInformation(Event $event, array $types = array())
     {
         // TODO: could use inheritance here and directly bring the relation when instanciating Object class
         $extrema = null;
-        foreach ($event->getObjects() as $object) {
+
+        if (!empty($types)) {
+            $objects = $event->getObjectsByType($types);
+        } else {
+            $objects = $event->getObjects();
+        }
+
+        foreach ($objects as $object) {
             if ($object->getObjectType() === OgiveObject::STOP && empty($extrema)) {
                 $extrema = $event->getExtremaPeriodDates();
             }
