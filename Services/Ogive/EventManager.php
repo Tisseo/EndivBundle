@@ -66,9 +66,10 @@ class EventManager extends OgiveManager
 
         if ($limit !== null) {
             if ($search !== null) {
-                $queryBuilder->andWhere(
-                    'unaccent(lower(event.reference)) LIKE unaccent(lower(:search)) OR
-                     unaccent(lower(event.chaosInternalCause)) LIKE unaccent(lower(:search))');
+                $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                    'unaccent(lower(event.reference)) LIKE unaccent(lower(:search))',
+                    'unaccent(lower(event.chaosInternalCause)) LIKE unaccent(lower(:search))'
+                ));
                 $queryBuilder->setParameter('search', '%'.$search.'%');
             }
 
@@ -199,6 +200,10 @@ class EventManager extends OgiveManager
         foreach ($event->getMessages() as $msg) {
             $event->removeMessage($msg);
             $this->objectManager->remove($msg);
+        }
+
+        if ($event->getStatus() === Event::STATUS_OPEN) {
+            $event->setStatus(Event::STATUS_CLOSED);
         }
 
         return $this->save($event);

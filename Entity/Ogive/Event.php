@@ -41,6 +41,11 @@ class Event extends OgiveEntity
     private $chaosInternalCause;
 
     /**
+     * @var string
+     */
+    private $chaosCause;
+
+    /**
      * @var integer
      */
     private $status;
@@ -69,6 +74,11 @@ class Event extends OgiveEntity
      * @var unknown
      */
     private $login;
+
+    /**
+     * @var string
+     */
+    private $comment;
 
     /**
      * @var Event
@@ -105,9 +115,6 @@ class Event extends OgiveEntity
      */
     private $messages;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->periods = new ArrayCollection();
@@ -312,6 +319,52 @@ class Event extends OgiveEntity
     }
 
     /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param  string $comment
+     * @return Event
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get chaosCause
+     *
+     * @return string
+     */
+    public function getChaosCause()
+    {
+        return $this->chaosCause;
+    }
+
+    /**
+     * Set chaosCause
+     *
+     * @param  string $chaosCause
+     * @return Event
+     */
+    public function setChaosCause($chaosCause)
+    {
+        $this->chaosCause = $chaosCause;
+
+        return $this;
+    }
+
+    /**
      * Get isPublished.
      *
      * @return boolean
@@ -450,6 +503,25 @@ class Event extends OgiveEntity
     }
 
     /**
+     * Get objects by type
+     *
+     * @param  array
+     * @return Collection
+     */
+    public function getObjectsByType(array $types)
+    {
+        if (!empty($types)) {
+            $filter = Criteria::create()
+                ->where(Criteria::expr()->in('objectType', $types))
+            ;
+
+            return $this->objects->matching($filter);
+        }
+
+        return $this->objects;
+    }
+
+    /**
      * Set objects
      *
      * @param Collection objects
@@ -538,5 +610,20 @@ class Event extends OgiveEntity
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    public function getPrehome()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('prehome', true))
+            ->setMaxResults(1)
+        ;
+
+        $prehome = $this->messages->matching($criteria);
+        if ($prehome->count() == 1) {
+            return $prehome->first();
+        }
+
+        return null;
     }
 }

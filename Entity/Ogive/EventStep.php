@@ -384,6 +384,17 @@ class EventStep extends OgiveEntity
         return $texts->first();
     }
 
+    public function getTextContent($type)
+    {
+        $text = $this->getText($type);
+
+        if ($text instanceof EventStepText) {
+            return $text->getText();
+        }
+
+        return '';
+    }
+
     /**
      * Get scenarioStep Id
      *
