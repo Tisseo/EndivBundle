@@ -45,7 +45,7 @@ class EventManager extends OgiveManager
         $search = null,
         $orderBy = array()
     ) {
-        $status = ($archive === true) ? array(Event::STATUS_CLOSED, Event::STATUS_REJECTED) : array(Event::STATUS_OPEN);
+        $status = ($archive === true) ? array(Event::STATUS_CLOSED) : array(Event::STATUS_OPEN);
 
         $queryBuilder = $this->objectManager->createQueryBuilder()
             ->select('event')
