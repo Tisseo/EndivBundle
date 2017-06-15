@@ -67,6 +67,13 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
         comment:
             type: text
             nullable: true
+    oneToOne:
+        message:
+            targetEntity: Message
+            inversedBy: event
+            joinColumn:
+                message_id:
+                    referencedColumnName: id
     manyToOne:
         eventParent:
             targetEntity: Event
@@ -77,10 +84,6 @@ Tisseo\EndivBundle\Entity\Ogive\Event:
                     referencedColumnName: id
             orphanRemoval: false
     oneToMany:
-        messages:
-            targetEntity: Message
-            mappedBy: event
-            orderBy: {'startDatetime': 'asc'}
         periods:
             targetEntity: Period
             mappedBy: event

@@ -54,11 +54,8 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             targetEntity: MessageFile
             mappedBy: message
             cascade: ['persist', 'remove']
-    manyToOne:
+    oneToOne:
         event:
             targetEntity: Event
-            inversedBy: messages
-            joinColumns:
-                event_id:
-                    referencedColumnName: id
+            mappedBy: message
     lifecycleCallbacks: {  }
