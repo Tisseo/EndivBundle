@@ -197,8 +197,9 @@ class EventManager extends OgiveManager
             $this->objectManager->persist($period);
         }
 
-        foreach ($event->getMessages() as $msg) {
-            $event->removeMessage($msg);
+        $msg = $event->getMessage();
+        if ($msg !== null) {
+            $event->setMessage();
             $this->objectManager->remove($msg);
         }
 

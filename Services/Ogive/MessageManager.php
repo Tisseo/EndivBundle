@@ -37,4 +37,19 @@ class MessageManager extends OgiveManager
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function remove($identifier)
+    {
+        $message = $this->getRepository()->find($identifier);
+
+        if (empty($message)) {
+            throw new Exception("The message {$identifier} was not found");
+        }
+
+        $event = $message->getEvent();
+        $event->setMessage();
+        $this->objectManager->persist($event);
+        $this->objectManager->remove($message);
+        $this->objectManager->flush();
+    }
 }

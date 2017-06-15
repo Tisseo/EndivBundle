@@ -3,6 +3,7 @@
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 
@@ -111,9 +112,9 @@ class Event extends OgiveEntity
     private $eventObjects;
 
     /**
-     * @var Collection
+     * @var Message
      */
-    private $messages;
+    private $message;
 
     public function __construct()
     {
@@ -122,7 +123,6 @@ class Event extends OgiveEntity
         $this->eventObjects = new ArrayCollection();
         $this->eventDatasources = new ArrayCollection();
         $this->eventSteps = new ArrayCollection();
-        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -515,6 +515,17 @@ class Event extends OgiveEntity
                 ->where(Criteria::expr()->in('objectType', $types))
             ;
 
+            // bugfix about PersistentCollection and Criteria
+            // in the case of a many-to-many relation
+            if ($this->objects instanceof PersistentCollection) {
+                $objects = new ArrayCollection();
+                foreach ($this->objects as $object) {
+                    $objects->add($object);
+                }
+
+                return $objects->matching($filter);
+            }
+
             return $this->objects->matching($filter);
         }
 
@@ -577,53 +588,35 @@ class Event extends OgiveEntity
     }
 
     /**
-     * Add message
+     * Set message
      *
-     * @param Message $message
-     * @return Message
+     * @param  Message $message
+     * @return Event
      */
-    public function addMessage(Message $message)
+    public function setMessage(Message $message = null)
     {
-        $this->messages->add($message);
+        $this->message = $message;
 
         return $this;
     }
 
     /**
-     * Remove message
+     * Get message
      *
-     * @param Message $message
      * @return Message
      */
-    public function removeMessage(Message $message)
+    public function getMessage()
     {
-        $this->messages->removeElement($message);
-
-        return $this;
+        return $this->message;
     }
 
     /**
-     * Get messages
+     * Check the event's message is a prehome or not
      *
-     * @return Collection
+     * @return boolean
      */
-    public function getMessages()
+    public function hasPrehome()
     {
-        return $this->messages;
-    }
-
-    public function getPrehome()
-    {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('prehome', true))
-            ->setMaxResults(1)
-        ;
-
-        $prehome = $this->messages->matching($criteria);
-        if ($prehome->count() == 1) {
-            return $prehome->first();
-        }
-
-        return null;
+        return ($this->message instanceof Message && $this->message->isPrehome());
     }
 }
