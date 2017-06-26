@@ -43,7 +43,7 @@ class MessageManager extends OgiveManager
         $message = $this->getRepository()->find($identifier);
 
         if (empty($message)) {
-            throw new Exception("The message {$identifier} was not found");
+            throw new \Exception("The message cannot be deleted as it was not found");
         }
 
         $event = $message->getEvent();
