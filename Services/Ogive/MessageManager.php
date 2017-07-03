@@ -38,9 +38,25 @@ class MessageManager extends OgiveManager
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function remove($identifier)
+    public function findOldPrehome()
     {
-        $message = $this->getRepository()->find($identifier);
+        $queryBuilder = $this->getRepository()->createQueryBuilder('m');
+        $expr = $queryBuilder->expr();
+
+        $queryBuilder
+            ->select('m', 'e')
+            ->join('m.event', 'e')
+            ->where($expr->lt('m.startDatetime', 'current_timestamp()'))
+            ->andWhere($expr->eq('m.prehome', ':prehome'))
+            ->setParameter('prehome', true)
+        ;
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function remove($message)
+    {
+        $message = $this->getRepository()->find($message);
 
         if (empty($message)) {
             throw new \Exception("The message cannot be deleted as it was not found");
