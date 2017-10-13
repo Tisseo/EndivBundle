@@ -45,6 +45,14 @@ Tisseo\EndivBundle\Entity\Ogive\Message:
             type: boolean
             nullable: false
             column: is_prehome
+        home:
+            type: boolean
+            nullable: false
+            column: is_home
+        priority:
+            type: integer
+            default: '0'
+            column: priority
         push:
             type: boolean
             nullable: false
