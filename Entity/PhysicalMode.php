@@ -9,6 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PhysicalMode
 {
+    const PHYSICAL_MODE_METRO = 1;
+    const PHYSICAL_MODE_TRAM = 2;
+    const PHYSICAL_MODE_BUS = 3;
+    const PHYSICAL_MODE_TAD = 4;
+    const PHYSICAL_MODE_TRAIN = 5;
+    const PHYSICAL_MODE_CAR = 7;
+    const PHYSICAL_MODE_SCOL = 8;
+    const PHYSICAL_MODE_NAV = 9;
+    const PHYSICAL_MODE_LINEO = 10;
+
     /**
      * @var integer
      */
