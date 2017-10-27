@@ -78,4 +78,18 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             targetEntity: EventStepText
             cascade: ['remove', 'persist']
             mappedBy: eventStep
+    manyToMany:
+        files:
+            targetEntity: EventStepFile
+            inversedBy: objects
+            joinTable:
+                name: ogive.event_step_event_step_file
+                joinColumns:
+                    -
+                        name: event_step_id
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: event_step_file_id
+                        referencedColumnName: id
     lifecycleCallbacks: {  }

@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Tisseo\EndivBundle\Entity\Ogive\EventStepFile;
 
 /**
  * EventStep
@@ -60,6 +61,11 @@ class EventStep extends OgiveEntity
      * @var Collection
      */
     private $texts;
+
+    /**
+     * @var Collection
+     */
+    private $files;
 
     /**
      * Non mapped property to get eventStep original scenario when adding an eventStep
@@ -437,6 +443,52 @@ class EventStep extends OgiveEntity
     public function setScenarioStepParentId($scenarioStepParentId)
     {
         $this->scenarioStepParentId = $scenarioStepParentId;
+
+        return $this;
+    }
+
+    /**
+     * Add status
+     *
+     * @param EventStepFile $file
+     * @return EventStep
+     */
+    public function addFile(EventStepFile $file)
+    {
+        $this->files->add($file);
+
+        return $this;
+    }
+
+    /**
+     * Remove status
+     *
+     * @param EventStepFile $file
+     */
+    public function removeFile(EventStepFile $file)
+    {
+        $this->files->removeElement($file);
+    }
+
+    /**
+     * Get files
+     *
+     * @return Collection
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Set files
+     *
+     * @param Collection $files
+     * @return EventStep
+     */
+    public function setFiles(Collection $files)
+    {
+        $this->files = $files;
 
         return $this;
     }
