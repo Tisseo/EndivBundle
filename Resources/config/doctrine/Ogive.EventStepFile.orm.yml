@@ -21,4 +21,16 @@ Tisseo\EndivBundle\Entity\Ogive\EventStepFile:
             nullable: false
             column: label
             length: 255
+        deleted:
+            type: boolean
+            nullable: false
+            comment: 'Indique si le fichier physique est supprimé'
+
+    manyToOne:
+        eventStep:
+            targetEntity: EventStep
+            joinColumns:
+                event_step_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

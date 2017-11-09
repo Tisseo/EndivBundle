@@ -65,7 +65,7 @@ class EventStep extends OgiveEntity
     /**
      * @var Collection
      */
-    private $files;
+    private $attachments;
 
     /**
      * Non mapped property to get eventStep original scenario when adding an eventStep
@@ -85,6 +85,7 @@ class EventStep extends OgiveEntity
     {
         $this->statuses = new ArrayCollection();
         $this->texts = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
     }
 
     /**
@@ -448,47 +449,48 @@ class EventStep extends OgiveEntity
     }
 
     /**
-     * Add status
+     * Add attachment
      *
      * @param EventStepFile $file
      * @return EventStep
      */
-    public function addFile(EventStepFile $file)
+    public function addAttachment(EventStepFile $file)
     {
-        $this->files->add($file);
+        $file->setEventStep($this);
+        $this->attachments->add($file);
 
         return $this;
     }
 
     /**
-     * Remove status
+     * Remove attachment
      *
      * @param EventStepFile $file
      */
-    public function removeFile(EventStepFile $file)
+    public function removeAttachment(EventStepFile $file)
     {
-        $this->files->removeElement($file);
+        $this->attachments->removeElement($file);
     }
 
     /**
-     * Get files
+     * Get Attachments
      *
      * @return Collection
      */
-    public function getFiles()
+    public function getAttachments()
     {
-        return $this->files;
+        return $this->attachments;
     }
 
     /**
-     * Set files
+     * Set attachements
      *
      * @param Collection $files
      * @return EventStep
      */
-    public function setFiles(Collection $files)
+    public function setAttachments(Collection $files)
     {
-        $this->files = $files;
+        $this->attachments = $files;
 
         return $this;
     }
