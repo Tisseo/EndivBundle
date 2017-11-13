@@ -2,7 +2,9 @@
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Tisseo\EndivBundle\Entity\Ogive\Connector;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
+use Tisseo\EndivBundle\Entity\Ogive\EventStep;
 use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
 use Tisseo\EndivBundle\Types\Ogive\MomentType;
 
@@ -189,6 +191,12 @@ class EventManager extends OgiveManager
                 $eventStep->addStatus($ess);
             }
 
+            if ($eventStep->getConnector() != null && in_array($eventStep->getConnector()->getType(), [Connector::EMAIL_PJ, Connector::MAIL])) {
+                $eventStepFiles = $eventStep->getAttachments();
+                foreach ($eventStepFiles as $file) {
+                    $file->setDeleted(true);
+                }
+            }
             $this->objectManager->persist($eventStep);
         }
 
