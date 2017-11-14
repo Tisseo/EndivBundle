@@ -454,8 +454,11 @@ class EventStep extends OgiveEntity
      * @param EventStepFile $file
      * @return EventStep
      */
-    public function addAttachment(EventStepFile $file)
+    public function addAttachment($file)
     {
+        if ($file == null) {
+            return $this;
+        }
         $file->setEventStep($this);
         $this->attachments->add($file);
 
