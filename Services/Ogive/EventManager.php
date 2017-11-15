@@ -191,7 +191,7 @@ class EventManager extends OgiveManager
                 $eventStep->addStatus($ess);
             }
 
-            if ($eventStep->getConnector() != null && in_array($eventStep->getConnector()->getType(), [Connector::EMAIL_PJ, Connector::MAIL])) {
+            if ($eventStep->getConnector() != null && $eventStep->getConnector()->getType() == Connector::MAIL) {
                 $eventStepFiles = $eventStep->getAttachments();
                 foreach ($eventStepFiles as $file) {
                     $file->setDeleted(true);

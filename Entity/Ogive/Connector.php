@@ -13,7 +13,6 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class Connector extends OgiveEntity
 {
-    const EMAIL_PJ = 1;
     const MAIL = 2;
     const HOMEPAGE = 3;
     const NETWORK_INFO = 4;
@@ -22,7 +21,6 @@ class Connector extends OgiveEntity
      * @var static array
      */
     public static $connectorTypes = array(
-        self::EMAIL_PJ => self::EMAIL_PJ,
         self::MAIL => self::MAIL,
         self::HOMEPAGE => self::HOMEPAGE,
         self::NETWORK_INFO => self::NETWORK_INFO
