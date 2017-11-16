@@ -5,6 +5,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Tisseo\EndivBundle\Entity\Ogive\EventStepFile;
 
 /**
  * EventStep
@@ -62,6 +63,11 @@ class EventStep extends OgiveEntity
     private $texts;
 
     /**
+     * @var Collection
+     */
+    private $attachments;
+
+    /**
      * Non mapped property to get eventStep original scenario when adding an eventStep
      */
     private $scenarioStepId;
@@ -79,6 +85,7 @@ class EventStep extends OgiveEntity
     {
         $this->statuses = new ArrayCollection();
         $this->texts = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
     }
 
     /**
@@ -437,6 +444,56 @@ class EventStep extends OgiveEntity
     public function setScenarioStepParentId($scenarioStepParentId)
     {
         $this->scenarioStepParentId = $scenarioStepParentId;
+
+        return $this;
+    }
+
+    /**
+     * Add attachment
+     *
+     * @param EventStepFile $file
+     * @return EventStep
+     */
+    public function addAttachment($file)
+    {
+        if ($file == null) {
+            return $this;
+        }
+        $file->setEventStep($this);
+        $this->attachments->add($file);
+
+        return $this;
+    }
+
+    /**
+     * Remove attachment
+     *
+     * @param EventStepFile $file
+     */
+    public function removeAttachment(EventStepFile $file)
+    {
+        $this->attachments->removeElement($file);
+    }
+
+    /**
+     * Get Attachments
+     *
+     * @return Collection
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * Set attachements
+     *
+     * @param Collection $files
+     * @return EventStep
+     */
+    public function setAttachments(Collection $files)
+    {
+        $this->attachments = $files;
 
         return $this;
     }

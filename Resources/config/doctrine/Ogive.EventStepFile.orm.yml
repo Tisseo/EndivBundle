@@ -1,0 +1,36 @@
+Tisseo\EndivBundle\Entity\Ogive\EventStepFile:
+    type: entity
+    table: ogive.event_step_file
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        filename:
+            type: string
+            nullable: false
+            column: filename
+            length: 255
+        label:
+            type: string
+            nullable: false
+            column: label
+            length: 255
+        deleted:
+            type: boolean
+            nullable: false
+            comment: 'Indique si le fichier physique est supprimé'
+
+    manyToOne:
+        eventStep:
+            targetEntity: EventStep
+            joinColumns:
+                event_step_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
