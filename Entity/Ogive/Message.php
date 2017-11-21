@@ -51,6 +51,16 @@ class Message extends OgiveEntity
     private $prehome;
 
     /**
+     * @var boolean
+     */
+    private $home;
+
+    /**
+     * @var integer
+     */
+    private $priority;
+
+    /**
      * @var push
      */
     private $push;
@@ -74,6 +84,7 @@ class Message extends OgiveEntity
         $this->modificationDatetime = new \Datetime();
         $this->prehome = false;
         $this->push = false;
+        $this->home = false;
     }
 
     /**
@@ -321,6 +332,52 @@ class Message extends OgiveEntity
     public function setPrehome($prehome)
     {
         $this->prehome = $prehome;
+
+        return $this;
+    }
+
+    /**
+     * Get home
+     *
+     * @return boolean
+     */
+    public function isHome()
+    {
+        return $this->home;
+    }
+
+    /**
+     * Set home
+     *
+     * @param  boolean $home
+     * @return Message
+     */
+    public function setHome($home)
+    {
+        $this->home = $home;
+
+        return $this;
+    }
+
+    /**
+     * Get priority
+     *
+     * @return integer
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * Set priority
+     *
+     * @param  integer $priority
+     * @return Message
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
 
         return $this;
     }

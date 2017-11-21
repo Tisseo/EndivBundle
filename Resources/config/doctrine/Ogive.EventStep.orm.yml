@@ -78,4 +78,8 @@ Tisseo\EndivBundle\Entity\Ogive\EventStep:
             targetEntity: EventStepText
             cascade: ['remove', 'persist']
             mappedBy: eventStep
+        attachments:
+            targetEntity: EventStepFile
+            cascade: ['remove', 'persist']
+            mappedBy: eventStep
     lifecycleCallbacks: {  }

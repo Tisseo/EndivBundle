@@ -28,7 +28,6 @@ class EventStepManager extends OgiveManager
                     $status->setId(null);
                     $status->setEventStep($step);
                     $step->addStatus($status);
-
                     $this->objectManager->persist($step);
                 }
             }
