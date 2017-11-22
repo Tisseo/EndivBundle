@@ -5,10 +5,15 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Tisseo\EndivBundle\Entity\Ogive\Board;
 
 /**
  * Line
+ *
+ * @ExclusionPolicy("none")
  */
 class Line extends ObjectDatasource
 {
@@ -19,6 +24,8 @@ class Line extends ObjectDatasource
 
     /**
      * @var string
+     *
+     * @groups({"monitoring"})
      */
     private $number;
 

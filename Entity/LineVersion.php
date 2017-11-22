@@ -4,9 +4,13 @@ namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * LineVersion
+ *
+ * @ExclusionPolicy("none")
  */
 class LineVersion extends ObjectDatasource
 {
@@ -15,11 +19,13 @@ class LineVersion extends ObjectDatasource
 
     /**
      * @var int
+     * @Groups({"monitoring"})
      */
     private $id;
 
     /**
      * @var int
+     * @Groups({"monitoring"})
      */
     private $version;
 
@@ -90,6 +96,7 @@ class LineVersion extends ObjectDatasource
 
     /**
      * @var Line
+     * @Groups({"monitoring"})
      */
     private $line;
 
