@@ -7,6 +7,7 @@ use Tisseo\EndivBundle\Entity\StopTime;
 
 class StopTimeManager extends SortManager
 {
+    /** @var \Doctrine\Common\Persistence\ObjectManager|null  */
     private $om = null;
     private $repository = null;
 
@@ -25,6 +26,24 @@ class StopTimeManager extends SortManager
     {
         return empty($StopId) ? null : $this->repository->find($StopId);
     }
+
+    public function getStopTimeWhoStartBetween($startTime, $endTime, $routeStopId)
+    {
+        $qb = $this->om->createQueryBuilder('st')
+            ->select('st')
+            ->from('Tisseo\EndivBundle\Entity\StopTime', 'st')
+            ->join('st.routeStop', 'rs', 'WITH', 'st.routeStop = :routeStopId')
+            ->where('st.departureTime BETWEEN :time and :endTime')
+            ->setParameters([
+                'routeStopId' => $routeStopId,
+                'time' => $startTime,
+                'endTime' => $endTime,
+            ])
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
 
     //TODO: This seems to be bad, change/delete
     public function save(StopTime $Stop)
