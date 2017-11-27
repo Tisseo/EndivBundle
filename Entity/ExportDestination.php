@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -12,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class ExportDestination
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -39,7 +38,7 @@ class ExportDestination
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -50,6 +49,7 @@ class ExportDestination
      * Set nam
      *
      * @param string $name
+     *
      * @return ExportDestination
      */
     public function setName($name)
@@ -73,6 +73,7 @@ class ExportDestination
      * Set url
      *
      * @param string $url
+     *
      * @return ExportDestination
      */
     public function setUrl($url)

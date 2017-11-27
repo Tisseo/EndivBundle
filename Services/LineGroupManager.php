@@ -7,7 +7,6 @@ use Tisseo\EndivBundle\Entity\LineGroup;
 use Tisseo\EndivBundle\Entity\LineGroupContent;
 use Tisseo\EndivBundle\Entity\LineVersion;
 
-
 class LineGroupManager extends SortManager
 {
     private $om = null;
@@ -23,7 +22,7 @@ class LineGroupManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($LineGroupId)
@@ -33,6 +32,7 @@ class LineGroupManager extends SortManager
 
     /**
      * save
+     *
      * @param LineGroup $LineGroup
      *
      * Persist and save a LineGroup into database.
@@ -61,7 +61,8 @@ class LineGroupManager extends SortManager
      *
      * return the child line
      */
-    public function getChildLine(LineVersion $lineVersion) {
+    public function getChildLine(LineVersion $lineVersion)
+    {
         $query = $this->om->createQuery("
             SELECT IDENTITY(lgc.lineVersion)
             FROM Tisseo\EndivBundle\Entity\LineGroupContent lgc

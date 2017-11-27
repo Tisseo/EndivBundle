@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * ExceptionType
  */
 class ExceptionType
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -34,11 +32,10 @@ class ExceptionType
      */
     private $tripCalendarPattern;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -49,6 +46,7 @@ class ExceptionType
      * Set label
      *
      * @param string $label
+     *
      * @return ExceptionType
      */
     public function setLabel($label)
@@ -72,6 +70,7 @@ class ExceptionType
      * Set exceptionText
      *
      * @param string $exceptionText
+     *
      * @return ExceptionType
      */
     public function setExceptionText($exceptionText)
@@ -95,6 +94,7 @@ class ExceptionType
      * Set gridCalendarPattern
      *
      * @param string $gridCalendarPattern
+     *
      * @return ExceptionType
      */
     public function setGridCalendarPattern($gridCalendarPattern)
@@ -118,6 +118,7 @@ class ExceptionType
      * Set tripCalendarPattern
      *
      * @param string $tripCalendarPattern
+     *
      * @return ExceptionType
      */
     public function setTripCalendarPattern($tripCalendarPattern)

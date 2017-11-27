@@ -13,7 +13,7 @@ class EventStepStatus extends OgiveEntity
 
     /**
      * @var array
-     * Possible status for events
+     *            Possible status for events
      */
     public static $statusMap = array(
         self::STATUS_TODO => self::STATUS_TODO,
@@ -22,12 +22,12 @@ class EventStepStatus extends OgiveEntity
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
@@ -54,7 +54,7 @@ class EventStepStatus extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -64,7 +64,8 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set id
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return EventStepStatus
      */
     public function setId($id)
@@ -85,7 +86,8 @@ class EventStepStatus extends OgiveEntity
     /**
      * Set Status
      *
-     * @param integer $status
+     * @param int $status
+     *
      * @return EventStepStatus
      */
     public function setStatus($status)
@@ -111,6 +113,7 @@ class EventStepStatus extends OgiveEntity
      * Set dateTime
      *
      * @param \DateTime $dateTime
+     *
      * @return EventStepStatus
      */
     public function setDateTime(\DateTime $dateTime)
@@ -132,6 +135,7 @@ class EventStepStatus extends OgiveEntity
      * Set userComment
      *
      * @param string $userComment
+     *
      * @return EventStepStatus
      */
     public function setUserComment($userComment)
@@ -153,6 +157,7 @@ class EventStepStatus extends OgiveEntity
      * Set login
      *
      * @param string $login
+     *
      * @return EventStepStatus
      */
     public function setLogin($login)
@@ -176,6 +181,7 @@ class EventStepStatus extends OgiveEntity
      * Set eventStep
      *
      * @param EventStep $eventStep
+     *
      * @return EventStepStatus
      */
     public function setEventStep($eventStep)

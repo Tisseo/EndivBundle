@@ -5,7 +5,6 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Tisseo\EndivBundle\Entity\Ogive\EventStepFile;
 
 /**
  * EventStep
@@ -13,12 +12,12 @@ use Tisseo\EndivBundle\Entity\Ogive\EventStepFile;
 class EventStep extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rank;
 
@@ -77,7 +76,6 @@ class EventStep extends OgiveEntity
      */
     private $scenarioStepParentId;
 
-
     /**
      * Constructor
      */
@@ -91,7 +89,7 @@ class EventStep extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -100,19 +98,23 @@ class EventStep extends OgiveEntity
 
     /**
      * Set id
+     *
      * @param $id
+     *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param int $rank
+     *
      * @return EventStep
      */
     public function setRank($rank)
@@ -125,7 +127,7 @@ class EventStep extends OgiveEntity
     /**
      * Get rank
      *
-     * @return integer
+     * @return int
      */
     public function getRank()
     {
@@ -136,6 +138,7 @@ class EventStep extends OgiveEntity
      * Set name
      *
      * @param string $name
+     *
      * @return EventStep
      */
     public function setName($name)
@@ -159,6 +162,7 @@ class EventStep extends OgiveEntity
      * Set moment
      *
      * @param string $moment
+     *
      * @return EventStep
      */
     public function setMoment($moment)
@@ -182,6 +186,7 @@ class EventStep extends OgiveEntity
      * Set eventStepParent
      *
      * @param EventStep $eventStepParent
+     *
      * @return EventStep
      */
     public function setEventStepParent(EventStep $eventStepParent = null)
@@ -205,6 +210,7 @@ class EventStep extends OgiveEntity
      * Set connector
      *
      * @param Connector $connector
+     *
      * @return EventStep
      */
     public function setConnector(Connector $connector = null)
@@ -228,6 +234,7 @@ class EventStep extends OgiveEntity
      * Set connectorParamList
      *
      * @param ConnectorParamList $connectorParamList
+     *
      * @return EventStep
      */
     public function setConnectorParamList(ConnectorParamList $connectorParamList = null)
@@ -251,6 +258,7 @@ class EventStep extends OgiveEntity
      * Set event
      *
      * @param Event $event
+     *
      * @return EventStep
      */
     public function setEvent(Event $event = null)
@@ -274,6 +282,7 @@ class EventStep extends OgiveEntity
      * Add status
      *
      * @param EventStepStatus $status
+     *
      * @return EventStep
      */
     public function addStatus(EventStepStatus $status)
@@ -307,6 +316,7 @@ class EventStep extends OgiveEntity
      * Set statuses
      *
      * @param Collection $statuses
+     *
      * @return EventStep
      */
     public function setStatuses(Collection $statuses)
@@ -321,7 +331,8 @@ class EventStep extends OgiveEntity
      *
      * @return EventStepStatus
      */
-    public function getLastStatus(){
+    public function getLastStatus()
+    {
         if ($this->statuses->count() == 0) {
             return null;
         }
@@ -333,6 +344,7 @@ class EventStep extends OgiveEntity
      * Add text
      *
      * @param EventStepText $text
+     *
      * @return EventStep
      */
     public function addText(EventStepText $text)
@@ -366,6 +378,7 @@ class EventStep extends OgiveEntity
      * Set texts
      *
      * @param Collection $texts
+     *
      * @return EventStep
      */
     public function setTexts(Collection $texts)
@@ -405,7 +418,7 @@ class EventStep extends OgiveEntity
     /**
      * Get scenarioStep Id
      *
-     * @return integer
+     * @return int
      */
     public function getScenarioStepId()
     {
@@ -415,7 +428,8 @@ class EventStep extends OgiveEntity
     /**
      * Set scenarioStep id
      *
-     * @param integer $scenarioStepId
+     * @param int $scenarioStepId
+     *
      * @return EventStep
      */
     public function setScenarioStepId($scenarioStepId)
@@ -428,7 +442,7 @@ class EventStep extends OgiveEntity
     /**
      * Get scenarioStepParent Id
      *
-     * @return integer
+     * @return int
      */
     public function getScenarioStepParentId()
     {
@@ -438,7 +452,8 @@ class EventStep extends OgiveEntity
     /**
      * Set scenarioStepParent Id
      *
-     * @param integer $scenarioStepParentId
+     * @param int $scenarioStepParentId
+     *
      * @return EventStep
      */
     public function setScenarioStepParentId($scenarioStepParentId)
@@ -452,6 +467,7 @@ class EventStep extends OgiveEntity
      * Add attachment
      *
      * @param EventStepFile $file
+     *
      * @return EventStep
      */
     public function addAttachment($file)
@@ -489,6 +505,7 @@ class EventStep extends OgiveEntity
      * Set attachements
      *
      * @param Collection $files
+     *
      * @return EventStep
      */
     public function setAttachments(Collection $files)

@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -13,37 +12,37 @@ use Doctrine\Common\Collections\Criteria;
 class RouteStop
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rank;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $scheduledStop;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $pickup;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $dropOff;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $reservationRequired;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $internalService;
 
@@ -78,7 +77,7 @@ class RouteStop
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -88,12 +87,12 @@ class RouteStop
     /**
      * Set id
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return RouteStop
      */
-
-    public function setId($id){
-
+    public function setId($id)
+    {
         $this->id = $id;
 
         return $this;
@@ -102,7 +101,8 @@ class RouteStop
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param int $rank
+     *
      * @return RouteStop
      */
     public function setRank($rank)
@@ -115,7 +115,7 @@ class RouteStop
     /**
      * Get rank
      *
-     * @return integer
+     * @return int
      */
     public function getRank()
     {
@@ -125,7 +125,8 @@ class RouteStop
     /**
      * Set scheduledStop
      *
-     * @param boolean $scheduledStop
+     * @param bool $scheduledStop
+     *
      * @return RouteStop
      */
     public function setScheduledStop($scheduledStop)
@@ -138,7 +139,7 @@ class RouteStop
     /**
      * Get scheduledStop
      *
-     * @return boolean
+     * @return bool
      */
     public function getScheduledStop()
     {
@@ -148,7 +149,8 @@ class RouteStop
     /**
      * Set pickup
      *
-     * @param boolean $pickup
+     * @param bool $pickup
+     *
      * @return RouteStop
      */
     public function setPickup($pickup)
@@ -161,7 +163,7 @@ class RouteStop
     /**
      * Get pickup
      *
-     * @return boolean
+     * @return bool
      */
     public function getPickup()
     {
@@ -171,7 +173,8 @@ class RouteStop
     /**
      * Set dropOff
      *
-     * @param boolean $dropOff
+     * @param bool $dropOff
+     *
      * @return RouteStop
      */
     public function setDropOff($dropOff)
@@ -184,7 +187,7 @@ class RouteStop
     /**
      * Get dropOff
      *
-     * @return boolean
+     * @return bool
      */
     public function getDropOff()
     {
@@ -194,7 +197,8 @@ class RouteStop
     /**
      * Set reservationRequired
      *
-     * @param boolean $reservationRequired
+     * @param bool $reservationRequired
+     *
      * @return RouteStop
      */
     public function setReservationRequired($reservationRequired)
@@ -207,7 +211,7 @@ class RouteStop
     /**
      * Get reservationRequired
      *
-     * @return boolean
+     * @return bool
      */
     public function getReservationRequired()
     {
@@ -218,6 +222,7 @@ class RouteStop
      * Set route
      *
      * @param Route $route
+     *
      * @return RouteStop
      */
     public function setRoute(Route $route = null)
@@ -241,6 +246,7 @@ class RouteStop
      * Set routeSection
      *
      * @param RouteSection $routeSection
+     *
      * @return RouteStop
      */
     public function setRouteSection(RouteSection $routeSection = null)
@@ -264,6 +270,7 @@ class RouteStop
      * Set waypoint
      *
      * @param Waypoint $waypoint
+     *
      * @return RouteStop
      */
     public function setWaypoint(Waypoint $waypoint = null)
@@ -286,7 +293,8 @@ class RouteStop
     /**
      * Set internalService
      *
-     * @param boolean $internalService
+     * @param bool $internalService
+     *
      * @return RouteStop
      */
     public function setInternalService($internalService)
@@ -299,7 +307,7 @@ class RouteStop
     /**
      * Get internalService
      *
-     * @return boolean
+     * @return bool
      */
     public function getInternalService()
     {
@@ -310,6 +318,7 @@ class RouteStop
      * Set stopTimes
      *
      * @param Collection $stopTimes
+     *
      * @return RouteStop
      */
     public function setStopTimes(Collection $stopTimes = null)
@@ -333,6 +342,7 @@ class RouteStop
      * Add stopTimes
      *
      * @param StopTime $stopTime
+     *
      * @return Route
      */
     public function addStopTimes(StopTime $stopTime)
@@ -357,6 +367,7 @@ class RouteStop
      * Add stopTimes
      *
      * @param \Tisseo\EndivBundle\Entity\StopTime $stopTimes
+     *
      * @return RouteStop
      */
     public function addStopTime(\Tisseo\EndivBundle\Entity\StopTime $stopTimes)
@@ -389,28 +400,27 @@ class RouteStop
     public function isOdtAreaRouteStop()
     {
         $isOdtArea = (is_null($this->waypoint->getStop()) && !is_null($this->waypoint->getOdtArea()));
+
         return $isOdtArea;
     }
 
     public function getStopLabel()
     {
-        if ($this->isOdtAreaRouteStop())
-        {
-            $label = $this->waypoint->getOdtArea()->getName() . ' (zone)';
-        }
-        else
-        {
+        if ($this->isOdtAreaRouteStop()) {
+            $label = $this->waypoint->getOdtArea()->getName().' (zone)';
+        } else {
             $label = $this->waypoint->getStop()->getStopArea()->getShortName();
             /*foreach ($this->waypoint->getStop()->getStopDatasources() as $stopDatasource)
                 $label .= ' (' . $stopDatasource->getCode() . ')';*/
         }
+
         return $label;
     }
 
     public function getStopTime($stopTimeId)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('id',$stopTimeId))
+            ->where(Criteria::expr()->eq('id', $stopTimeId))
             ->setMaxResults(1)
         ;
 

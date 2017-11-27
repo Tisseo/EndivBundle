@@ -18,7 +18,7 @@ class PropertyManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function findAllAsArray()
@@ -26,8 +26,7 @@ class PropertyManager
         $properties = $this->repository->findAll();
         $arrayProperties = array();
 
-        foreach($properties as $property)
-        {
+        foreach ($properties as $property) {
             $arrayProperties[$property->getId()] = $property;
         }
 

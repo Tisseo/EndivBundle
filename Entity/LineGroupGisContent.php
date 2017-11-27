@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LineGroupGisContent
  */
@@ -23,6 +21,7 @@ class LineGroupGisContent
      * Set line
      *
      * @param \Tisseo\EndivBundle\Entity\Line $line
+     *
      * @return LineGroupGisContent
      */
     public function setLine(\Tisseo\EndivBundle\Entity\Line $line = null)
@@ -46,11 +45,13 @@ class LineGroupGisContent
      * Set lineGroupGis
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
+     *
      * @return LineGroupGisContent
      */
     public function setLineGroupGis(\Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis = null)
     {
         $this->lineGroupGis = $lineGroupGis;
+
         return $this;
     }
 

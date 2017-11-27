@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * TransferExportDestination
  */
 class TransferExportDestination
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class TransferExportDestination
      */
     private $transfer;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class TransferExportDestination
      * Set exportDestination
      *
      * @param \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
+     *
      * @return TransferExportDestination
      */
     public function setExportDestination(\Tisseo\EndivBundle\Entity\ExportDestination $exportDestination = null)
@@ -62,6 +60,7 @@ class TransferExportDestination
      * Set transfer
      *
      * @param \Tisseo\EndivBundle\Entity\Transfer $transfer
+     *
      * @return TransferExportDestination
      */
     public function setTransfer(\Tisseo\EndivBundle\Entity\Transfer $transfer = null)

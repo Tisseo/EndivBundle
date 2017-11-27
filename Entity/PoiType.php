@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * PoiType
  */
 class PoiType
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class PoiType
      */
     private $long_name;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class PoiType
      * Set name
      *
      * @param string $name
+     *
      * @return PoiType
      */
     public function setName($name)
@@ -57,7 +55,6 @@ class PoiType
     {
         return $this->name;
     }
-
 
     /**
      * @return string

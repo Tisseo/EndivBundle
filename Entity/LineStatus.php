@@ -2,16 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * LineStatus
  */
 class LineStatus
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -26,7 +23,7 @@ class LineStatus
     private $login;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
@@ -42,13 +39,13 @@ class LineStatus
 
     public function __toString()
     {
-        return sprintf("%s / %s / %s / %s version %s", $this->login, $this->status, $this->comment, $this->dateTime->format('d/m/Y'), $this->line->getId());
+        return sprintf('%s / %s / %s / %s version %s', $this->login, $this->status, $this->comment, $this->dateTime->format('d/m/Y'), $this->line->getId());
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -59,6 +56,7 @@ class LineStatus
      * Set login
      *
      * @param string $login
+     *
      * @return LineStatus
      */
     public function setLogin($login)
@@ -82,6 +80,7 @@ class LineStatus
      * Set comment
      *
      * @param string $comment
+     *
      * @return LineStatus
      */
     public function setComment($comment)
@@ -104,7 +103,8 @@ class LineStatus
     /**
      * Set status
      *
-     * @param integer $status
+     * @param int $status
+     *
      * @return LineStatus
      */
     public function setStatus($status)
@@ -117,7 +117,7 @@ class LineStatus
     /**
      * Get status
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -128,6 +128,7 @@ class LineStatus
      * Set dateTime
      *
      * @param \DateTime $dateTime
+     *
      * @return LineStatus
      */
     public function setDateTime($dateTime)
@@ -151,6 +152,7 @@ class LineStatus
      * Set line
      *
      * @param Line $line
+     *
      * @return LineStatus
      */
     public function setLine(Line $line = null)

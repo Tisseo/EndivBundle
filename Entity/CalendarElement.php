@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 
 /**
@@ -24,7 +23,7 @@ class CalendarElement
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -39,7 +38,7 @@ class CalendarElement
     private $endDate;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rank;
 
@@ -50,7 +49,7 @@ class CalendarElement
     private $operator;
 
     /**
-     * @var integer
+     * @var int
      */
     private $interval;
 
@@ -67,7 +66,7 @@ class CalendarElement
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -78,6 +77,7 @@ class CalendarElement
      * Set startDate
      *
      * @param \DateTime $startDate
+     *
      * @return CalendarElement
      */
     public function setStartDate($startDate)
@@ -101,6 +101,7 @@ class CalendarElement
      * Set endDate
      *
      * @param \DateTime $endDate
+     *
      * @return CalendarElement
      */
     public function setEndDate($endDate)
@@ -124,6 +125,7 @@ class CalendarElement
      * Set rank
      *
      * @param string $rank
+     *
      * @return CalendarElement
      */
     public function setRank($rank)
@@ -147,12 +149,14 @@ class CalendarElement
      * Set operator
      *
      * @param string $operator
+     *
      * @return CalendarElement
      */
     public function setOperator($operator)
     {
-        if (in_array($operator, self::$operators))
+        if (in_array($operator, self::$operators)) {
             $this->operator = $operator;
+        }
 
         return $this;
     }
@@ -170,7 +174,8 @@ class CalendarElement
     /**
      * Set interval
      *
-     * @param integer $interval
+     * @param int $interval
+     *
      * @return CalendarElement
      */
     public function setInterval($interval)
@@ -183,7 +188,7 @@ class CalendarElement
     /**
      * Get interval
      *
-     * @return integer
+     * @return int
      */
     public function getInterval()
     {
@@ -194,6 +199,7 @@ class CalendarElement
      * Set includedCalendar
      *
      * @param \Tisseo\EndivBundle\Entity\Calendar $includedCalendar
+     *
      * @return CalendarElement
      */
     public function setIncludedCalendar(Calendar $includedCalendar = null)
@@ -217,6 +223,7 @@ class CalendarElement
      * Set calendar
      *
      * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
+     *
      * @return CalendarElement
      */
     public function setCalendar(Calendar $calendar = null)

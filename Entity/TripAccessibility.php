@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * TripAccessibility
  */
 class TripAccessibility
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class TripAccessibility
      */
     private $trip;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class TripAccessibility
      * Set accessibilityType
      *
      * @param AccessibilityType $accessibilityType
+     *
      * @return TripAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -62,6 +60,7 @@ class TripAccessibility
      * Set trip
      *
      * @param Trip $trip
+     *
      * @return TripAccessibility
      */
     public function setTrip(Trip $trip = null)

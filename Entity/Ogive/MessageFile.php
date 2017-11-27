@@ -1,4 +1,5 @@
 <?php
+
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 /**
@@ -7,7 +8,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class MessageFile extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,7 +30,7 @@ class MessageFile extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -40,6 +41,7 @@ class MessageFile extends OgiveEntity
      * Set filename
      *
      * @param string $filename
+     *
      * @return MessageFile
      */
     public function setFilename($filename)
@@ -63,6 +65,7 @@ class MessageFile extends OgiveEntity
      * Set link
      *
      * @param string $link
+     *
      * @return MessageFile
      */
     public function setLink($link)
@@ -85,7 +88,8 @@ class MessageFile extends OgiveEntity
     /**
      * Set message
      *
-     * @param  Message $message
+     * @param Message $message
+     *
      * @return MessageFile
      */
     public function setMessage($message)

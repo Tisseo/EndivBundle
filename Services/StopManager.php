@@ -2,15 +2,11 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\StopHistory;
 use Tisseo\EndivBundle\Entity\StopAccessibility;
 use Tisseo\EndivBundle\Entity\Waypoint;
-use Tisseo\EndivBundle\Entity\AccessibilityMode;
 
 class StopManager extends SortManager
 {
@@ -25,7 +21,7 @@ class StopManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($stopId)
@@ -38,7 +34,7 @@ class StopManager extends SortManager
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("INSERT INTO waypoint(id) VALUES (nextval('waypoint_id_seq')) RETURNING waypoint.id");
         $stmt->execute();
-        $stop->setId($stmt->fetch(\PDO::FETCH_ASSOC)["id"]);
+        $stop->setId($stmt->fetch(\PDO::FETCH_ASSOC)['id']);
 
         $this->em->persist($stop);
         $this->em->flush();
@@ -115,10 +111,10 @@ class StopManager extends SortManager
 
         $sh = $query->getResult();
         if (!$sh) {
-            return "";
+            return '';
         }
 
-        $label = $sh[0]["name"] . " " . $sh[0]["city"] . " (" . $sh[0]["code"] . ")";
+        $label = $sh[0]['name'].' '.$sh[0]['city'].' ('.$sh[0]['code'].')';
 
         return $label;
     }
@@ -153,31 +149,31 @@ class StopManager extends SortManager
      */
     public function findStopsLike($term, $stopAreaId = null, $getPhantoms = false)
     {
-        $specials = array("-", " ", "'");
-        $cleanTerm = str_replace($specials, "_", $term);
+        $specials = array('-', ' ', "'");
+        $cleanTerm = str_replace($specials, '_', $term);
 
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query = "SELECT DISTINCT sh.short_name as name, c.name as city, sd.code as code, s.id as id
-            FROM stop_history sh";
+        $query = 'SELECT DISTINCT sh.short_name as name, c.name as city, sd.code as code, s.id as id
+            FROM stop_history sh';
         if ($getPhantoms) {
-            $query .= " JOIN stop s on (sh.stop_id = COALESCE(s.master_stop_id, s.id))";
+            $query .= ' JOIN stop s on (sh.stop_id = COALESCE(s.master_stop_id, s.id))';
         } else {
-            $query .= " JOIN stop s on sh.stop_id = s.id ";
+            $query .= ' JOIN stop s on sh.stop_id = s.id ';
         }
-        $query .= "LEFT JOIN stop_area sa on sa.id = s.stop_area_id
+        $query .= 'LEFT JOIN stop_area sa on sa.id = s.stop_area_id
             LEFT JOIN city c on c.id = sa.city_id
             JOIN stop_datasource sd on sd.stop_id = s.id
             WHERE (UPPER(unaccent(sh.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sh.long_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(sd.code) LIKE UPPER(:term))";
+            OR UPPER(sd.code) LIKE UPPER(:term))';
         if (!is_null($stopAreaId)) {
-            $query .= " AND (sa.id != :stop_area_id)";
+            $query .= ' AND (sa.id != :stop_area_id)';
         }
-        $query .= " ORDER BY sh.short_name, c.name, sd.code";
+        $query .= ' ORDER BY sh.short_name, c.name, sd.code';
 
         $stmt = $connection->prepare($query);
-        $stmt->bindValue(':term', '%' . $cleanTerm . '%');
+        $stmt->bindValue(':term', '%'.$cleanTerm.'%');
         if (!is_null($stopAreaId)) {
             $stmt->bindValue(':stop_area_id', $stopAreaId);
         }
@@ -187,8 +183,8 @@ class StopManager extends SortManager
         $result = array();
         foreach ($stopHistories as $stopHistory) {
             $result[] = array(
-                "name" => $stopHistory["name"] . " " . $stopHistory["city"] . " (" . $stopHistory["code"] . ")",
-                "id" => $stopHistory["id"]
+                'name' => $stopHistory['name'].' '.$stopHistory['city'].' ('.$stopHistory['code'].')',
+                'id' => $stopHistory['id']
             );
         }
 
@@ -203,7 +199,7 @@ class StopManager extends SortManager
     /**
      * Save
      *
-     * @param integer $stopId
+     * @param int               $stopId
      * @param StopAccessibility $stopAccessibility
      *
      * TODO: COMMENT
@@ -213,7 +209,7 @@ class StopManager extends SortManager
         $stop = $this->find($stopId);
 
         if (empty($stop)) {
-            throw new \Exception("Can't save accessibility for the related stop with ID: " . $stopId . " because it doesn't exist.");
+            throw new \Exception("Can't save accessibility for the related stop with ID: ".$stopId." because it doesn't exist.");
         }
 
         $stopAccessibility->setStop($stop);
@@ -227,8 +223,8 @@ class StopManager extends SortManager
     /**
      * Delete
      *
-     * @param integer $stopId
-     * @param integer $stopAccessibilityId
+     * @param int $stopId
+     * @param int $stopAccessibilityId
      *
      * TODO: COMMENT
      */
@@ -237,13 +233,13 @@ class StopManager extends SortManager
         $stop = $this->find($stopId);
 
         if (empty($stop)) {
-            throw new \Exception("Can't delete accessibility for the related stop with ID: " . $stopId . " because it doesn't exist.");
+            throw new \Exception("Can't delete accessibility for the related stop with ID: ".$stopId." because it doesn't exist.");
         }
 
         $stopAccessibility = $stop->findStopAccessibility($stopAccessibilityId);
 
         if (empty($stopAccessibility)) {
-            throw new \Exception("Can't delete accessibility with ID: " . $stopAccessibilityId . " because it doesn't exist.");
+            throw new \Exception("Can't delete accessibility with ID: ".$stopAccessibilityId." because it doesn't exist.");
         }
 
         $stop->removeStopAccessibility($stopAccessibility);
@@ -323,7 +319,7 @@ class StopManager extends SortManager
     /**
      * Detach
      *
-     * @param integer $stopId
+     * @param int $stopId
      *
      * Close last Stop's history and delete its link with its StopArea.
      */
@@ -332,7 +328,7 @@ class StopManager extends SortManager
         $stop = $this->find($stopId);
 
         if (empty($stop)) {
-            throw new \Exception("Can't find the stop with ID: " . $stopId);
+            throw new \Exception("Can't find the stop with ID: ".$stopId);
         }
 
         $now = new \Datetime();
@@ -367,21 +363,21 @@ class StopManager extends SortManager
         $connection = $this->em->getConnection();
 
         if ($getPhantoms) {
-            $query = "SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+            $query = 'SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on s.id = sd.stop_id
                 JOIN stop_history sh on (sh.stop_id = COALESCE(s.master_stop_id, s.id))
                 WHERE s.id IN (?)
                 AND sh.start_date <= CURRENT_DATE
-                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)';
         } else {
-            $query = "SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+            $query = 'SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
                 FROM stop s
                 JOIN stop_datasource sd on sd.stop_id = s.id
                 JOIN stop_history sh on sh.stop_id = s.id
                 WHERE s.id IN (?)
                 AND sh.start_date <= CURRENT_DATE
-                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+                AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)';
         }
 
         $stmt = $connection->executeQuery($query, array($stopIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
@@ -392,33 +388,33 @@ class StopManager extends SortManager
     /**
      * @param $stopsData
      * @param bool $getPhantoms
+     *
      * @return array
      */
-    public function getStopJsonWithRankAndOdtArea ($stopsData, $getPhantoms = false) {
-
-        $stops = array_map(function ($stop){
+    public function getStopJsonWithRankAndOdtArea($stopsData, $getPhantoms = false)
+    {
+        $stops = array_map(function ($stop) {
             return $stop['stop'];
-        },$stopsData);
+        }, $stopsData);
 
         $results = $this->getStopsJson($stops, $getPhantoms);
 
-        # Map rank to Results
-        foreach ($results as $k=>$result) {
+        // Map rank to Results
+        foreach ($results as $k => $result) {
             foreach ($stopsData as $s) {
-                if(!is_array($s)){
+                if (!is_array($s)) {
                     break;
                 }
-                if ($result['id'] === $s['stop']->getId() ){
-                    if(!isset($results[$k]['rank'])){
+                if ($result['id'] === $s['stop']->getId()) {
+                    if (!isset($results[$k]['rank'])) {
                         $results[$k]['rank'] = $s['rank'];
-                    }else{
+                    } else {
                         $results[$k]['rank'] .= '-'.$s['rank'];
                     }
-                    if (isset($s['odt_area']) ){
+                    if (isset($s['odt_area'])) {
                         $results[$k]['odt_area'] = $s['odt_area'];
                     }
                 }
-
             }
         }
 
@@ -468,7 +464,8 @@ class StopManager extends SortManager
     }
 
     /**
-     * @param  integer $stopId
+     * @param int $stopId
+     *
      * @return array
      */
     public function getPhantomsByStop($stopId)

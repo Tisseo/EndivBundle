@@ -12,17 +12,17 @@ class ScenarioManager extends OgiveManager
         $this->updateCollection($scenario, 'getScenarioSteps', $originalSteps);
 
         $parents = $scenario->getScenarioSteps()->filter(
-            function($step) {
+            function ($step) {
                 return $step->getScenarioStepParent() === null;
             }
         );
 
-        foreach($scenario->getScenarioSteps() as $scenarioStep) {
+        foreach ($scenario->getScenarioSteps() as $scenarioStep) {
             if ($scenarioStep->getScenario() === null) {
                 if ($scenarioStep->getScenarioStepParent() !== null) {
                     $name = $scenarioStep->getScenarioStepParent()->getName();
                     $parent = $parents->filter(
-                        function($step) use ($name) {
+                        function ($step) use ($name) {
                             return $step->getName() === $name;
                         }
                     )->first();

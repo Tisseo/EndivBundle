@@ -19,7 +19,7 @@ class DatasourceManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($datasourceId)
@@ -31,8 +31,9 @@ class DatasourceManager extends SortManager
      * Filling an object datasource with specified content
      *
      * @param ObjectDatasource $object
-     * @param string $name
-     * @param string $code
+     * @param string           $name
+     * @param string           $code
+     *
      * @return $source
      */
     public function fill(ObjectDatasource $object, $name, $code)

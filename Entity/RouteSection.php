@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * RouteSection
  */
 class RouteSection
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -39,11 +37,10 @@ class RouteSection
      */
     private $startStop;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -54,6 +51,7 @@ class RouteSection
      * Set startDate
      *
      * @param \DateTime $startDate
+     *
      * @return RouteSection
      */
     public function setStartDate($startDate)
@@ -77,6 +75,7 @@ class RouteSection
      * Set endDate
      *
      * @param \DateTime $endDate
+     *
      * @return RouteSection
      */
     public function setEndDate($endDate)
@@ -100,6 +99,7 @@ class RouteSection
      * Set theGeom
      *
      * @param geometry $theGeom
+     *
      * @return RouteSection
      */
     public function setTheGeom($theGeom)
@@ -123,6 +123,7 @@ class RouteSection
      * Set endStop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $endStop
+     *
      * @return RouteSection
      */
     public function setEndStop(\Tisseo\EndivBundle\Entity\Stop $endStop = null)
@@ -146,6 +147,7 @@ class RouteSection
      * Set startStop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $startStop
+     *
      * @return RouteSection
      */
     public function setStartStop(\Tisseo\EndivBundle\Entity\Stop $startStop = null)

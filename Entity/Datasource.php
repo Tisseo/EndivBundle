@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Datasource
  */
@@ -22,7 +20,7 @@ class Datasource
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -36,11 +34,10 @@ class Datasource
      */
     private $agency;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,6 +48,7 @@ class Datasource
      * Set name
      *
      * @param string $name
+     *
      * @return Datasource
      */
     public function setName($name)
@@ -74,6 +72,7 @@ class Datasource
      * Set agency
      *
      * @param \Tisseo\EndivBundle\Entity\Agency $agency
+     *
      * @return Datasource
      */
     public function setAgency(\Tisseo\EndivBundle\Entity\Agency $agency = null)

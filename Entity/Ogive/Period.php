@@ -8,7 +8,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class Period extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -30,7 +30,7 @@ class Period extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -41,6 +41,7 @@ class Period extends OgiveEntity
      * Set startDate
      *
      * @param \DateTime $startDate
+     *
      * @return Period
      */
     public function setStartDate($startDate)
@@ -64,6 +65,7 @@ class Period extends OgiveEntity
      * Set endDate
      *
      * @param \DateTime $endDate
+     *
      * @return Period
      */
     public function setEndDate($endDate)
@@ -87,6 +89,7 @@ class Period extends OgiveEntity
      * Set event
      *
      * @param Event $event
+     *
      * @return Period
      */
     public function setEvent(Event $event = null)

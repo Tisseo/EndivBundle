@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * PhysicalMode
  */
@@ -20,7 +18,7 @@ class PhysicalMode
     const PHYSICAL_MODE_LINEO = 10;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -42,7 +40,7 @@ class PhysicalMode
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -53,6 +51,7 @@ class PhysicalMode
      * Set name
      *
      * @param string $name
+     *
      * @return PhysicalMode
      */
     public function setName($name)
@@ -76,6 +75,7 @@ class PhysicalMode
      * Set type
      *
      * @param string $type
+     *
      * @return PhysicalMode
      */
     public function setType($type)
@@ -109,6 +109,7 @@ class PhysicalMode
      * Set co2Emission
      *
      * @param  float co2Emission
+     *
      * @return PhysicalMode
      */
     public function setCo2Emission($co2Emission)

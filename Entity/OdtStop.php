@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * OdtStop
  */
@@ -20,12 +18,12 @@ class OdtStop
     private $endDate;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $pickup;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $dropOff;
 
@@ -48,6 +46,7 @@ class OdtStop
      * Set startDate
      *
      * @param \DateTime $startDate
+     *
      * @return OdtStop
      */
     public function setStartDate($startDate)
@@ -71,6 +70,7 @@ class OdtStop
      * Set endDate
      *
      * @param \DateTime $endDate
+     *
      * @return OdtStop
      */
     public function setEndDate($endDate)
@@ -93,7 +93,8 @@ class OdtStop
     /**
      * Set pickup
      *
-     * @param boolean $pickup
+     * @param bool $pickup
+     *
      * @return OdtStop
      */
     public function setPickup($pickup)
@@ -106,7 +107,7 @@ class OdtStop
     /**
      * Get pickup
      *
-     * @return boolean
+     * @return bool
      */
     public function getPickup()
     {
@@ -116,7 +117,8 @@ class OdtStop
     /**
      * Set dropOff
      *
-     * @param boolean $dropOff
+     * @param bool $dropOff
+     *
      * @return OdtStop
      */
     public function setDropOff($dropOff)
@@ -129,7 +131,7 @@ class OdtStop
     /**
      * Get dropOff
      *
-     * @return boolean
+     * @return bool
      */
     public function getDropOff()
     {
@@ -140,6 +142,7 @@ class OdtStop
      * Set odtArea
      *
      * @param \Tisseo\EndivBundle\Entity\OdtArea $odtArea
+     *
      * @return OdtStop
      */
     public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $odtArea = null)
@@ -163,6 +166,7 @@ class OdtStop
      * Set stop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     *
      * @return OdtStop
      */
     public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)

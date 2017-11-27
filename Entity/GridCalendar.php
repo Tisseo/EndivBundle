@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -11,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class GridCalendar
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -21,37 +20,37 @@ class GridCalendar
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $monday;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $tuesday;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $wednesday;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $thursday;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $friday;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $saturday;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $sunday;
 
@@ -75,6 +74,7 @@ class GridCalendar
 
     /**
      * merge
+     *
      * @param GridCalendar
      * @param LineVersion
      *
@@ -105,11 +105,12 @@ class GridCalendar
      */
     public function hasLinkToGridMaskType($gridMaskTypeId)
     {
-        foreach ($this->gridLinkCalendarMaskTypes as $gridLinkCalendarMaskType)
-        {
-            if ($gridLinkCalendarMaskType->getGridMaskType()->getId() == $gridMaskTypeId)
+        foreach ($this->gridLinkCalendarMaskTypes as $gridLinkCalendarMaskType) {
+            if ($gridLinkCalendarMaskType->getGridMaskType()->getId() == $gridMaskTypeId) {
                 return true;
+            }
         }
+
         return false;
     }
 
@@ -127,14 +128,13 @@ class GridCalendar
     public function updateLinks($gridMaskTypeIds)
     {
         $sync = false;
-        foreach($this->gridLinkCalendarMaskTypes as $gridLinkCalendarMaskType)
-        {
-            if (!in_array($gridLinkCalendarMaskType->getGridMaskType()->getId(), $gridMaskTypeIds))
-            {
+        foreach ($this->gridLinkCalendarMaskTypes as $gridLinkCalendarMaskType) {
+            if (!in_array($gridLinkCalendarMaskType->getGridMaskType()->getId(), $gridMaskTypeIds)) {
                 $this->removeGridLinkCalendarMaskType($gridLinkCalendarMaskType);
                 $sync = true;
             }
         }
+
         return $sync;
     }
 
@@ -161,7 +161,7 @@ class GridCalendar
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -172,6 +172,7 @@ class GridCalendar
      * Set name
      *
      * @param string $name
+     *
      * @return GridCalendar
      */
     public function setName($name)
@@ -194,7 +195,8 @@ class GridCalendar
     /**
      * Set monday
      *
-     * @param boolean $monday
+     * @param bool $monday
+     *
      * @return GridCalendar
      */
     public function setMonday($monday)
@@ -207,7 +209,7 @@ class GridCalendar
     /**
      * Get monday
      *
-     * @return boolean
+     * @return bool
      */
     public function getMonday()
     {
@@ -217,7 +219,8 @@ class GridCalendar
     /**
      * Set tuesday
      *
-     * @param boolean $tuesday
+     * @param bool $tuesday
+     *
      * @return GridCalendar
      */
     public function setTuesday($tuesday)
@@ -230,7 +233,7 @@ class GridCalendar
     /**
      * Get tuesday
      *
-     * @return boolean
+     * @return bool
      */
     public function getTuesday()
     {
@@ -240,7 +243,8 @@ class GridCalendar
     /**
      * Set wednesday
      *
-     * @param boolean $wednesday
+     * @param bool $wednesday
+     *
      * @return GridCalendar
      */
     public function setWednesday($wednesday)
@@ -253,7 +257,7 @@ class GridCalendar
     /**
      * Get wednesday
      *
-     * @return boolean
+     * @return bool
      */
     public function getWednesday()
     {
@@ -263,7 +267,8 @@ class GridCalendar
     /**
      * Set thursday
      *
-     * @param boolean $thursday
+     * @param bool $thursday
+     *
      * @return GridCalendar
      */
     public function setThursday($thursday)
@@ -276,7 +281,7 @@ class GridCalendar
     /**
      * Get thursday
      *
-     * @return boolean
+     * @return bool
      */
     public function getThursday()
     {
@@ -286,7 +291,8 @@ class GridCalendar
     /**
      * Set friday
      *
-     * @param boolean $friday
+     * @param bool $friday
+     *
      * @return GridCalendar
      */
     public function setFriday($friday)
@@ -299,7 +305,7 @@ class GridCalendar
     /**
      * Get friday
      *
-     * @return boolean
+     * @return bool
      */
     public function getFriday()
     {
@@ -309,7 +315,8 @@ class GridCalendar
     /**
      * Set saturday
      *
-     * @param boolean $saturday
+     * @param bool $saturday
+     *
      * @return GridCalendar
      */
     public function setSaturday($saturday)
@@ -322,7 +329,7 @@ class GridCalendar
     /**
      * Get saturday
      *
-     * @return boolean
+     * @return bool
      */
     public function getSaturday()
     {
@@ -332,7 +339,8 @@ class GridCalendar
     /**
      * Set sunday
      *
-     * @param boolean $sunday
+     * @param bool $sunday
+     *
      * @return GridCalendar
      */
     public function setSunday($sunday)
@@ -345,7 +353,7 @@ class GridCalendar
     /**
      * Get sunday
      *
-     * @return boolean
+     * @return bool
      */
     public function getSunday()
     {
@@ -356,6 +364,7 @@ class GridCalendar
      * Set lineVersion
      *
      * @param LineVersion $lineVersion
+     *
      * @return GridCalendar
      */
     public function setLineVersion(LineVersion $lineVersion = null)
@@ -389,6 +398,7 @@ class GridCalendar
      * Add gridLinkCalendarMaskTypes
      *
      * @param GridLinkCalendarMaskType $gridLinkCalendarMaskType
+     *
      * @return GridCalendar
      */
     public function addGridLinkCalendarMaskType(GridLinkCalendarMaskType $gridLinkCalendarMaskType)

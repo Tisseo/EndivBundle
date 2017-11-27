@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -23,7 +22,7 @@ class OdtArea
     private $comment;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -32,19 +31,19 @@ class OdtArea
      */
     private $odtStops;
 
-   /**
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->odtStops = new ArrayCollection();
-
     }
 
     /**
      * Set name
      *
      * @param string $name
+     *
      * @return OdtArea
      */
     public function setName($name)
@@ -68,6 +67,7 @@ class OdtArea
      * Set comment
      *
      * @param string $comment
+     *
      * @return OdtArea
      */
     public function setComment($comment)
@@ -90,7 +90,8 @@ class OdtArea
     /**
      * Set id
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return OdtArea
      */
     public function setId($id)
@@ -109,16 +110,17 @@ class OdtArea
     {
         return $this->id;
     }
+
     /**
      * @var \Tisseo\EndivBundle\Entity\Waypoint
      */
     private $waypoint;
 
-
     /**
      * Set waypoint
      *
      * @param \Tisseo\EndivBundle\Entity\Waypoint $waypoint
+     *
      * @return OdtArea
      */
     public function setWaypoint(\Tisseo\EndivBundle\Entity\Waypoint $waypoint = null)
@@ -155,6 +157,7 @@ class OdtArea
                     Criteria::expr()->isNull('endDate'),
                     Criteria::expr()->gte('endDate', new \DateTime())
                 ));
+
         return $this->odtStops->matching($criteria);
     }
 
@@ -162,6 +165,7 @@ class OdtArea
      * Set odtStops
      *
      * @param \Doctrine\Common\Collections\Collection $odtStops
+     *
      * @return OdtArea
      */
     public function setOdtStops(Collection $odtStops)
@@ -170,6 +174,7 @@ class OdtArea
         foreach ($this->odtStops as $odtStop) {
             $odtStop->setOdtArea($this);
         }
+
         return $this;
     }
 
@@ -177,12 +182,14 @@ class OdtArea
      * Add odtStop
      *
      * @param OdtStop $odtStop
+     *
      * @return OdtArea
      */
     public function addOdtStop(odtStop $odtStop)
     {
         $this->odtStops[] = $odtStop;
         $odtStop->setOdtArea($this);
+
         return $this;
     }
 
@@ -195,5 +202,4 @@ class OdtArea
     {
         $this->odtStops->removeElement($odtStop);
     }
-
 }

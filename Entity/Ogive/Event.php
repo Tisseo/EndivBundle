@@ -18,7 +18,7 @@ class Event extends OgiveEntity
 
     /**
      * @var array
-     * Possible status for events
+     *            Possible status for events
      */
     public static $statusMap = array(
         self::STATUS_OPEN => self::STATUS_OPEN,
@@ -27,7 +27,7 @@ class Event extends OgiveEntity
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -47,12 +47,12 @@ class Event extends OgiveEntity
     private $chaosCause;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isPublished;
 
@@ -67,7 +67,7 @@ class Event extends OgiveEntity
     private $reference;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isEmergency;
 
@@ -128,7 +128,7 @@ class Event extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -139,6 +139,7 @@ class Event extends OgiveEntity
      * Set chaosSeverity
      *
      * @param guid $chaosSeverity
+     *
      * @return Event
      */
     public function setChaosSeverity($chaosSeverity)
@@ -162,6 +163,7 @@ class Event extends OgiveEntity
      * Set chaosInternalCause
      *
      * @param string $chaosInternalCause
+     *
      * @return Event
      */
     public function setChaosInternalCause($chaosInternalCause)
@@ -185,6 +187,7 @@ class Event extends OgiveEntity
      * Set chaosDisruptionId
      *
      * @param guid $chaosDisruptionId
+     *
      * @return Event
      */
     public function setChaosDisruptionId($chaosDisruptionId)
@@ -208,6 +211,7 @@ class Event extends OgiveEntity
      * Set reference
      *
      * @param string $reference
+     *
      * @return Event
      */
     public function setReference($reference)
@@ -230,7 +234,8 @@ class Event extends OgiveEntity
     /**
      * Set isEmergency
      *
-     * @param boolean $isEmergency
+     * @param bool $isEmergency
+     *
      * @return Event
      */
     public function setIsEmergency($isEmergency)
@@ -243,7 +248,7 @@ class Event extends OgiveEntity
     /**
      * Get isEmergency
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsEmergency()
     {
@@ -264,11 +269,13 @@ class Event extends OgiveEntity
      * Set login
      *
      * @param string $login
+     *
      * @return Event
      */
     public function setLogin($login)
     {
         $this->login = $login;
+
         return $this;
     }
 
@@ -276,6 +283,7 @@ class Event extends OgiveEntity
      * Set eventParent
      *
      * @param Event $eventParent
+     *
      * @return Event
      */
     public function setEventParent(Event $eventParent = null)
@@ -298,7 +306,7 @@ class Event extends OgiveEntity
     /**
      * Get status
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -308,7 +316,8 @@ class Event extends OgiveEntity
     /**
      * Set status
      *
-     * @param integer status
+     * @param int status
+     *
      * @return Event
      */
     public function setStatus($status)
@@ -331,7 +340,8 @@ class Event extends OgiveEntity
     /**
      * Set comment
      *
-     * @param  string $comment
+     * @param string $comment
+     *
      * @return Event
      */
     public function setComment($comment)
@@ -354,7 +364,8 @@ class Event extends OgiveEntity
     /**
      * Set chaosCause
      *
-     * @param  string $chaosCause
+     * @param string $chaosCause
+     *
      * @return Event
      */
     public function setChaosCause($chaosCause)
@@ -367,7 +378,7 @@ class Event extends OgiveEntity
     /**
      * Get isPublished.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPublished()
     {
@@ -377,7 +388,8 @@ class Event extends OgiveEntity
     /**
      * Set isPublished.
      *
-     * @param boolean isPublished
+     * @param bool isPublished
+     *
      * @return Event
      */
     public function setIsPublished($isPublished)
@@ -401,6 +413,7 @@ class Event extends OgiveEntity
      * Set eventSteps.
      *
      * @param Collection eventSteps
+     *
      * @return Event
      */
     public function setEventSteps(Collection $eventSteps)
@@ -424,6 +437,7 @@ class Event extends OgiveEntity
      * Set periods.
      *
      * @param Collection periods
+     *
      * @return Event
      */
     public function setPeriods(Collection $periods)
@@ -447,6 +461,7 @@ class Event extends OgiveEntity
      * Set eventDatasources.
      *
      * @param Collection eventDatasources
+     *
      * @return Event
      */
     public function setEventDatasources(Collection $eventDatasources)
@@ -470,6 +485,7 @@ class Event extends OgiveEntity
      * Set event objects
      *
      * @param Collection eventObjects
+     *
      * @return Event
      */
     public function setEventObjects(Collection $eventObjects)
@@ -483,6 +499,7 @@ class Event extends OgiveEntity
      * Add event object
      *
      * @param EventObject $eventObject
+     *
      * @return Event
      */
     public function addEventObject(EventObject $eventObject)
@@ -506,6 +523,7 @@ class Event extends OgiveEntity
      * Get objects by type
      *
      * @param  array
+     *
      * @return Collection
      */
     public function getObjectsByType(array $types)
@@ -536,6 +554,7 @@ class Event extends OgiveEntity
      * Set objects
      *
      * @param Collection objects
+     *
      * @return Event
      */
     public function setObjects(Collection $objects)
@@ -548,7 +567,8 @@ class Event extends OgiveEntity
     /**
      * Add event object
      *
-     * @param Object $object
+     * @param object $object
+     *
      * @return Event
      */
     public function addObject(Object $object)
@@ -590,7 +610,8 @@ class Event extends OgiveEntity
     /**
      * Set message
      *
-     * @param  Message $message
+     * @param Message $message
+     *
      * @return Event
      */
     public function setMessage(Message $message = null)
@@ -613,10 +634,10 @@ class Event extends OgiveEntity
     /**
      * Check the event's message is a prehome or not
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPrehome()
     {
-        return ($this->message instanceof Message && $this->message->isPrehome());
+        return $this->message instanceof Message && $this->message->isPrehome();
     }
 }

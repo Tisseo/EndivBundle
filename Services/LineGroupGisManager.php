@@ -3,13 +3,12 @@
 namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Tisseo\EndivBundle\Entity\LineGroupGis;
 
 class LineGroupGisManager extends SortManager
 {
     /**
-     * @var ObjectManager $om
+     * @var ObjectManager
      */
     private $om = null;
 
@@ -24,12 +23,12 @@ class LineGroupGisManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        return ($this->repository->findBy($criteria,$orderBy,$limit,$offset));
+        return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     public function find($lineGroupGisId)
@@ -39,7 +38,9 @@ class LineGroupGisManager extends SortManager
 
     /**
      * save
+     *
      * @param LineGroupGis $lineGroupGis
+     *
      * @return array(boolean, string message, LineGroupGis)
      *
      * Persist and save a LineGroupGis into database.
@@ -48,14 +49,12 @@ class LineGroupGisManager extends SortManager
     {
         $lineGroupGisContents = clone $lineGroupGis->getLineGroupGisContents();
 
-        if ($lineGroupGis->getId() === null)
-        {
+        if ($lineGroupGis->getId() === null) {
             $lineGroupGis->clearLineGroupGisContents();
             $this->om->persist($lineGroupGis);
         }
 
-        foreach($lineGroupGisContents as $lineGroupGisContent)
-        {
+        foreach ($lineGroupGisContents as $lineGroupGisContent) {
             $lineGroupGisContent->setLineGroupGis($lineGroupGis);
             $this->om->persist($lineGroupGisContent);
         }
@@ -66,6 +65,7 @@ class LineGroupGisManager extends SortManager
 
     /**
      * @param LineGroupGis $lineGroupGis
+     *
      * @return array(boolean, string message)
      *
      * Remove LineGroupGis into database

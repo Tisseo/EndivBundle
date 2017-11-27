@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -14,7 +13,7 @@ use Tisseo\EndivBundle\Entity\Ogive\Board;
 class Line extends ObjectDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,7 +23,7 @@ class Line extends ObjectDatasource
     private $number;
 
     /**
-     * @var integer
+     * @var int
      */
     private $priority;
 
@@ -89,14 +88,14 @@ class Line extends ObjectDatasource
      */
     public function definePriority()
     {
-        $priorities = array("Métro" => 1, "Tramway" => 2, "Bus" => 3, "TAD" => 4);
+        $priorities = array('Métro' => 1, 'Tramway' => 2, 'Bus' => 3, 'TAD' => 4);
         $this->priority = $priorities[$this->getPhysicalMode()->getName()];
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -107,6 +106,7 @@ class Line extends ObjectDatasource
      * Set number
      *
      * @param string $number
+     *
      * @return Line
      */
     public function setNumber($number)
@@ -129,7 +129,8 @@ class Line extends ObjectDatasource
     /**
      * Set priority
      *
-     * @param integer $priority
+     * @param int $priority
+     *
      * @return Line
      */
     public function setPriority($priority)
@@ -142,7 +143,7 @@ class Line extends ObjectDatasource
     /**
      * Get priority
      *
-     * @return integer
+     * @return int
      */
     public function getPriority()
     {
@@ -153,6 +154,7 @@ class Line extends ObjectDatasource
      * Set physicalMode
      *
      * @param PhysicalMode $physicalMode
+     *
      * @return Line
      */
     public function setPhysicalMode(PhysicalMode $physicalMode = null)
@@ -196,6 +198,7 @@ class Line extends ObjectDatasource
      * Set lineDatasources
      *
      * @param \Doctrine\Common\Collections\Collection $lineDatasources
+     *
      * @return Line
      */
     public function setLineDatasources(Collection $lineDatasources)
@@ -204,6 +207,7 @@ class Line extends ObjectDatasource
         foreach ($this->lineDatasources as $lineDatasource) {
             $lineDatasource->setLine($this);
         }
+
         return $this;
     }
 
@@ -211,6 +215,7 @@ class Line extends ObjectDatasource
      * Add lineDatasource
      *
      * @param LineDatasource $lineDatasources
+     *
      * @return Line
      */
     public function addLineDatasource(LineDatasource $lineDatasource)
@@ -245,6 +250,7 @@ class Line extends ObjectDatasource
      * Set lineVersions
      *
      * @param \Doctrine\Common\Collections\Collection $lineVersions
+     *
      * @return Line
      */
     public function setLineVersions(Collection $lineVersions)
@@ -253,6 +259,7 @@ class Line extends ObjectDatasource
         foreach ($this->lineVersions as $lineVersion) {
             $lineVersion->setLine($this);
         }
+
         return $this;
     }
 
@@ -260,12 +267,14 @@ class Line extends ObjectDatasource
      * Add lineVersions
      *
      * @param LineVersion $lineVersion
+     *
      * @return Line
      */
     public function addLineVersions(LineVersion $lineVersion)
     {
         $this->lineVersions[] = $lineVersion;
         $lineVersion->setLine($this);
+
         return $this;
     }
 
@@ -283,6 +292,7 @@ class Line extends ObjectDatasource
      * Add lineVersions
      *
      * @param LineVersion $lineVersions
+     *
      * @return Line
      */
     public function addLineVersion(LineVersion $lineVersions)
@@ -306,6 +316,7 @@ class Line extends ObjectDatasource
      * Add schematic
      *
      * @param \Tisseo\EndivBundle\Entity\Schematic $schematic
+     *
      * @return Line
      */
     public function addSchematics(Schematic $schematic)
@@ -319,6 +330,7 @@ class Line extends ObjectDatasource
      * Set schematics
      *
      * @param \Doctrine\Common\Collections\Collection $schematics
+     *
      * @return Line
      */
     public function setSchematics(Collection $schematics)
@@ -327,6 +339,7 @@ class Line extends ObjectDatasource
         foreach ($this->$schematics as $schematic) {
             $schematic->setLine($this);
         }
+
         return $this;
     }
 
@@ -362,6 +375,7 @@ class Line extends ObjectDatasource
      * Add lineGroupGisContents
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     *
      * @return Line
      */
     public function addLineGroupGisContent(\Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents)
@@ -405,6 +419,7 @@ class Line extends ObjectDatasource
      * Set boards
      *
      * @param Collection $boards
+     *
      * @return Line
      */
     public function setBoards(Collection $boards)
@@ -418,6 +433,7 @@ class Line extends ObjectDatasource
      * Add board
      *
      * @param Board $board
+     *
      * @return Line
      */
     public function addBoard(Board $board)
@@ -431,6 +447,7 @@ class Line extends ObjectDatasource
      * Remove board
      *
      * @param Board $board
+     *
      * @return Line
      */
     public function removeBoard(Board $board)
@@ -444,11 +461,13 @@ class Line extends ObjectDatasource
      * Set lineStatuses
      *
      * @param Collection $lineStatuses
+     *
      * @return Line
      */
     public function setLineStatuses(Collection $lineStatuses)
     {
         $this->lineStatuses = $lineStatuses;
+
         return $this;
     }
 
@@ -466,12 +485,14 @@ class Line extends ObjectDatasource
      * Add lineStatus
      *
      * @param LineStatus $lineStatus
+     *
      * @return Line
      */
     public function addLineStatus(LineStatus $lineStatus)
     {
         $this->lineStatuses[] = $lineStatus;
         $lineStatus->setLineVersion($this);
+
         return $this;
     }
 
@@ -493,6 +514,7 @@ class Line extends ObjectDatasource
     public function clearLineStatuses()
     {
         $this->lineStatuses->clear();
+
         return $this;
     }
 
@@ -512,8 +534,9 @@ class Line extends ObjectDatasource
 
         $lineVersions = $this->lineVersions->matching($criteria);
 
-        if (!$lineVersions->isEmpty())
+        if (!$lineVersions->isEmpty()) {
             return $lineVersions->first();
+        }
 
         return null;
     }
@@ -522,6 +545,7 @@ class Line extends ObjectDatasource
      * getHistoryLineVersions
      *
      * @param \Datetime $now
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getHistoryLineVersions(\Datetime $now)
@@ -538,6 +562,7 @@ class Line extends ObjectDatasource
      * Get current LineVersion
      *
      * @param \Datetime $now
+     *
      * @return LineVersion
      */
     public function getCurrentLineVersion(\Datetime $now = null)
@@ -571,6 +596,7 @@ class Line extends ObjectDatasource
      * Get current or future LineVersion
      *
      * @param \Datetime $now
+     *
      * @return LineVersion
      */
     public function getCurrentOrFutureLineVersion(\Datetime $now = null)
@@ -625,7 +651,9 @@ class Line extends ObjectDatasource
 
     /**
      * Get last schematic (priority on schematic with a filePath).
-     * @param boolean withFile
+     *
+     * @param bool withFile
+     *
      * @return \Datetime
      */
     public function getLastSchematic($withFile = false)
@@ -653,12 +681,14 @@ class Line extends ObjectDatasource
 
     /**
      * Get first valid schematic date
+     *
      * @return Schematic
      */
     public function getFirstValidSchematic()
     {
-        if ($this->schematics->count() === 0)
+        if ($this->schematics->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->where(Criteria::expr()->neq('deprecated', true))
@@ -669,14 +699,16 @@ class Line extends ObjectDatasource
 
         $schematics = $this->schematics->matching($criteria);
 
-        if ($schematics->isEmpty())
+        if ($schematics->isEmpty()) {
             return null;
+        }
 
         return $schematics->first();
     }
 
     /**
      * Get fileSchematics
+     *
      * @return ArrayCollection
      */
     public function getFileSchematics($max = null)
@@ -699,6 +731,7 @@ class Line extends ObjectDatasource
 
     /**
      * Get last gisSchematic
+     *
      * @return Schematic
      */
     public function getLastGisSchematic()
@@ -725,6 +758,7 @@ class Line extends ObjectDatasource
 
     /**
      * Get gisSchematics
+     *
      * @return ArrayCollection
      */
     public function getGisSchematics()

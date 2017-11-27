@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -13,7 +12,7 @@ use Doctrine\Common\Collections\Criteria;
 class Trip extends ObjectDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -23,7 +22,7 @@ class Trip extends ObjectDatasource
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isPattern;
 
@@ -68,7 +67,7 @@ class Trip extends ObjectDatasource
     private $stopTimes;
 
     /**
-     * @var integer
+     * @var int
      */
     private $parent;
 
@@ -84,7 +83,7 @@ class Trip extends ObjectDatasource
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -94,7 +93,8 @@ class Trip extends ObjectDatasource
     /**
      * Get id
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return Trip
      */
     public function setId($id)
@@ -108,6 +108,7 @@ class Trip extends ObjectDatasource
      * Set name
      *
      * @param string $name
+     *
      * @return Trip
      */
     public function setName($name)
@@ -130,9 +131,8 @@ class Trip extends ObjectDatasource
     /**
      * Get parent
      *
-     * @return integer
+     * @return int
      */
-
     public function getParent()
     {
         return $this->parent;
@@ -143,7 +143,6 @@ class Trip extends ObjectDatasource
      *
      * @return Trip
      */
-
     public function setParent($parent)
     {
         $this->parent = $parent;
@@ -151,11 +150,11 @@ class Trip extends ObjectDatasource
         return $this;
     }
 
-
     /**
      * Set isPattern
      *
-     * @param boolean $isPattern
+     * @param bool $isPattern
+     *
      * @return Trip
      */
     public function setIsPattern($isPattern)
@@ -168,7 +167,7 @@ class Trip extends ObjectDatasource
     /**
      * Get isPattern
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsPattern()
     {
@@ -179,6 +178,7 @@ class Trip extends ObjectDatasource
      * Set pattern
      *
      * @param Trip $pattern
+     *
      * @return Trip
      */
     public function setPattern($pattern)
@@ -202,6 +202,7 @@ class Trip extends ObjectDatasource
      * Set comment
      *
      * @param Comment $comment
+     *
      * @return Trip
      */
     public function setComment(Comment $comment = null)
@@ -225,6 +226,7 @@ class Trip extends ObjectDatasource
      * Set route
      *
      * @param Route $route
+     *
      * @return Trip
      */
     public function setRoute(Route $route = null)
@@ -248,6 +250,7 @@ class Trip extends ObjectDatasource
      * Set tripCalendar
      *
      * @param TripCalendar $tripCalendar
+     *
      * @return Trip
      */
     public function setTripCalendar(TripCalendar $tripCalendar = null)
@@ -271,6 +274,7 @@ class Trip extends ObjectDatasource
      * Set periodCalendar
      *
      * @param Calendar $periodCalendar
+     *
      * @return Trip
      */
     public function setPeriodCalendar(Calendar $periodCalendar = null)
@@ -294,6 +298,7 @@ class Trip extends ObjectDatasource
      * Set dayCalendar
      *
      * @param Calendar $dayCalendar
+     *
      * @return Trip
      */
     public function setDayCalendar(Calendar $dayCalendar = null)
@@ -317,6 +322,7 @@ class Trip extends ObjectDatasource
      * Set stopTimes
      *
      * @param Collection $stopTimes
+     *
      * @return Trip
      */
     public function setStopTimes(Collection $stopTimes)
@@ -325,6 +331,7 @@ class Trip extends ObjectDatasource
         foreach ($this->stopTimes as $stopTime) {
             $stopTime->setTrip($this);
         }
+
         return $this;
     }
 
@@ -346,6 +353,7 @@ class Trip extends ObjectDatasource
      * Add stopTime
      *
      * @param StopTime $stopTime
+     *
      * @return Trip
      */
     public function addStopTime(StopTime $stopTime)
@@ -366,7 +374,6 @@ class Trip extends ObjectDatasource
     }
 
     /** Clear stopTimes
-     *
      * @return Trip
      */
     public function clearStopTimes()
@@ -378,6 +385,7 @@ class Trip extends ObjectDatasource
      * Set tripDatasources
      *
      * @param Collection $tripDatasources
+     *
      * @return Trip
      */
     public function setTripDatasources(Collection $tripDatasources)
@@ -386,6 +394,7 @@ class Trip extends ObjectDatasource
         foreach ($this->tripDatasources as $tripDatasource) {
             $tripDatasource->setTrip($this);
         }
+
         return $this;
     }
 
@@ -403,6 +412,7 @@ class Trip extends ObjectDatasource
      * Add tripDatasource
      *
      * @param \Tisseo\EndivBundle\Entity\TripDatasource $tripDatasources
+     *
      * @return Trip
      */
     public function addTripDatasource(\Tisseo\EndivBundle\Entity\TripDatasource $tripDatasource)
@@ -427,12 +437,13 @@ class Trip extends ObjectDatasource
 
     /**
      * Getting a specific StopTime using a RouteStop
+     *
      * @param RouteStop $routeStop
      */
     public function getStopTime(RouteStop $routeStop)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('routeStop',$routeStop))
+            ->where(Criteria::expr()->eq('routeStop', $routeStop))
             ->setMaxResults(1)
         ;
 

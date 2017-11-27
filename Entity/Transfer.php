@@ -2,25 +2,23 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Transfer
  */
 class Transfer
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $duration;
 
     /**
-     * @var integer
+     * @var int
      */
     private $distance;
 
@@ -44,11 +42,10 @@ class Transfer
      */
     private $startStop;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -58,7 +55,8 @@ class Transfer
     /**
      * Set duration
      *
-     * @param integer $duration
+     * @param int $duration
+     *
      * @return Transfer
      */
     public function setDuration($duration)
@@ -71,7 +69,7 @@ class Transfer
     /**
      * Get duration
      *
-     * @return integer
+     * @return int
      */
     public function getDuration()
     {
@@ -81,7 +79,8 @@ class Transfer
     /**
      * Set distance
      *
-     * @param integer $distance
+     * @param int $distance
+     *
      * @return Transfer
      */
     public function setDistance($distance)
@@ -94,7 +93,7 @@ class Transfer
     /**
      * Get distance
      *
-     * @return integer
+     * @return int
      */
     public function getDistance()
     {
@@ -105,6 +104,7 @@ class Transfer
      * Set theGeom
      *
      * @param geometry $theGeom
+     *
      * @return Transfer
      */
     public function setTheGeom($theGeom)
@@ -124,10 +124,11 @@ class Transfer
         return $this->theGeom;
     }
 
-     /**
+    /**
      * Set longName
      *
      * @param string $longName
+     *
      * @return StopHistory
      */
     public function setLongName($longName)
@@ -151,6 +152,7 @@ class Transfer
      * Set endStop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $endStop
+     *
      * @return Transfer
      */
     public function setEndStop(\Tisseo\EndivBundle\Entity\Stop $endStop = null)
@@ -174,6 +176,7 @@ class Transfer
      * Set startStop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $startStop
+     *
      * @return Transfer
      */
     public function setStartStop(\Tisseo\EndivBundle\Entity\Stop $startStop = null)

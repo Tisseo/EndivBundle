@@ -21,7 +21,7 @@ class Board extends OgiveEntity
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -36,30 +36,29 @@ class Board extends OgiveEntity
     private $longName;
 
     /**
-     * @var integer
+     * @var int
      */
     private $nbBoards;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isOffice;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isWaitingRoom;
-
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -70,6 +69,7 @@ class Board extends OgiveEntity
      * Set shortName
      *
      * @param string $shortName
+     *
      * @return Board
      */
     public function setShortName($shortName)
@@ -93,6 +93,7 @@ class Board extends OgiveEntity
      * Set longName
      *
      * @param string $longName
+     *
      * @return Board
      */
     public function setLongName($longName)
@@ -115,7 +116,8 @@ class Board extends OgiveEntity
     /**
      * Set nbBoards
      *
-     * @param integer $nbBoards
+     * @param int $nbBoards
+     *
      * @return Board
      */
     public function setNbBoards($nbBoards)
@@ -128,7 +130,7 @@ class Board extends OgiveEntity
     /**
      * Get nbBoards
      *
-     * @return integer
+     * @return int
      */
     public function getNbBoards()
     {
@@ -138,7 +140,8 @@ class Board extends OgiveEntity
     /**
      * Set status
      *
-     * @param integer $status
+     * @param int $status
+     *
      * @return Board
      */
     public function setStatus($status)
@@ -155,7 +158,7 @@ class Board extends OgiveEntity
     /**
      * Get status
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -165,7 +168,8 @@ class Board extends OgiveEntity
     /**
      * Set isOffice
      *
-     * @param boolean $isOffice
+     * @param bool $isOffice
+     *
      * @return Board
      */
     public function setIsOffice($isOffice)
@@ -178,7 +182,7 @@ class Board extends OgiveEntity
     /**
      * Get isOffice
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsOffice()
     {
@@ -188,7 +192,8 @@ class Board extends OgiveEntity
     /**
      * Set isWaitingRoom
      *
-     * @param boolean $isWaitingRoom
+     * @param bool $isWaitingRoom
+     *
      * @return Board
      */
     public function setIsWaitingRoom($isWaitingRoom)
@@ -201,7 +206,7 @@ class Board extends OgiveEntity
     /**
      * Get isWaitingRoom
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsWaitingRoom()
     {

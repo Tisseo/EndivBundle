@@ -18,7 +18,7 @@ class DepotManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($depotId)
@@ -32,16 +32,16 @@ class DepotManager extends SortManager
         $this->om->flush();
     }
 
-       /**
-       * delete
-       * @param Depot $depot
-       *
-       * Delete a Depot from the database.
-       */
+    /**
+     * delete
+     *
+     * @param Depot $depot
+     *
+     * Delete a Depot from the database.
+     */
     public function delete(Depot $depot)
     {
         $this->om->remove($depot);
         $this->om->flush();
     }
-
 }

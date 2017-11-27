@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * GroupObject
  */
 class GroupObject
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -25,7 +23,7 @@ class GroupObject
     private $groupType;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isPrivate;
 
@@ -45,7 +43,7 @@ class GroupObject
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -56,6 +54,7 @@ class GroupObject
      * Set name
      *
      * @param string $name
+     *
      * @return GroupObject
      */
     public function setName($name)
@@ -79,6 +78,7 @@ class GroupObject
      * Set groupType
      *
      * @param string $groupType
+     *
      * @return GroupObject
      */
     public function setGroupType($groupType)
@@ -101,7 +101,8 @@ class GroupObject
     /**
      * Set isPrivate
      *
-     * @param boolean $isPrivate
+     * @param bool $isPrivate
+     *
      * @return GroupObject
      */
     public function setIsPrivate($isPrivate)
@@ -114,7 +115,7 @@ class GroupObject
     /**
      * Get isPrivate
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsPrivate()
     {
@@ -124,7 +125,8 @@ class GroupObject
     /**
      * Add objects
      *
-     * @param Object $objects
+     * @param object $objects
+     *
      * @return GroupObject
      */
     public function addObject(Object $objects)
@@ -137,7 +139,7 @@ class GroupObject
     /**
      * Remove objects
      *
-     * @param Object $objects
+     * @param object $objects
      */
     public function removeObject(Object $objects)
     {
