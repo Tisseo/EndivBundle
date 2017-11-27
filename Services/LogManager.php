@@ -18,7 +18,7 @@ class LogManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findBy(array(), array('id' => 'desc')));
+        return $this->repository->findBy(array(), array('id' => 'desc'));
     }
 
     public function find($LogId)
@@ -47,7 +47,6 @@ class LogManager extends SortManager
 
     public function save(Log $Log)
     {
-
         $log->setTable($log->getTable());
         $this->om->persist($Log);
         $this->om->flush();

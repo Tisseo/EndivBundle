@@ -2,13 +2,10 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Tisseo\EndivBundle\Entity\OdtArea;
-use Tisseo\EndivBundle\Entity\OdtStop;
 use Tisseo\EndivBundle\Entity\Waypoint;
+
 class OdtAreaManager extends SortManager
 {
     private $em = null;
@@ -35,7 +32,7 @@ class OdtAreaManager extends SortManager
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare("INSERT INTO waypoint(id) VALUES (nextval('waypoint_id_seq')) RETURNING waypoint.id");
         $stmt->execute();
-        $odtArea->setId($stmt->fetch(\PDO::FETCH_ASSOC)["id"]);
+        $odtArea->setId($stmt->fetch(\PDO::FETCH_ASSOC)['id']);
 
         $this->em->persist($odtArea);
         $this->em->flush();
@@ -50,11 +47,12 @@ class OdtAreaManager extends SortManager
     }
 
     /**
-       * delete
-       * @param OdtArea $odtArea
-       *
-       * Delete a OdtArea from the database.
-       */
+     * delete
+     *
+     * @param OdtArea $odtArea
+     *
+     * Delete a OdtArea from the database.
+     */
     ////////
     //TODO : INVESTIGATE THIS METHOD to avoid using queries. There is a problem with the waypoint deletion when we use the method 'remove'.
     ////////
@@ -68,8 +66,9 @@ class OdtAreaManager extends SortManager
         ")
         ->setParameter('wp', $waypoint);
         $count = $query->getSingleScalarResult();
-        if ($count > 0)
+        if ($count > 0) {
             throw new \Exception('Suppression impossible au motif que la zone "'.$odtArea->getName().'" est encore utilisée dans un ou plusieurs itinéraires');
+        }
         $odtArea->getOdtStops()->clear();
         $this->em->remove($odtArea);
         $this->em->refresh($waypoint);
@@ -125,8 +124,9 @@ class OdtAreaManager extends SortManager
         // leading to missing rows in the result array.
         $array = $query->getResult();
         $lines = array();
-        foreach ($array as $item)
+        foreach ($array as $item) {
             $lines[] = $item['line'];
+        }
 
         $query = $this->em->createQuery("
             SELECT DISTINCT l
@@ -137,15 +137,17 @@ class OdtAreaManager extends SortManager
         $linesResult = $query->getResult();
 
         $lines = array();
-        foreach($linesResult as $line)
+        foreach ($linesResult as $line) {
             $lines[$line->getId()] = $line;
+        }
 
         $result = array();
         foreach ($array as $item) {
-            if (!empty($item['odtArea']))
+            if (!empty($item['odtArea'])) {
                 $result[$item['odtArea']][] = $lines[$item['line']];
-            else
+            } else {
                 $result[$item['odtArea2']][] = $lines[$item['line']];
+            }
         }
 
         foreach ($result as $key => $item) {
@@ -157,16 +159,16 @@ class OdtAreaManager extends SortManager
 
     public function findOdtAreasLike($term)
     {
-        $specials = array("-", " ", "'");
-        $cleanTerm = str_replace($specials, "_", $term);
+        $specials = array('-', ' ', "'");
+        $cleanTerm = str_replace($specials, '_', $term);
 
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("
+        $stmt = $connection->prepare('
             SELECT oa.name as name, oa.id as id
             FROM odt_area oa
             WHERE (UPPER(unaccent(oa.name)) LIKE UPPER(unaccent(:term)))
             ORDER BY oa.name
-        ");
+        ');
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
         $stmt->execute();
         $odtAreas = $stmt->fetchAll();
@@ -176,10 +178,9 @@ class OdtAreaManager extends SortManager
 
     public function getOdtStopsJson($odtArea)
     {
-
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query="SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+        $query = 'SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
             FROM stop s
             JOIN odt_stop os on os.stop_id = s.id
             JOIN stop_datasource sd on sd.stop_id = s.id
@@ -187,7 +188,7 @@ class OdtAreaManager extends SortManager
             WHERE os.odt_area_id = :oa_id
             AND (os.end_date IS NULL or os.end_date >= CURRENT_DATE)
             AND sh.start_date <= CURRENT_DATE
-            AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+            AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)';
         $stmt = $connection->prepare($query);
         $stmt->bindValue(':oa_id', $odtArea->getId());
         $stmt->execute();
@@ -195,5 +196,4 @@ class OdtAreaManager extends SortManager
 
         return $result;
     }
-
 }

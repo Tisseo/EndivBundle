@@ -2,20 +2,18 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Printing
  */
 class Printing
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $quantity;
 
@@ -37,7 +35,7 @@ class Printing
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -47,7 +45,8 @@ class Printing
     /**
      * Set quantity
      *
-     * @param integer $quantity
+     * @param int $quantity
+     *
      * @return Printing
      */
     public function setQuantity($quantity)
@@ -60,7 +59,7 @@ class Printing
     /**
      * Get quantity
      *
-     * @return integer
+     * @return int
      */
     public function getQuantity()
     {
@@ -71,6 +70,7 @@ class Printing
      * Set date
      *
      * @param \DateTime $date
+     *
      * @return Printing
      */
     public function setDate($date)
@@ -94,6 +94,7 @@ class Printing
      * Set comment
      *
      * @param string $comment
+     *
      * @return Printing
      */
     public function setComment($comment)
@@ -117,6 +118,7 @@ class Printing
      * Set lineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     *
      * @return Printing
      */
     public function setLineVersion(LineVersion $lineVersion = null)

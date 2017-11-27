@@ -8,7 +8,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class Text extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -25,7 +25,7 @@ class Text extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -36,6 +36,7 @@ class Text extends OgiveEntity
      * Set label
      *
      * @param string $label
+     *
      * @return Text
      */
     public function setLabel($label)
@@ -59,6 +60,7 @@ class Text extends OgiveEntity
      * Set text
      *
      * @param string $text
+     *
      * @return Text
      */
     public function setText($text)

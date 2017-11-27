@@ -10,17 +10,15 @@ class LineManager extends SortManager
     private $om = null;
     private $repository = null;
 
-
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:Line');
     }
 
-
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($lineId)
@@ -70,7 +68,8 @@ class LineManager extends SortManager
         return $this->sortLinesByNumber($query->getResult());
     }
 
-    public function findAllWithSchematics() {
+    public function findAllWithSchematics()
+    {
         $query = $this->repository->createQueryBuilder('l')
             ->select('l, sc, lgc, lgg, p, lv, bgc, fgc')
             ->join('l.lineVersions', 'lv', 'with', 'lv.endDate is null or (lv.endDate + 1) > current_date()')

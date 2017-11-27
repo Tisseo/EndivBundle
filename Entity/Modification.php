@@ -2,16 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Modification
  */
 class Modification
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -42,13 +39,13 @@ class Modification
 
     public function __toString()
     {
-        return sprintf("%s / %s / %s version %s", $this->description, $this->author, $this->date->format('d/m/Y'), $this->lineVersion->getVersion());
+        return sprintf('%s / %s / %s version %s', $this->description, $this->author, $this->date->format('d/m/Y'), $this->lineVersion->getVersion());
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -59,6 +56,7 @@ class Modification
      * Set author
      *
      * @param string $author
+     *
      * @return Modification
      */
     public function setAuthor($author)
@@ -82,6 +80,7 @@ class Modification
      * Set description
      *
      * @param string $description
+     *
      * @return Modification
      */
     public function setDescription($description)
@@ -105,6 +104,7 @@ class Modification
      * Set date
      *
      * @param \DateTime $date
+     *
      * @return ModificationLink
      */
     public function setDate($date)
@@ -128,6 +128,7 @@ class Modification
      * Set lineVersion
      *
      * @param LineVersion $lineVersion
+     *
      * @return ModificationLink
      */
     public function setLineVersion(LineVersion $lineVersion = null)
@@ -151,6 +152,7 @@ class Modification
      * Set resolvedIn
      *
      * @param LineVersion $resolvedIn
+     *
      * @return ModificationLink
      */
     public function setResolvedIn(LineVersion $resolvedIn = null)

@@ -9,6 +9,7 @@ use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Connector
+ *
  * @ExclusionPolicy("none")
  */
 class Connector extends OgiveEntity
@@ -27,7 +28,7 @@ class Connector extends OgiveEntity
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -37,7 +38,7 @@ class Connector extends OgiveEntity
     private $name;
 
     /**
-     * @var integer
+     * @var int
      */
     private $type;
 
@@ -70,7 +71,7 @@ class Connector extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -81,6 +82,7 @@ class Connector extends OgiveEntity
      * Set name
      *
      * @param string $name
+     *
      * @return Connector
      */
     public function setName($name)
@@ -103,7 +105,8 @@ class Connector extends OgiveEntity
     /**
      * Set type
      *
-     * @param integer $type
+     * @param int $type
+     *
      * @return Connector
      */
     public function setType($type)
@@ -118,7 +121,7 @@ class Connector extends OgiveEntity
     /**
      * Get type
      *
-     * @return integer
+     * @return int
      */
     public function getType()
     {
@@ -129,6 +132,7 @@ class Connector extends OgiveEntity
      * Set details
      *
      * @param string $details
+     *
      * @return Connector
      */
     public function setDetails($details)
@@ -151,7 +155,7 @@ class Connector extends OgiveEntity
     /**
      * isLinked
      *
-     * @return boolean
+     * @return bool
      */
     public function isLinked()
     {

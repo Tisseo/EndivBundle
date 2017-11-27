@@ -2,10 +2,8 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 
 /**
  * AccessibilityType
@@ -13,22 +11,22 @@ use Doctrine\Common\Collections\Collection;
 class AccessibilityType
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $startTime;
 
     /**
-     * @var integer
+     * @var int
      */
     private $endTime;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isRecursive;
 
@@ -58,7 +56,7 @@ class AccessibilityType
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -68,7 +66,8 @@ class AccessibilityType
     /**
      * Set startTime
      *
-     * @param integer $startTime
+     * @param int $startTime
+     *
      * @return AccessibilityType
      */
     public function setStartTime($startTime)
@@ -81,7 +80,7 @@ class AccessibilityType
     /**
      * Get startTime
      *
-     * @return integer
+     * @return int
      */
     public function getStartTime()
     {
@@ -91,7 +90,8 @@ class AccessibilityType
     /**
      * Set endTime
      *
-     * @param integer $endTime
+     * @param int $endTime
+     *
      * @return AccessibilityType
      */
     public function setEndTime($endTime)
@@ -104,7 +104,7 @@ class AccessibilityType
     /**
      * Get endTime
      *
-     * @return integer
+     * @return int
      */
     public function getEndTime()
     {
@@ -114,7 +114,8 @@ class AccessibilityType
     /**
      * Set isRecursive
      *
-     * @param boolean $isRecursive
+     * @param bool $isRecursive
+     *
      * @return AccessibilityType
      */
     public function setIsRecursive($isRecursive)
@@ -127,7 +128,7 @@ class AccessibilityType
     /**
      * Get isRecursive
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsRecursive()
     {
@@ -138,6 +139,7 @@ class AccessibilityType
      * Set accessibilityMode
      *
      * @param AccessibilityMode $accessibilityMode
+     *
      * @return AccessibilityType
      */
     public function setAccessibilityMode(AccessibilityMode $accessibilityMode = null)
@@ -161,6 +163,7 @@ class AccessibilityType
      * Set calendar
      *
      * @param Calendar $calendar
+     *
      * @return AccessibilityType
      */
     public function setCalendar(Calendar $calendar = null)
@@ -194,6 +197,7 @@ class AccessibilityType
      * Set StopAccessibilities
      *
      * @param \Doctrine\Common\Collections\Collection $stopAccessibilities
+     *
      * @return Line
      */
     public function setStopAccessibilities(Collection $stopAccessibilities)
@@ -202,6 +206,7 @@ class AccessibilityType
         foreach ($this->stopAccessibilities as $stopAccessibility) {
             $stopAccessibility->setStop($this);
         }
+
         return $this;
     }
 
@@ -209,12 +214,14 @@ class AccessibilityType
      * Add stopAccessibility
      *
      * @param stopAccessibility $stopAccessibility
+     *
      * @return Line
      */
     public function addStopAccessibility(stopAccessibility $stopAccessibility)
     {
         $this->stopAccessibilities[] = $stopAccessibility;
         $stopAccessibility->setStop($this);
+
         return $this;
     }
 

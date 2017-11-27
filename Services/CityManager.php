@@ -18,7 +18,7 @@ class CityManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($CityId)
@@ -34,8 +34,8 @@ class CityManager extends SortManager
 
     public function findCityLike($term)
     {
-        $specials = array("-", " ", "'");
-        $cleanTerm = str_replace($specials, "_", $term);
+        $specials = array('-', ' ', "'");
+        $cleanTerm = str_replace($specials, '_', $term);
 
         $query = $this->om->createQuery("
             SELECT c.name as name, c.insee as insee, c.id as id
@@ -49,12 +49,11 @@ class CityManager extends SortManager
 
         $shs = $query->getResult();
         $array = array();
-        foreach($shs as $sh) {
-            $label = $sh["name"]." (".$sh["insee"].")";
-            $array[] = array("name"=>$label, "id"=>$sh["id"]);
+        foreach ($shs as $sh) {
+            $label = $sh['name'].' ('.$sh['insee'].')';
+            $array[] = array('name' => $label, 'id' => $sh['id']);
         }
 
         return $array;
     }
-
 }

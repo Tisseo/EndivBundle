@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * StopDatasource
  */
 class StopDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class StopDatasource
      */
     private $stop;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class StopDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return StopDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class StopDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return StopDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -90,6 +89,7 @@ class StopDatasource
      * Set stop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     *
      * @return StopDatasource
      */
     public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)

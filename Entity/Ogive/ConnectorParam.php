@@ -2,21 +2,18 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * ConnectorParam
  */
 class ConnectorParam
 {
-
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $type;
 
@@ -33,7 +30,8 @@ class ConnectorParam
     /**
      * Set id
      *
-     * @param integer $identifier
+     * @param int $identifier
+     *
      * @return ScenarioStep
      */
     public function setId($identifier)
@@ -46,7 +44,7 @@ class ConnectorParam
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -56,7 +54,8 @@ class ConnectorParam
     /**
      * Set type
      *
-     * @param integer $type
+     * @param int $type
+     *
      * @return ConnectorParam
      */
     public function setType($type)
@@ -69,7 +68,7 @@ class ConnectorParam
     /**
      * Get type
      *
-     * @return integer
+     * @return int
      */
     public function getType()
     {
@@ -80,6 +79,7 @@ class ConnectorParam
      * Set param
      *
      * @param string $param
+     *
      * @return ConnectorParam
      */
     public function setParam($param)
@@ -103,6 +103,7 @@ class ConnectorParam
      * Set connectorParamList
      *
      * @param ConnectorParamList $connectorParamList
+     *
      * @return ConnectorParam
      */
     public function setConnectorParamList(ConnectorParamList $connectorParamList = null)

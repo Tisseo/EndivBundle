@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Alias
  */
 class Alias
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class Alias
      */
     private $stopArea;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class Alias
      * Set name
      *
      * @param string $name
+     *
      * @return Alias
      */
     public function setName($name)
@@ -62,6 +60,7 @@ class Alias
      * Set stopArea
      *
      * @param \Tisseo\EndivBundle\Entity\StopArea $stopArea
+     *
      * @return Alias
      */
     public function setStopArea(\Tisseo\EndivBundle\Entity\StopArea $stopArea = null)

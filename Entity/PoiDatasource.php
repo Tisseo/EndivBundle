@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * PoiDatasource
  */
 class PoiDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class PoiDatasource
      */
     private $poi;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class PoiDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return PoiDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class PoiDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return PoiDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -90,6 +89,7 @@ class PoiDatasource
      * Set poi
      *
      * @param \Tisseo\EndivBundle\Entity\Poi $poi
+     *
      * @return PoiDatasource
      */
     public function setPoi(\Tisseo\EndivBundle\Entity\Poi $poi = null)

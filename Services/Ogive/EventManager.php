@@ -1,4 +1,5 @@
 <?php
+
 namespace Tisseo\EndivBundle\Services\Ogive;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -14,6 +15,7 @@ class EventManager extends OgiveManager
      * Find parent event if exists
      *
      * @param $disruptionId
+     *
      * @return Event|null
      */
     public function findParentEvent($disruptionId)
@@ -92,7 +94,8 @@ class EventManager extends OgiveManager
     /**
      * Check alerts and nbr of finished event steps.
      *
-     * @param  array $events
+     * @param array $events
+     *
      * @return array
      */
     public function checkEventSteps(array $events)
@@ -111,7 +114,7 @@ class EventManager extends OgiveManager
 
             foreach ($event->getEventSteps() as $eventStep) {
                 if ($eventStep->getLastStatus()->getStatus() != EventStepStatus::STATUS_TODO) {
-                    $nbrFinished++;
+                    ++$nbrFinished;
                 } elseif ($alert === null) {
                     $moment = $eventStep->getMoment();
 
@@ -137,7 +140,9 @@ class EventManager extends OgiveManager
 
     /**
      * Update event data and save it
-     * @param  Event $event
+     *
+     * @param Event $event
+     *
      * @return Event
      */
     public function update(Event $event)
@@ -167,9 +172,10 @@ class EventManager extends OgiveManager
     /**
      * Closing an event
      *
-     * @param  Event $event
-     * @param  string $login
-     * @param  string $message
+     * @param Event  $event
+     * @param string $login
+     * @param string $message
+     *
      * @return Event
      */
     public function close(Event $event, $login, $message)

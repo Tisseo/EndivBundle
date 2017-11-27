@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LineVersionExportDestination
  */
 class LineVersionExportDestination
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class LineVersionExportDestination
      */
     private $lineVersion;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class LineVersionExportDestination
      * Set exportDestination
      *
      * @param \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
+     *
      * @return LineVersionExportDestination
      */
     public function setExportDestination(\Tisseo\EndivBundle\Entity\ExportDestination $exportDestination = null)
@@ -62,6 +60,7 @@ class LineVersionExportDestination
      * Set lineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     *
      * @return LineVersionExportDestination
      */
     public function setLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion = null)

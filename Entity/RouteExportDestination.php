@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * RouteExportDestination
  */
 class RouteExportDestination
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class RouteExportDestination
      */
     private $route;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class RouteExportDestination
      * Set exportDestination
      *
      * @param \Tisseo\EndivBundle\Entity\ExportDestination $exportDestination
+     *
      * @return RouteExportDestination
      */
     public function setExportDestination(\Tisseo\EndivBundle\Entity\ExportDestination $exportDestination = null)
@@ -62,6 +60,7 @@ class RouteExportDestination
      * Set route
      *
      * @param \Tisseo\EndivBundle\Entity\Route $route
+     *
      * @return RouteExportDestination
      */
     public function setRoute(\Tisseo\EndivBundle\Entity\Route $route = null)

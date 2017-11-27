@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Agency
  */
 class Agency
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -39,11 +37,10 @@ class Agency
      */
     private $phone;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -54,6 +51,7 @@ class Agency
      * Set name
      *
      * @param string $name
+     *
      * @return Agency
      */
     public function setName($name)
@@ -77,6 +75,7 @@ class Agency
      * Set url
      *
      * @param string $url
+     *
      * @return Agency
      */
     public function setUrl($url)
@@ -100,6 +99,7 @@ class Agency
      * Set timezone
      *
      * @param string $timezone
+     *
      * @return Agency
      */
     public function setTimezone($timezone)
@@ -123,6 +123,7 @@ class Agency
      * Set lang
      *
      * @param string $lang
+     *
      * @return Agency
      */
     public function setLang($lang)
@@ -146,6 +147,7 @@ class Agency
      * Set phone
      *
      * @param string $phone
+     *
      * @return Agency
      */
     public function setPhone($phone)

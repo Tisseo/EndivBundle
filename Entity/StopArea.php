@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -12,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class StopArea extends ObjectDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -27,7 +26,7 @@ class StopArea extends ObjectDatasource
     private $longName;
 
     /**
-     * @var integer
+     * @var int
      */
     private $transferDuration = 3;
 
@@ -56,7 +55,6 @@ class StopArea extends ObjectDatasource
      */
     private $aliases;
 
-
     /**
      * Constructor
      */
@@ -70,7 +68,7 @@ class StopArea extends ObjectDatasource
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -81,6 +79,7 @@ class StopArea extends ObjectDatasource
      * Set shortName
      *
      * @param string $shortName
+     *
      * @return StopArea
      */
     public function setShortName($shortName)
@@ -104,6 +103,7 @@ class StopArea extends ObjectDatasource
      * Set longName
      *
      * @param string $longName
+     *
      * @return StopArea
      */
     public function setLongName($longName)
@@ -126,7 +126,8 @@ class StopArea extends ObjectDatasource
     /**
      * Set transferDuration
      *
-     * @param integer $transferDuration
+     * @param int $transferDuration
+     *
      * @return StopArea
      */
     public function setTransferDuration($transferDuration)
@@ -139,7 +140,7 @@ class StopArea extends ObjectDatasource
     /**
      * Get transferDuration
      *
-     * @return integer
+     * @return int
      */
     public function getTransferDuration()
     {
@@ -150,6 +151,7 @@ class StopArea extends ObjectDatasource
      * Set theGeom
      *
      * @param geometry $theGeom
+     *
      * @return StopArea
      */
     public function setTheGeom($theGeom)
@@ -173,6 +175,7 @@ class StopArea extends ObjectDatasource
      * Set city
      *
      * @param \Tisseo\EndivBundle\Entity\City $city
+     *
      * @return StopArea
      */
     public function setCity(\Tisseo\EndivBundle\Entity\City $city = null)
@@ -206,6 +209,7 @@ class StopArea extends ObjectDatasource
      * Set stopAreaDatasources
      *
      * @param \Doctrine\Common\Collections\Collection $stopAreaDatasources
+     *
      * @return Line
      */
     public function setStopAreaDatasources(Collection $stopAreaDatasources)
@@ -214,6 +218,7 @@ class StopArea extends ObjectDatasource
         foreach ($this->stopAreaDatasources as $stopAreaDatasource) {
             $stopAreaDatasource->setStopArea($this);
         }
+
         return $this;
     }
 
@@ -221,6 +226,7 @@ class StopArea extends ObjectDatasource
      * Add stopAreaDatasource
      *
      * @param StopAreaDatasource $stopAreaDatasource
+     *
      * @return Line
      */
     public function addStopAreaDatasource(StopAreaDatasource $stopAreaDatasource)
@@ -255,6 +261,7 @@ class StopArea extends ObjectDatasource
      * Set stops
      *
      * @param \Doctrine\Common\Collections\Collection $stops
+     *
      * @return Line
      */
     public function setStops(Collection $stops)
@@ -263,6 +270,7 @@ class StopArea extends ObjectDatasource
         foreach ($this->stops as $stop) {
             $stop->setStopArea($this);
         }
+
         return $this;
     }
 
@@ -270,12 +278,14 @@ class StopArea extends ObjectDatasource
      * Add stop
      *
      * @param Stop $stop
+     *
      * @return Line
      */
     public function addStop(Stop $stop)
     {
         $this->stops[] = $stop;
         $stop->setStopArea($this);
+
         return $this;
     }
 
@@ -303,6 +313,7 @@ class StopArea extends ObjectDatasource
      * Set aliases
      *
      * @param \Doctrine\Common\Collections\Collection $aliases
+     *
      * @return StopArea
      */
     public function setAliases(Collection $aliases)
@@ -311,6 +322,7 @@ class StopArea extends ObjectDatasource
         foreach ($this->aliases as $a) {
             $a->setStopArea($this);
         }
+
         return $this;
     }
 
@@ -318,12 +330,14 @@ class StopArea extends ObjectDatasource
      * Add alias
      *
      * @param Alias $alias
+     *
      * @return StopArea
      */
     public function addAlias(Alias $alias)
     {
         $this->aliases[] = $alias;
         $alias->setStopArea($this);
+
         return $this;
     }
 
@@ -349,6 +363,6 @@ class StopArea extends ObjectDatasource
 
     public function isMainOfCity()
     {
-        return ($this === $this->getCity()->getMainStopArea());
+        return $this === $this->getCity()->getMainStopArea();
     }
 }

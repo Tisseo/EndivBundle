@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * NonConcurrency
  */
 class NonConcurrency
 {
     /**
-     * @var integer
+     * @var int
      */
     private $time;
 
@@ -24,16 +22,16 @@ class NonConcurrency
      */
     private $nonPriorityLine;
 
-
     public function getId()
     {
-        return (string)($this->priorityLine->getId())."/".(string)($this->nonPriorityLine->getId());
+        return (string) ($this->priorityLine->getId()).'/'.(string) ($this->nonPriorityLine->getId());
     }
 
     /**
      * Set time
      *
-     * @param integer $time
+     * @param int $time
+     *
      * @return NonConcurrency
      */
     public function setTime($time)
@@ -46,7 +44,7 @@ class NonConcurrency
     /**
      * Get time
      *
-     * @return integer
+     * @return int
      */
     public function getTime()
     {
@@ -57,6 +55,7 @@ class NonConcurrency
      * Set priorityLine
      *
      * @param \Tisseo\EndivBundle\Entity\Line $priorityLine
+     *
      * @return NonConcurrency
      */
     public function setPriorityLine(\Tisseo\EndivBundle\Entity\Line $priorityLine)
@@ -80,6 +79,7 @@ class NonConcurrency
      * Set nonPriorityLine
      *
      * @param \Tisseo\EndivBundle\Entity\Line $nonPriorityLine
+     *
      * @return NonConcurrency
      */
     public function setNonPriorityLine(\Tisseo\EndivBundle\Entity\Line $nonPriorityLine)

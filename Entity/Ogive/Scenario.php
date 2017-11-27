@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class Scenario extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -46,7 +46,7 @@ class Scenario extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -57,6 +57,7 @@ class Scenario extends OgiveEntity
      * Set name
      *
      * @param string $name
+     *
      * @return Scenario
      */
     public function setName($name)
@@ -80,6 +81,7 @@ class Scenario extends OgiveEntity
      * Set severityId
      *
      * @param guid $severityId
+     *
      * @return Scenario
      */
     public function setSeverityId($severityId)
@@ -103,6 +105,7 @@ class Scenario extends OgiveEntity
      * Set internalCause
      *
      * @param guid $internalCause
+     *
      * @return Scenario
      */
     public function setInternalCause($internalCause)
@@ -136,6 +139,7 @@ class Scenario extends OgiveEntity
      * Set scenarioSteps
      *
      * @param Collection $scenarioSteps
+     *
      * @return ScenarioStep
      */
     public function setScenarioSteps(Collection $scenarioSteps)
@@ -149,6 +153,7 @@ class Scenario extends OgiveEntity
      * Add scenarioStep
      *
      * @param ScenarioStep $scenarioStep
+     *
      * @return ScenarioStep
      */
     public function addScenarioStep(ScenarioStep $scenarioStep)
@@ -162,6 +167,7 @@ class Scenario extends OgiveEntity
      * Remove scenarioStep
      *
      * @param ScenarioStep $scenarioStep
+     *
      * @return ScenarioStep
      */
     public function removeScenarioStep(ScenarioStep $scenarioStep)

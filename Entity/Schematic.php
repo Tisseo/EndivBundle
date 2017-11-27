@@ -2,9 +2,7 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Schematic
@@ -12,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Schematic
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -42,12 +40,12 @@ class Schematic
     public $file;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $deprecated;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $groupGis;
 
@@ -72,7 +70,7 @@ class Schematic
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -83,6 +81,7 @@ class Schematic
      * Set name
      *
      * @param string $name
+     *
      * @return Schematic
      */
     public function setName($name)
@@ -106,6 +105,7 @@ class Schematic
      * Set comment
      *
      * @param string $comment
+     *
      * @return Schematic
      */
     public function setComment($comment)
@@ -129,6 +129,7 @@ class Schematic
      * Set date
      *
      * @param \DateTime $date
+     *
      * @return Schematic
      */
     public function setDate($date)
@@ -152,6 +153,7 @@ class Schematic
      * Set filePath
      *
      * @param string $filePath
+     *
      * @return Schematic
      */
     public function setFilePath($filePath)
@@ -208,10 +210,10 @@ class Schematic
     {
         if (null !== $this->file) {
             $this->setFilePath(
-                $this->getLine()->getNumber() .
-                '_' . date_format($this->getDate(), 'Ymd') .
-                '_' . sha1(uniqid(mt_rand(), true)) .
-                '.' . $this->file->guessExtension()
+                $this->getLine()->getNumber().
+                '_'.date_format($this->getDate(), 'Ymd').
+                '_'.sha1(uniqid(mt_rand(), true)).
+                '.'.$this->file->guessExtension()
             );
         }
     }
@@ -220,6 +222,7 @@ class Schematic
      * Set line
      *
      * @param \Tisseo\EndivBundle\Entity\Line $line
+     *
      * @return Schematic
      */
     public function setLine(\Tisseo\EndivBundle\Entity\Line $line = null)
@@ -242,7 +245,8 @@ class Schematic
     /**
      * Set deprecated
      *
-     * @param boolean $deprecated
+     * @param bool $deprecated
+     *
      * @return Schematic
      */
     public function setDeprecated($deprecated)
@@ -255,7 +259,7 @@ class Schematic
     /**
      * Get deprecated
      *
-     * @return boolean
+     * @return bool
      */
     public function getDeprecated()
     {
@@ -265,7 +269,8 @@ class Schematic
     /**
      * Set groupGis
      *
-     * @param boolean $groupGis
+     * @param bool $groupGis
+     *
      * @return Schematic
      */
     public function setGroupGis($groupGis)
@@ -278,7 +283,7 @@ class Schematic
     /**
      * Get groupGis
      *
-     * @return boolean
+     * @return bool
      */
     public function getGroupGis()
     {

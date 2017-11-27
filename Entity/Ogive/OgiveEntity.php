@@ -15,8 +15,9 @@ class OgiveEntity
      * of the merged object. Doesn't work with relations (have to be managed by em)
      *
      * @param OgiveEntity $entity
-     * @param array $mapper
-     * @param boolean $withId
+     * @param array       $mapper
+     * @param bool        $withId
+     *
      * @throws \Exception
      */
     public function merge(OgiveEntity $entity, array $mapper = array(), $withId = true)
@@ -28,8 +29,8 @@ class OgiveEntity
         if (!empty($mapper)) {
             foreach ($mapper as $property) {
                 if (property_exists($this, $property)) {
-                    $setter = 'set' . ucfirst($property);
-                    $getter = 'get' . ucfirst($property);
+                    $setter = 'set'.ucfirst($property);
+                    $getter = 'get'.ucfirst($property);
 
                     $this->$setter($entity->$getter());
                 }
@@ -41,8 +42,8 @@ class OgiveEntity
                     continue;
                 }
 
-                $setter = 'set' . ucfirst($property->getName());
-                $getter = 'get' . ucfirst($property->getName());
+                $setter = 'set'.ucfirst($property->getName());
+                $getter = 'get'.ucfirst($property->getName());
 
                 if ($entity->$getter() instanceof Collection) {
                     continue;
@@ -60,7 +61,7 @@ class OgiveEntity
         foreach ($collection as $subEntity) {
             $newSubEntity = clone $subEntity;
             $reflect = new ReflectionClass($this);
-            $setter = 'set' . ucfirst($reflect->getShortName());
+            $setter = 'set'.ucfirst($reflect->getShortName());
             $newSubEntity->$setter($this);
             $newCollection->add($newSubEntity);
         }

@@ -1,14 +1,14 @@
 <?php
-namespace Tisseo\EndivBundle\Services\Ogive;
 
-use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
+namespace Tisseo\EndivBundle\Services\Ogive;
 
 class MessageManager extends OgiveManager
 {
     /**
      * Retrieve Messages
      *
-     * @param  boolean $prehome
+     * @param bool $prehome
+     *
      * @return array
      */
     public function findNetworkPublications($filterPrehome = false, $prehome = false)
@@ -59,7 +59,7 @@ class MessageManager extends OgiveManager
         $message = $this->getRepository()->find($message);
 
         if (empty($message)) {
-            throw new \Exception("The message cannot be deleted as it was not found");
+            throw new \Exception('The message cannot be deleted as it was not found');
         }
 
         $event = $message->getEvent();

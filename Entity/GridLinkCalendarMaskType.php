@@ -2,20 +2,18 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * GridLinkCalendarMaskType
  */
 class GridLinkCalendarMaskType
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $active;
 
@@ -31,26 +29,30 @@ class GridLinkCalendarMaskType
 
     /**
      * Constructor
+     *
      * @param GridCalendar $gridCalendar
      * @param GridMaskType $gridMaskType
-     * @param boolean active
+     * @param bool active
      *
      * Create a new GridLinkCalendarMaskType.
      */
     public function __construct(GridCalendar $gridCalendar = null, GridMaskType $gridMaskType = null, $active = null)
     {
-        if ($gridCalendar !== null)
+        if ($gridCalendar !== null) {
             $this->gridCalendar = $gridCalendar;
-        if ($gridMaskType !== null)
+        }
+        if ($gridMaskType !== null) {
             $this->gridMaskType = $gridMaskType;
-        if ($active !== null)
+        }
+        if ($active !== null) {
             $this->active = $active;
+        }
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -60,7 +62,8 @@ class GridLinkCalendarMaskType
     /**
      * Set active
      *
-     * @param boolean $active
+     * @param bool $active
+     *
      * @return GridLinkCalendarMaskType
      */
     public function setActive($active)
@@ -73,7 +76,7 @@ class GridLinkCalendarMaskType
     /**
      * Get active
      *
-     * @return boolean
+     * @return bool
      */
     public function getActive()
     {
@@ -84,6 +87,7 @@ class GridLinkCalendarMaskType
      * Set gridCalendar
      *
      * @param \Tisseo\EndivBundle\Entity\GridCalendar $gridCalendar
+     *
      * @return GridLinkCalendarMaskType
      */
     public function setGridCalendar(GridCalendar $gridCalendar = null)
@@ -107,6 +111,7 @@ class GridLinkCalendarMaskType
      * Set gridMaskType
      *
      * @param \Tisseo\EndivBundle\Entity\GridMaskType $gridMaskType
+     *
      * @return GridLinkCalendarMaskType
      */
     public function setGridMaskType(GridMaskType $gridMaskType = null)

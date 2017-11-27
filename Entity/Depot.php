@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -12,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class Depot
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -42,7 +41,7 @@ class Depot
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -53,6 +52,7 @@ class Depot
      * Set short name
      *
      * @param string $shortName
+     *
      * @return Depot
      */
     public function setShortName($shortName)
@@ -76,6 +76,7 @@ class Depot
      * Set long name
      *
      * @param string $longName
+     *
      * @return Depot
      */
     public function setLongName($longName)

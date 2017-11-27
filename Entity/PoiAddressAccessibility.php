@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * PoiAddressAccessibility
  */
 class PoiAddressAccessibility
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class PoiAddressAccessibility
      */
     private $poiAddress;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class PoiAddressAccessibility
      * Set accessibilityType
      *
      * @param AccessibilityType $accessibilityType
+     *
      * @return PoiAddressAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -62,6 +60,7 @@ class PoiAddressAccessibility
      * Set poiAddress
      *
      * @param PoiAddress $poiAddress
+     *
      * @return PoiAddressAccessibility
      */
     public function setPoiAddress(PoiAddress $poiAddress = null)

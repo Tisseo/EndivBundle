@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * TripDatasource
  */
 class TripDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class TripDatasource
      */
     private $trip;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class TripDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return TripDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class TripDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return TripDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -90,6 +89,7 @@ class TripDatasource
      * Set trip
      *
      * @param \Tisseo\EndivBundle\Entity\Trip $trip
+     *
      * @return TripDatasource
      */
     public function setTrip(\Tisseo\EndivBundle\Entity\Trip $trip = null)
