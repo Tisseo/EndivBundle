@@ -11,7 +11,8 @@ class EventStepManager extends OgiveManager
         EventStep $eventStep,
         $status,
         $login,
-        $comment
+        $comment,
+        $withChilds = true
     ) {
         $less = new EventStepStatus();
         $less->setEventStep($eventStep);
@@ -22,7 +23,7 @@ class EventStepManager extends OgiveManager
 
         $eventStep->addStatus($less);
 
-        if ((int) $status !== EventStepStatus::STATUS_VALIDATED) {
+        if ($withChilds && (int) $status !== EventStepStatus::STATUS_VALIDATED) {
             foreach ($this->findChildSteps($eventStep->getId()) as $step) {
                 if ($step->getLastStatus()->getStatus() !== $status) {
                     $status = clone $less;
