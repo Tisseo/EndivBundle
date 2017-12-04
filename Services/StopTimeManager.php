@@ -27,15 +27,17 @@ class StopTimeManager extends SortManager
         return empty($StopId) ? null : $this->repository->find($StopId);
     }
 
-    public function getStopTimeWhoStartBetween($startTime, $endTime, $routeStopId)
+    public function getStopTimeWhoStartBetween($startTime, $endTime, $routeStop)
     {
         $qb = $this->om->createQueryBuilder('st')
-            ->select('st')
+            ->select('st, rs, tr')
             ->from('Tisseo\EndivBundle\Entity\StopTime', 'st')
             ->join('st.routeStop', 'rs', 'WITH', 'st.routeStop = :routeStopId')
+            ->join('st.trip', 'tr')
             ->where('st.departureTime BETWEEN :time and :endTime')
+            ->orderBy('st.departureTime', 'ASC')
             ->setParameters([
-                'routeStopId' => $routeStopId,
+                'routeStopId' => $routeStop->getId(),
                 'time' => $startTime,
                 'endTime' => $endTime,
             ])
