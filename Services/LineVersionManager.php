@@ -41,7 +41,7 @@ class LineVersionManager extends SortManager
      * @param \Datetime $date
      * @return mixed
      */
-    public function findLineVersionSortedByLineNumber(\Datetime $date = null)
+    public function findLineVersionSortedByLineNumber(\Datetime $date = null, $excludedPhysicalMode = array())
     {
         if (is_null($date)) {
             $date = new \DateTime('now');
@@ -52,10 +52,19 @@ class LineVersionManager extends SortManager
 
         $qb = $this->repository->createQueryBuilder('lv');
 
-        $query = $qb->select('lv')
+        $qb->select('lv')
             ->where(':startDate >=  lv.startDate')
-            ->andWhere(':endDate <= coalesce(lv.endDate, lv.plannedEndDate)')
-            ->setParameter('startDate', $date->format('Y-m-d'))
+            ->andWhere(':endDate <= coalesce(lv.endDate, lv.plannedEndDate)');
+
+        if (!empty($excludedPhysicalMode)) {
+            dump(implode(',',$excludedPhysicalMode));
+            $qb->join('lv.line', 'l')
+                ->join('l.physicalMode', 'pm')
+                ->andWhere($qb->expr()->notIn('pm.id', ':physicalMode'))
+                ->setParameter('physicalMode', $excludedPhysicalMode);
+        }
+
+        $query = $qb->setParameter('startDate', $date->format('Y-m-d'))
             ->setParameter('endDate', $endDate->format('Y-m-d'))
             ->getQuery();
 
