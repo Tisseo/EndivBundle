@@ -37,6 +37,47 @@ class LineVersionManager extends SortManager
     }
 
     /**
+     * Find the line versions who are active during $date (month)
+     * @param \Datetime $date
+     * @return mixed
+     */
+    public function findLineVersionSortedByLineNumber(\Datetime $date = null, $excludedPhysicalMode = array())
+    {
+        if (is_null($date)) {
+            $date = new \DateTime('now');
+        }
+
+        $endDate = clone $date;
+        $endDate->modify('+1 month -1 day');
+
+        $qb = $this->repository->createQueryBuilder('lv');
+
+        $qb->select('lv')
+            ->where(':startDate >=  lv.startDate')
+            ->andWhere(':endDate <= coalesce(lv.endDate, lv.plannedEndDate)');
+
+        if (!empty($excludedPhysicalMode)) {
+            dump(implode(',',$excludedPhysicalMode));
+            $qb->join('lv.line', 'l')
+                ->join('l.physicalMode', 'pm')
+                ->andWhere($qb->expr()->notIn('pm.id', ':physicalMode'))
+                ->setParameter('physicalMode', $excludedPhysicalMode);
+        }
+
+        $query = $qb->setParameter('startDate', $date->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->getQuery();
+
+        try {
+            $lineVersions = $query->getResult();
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return $this->sortLineVersionsByNumber($lineVersions);
+    }
+
+    /**
      * findLastLineVersionOfLine
      *
      * @param int $lineId

@@ -139,7 +139,7 @@ class CalendarManager extends SortManager
         return $result;
     }
 
-    public function getCalendarBitmask($calendarId, \Datetime $startDate, \Datetime $endDate)
+    public function getCalendarBitmask($calendarId, \DatetimeInterface $startDate, \DatetimeInterface $endDate)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare('select public.getcalendarbitmask(:calendarId::int, :startDate::date, :endDate::date)');
@@ -153,7 +153,7 @@ class CalendarManager extends SortManager
         return $result['getcalendarbitmask'];
     }
 
-    public function getCalendarsIntersectionBitmask($calendar1Id, $calendar2Id, \Datetime $startDate, \Datetime $endDate)
+    public function getCalendarsIntersectionBitmask($calendar1Id, $calendar2Id, \DatetimeInterface $startDate, \DatetimeInterface $endDate)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
         $stmt = $connection->prepare('select public.getbitmaskbeetweencalendars(:calendar1Id::int, :calendar2Id::int, :startDate::date, :endDate::date)');
