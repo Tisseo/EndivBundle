@@ -57,7 +57,6 @@ class LineVersionManager extends SortManager
             ->andWhere(':endDate <= coalesce(lv.endDate, lv.plannedEndDate)');
 
         if (!empty($excludedPhysicalMode)) {
-            dump(implode(',',$excludedPhysicalMode));
             $qb->join('lv.line', 'l')
                 ->join('l.physicalMode', 'pm')
                 ->andWhere($qb->expr()->notIn('pm.id', ':physicalMode'))
