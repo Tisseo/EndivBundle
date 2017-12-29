@@ -34,6 +34,9 @@ class Line extends ObjectDatasource
      */
     private $priority;
 
+    /** @var  string */
+    private $codeTicketing;
+
     /**
      * @var PhysicalMode
      */
@@ -155,6 +158,30 @@ class Line extends ObjectDatasource
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * Set code ticketing
+     *
+     * @param string $codeTicketing
+     *
+     * @return Line
+     */
+    public function setCodeTicketing($codeTicketing)
+    {
+        $this->codeTicketing = $codeTicketing;
+
+        return $this;
+    }
+
+    /**
+     * Get code ticketing
+     *
+     * @return string
+     */
+    public function getCodeTicketing()
+    {
+        return $this->codeTicketing;
     }
 
     /**

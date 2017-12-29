@@ -26,6 +26,10 @@ Tisseo\EndivBundle\Entity\Line:
             nullable: false
             unsigned: false
             comment: 'Priorité de la ligne. Sert notamment a trier les lignes dans les listes de lignes.'
+        codeTicketing:
+            type: string
+            nullable: true
+            column: ticketing_code
     oneToMany:
         lineDatasources:
             targetEntity: LineDatasource
