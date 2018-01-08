@@ -38,7 +38,9 @@ class LineVersionManager extends SortManager
 
     /**
      * Find the line versions who are active during $date (month)
+     *
      * @param \Datetime $date
+     *
      * @return mixed
      */
     public function findLineVersionSortedByLineNumber(\Datetime $date = null, $excludedPhysicalMode = array())
@@ -186,17 +188,20 @@ class LineVersionManager extends SortManager
         return $lineVersion;
     }
 
-    /*
+    /**
      * findActiveLineVersions
-     * @param Datetime $now TODO: remove
-     * @param string $filter default null
-     * @param Boolean $splitByPhysicalMode default false
+     *
+     * @param Datetime $now                 TODO: remove
+     * @param string   $filter              default null
+     * @param bool     $splitByPhysicalMode default false
+     * @param int SORT_BY_LINE_NUMBER SORT_BY_PRIORITY_AND_START_OFFER
+     *
      * @return Collection $lineVersions
      *
      * Find LineVersion which are considered as active according to the current
      * date passed as parameter.
      */
-    public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
+    public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false, $sortBy = self::SORT_BY_NUMBER)
     {
         $query = $this->repository->createQueryBuilder('lv')
             ->where('lv.endDate is null OR (lv.endDate + 1) > :now')
@@ -208,7 +213,15 @@ class LineVersionManager extends SortManager
             $query->leftJoin('lv.schematic', 'sc');
         }
 
-        $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
+        if ($sortBy === self::SORT_BY_NUMBER) {
+            $result = $this->sortLineVersionsByNumber(
+                $query->getQuery()->getResult()
+            );
+        } elseif ($sortBy === self::SORT_BY_PRIORITY_NUMBER_AND_START_OFFER) {
+            $result = $this->sortByPriorityNumberStartOffer(
+                $query->getQuery()->getResult()
+            );
+        }
 
         if ($splitByPhysicalMode) {
             $query = $this->om->createQuery("

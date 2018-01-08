@@ -2,11 +2,9 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-use Ivory\CKEditorBundle\Exception\Exception;
 use Tisseo\EndivBundle\Entity\Ogive\Connector;
 use Tisseo\EndivBundle\Entity\Ogive\EventStep;
 use Tisseo\EndivBundle\Entity\Ogive\EventStepStatus;
-
 
 class EventStepManager extends OgiveManager
 {
@@ -77,7 +75,8 @@ class EventStepManager extends OgiveManager
      *
      * @return bool return true if children was found and updated, else false.
      */
-    public function updateChildConnectorParamList(EventStep $eventStepParent) {
+    public function updateChildConnectorParamList(EventStep $eventStepParent)
+    {
         $childSteps = $this->findChildSteps($eventStepParent->getId());
         if (is_array($childSteps) && !empty($childSteps)) {
             /** @var EventStep $step */
@@ -87,8 +86,10 @@ class EventStepManager extends OgiveManager
                     $this->save($step);
                 }
             }
+
             return true;
         }
+
         return false;
     }
 }
