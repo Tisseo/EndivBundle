@@ -68,7 +68,7 @@ class LineManager extends SortManager
         return $this->sortLinesByNumber($query->getResult());
     }
 
-    public function findAllWithSchematics()
+    public function findAllWithSchematics($splitByPhysicalMode = true)
     {
         $query = $this->repository->createQueryBuilder('l')
             ->select('l, sc, lgc, lgg, p, lv, bgc, fgc')
@@ -80,13 +80,17 @@ class LineManager extends SortManager
             ->leftJoin('l.lineGroupGisContents', 'lgc')
             ->leftJoin('lgc.lineGroupGis', 'lgg')
             ->getQuery();
+
         $result = $this->sortLinesByNumber($query->getResult());
 
-        $query = $this->repository->createQueryBuilder('pm')
-            ->select('p.name')
-            ->from('Tisseo\EndivBundle\Entity\PhysicalMode', 'p')
-            ->getQuery();
-        $result = $this->splitByPhysicalMode($result, $query->getResult());
+        if ($splitByPhysicalMode == true) {
+            $query = $this->repository->createQueryBuilder('pm')
+                ->select('p.name')
+                ->from('Tisseo\EndivBundle\Entity\PhysicalMode', 'p')
+                ->getQuery();
+
+            $result = $this->splitByPhysicalMode($result, $query->getResult());
+        }
 
         return $result;
     }

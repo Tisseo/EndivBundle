@@ -7,7 +7,7 @@ use Tisseo\EndivBundle\Entity\StopTime;
 
 class StopTimeManager extends SortManager
 {
-    /** @var \Doctrine\Common\Persistence\ObjectManager|null  */
+    /** @var \Doctrine\Common\Persistence\ObjectManager|null */
     private $om = null;
     private $repository = null;
 
@@ -45,7 +45,6 @@ class StopTimeManager extends SortManager
 
         return $qb->getQuery()->getResult();
     }
-
 
     //TODO: This seems to be bad, change/delete
     public function save(StopTime $Stop)

@@ -5,7 +5,6 @@ namespace Tisseo\EndivBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Tisseo\EndivBundle\Entity\Ogive\Board;
@@ -34,7 +33,7 @@ class Line extends ObjectDatasource
      */
     private $priority;
 
-    /** @var  string */
+    /** @var string */
     private $codeTicketing;
 
     /**
