@@ -8,7 +8,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class EventObject extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -23,15 +23,14 @@ class EventObject extends OgiveEntity
     private $emergencyStatus;
 
     /**
-     * @var Object
+     * @var object
      */
     private $object;
-
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -42,6 +41,7 @@ class EventObject extends OgiveEntity
      * Set event
      *
      * @param Event $event
+     *
      * @return EventObject
      */
     public function setEvent(Event $event = null)
@@ -65,6 +65,7 @@ class EventObject extends OgiveEntity
      * Set emergencyStatus
      *
      * @param EmergencyStatus $emergencyStatus
+     *
      * @return EventObject
      */
     public function setEmergencyStatus(EmergencyStatus $emergencyStatus = null)
@@ -87,7 +88,8 @@ class EventObject extends OgiveEntity
     /**
      * Set object
      *
-     * @param Object $object
+     * @param object $object
+     *
      * @return EventObject
      */
     public function setObject(Object $object = null)
@@ -100,7 +102,7 @@ class EventObject extends OgiveEntity
     /**
      * Get object
      *
-     * @return Object
+     * @return object
      */
     public function getObject()
     {

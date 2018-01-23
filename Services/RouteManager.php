@@ -12,9 +12,7 @@ use Tisseo\EndivBundle\Entity\TripCalendar;
 use Tisseo\EndivBundle\Entity\TripDatasource;
 use Tisseo\EndivBundle\Entity\RouteDatasource;
 use Tisseo\EndivBundle\Entity\Stop;
-use Tisseo\EndivBundle\Entity\StopArea;
 use Tisseo\EndivBundle\Entity\RouteExportDestination;
-use Tisseo\EndivBundle\Services\StopManager;
 
 class RouteManager extends SortManager
 {
@@ -25,7 +23,7 @@ class RouteManager extends SortManager
     public function __construct(ObjectManager $om, StopManager $stopManager)
     {
         $this->om = $om;
-        $this->repository = $om->getRepository("TisseoEndivBundle:Route");
+        $this->repository = $om->getRepository('TisseoEndivBundle:Route');
         $this->stopManager = $stopManager;
     }
 
@@ -61,14 +59,14 @@ class RouteManager extends SortManager
         $route = $this->find($routeId);
 
         if (empty($route)) {
-            throw new \Exception("Can't find the route with ID: " . $routeId);
+            throw new \Exception("Can't find the route with ID: ".$routeId);
         }
 
         $trips = $route->getTripsNotPattern();
 
         // TODO: Later, condition is if ACTIVE (calendar_start_date > now > calendar_end_date) trips found, can't delete
         if ($trips->count() > 0) {
-            throw new \Exception("Can't delete this route because it has " . $trips . " trips.");
+            throw new \Exception("Can't delete this route because it has ".$trips.' trips.');
         }
 
         $lineVersionId = $route->getLineVersion()->getId();
@@ -82,9 +80,9 @@ class RouteManager extends SortManager
     private function getRouteSectionLength($routeSectionId)
     {
         $connection = $this->om->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("
+        $stmt = $connection->prepare('
             select ST_Length(the_geom) from route_section where id = :rsId::int
-        ");
+        ');
         $stmt->bindValue(':rsId', $routeSectionId, \PDO::PARAM_INT);
         $stmt->execute();
 
@@ -100,7 +98,7 @@ class RouteManager extends SortManager
             WITH t.pattern = t1
             WHERE t1.route = :route
         ")
-            ->setParameter("route", $route);
+            ->setParameter('route', $route);
         //convert associative array of in to array of strings
         $tmp = array_map('current', $query->getArrayResult());
 
@@ -110,7 +108,7 @@ class RouteManager extends SortManager
     /**
      * Get Timetable Calendars
      *
-     * @param integer lineVersionId
+     * @param int lineVersionId
      *
      * Creating an array with grouped Trips by Route with their calendar/trip_calendar.
      */
@@ -126,7 +124,7 @@ class RouteManager extends SortManager
             }
 
             foreach ($route->getTripsNotPatternWithCalendars() as $trip) {
-                $calendarKey = $trip->getDayCalendar()->getName() . '_' . $trip->getPeriodCalendar()->getName();
+                $calendarKey = $trip->getDayCalendar()->getName().'_'.$trip->getPeriodCalendar()->getName();
 
                 if (!array_key_exists($calendarKey, $result[$way])) {
                     $result[$way][$calendarKey]['dayCalendar'] = $trip->getDayCalendar();
@@ -147,13 +145,13 @@ class RouteManager extends SortManager
 
     public function getSortedTypesOfGridMaskType()
     {
-        $result = array("Semaine", "Samedi", "Dimanche");
+        $result = array('Semaine', 'Samedi', 'Dimanche');
         $query = $this->om->createQuery("
             SELECT DISTINCT g.calendarType
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
             WHERE g.calendarType NOT IN (:type)
         ")
-            ->setParameter("type", $result);
+            ->setParameter('type', $result);
 
         foreach ($query->getResult() as $value) {
             $result[] = $value['calendarType'];
@@ -164,13 +162,13 @@ class RouteManager extends SortManager
 
     public function getSortedPeriodsOfGridMaskType()
     {
-        $result = array("Base", "Vacances", "Ete");
+        $result = array('Base', 'Vacances', 'Ete');
         $query = $this->om->createQuery("
             SELECT DISTINCT g.calendarPeriod
             FROM Tisseo\EndivBundle\Entity\GridMaskType g
             WHERE g.calendarPeriod NOT IN (:period)
         ")
-            ->setParameter("period", $result);
+            ->setParameter('period', $result);
 
         foreach ($query->getResult() as $value) {
             $result[] = $value['calendarPeriod'];
@@ -197,8 +195,8 @@ class RouteManager extends SortManager
                 WHERE gmt.calendarPeriod = :period
                 AND gmt.calendarType = :type
             ")
-                ->setParameter("period", $data['calendarPeriod'])
-                ->setParameter("type", $data['calendarType'])
+                ->setParameter('period', $data['calendarPeriod'])
+                ->setParameter('type', $data['calendarType'])
                 ->getOneOrNullResult();
 
             if (!empty($gridMaskType)) {
@@ -212,8 +210,8 @@ class RouteManager extends SortManager
                                CAST(CAST(tc.thursday AS INTEGER) AS CHAR), CAST(CAST(tc.friday AS INTEGER) AS CHAR), CAST(CAST(tc.saturday AS INTEGER) AS CHAR),
                                CAST(CAST(tc.sunday AS INTEGER) AS CHAR)) = :pattern
                 ")
-                    ->setParameter("gridMaskType", $gridMaskType)
-                    ->setParameter("pattern", $pattern)
+                    ->setParameter('gridMaskType', $gridMaskType)
+                    ->setParameter('pattern', $pattern)
                     ->getOneOrNullResult();
 
                 if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
@@ -221,7 +219,7 @@ class RouteManager extends SortManager
                         SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
                         WHERE tc.id = :tripCalendar
                     ")
-                        ->setParameter("tripCalendar", $data['tripCalendar'])
+                        ->setParameter('tripCalendar', $data['tripCalendar'])
                         ->getOneOrNullResult();
 
                     if (!empty($oldTripCalendar) && $oldTripCalendar->getId() === $tripCalendar->getId()) {
@@ -258,7 +256,7 @@ class RouteManager extends SortManager
                 SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
                 WHERE t.id IN(:trips)
             ")
-                ->setParameter("trips", $tripIds)
+                ->setParameter('trips', $tripIds)
                 ->getResult();
 
             foreach ($trips as $trip) {
@@ -268,7 +266,6 @@ class RouteManager extends SortManager
 
             $this->om->flush();
         }
-
     }
 
     public function updateExportDestinations($route, $exportDestinations)
@@ -328,12 +325,11 @@ class RouteManager extends SortManager
             }
 
             $data = $this->stopManager->getStopJsonWithRankAndOdtArea($stops, true);
-
         } //otherwise, we return a list of stops with their WKT
         else {
             $connection = $this->om->getConnection()->getWrappedConnection();
 
-            $query = "SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
+            $query = 'SELECT DISTINCT s.id as id, s.master_stop_id as master_stop_id, sh.short_name as name, sd.code as code, rs.rank as rank, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y, ST_AsGeoJSON(ST_Transform(rsec.the_geom, 4326)) as geom
                 FROM stop s
                 JOIN waypoint w on s.id = w.id
                 JOIN route_stop rs on w.id = rs.waypoint_id
@@ -344,7 +340,7 @@ class RouteManager extends SortManager
                 WHERE r.id = :route_id
                 AND sh.start_date <= CURRENT_DATE
                 AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)
-                ORDER BY rs.rank";
+                ORDER BY rs.rank';
             $stmt = $connection->prepare($query);
             $stmt->bindValue(':route_id', $route->getId());
             $stmt->execute();
@@ -353,13 +349,12 @@ class RouteManager extends SortManager
         }
 
         return $this->setShades($data);
-
     }
-
 
     /**
      * @param $stops
      * @param array $odtStopsByArea
+     *
      * @return array
      */
     private function setShades($stops)
@@ -374,7 +369,7 @@ class RouteManager extends SortManager
         sort($ranks);
         $num = count($ranks);
         $shadeList = array();
-        for ($i = 1; $i < ($num + 1); $i++) {
+        for ($i = 1; $i < ($num + 1); ++$i) {
             $shadeList[$ranks[$i - 1]] = round($i * (1 / $num), 4);
         }
 
@@ -391,13 +386,13 @@ class RouteManager extends SortManager
         $query = $this->om->createQuery("
             SELECT ds FROM Tisseo\EndivBundle\Entity\Datasource ds
             WHERE ds.name = ?1
-        ")->setParameter(1, "Service Données");
+        ")->setParameter(1, 'Service Données');
 
         $datasource = $query->getOneOrNullResult();
 
         $newRoute = new Route();
         $newRoute->setWay($route->getWay());
-        $newRoute->setName($route->getName() . " (Copie)");
+        $newRoute->setName($route->getName().' (Copie)');
         $newRoute->setDirection($route->getDirection());
         if ($route->getComment()) {
             $newRoute->setComment($route->getComment());
@@ -470,5 +465,4 @@ class RouteManager extends SortManager
         $this->om->persist($newRoute);
         $this->om->flush();
     }
-
 }

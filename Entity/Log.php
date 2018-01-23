@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Log
  */
 class Log
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -44,11 +42,10 @@ class Log
      */
     private $user;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -59,6 +56,7 @@ class Log
      * Set datetime
      *
      * @param \DateTime $datetime
+     *
      * @return Log
      */
     public function setDatetime($datetime)
@@ -82,6 +80,7 @@ class Log
      * Set table
      *
      * @param string $table
+     *
      * @return Log
      */
     public function setTable($table)
@@ -105,6 +104,7 @@ class Log
      * Set action
      *
      * @param string $action
+     *
      * @return Log
      */
     public function setAction($action)
@@ -128,6 +128,7 @@ class Log
      * Set previousData
      *
      * @param string $previousData
+     *
      * @return Log
      */
     public function setPreviousData($previousData)
@@ -151,6 +152,7 @@ class Log
      * Set insertedData
      *
      * @param string $insertedData
+     *
      * @return Log
      */
     public function setInsertedData($insertedData)
@@ -174,6 +176,7 @@ class Log
      * Set user
      *
      * @param string $user
+     *
      * @return Log
      */
     public function setUser($user)

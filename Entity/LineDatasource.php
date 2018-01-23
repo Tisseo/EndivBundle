@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LineDatasource
  */
 class LineDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class LineDatasource
      */
     private $line;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class LineDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return LineDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class LineDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return LineDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -90,6 +89,7 @@ class LineDatasource
      * Set line
      *
      * @param \Tisseo\EndivBundle\Entity\Line $line
+     *
      * @return LineDatasource
      */
     public function setLine(\Tisseo\EndivBundle\Entity\Line $line = null)

@@ -2,27 +2,23 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * StopTime
  */
 class StopTime
 {
     /**
-     *
-     * @var integer
-     *
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $arrivalTime;
 
     /**
-     * @var integer
+     * @var int
      */
     private $departureTime;
 
@@ -39,7 +35,7 @@ class StopTime
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -49,20 +45,22 @@ class StopTime
     /**
      * Get id
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return StopTime
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
-
 
     /**
      * Set arrivalTime
      *
-     * @param integer $arrivalTime
+     * @param int $arrivalTime
+     *
      * @return StopTime
      */
     public function setArrivalTime($arrivalTime)
@@ -75,7 +73,7 @@ class StopTime
     /**
      * Get arrivalTime
      *
-     * @return integer
+     * @return int
      */
     public function getArrivalTime()
     {
@@ -85,7 +83,8 @@ class StopTime
     /**
      * Set departureTime
      *
-     * @param integer $departureTime
+     * @param int $departureTime
+     *
      * @return StopTime
      */
     public function setDepartureTime($departureTime)
@@ -98,7 +97,7 @@ class StopTime
     /**
      * Get departureTime
      *
-     * @return integer
+     * @return int
      */
     public function getDepartureTime()
     {
@@ -109,6 +108,7 @@ class StopTime
      * Set trip
      *
      * @param Trip $trip
+     *
      * @return StopTime
      */
     public function setTrip(Trip $trip = null)
@@ -144,6 +144,7 @@ class StopTime
      * Set routeStop
      *
      * @param RouteStop $routeStop
+     *
      * @return StopTime
      */
     public function setRouteStop(RouteStop $routeStop = null)

@@ -2,20 +2,18 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Printing
  */
 class PrintingLineGroupGis
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $quantity;
 
@@ -37,7 +35,7 @@ class PrintingLineGroupGis
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -47,7 +45,8 @@ class PrintingLineGroupGis
     /**
      * Set quantity
      *
-     * @param integer $quantity
+     * @param int $quantity
+     *
      * @return Printing
      */
     public function setQuantity($quantity)
@@ -60,7 +59,7 @@ class PrintingLineGroupGis
     /**
      * Get quantity
      *
-     * @return integer
+     * @return int
      */
     public function getQuantity()
     {
@@ -71,6 +70,7 @@ class PrintingLineGroupGis
      * Set date
      *
      * @param \DateTime $date
+     *
      * @return Printing
      */
     public function setDate($date)
@@ -94,6 +94,7 @@ class PrintingLineGroupGis
      * Set comment
      *
      * @param string $comment
+     *
      * @return Printing
      */
     public function setComment($comment)
@@ -117,6 +118,7 @@ class PrintingLineGroupGis
      * Set lineGroupGis
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupGis $lineGroupGis
+     *
      * @return PrintingLineGroupGis
      */
     public function setLineGroupGis(LineGroupGis $lineGroupGis = null)

@@ -8,7 +8,7 @@ use Tisseo\EndivBundle\Entity\NonConcurrency;
 class NonConcurrencyManager extends SortManager
 {
     /**
-     * @var ObjectManager $om
+     * @var ObjectManager
      */
     private $om = null;
 
@@ -23,11 +23,12 @@ class NonConcurrencyManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     /**
      * @param $priorityLineId, $nonPriorityLineId
+     *
      * @return array
      */
     public function find($priorityLineId, $nonPriorityLineId)
@@ -40,19 +41,21 @@ class NonConcurrencyManager extends SortManager
 
     public function findById($nonConcurrencyId)
     {
-        if ($nonConcurrencyId === null)
+        if ($nonConcurrencyId === null) {
             return null;
-        $idArray = explode("/", $nonConcurrencyId);
+        }
+        $idArray = explode('/', $nonConcurrencyId);
 
         return $this->find($idArray[0], $idArray[1]);
     }
 
     /**
-       * delete
-       * @param NonConcurrency $nonConcurrency
-       *
-       * Delete a NonConcurrency from the database.
-       */
+     * delete
+     *
+     * @param NonConcurrency $nonConcurrency
+     *
+     * Delete a NonConcurrency from the database.
+     */
     public function delete(NonConcurrency $nonConcurrency)
     {
         $this->om->remove($nonConcurrency);
@@ -61,6 +64,7 @@ class NonConcurrencyManager extends SortManager
 
     /**
      * save
+     *
      * @param NonConcurrency $nonConcurrency
      *
      * Persist and save a NonConcurrency into database.

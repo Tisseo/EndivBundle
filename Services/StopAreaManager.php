@@ -5,7 +5,6 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\StopArea;
-use Tisseo\EndivBundle\Entity\Transfer;
 use Tisseo\EndivBundle\Entity\Alias;
 
 class StopAreaManager extends SortManager
@@ -21,7 +20,7 @@ class StopAreaManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($stopAreaId)
@@ -32,18 +31,22 @@ class StopAreaManager extends SortManager
     public function findByCityId($cityId, $search = array(), $orderParams = null, $limit = null, $offset = null)
     {
         $q = $this->repository->createQueryBuilder('q');
-        $q->where($q->expr()->eq('q.city',':cityId'))
+        $q->where($q->expr()->eq('q.city', ':cityId'))
             ->setParameter('cityId', $cityId);
 
         $this->buildSearchQuery($search, $q, 'q');
 
         if (!is_null($orderParams)) {
-            foreach($orderParams as $key => $order) {
+            foreach ($orderParams as $key => $order) {
                 $q->addOrderBy('q.'.$order['columnName'], $order['orderDir']);
             }
         }
-        if (!is_null($offset) && !is_null($limit)) $q->setFirstResult($offset * $limit);
-        if (!is_null($limit))  $q->setMaxResults($limit);
+        if (!is_null($offset) && !is_null($limit)) {
+            $q->setFirstResult($offset * $limit);
+        }
+        if (!is_null($limit)) {
+            $q->setMaxResults($limit);
+        }
 
         return $q->getQuery()->getResult();
     }
@@ -63,10 +66,10 @@ class StopAreaManager extends SortManager
     private function buildSearchQuery(array $search, QueryBuilder &$q, $alias)
     {
         if (count($search) > 0) {
-            foreach($search as $key => $value) {
+            foreach ($search as $key => $value) {
                 if (!empty($value)) {
-                    $q->andWhere('LOWER('.$alias.'.'.$key.') LIKE LOWER(:val_' . $key . ')');
-                    $q->setParameter('val_' . $key, '%' . $value . '%');
+                    $q->andWhere('LOWER('.$alias.'.'.$key.') LIKE LOWER(:val_'.$key.')');
+                    $q->setParameter('val_'.$key, '%'.$value.'%');
                 }
             }
         }
@@ -104,58 +107,58 @@ class StopAreaManager extends SortManager
      */
     public function findStopAreasLike($term, $stopAreaId = null)
     {
-        $specials = array("-", " ", "'");
-        $cleanTerm = str_replace($specials, "_", $term);
+        $specials = array('-', ' ', "'");
+        $cleanTerm = str_replace($specials, '_', $term);
 
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query="SELECT DISTINCT sa.short_name as name, c.name as city, sa.id as id
+        $query = 'SELECT DISTINCT sa.short_name as name, c.name as city, sa.id as id
             FROM stop_area sa
             JOIN city c on c.id = sa.city_id
             LEFT JOIN alias a on a.stop_area_id = sa.id
             WHERE (UPPER(unaccent(sa.short_name)) LIKE UPPER(unaccent(:term))
             OR UPPER(unaccent(sa.long_name)) LIKE UPPER(unaccent(:term))
-            OR UPPER(unaccent(a.name)) LIKE UPPER(unaccent(:term)))";
-        if (!is_null($stopAreaId))
-        {
-            $query .= " AND (sa.id != :stop_area_id)";
+            OR UPPER(unaccent(a.name)) LIKE UPPER(unaccent(:term)))';
+        if (!is_null($stopAreaId)) {
+            $query .= ' AND (sa.id != :stop_area_id)';
         }
-        $query .= " ORDER BY sa.short_name, c.name";
+        $query .= ' ORDER BY sa.short_name, c.name';
 
         $stmt = $connection->prepare($query);
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
-        if (!is_null($stopAreaId))
-        {
+        if (!is_null($stopAreaId)) {
             $stmt->bindValue(':stop_area_id', $stopAreaId);
         }
         $stmt->execute();
         $shs = $stmt->fetchAll();
 
         $array = array();
-        foreach($shs as $sh) {
-            $label = $sh["name"]." ".$sh["city"];
-            $array[] = array("name"=>$label, "id"=>$sh["id"]);
+        foreach ($shs as $sh) {
+            $label = $sh['name'].' '.$sh['city'];
+            $array[] = array('name' => $label, 'id' => $sh['id']);
         }
 
         return $array;
     }
 
-    public function getStopsOrderedByCode($stopArea, $getPhantoms = false) {
+    public function getStopsOrderedByCode($stopArea, $getPhantoms = false)
+    {
         $queryString = "SELECT s
             FROM Tisseo\EndivBundle\Entity\Stop s
             JOIN s.stopDatasources sd ";
 
-        if (! $getPhantoms) {
-            $queryString .= "JOIN s.stopHistories sh ";
+        if (!$getPhantoms) {
+            $queryString .= 'JOIN s.stopHistories sh ';
         }
-        $queryString .= "WHERE s.stopArea = :sa
-               ORDER BY sd.code";
+        $queryString .= 'WHERE s.stopArea = :sa
+               ORDER BY sd.code';
         $query = $this->em->createQuery($queryString)->setParameter('sa', $stopArea);
 
         return $query->getResult();
     }
 
-    public function getStopsOrderedByShortName($stopArea) {
+    public function getStopsOrderedByShortName($stopArea)
+    {
         $query = $this->em->createQuery("
                SELECT s
                FROM Tisseo\EndivBundle\Entity\Stop s
@@ -171,7 +174,8 @@ class StopAreaManager extends SortManager
     }
 
     //can get closed stops
-    public function getCurrentStops($stopArea) {
+    public function getCurrentStops($stopArea)
+    {
         $sql = "
             SELECT s
             FROM Tisseo\EndivBundle\Entity\Stop s
@@ -181,14 +185,14 @@ class StopAreaManager extends SortManager
             AND sh.startDate <= CURRENT_DATE()
             ORDER BY sd.code";
 
-
         $query = $this->em->createQuery($sql)
         ->setParameter('sa', $stopArea);
 
         return $query->getResult();
     }
 
-    public function getOpenedStops($stopArea) {
+    public function getOpenedStops($stopArea)
+    {
         $sql = "
             SELECT s
             FROM Tisseo\EndivBundle\Entity\Stop s
@@ -207,11 +211,16 @@ class StopAreaManager extends SortManager
 
     /**
      * getMainStopCityName
+     *
      * @param entity $stopArea => stop_area to check
+     *
      * @return the name of the (first) city found, an empty string if none
      */
-    public function getMainStopCityName($stopArea) {
-        if( !$stopArea->getId() ) return "";
+    public function getMainStopCityName($stopArea)
+    {
+        if (!$stopArea->getId()) {
+            return '';
+        }
 
         $query = $this->em->createQuery("
                SELECT c.name
@@ -222,12 +231,15 @@ class StopAreaManager extends SortManager
         ->setMaxResults(1);
 
         $result = $query->getResult();
-        if( $result ) return $result[0]["name"];
-        return "";
+        if ($result) {
+            return $result[0]['name'];
+        }
+
+        return '';
     }
 
-
-    public function getStopArea($id) {
+    public function getStopArea($id)
+    {
         $query = $this->em->createQuery("
                SELECT ar.id, ar.rank, wp.id as waypoint, c.id as city
                FROM Tisseo\EndivBundle\Entity\StopArea ar
@@ -242,7 +254,8 @@ class StopAreaManager extends SortManager
     //
     // VERIFIED FUNCTION
     //
-    public function getUsedStops($stopAreaId) {
+    public function getUsedStops($stopAreaId)
+    {
         $query = $this->em->createQuery("
             SELECT DISTINCT s.id as stop1, s2.id as stop2
             FROM Tisseo\EndivBundle\Entity\Line l
@@ -292,8 +305,9 @@ class StopAreaManager extends SortManager
         $array = $query->getResult();
 
         $lines = array();
-        foreach ($array as $item)
+        foreach ($array as $item) {
             $lines[] = $item['line'];
+        }
 
         $query = $this->em->createQuery("
             SELECT DISTINCT l
@@ -304,17 +318,19 @@ class StopAreaManager extends SortManager
         $linesResult = $query->getResult();
 
         $lines = array();
-        foreach($linesResult as $line)
+        foreach ($linesResult as $line) {
             $lines[$line->getId()] = $line;
+        }
 
         $result = array();
 
         if ($groupResultByStop) {
             foreach ($array as $item) {
-                if (!empty($item['stop']))
+                if (!empty($item['stop'])) {
                     $result[$item['stop']][] = $lines[$item['line']];
-                else
+                } else {
                     $result[$item['stop2']][] = $lines[$item['line']];
+                }
             }
         } else {
             $result = $lines;
@@ -323,7 +339,8 @@ class StopAreaManager extends SortManager
         return $result;
     }
 
-    public function getLinesByStopAreas($stopAreas){
+    public function getLinesByStopAreas($stopAreas)
+    {
         $query = $this->em->createQuery("
             SELECT DISTINCT sa.id as stop_area, sa2.id as stop_area_2, l.id as line
             FROM Tisseo\EndivBundle\Entity\Line l
@@ -346,8 +363,9 @@ class StopAreaManager extends SortManager
         $array = $query->getResult();
 
         $lines = array();
-        foreach ($array as $item)
+        foreach ($array as $item) {
             $lines[] = $item['line'];
+        }
 
         $query = $this->em->createQuery("
             SELECT DISTINCT l
@@ -358,16 +376,18 @@ class StopAreaManager extends SortManager
         $linesResult = $query->getResult();
 
         $lines = array();
-        foreach($linesResult as $line)
+        foreach ($linesResult as $line) {
             $lines[$line->getId()] = $line;
+        }
 
         $result = array();
 
         foreach ($array as $item) {
-            if (!empty($item['stop_area']))
+            if (!empty($item['stop_area'])) {
                 $result[$item['stop_area']][] = $lines[$item['line']];
-            else
+            } else {
                 $result[$item['stop_area_2']][] = $lines[$item['line']];
+            }
         }
 
         return $result;
@@ -376,27 +396,22 @@ class StopAreaManager extends SortManager
     public function updateAliases($aliases, $stopArea)
     {
         $sync = false;
-        foreach ($stopArea->getAliases() as $alias)
-        {
-
+        foreach ($stopArea->getAliases() as $alias) {
             $existing = array_filter(
                 $aliases,
                 function ($object) use ($alias) {
-                    return ($object['id'] == $alias->getId());
+                    return $object['id'] == $alias->getId();
                 }
             );
 
-            if (empty($existing))
-            {
+            if (empty($existing)) {
                 $sync = true;
                 $stopArea->removeAlias($alias);
             }
         }
 
-        foreach ($aliases as $alias)
-        {
-            if (empty($alias['id']) and !empty($alias['name']))
-            {
+        foreach ($aliases as $alias) {
+            if (empty($alias['id']) and !empty($alias['name'])) {
                 $sync = true;
                 $newAlias = new Alias();
                 $newAlias->setName($alias['name']);
@@ -405,22 +420,22 @@ class StopAreaManager extends SortManager
             }
         }
 
-        if ($sync)
+        if ($sync) {
             $this->em->flush();
+        }
     }
 
     public function getStopsJson($stopArea)
     {
-
         $connection = $this->em->getConnection()->getWrappedConnection();
 
-        $query="SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
+        $query = 'SELECT DISTINCT s.id as id, sh.short_name as name, sd.code as code, ST_X(ST_Transform(sh.the_geom, 4326)) as x, ST_Y(ST_Transform(sh.the_geom, 4326)) as y
             FROM stop s
             JOIN stop_datasource sd on sd.stop_id = s.id
             JOIN stop_history sh on sh.stop_id = s.id
             WHERE s.stop_area_id = :sa_id
             AND sh.start_date <= CURRENT_DATE
-            AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)";
+            AND (sh.end_date IS NULL OR sh.end_date > CURRENT_DATE)';
         $stmt = $connection->prepare($query);
         $stmt->bindValue(':sa_id', $stopArea->getId());
         $stmt->execute();
@@ -429,4 +444,3 @@ class StopAreaManager extends SortManager
         return $result;
     }
 }
-

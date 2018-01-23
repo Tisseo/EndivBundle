@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LineVersionProperty
  */
 class LineVersionProperty
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class LineVersionProperty
      */
     private $property;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class LineVersionProperty
      * Set lineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     *
      * @return LineVersionProperty
      */
     public function setLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion = null)
@@ -62,6 +60,7 @@ class LineVersionProperty
      * Set property
      *
      * @param \Tisseo\EndivBundle\Entity\Property $property
+     *
      * @return LineVersionProperty
      */
     public function setProperty(\Tisseo\EndivBundle\Entity\Property $property = null)
@@ -80,16 +79,17 @@ class LineVersionProperty
     {
         return $this->property;
     }
+
     /**
-     * @var integer
+     * @var int
      */
     private $value;
-
 
     /**
      * Set value
      *
-     * @param integer $value
+     * @param int $value
+     *
      * @return LineVersionProperty
      */
     public function setValue($value)
@@ -102,7 +102,7 @@ class LineVersionProperty
     /**
      * Get value
      *
-     * @return integer
+     * @return int
      */
     public function getValue()
     {

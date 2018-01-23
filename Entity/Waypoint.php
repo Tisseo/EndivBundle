@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Waypoint
  */
 class Waypoint
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -27,7 +25,7 @@ class Waypoint
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -38,6 +36,7 @@ class Waypoint
      * Set stop
      *
      * @param \Tisseo\EndivBundle\Entity\Stop $stop
+     *
      * @return Waypoint
      */
     public function setStop(\Tisseo\EndivBundle\Entity\Stop $stop = null)
@@ -71,18 +70,18 @@ class Waypoint
      * set OdtArea
      *
      * @param \Tisseo\EndivBundle\Entity\OdtArea $odtArea
+     *
      * @return Waypoint
      */
     public function setOdtArea(\Tisseo\EndivBundle\Entity\OdtArea $odtArea = null)
     {
         $this->odtArea = $odtArea;
+
         return $this;
     }
 
-
     public function isOdtAreaWaypoint()
     {
-        return (is_null($this->waypoint->getStop()) and !is_null($this->waypoint->getOdtArea()));
+        return is_null($this->waypoint->getStop()) and !is_null($this->waypoint->getOdtArea());
     }
-
 }

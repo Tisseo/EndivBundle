@@ -1,9 +1,9 @@
 <?php
+
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Message
@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 class Message extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -46,17 +46,17 @@ class Message extends OgiveEntity
     private $modificationDatetime;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $prehome;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $home;
 
     /**
-     * @var integer
+     * @var int
      */
     private $priority;
 
@@ -90,7 +90,7 @@ class Message extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -101,6 +101,7 @@ class Message extends OgiveEntity
      * Set title
      *
      * @param string $title
+     *
      * @return Message
      */
     public function setTitle($title)
@@ -124,6 +125,7 @@ class Message extends OgiveEntity
      * Set subtitle
      *
      * @param string $subtitle
+     *
      * @return Message
      */
     public function setSubtitle($subtitle)
@@ -147,6 +149,7 @@ class Message extends OgiveEntity
      * Set content
      *
      * @param string $content
+     *
      * @return Message
      */
     public function setContent($content)
@@ -166,10 +169,11 @@ class Message extends OgiveEntity
         return $this->content;
     }
 
-   /**
+    /**
      * Set startDatetime
      *
      * @param \DateTime $startDatetime
+     *
      * @return Message
      */
     public function setStartDatetime($startDatetime)
@@ -193,6 +197,7 @@ class Message extends OgiveEntity
      * Set endDatetime
      *
      * @param \DateTime $endDatetime
+     *
      * @return Message
      */
     public function setEndDatetime($endDatetime)
@@ -226,6 +231,7 @@ class Message extends OgiveEntity
      * Set modificationDatetime
      *
      * @param \Datetime $modificationDatetime
+     *
      * @return Message
      */
     public function setModificationDatetime($modificationDatetime)
@@ -238,7 +244,8 @@ class Message extends OgiveEntity
     /**
      * Add file
      *
-     * @param  MessageFile $file
+     * @param MessageFile $file
+     *
      * @return Message
      */
     public function addFile(MessageFile $file)
@@ -253,7 +260,8 @@ class Message extends OgiveEntity
     /**
      * Remove file
      *
-     * @param  MessageFile $file
+     * @param MessageFile $file
+     *
      * @return Message
      */
     public function removeFile(MessageFile $file)
@@ -276,14 +284,15 @@ class Message extends OgiveEntity
     /**
      * Set files
      *
-     * @param  Collection $files
+     * @param Collection $files
+     *
      * @return Message
      */
     public function setFiles($files)
     {
         if ($files instanceof Collection) {
             $this->files = $files;
-        } else if (is_array($files)) {
+        } elseif (is_array($files)) {
             $this->files = new ArrayCollection($files);
         }
 
@@ -304,6 +313,7 @@ class Message extends OgiveEntity
      * Set event
      *
      * @param Event event
+     *
      * @return Message
      */
     public function setEvent($event)
@@ -316,7 +326,7 @@ class Message extends OgiveEntity
     /**
      * Get prehome
      *
-     * @return boolean
+     * @return bool
      */
     public function isPrehome()
     {
@@ -326,7 +336,8 @@ class Message extends OgiveEntity
     /**
      * Set prehome
      *
-     * @param  boolean $prehome
+     * @param bool $prehome
+     *
      * @return Message
      */
     public function setPrehome($prehome)
@@ -339,7 +350,7 @@ class Message extends OgiveEntity
     /**
      * Get home
      *
-     * @return boolean
+     * @return bool
      */
     public function isHome()
     {
@@ -349,7 +360,8 @@ class Message extends OgiveEntity
     /**
      * Set home
      *
-     * @param  boolean $home
+     * @param bool $home
+     *
      * @return Message
      */
     public function setHome($home)
@@ -362,7 +374,7 @@ class Message extends OgiveEntity
     /**
      * Get priority
      *
-     * @return integer
+     * @return int
      */
     public function getPriority()
     {
@@ -372,7 +384,8 @@ class Message extends OgiveEntity
     /**
      * Set priority
      *
-     * @param  integer $priority
+     * @param int $priority
+     *
      * @return Message
      */
     public function setPriority($priority)
@@ -385,7 +398,7 @@ class Message extends OgiveEntity
     /**
      * Is push
      *
-     * @return boolean
+     * @return bool
      */
     public function isPush()
     {
@@ -395,7 +408,8 @@ class Message extends OgiveEntity
     /**
      * Set push
      *
-     * @param  boolean push
+     * @param  bool push
+     *
      * @return Message
      */
     public function setPush($push)

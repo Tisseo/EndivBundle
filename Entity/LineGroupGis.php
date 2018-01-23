@@ -4,8 +4,6 @@ namespace Tisseo\EndivBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\BooleanType;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * LineGroupGis
@@ -13,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class LineGroupGis
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -23,7 +21,7 @@ class LineGroupGis
     private $name;
 
     /**
-     * @var integer
+     * @var int
      */
     private $nbBus;
 
@@ -43,10 +41,9 @@ class LineGroupGis
     private $printings;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $deprecated;
-
 
     /**
      * Constructor
@@ -60,7 +57,7 @@ class LineGroupGis
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -71,6 +68,7 @@ class LineGroupGis
      * Set name
      *
      * @param string $name
+     *
      * @return LineGroupGis
      */
     public function setName($name)
@@ -91,7 +89,7 @@ class LineGroupGis
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDeprecated()
     {
@@ -99,7 +97,7 @@ class LineGroupGis
     }
 
     /**
-     * @param boolean $deprecated
+     * @param bool $deprecated
      */
     public function setDeprecated($deprecated)
     {
@@ -110,12 +108,14 @@ class LineGroupGis
      * Add lineGroupGisContents
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupGisContent $lineGroupGisContents
+     *
      * @return LineGroupGis
      */
     public function addLineGroupGisContent(LineGroupGisContent $lineGroupGisContents)
     {
         $this->setLineGroupGisContents($lineGroupGisContents);
         $this->lineGroupGisContents[] = $lineGroupGisContents;
+
         return $this;
     }
 
@@ -153,6 +153,7 @@ class LineGroupGis
      * Set nbBus
      *
      * @param string $nbBus
+     *
      * @return LineGroupGis
      */
     public function setNbBus($nbBus)
@@ -176,6 +177,7 @@ class LineGroupGis
      * Set comment
      *
      * @param string $comment
+     *
      * @return LineGroupGis
      */
     public function setComment($comment)
@@ -198,15 +200,16 @@ class LineGroupGis
     /**
      * getTotalPrintings
      *
-     * @return integer
+     * @return int
      *
      * Return the total amount of printings (i.e. printing.quantity)
      */
     public function getTotalPrintings()
     {
         $printings = 0;
-        foreach($this->printings as $printing)
+        foreach ($this->printings as $printing) {
             $printings += $printing->getQuantity();
+        }
 
         return $printings;
     }
@@ -215,6 +218,7 @@ class LineGroupGis
      * Set printings
      *
      * @param Collection $printings
+     *
      * @return LineGroupGis
      */
     public function setPrintings(Collection $printings)
@@ -223,6 +227,7 @@ class LineGroupGis
         foreach ($this->printings as $printing) {
             $printing->setLineGroupGis($this);
         }
+
         return $this;
     }
 
@@ -240,12 +245,14 @@ class LineGroupGis
      * Add printings
      *
      * @param Printing $printing
+     *
      * @return LineGroupGis
      */
     public function addPrintings(Printing $printing)
     {
         $this->printings[] = $printing;
         $printing->setLineGroupGis($this);
+
         return $this;
     }
 
@@ -270,5 +277,4 @@ class LineGroupGis
 
         return $this;
     }
-
 }

@@ -18,7 +18,7 @@ class ColorManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($ColorId)

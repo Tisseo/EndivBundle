@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -13,7 +12,7 @@ class LineGroupContent
     private $id;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isParent;
 
@@ -29,14 +28,13 @@ class LineGroupContent
 
     public function getChildLines()
     {
-        if ($this->isParent)
-        {
+        if ($this->isParent) {
             $childLines = new ArrayCollection();
 
-            foreach($this->lineGroup->getLineGroupContents() as $otherGroupContent)
-            {
-                if ($otherGroupContent !== $this)
+            foreach ($this->lineGroup->getLineGroupContents() as $otherGroupContent) {
+                if ($otherGroupContent !== $this) {
                     $childLines[] = $otherGroupContent->getLineVersion();
+                }
             }
 
             return $childLines;
@@ -48,7 +46,8 @@ class LineGroupContent
     /**
      * Set isParent
      *
-     * @param boolean $isParent
+     * @param bool $isParent
+     *
      * @return LineGroupContent
      */
     public function setIsParent($isParent)
@@ -61,7 +60,7 @@ class LineGroupContent
     /**
      * Get isParent
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsParent()
     {
@@ -72,6 +71,7 @@ class LineGroupContent
      * Set lineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     *
      * @return LineGroupContent
      */
     public function setLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion = null)
@@ -95,6 +95,7 @@ class LineGroupContent
      * Set lineGroup
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroup $lineGroup
+     *
      * @return LineGroupContent
      */
     public function setLineGroup(\Tisseo\EndivBundle\Entity\LineGroup $lineGroup = null)

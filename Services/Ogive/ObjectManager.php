@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services\Ogive;
 
-use \Traversable;
 use Tisseo\EndivBundle\Entity\Ogive\Object as OgiveObject;
 use Tisseo\EndivBundle\Entity\Ogive\Event;
 
@@ -39,13 +38,14 @@ class ObjectManager extends OgiveManager
      */
     public function setMetaInformation(OgiveObject $object, $extrema = null)
     {
-        $meta = new \stdclass;
+        $meta = new \stdclass();
         $meta->label = 'N/A';
 
         $objectRef = $this->getObjectReference($object);
 
         if (empty($objectRef)) {
             $object->setMeta($meta);
+
             return;
         }
 
@@ -93,6 +93,7 @@ class ObjectManager extends OgiveManager
      * Get object in TID referential
      *
      * @param OgiveObject $object
+     *
      * @return mixed
      */
     public function getObjectReference(OgiveObject $object)

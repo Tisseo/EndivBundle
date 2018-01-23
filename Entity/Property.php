@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Property
  */
 class Property
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -20,7 +18,7 @@ class Property
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $is_default;
 
@@ -40,7 +38,7 @@ class Property
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,6 +49,7 @@ class Property
      * Set name
      *
      * @param string $name
+     *
      * @return Property
      */
     public function setName($name)
@@ -73,7 +72,8 @@ class Property
     /**
      * Set default
      *
-     * @param integer $default
+     * @param int $default
+     *
      * @return Property
      */
     public function setDefault($default)
@@ -86,7 +86,7 @@ class Property
     /**
      * Get default
      *
-     * @return integer
+     * @return int
      */
     public function getDefault()
     {
@@ -97,6 +97,7 @@ class Property
      * Add lineVersionProperties
      *
      * @param \Tisseo\EndivBundle\Entity\LineVersionProperty $lineVersionProperties
+     *
      * @return Property
      */
     public function addLineVersionProperty(\Tisseo\EndivBundle\Entity\LineVersionProperty $lineVersionProperties)

@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LineGroup
  */
 class LineGroup
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -35,7 +33,7 @@ class LineGroup
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -46,6 +44,7 @@ class LineGroup
      * Set name
      *
      * @param string $name
+     *
      * @return LineGroup
      */
     public function setName($name)
@@ -69,6 +68,7 @@ class LineGroup
      * Add lineGroupContents
      *
      * @param \Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents
+     *
      * @return LineGroup
      */
     public function addLineGroupContent(\Tisseo\EndivBundle\Entity\LineGroupContent $lineGroupContents)

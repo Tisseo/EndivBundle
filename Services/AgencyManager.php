@@ -18,7 +18,7 @@ class AgencyManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($AgencyId)

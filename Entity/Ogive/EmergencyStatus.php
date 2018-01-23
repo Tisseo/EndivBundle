@@ -8,12 +8,12 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class EmergencyStatus
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rank;
 
@@ -37,11 +37,10 @@ class EmergencyStatus
      */
     private $description;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,7 +50,8 @@ class EmergencyStatus
     /**
      * Set rank
      *
-     * @param integer $rank
+     * @param int $rank
+     *
      * @return EmergencyStatus
      */
     public function setRank($rank)
@@ -64,7 +64,7 @@ class EmergencyStatus
     /**
      * Get rank
      *
-     * @return integer
+     * @return int
      */
     public function getRank()
     {
@@ -75,6 +75,7 @@ class EmergencyStatus
      * Set chaosSeverity
      *
      * @param guid $chaosSeverity
+     *
      * @return EmergencyStatus
      */
     public function setChaosSeverity($chaosSeverity)
@@ -98,6 +99,7 @@ class EmergencyStatus
      * Set color
      *
      * @param string $color
+     *
      * @return EmergencyStatus
      */
     public function setColor($color)
@@ -121,6 +123,7 @@ class EmergencyStatus
      * Set label
      *
      * @param string $label
+     *
      * @return EmergencyStatus
      */
     public function setLabel($label)
@@ -144,6 +147,7 @@ class EmergencyStatus
      * Set description
      *
      * @param string $description
+     *
      * @return EmergencyStatus
      */
     public function setDescription($description)

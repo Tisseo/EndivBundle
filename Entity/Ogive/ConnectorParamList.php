@@ -9,12 +9,13 @@ use JMS\Serializer\Annotation\Exclude;
 
 /**
  * ConnectorParamList
+ *
  * @ExclusionPolicy("none")
  */
 class ConnectorParamList extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,7 +25,7 @@ class ConnectorParamList extends OgiveEntity
     private $name;
 
     /**
-     * @var integer
+     * @var int
      */
     private $sort;
 
@@ -73,7 +74,8 @@ class ConnectorParamList extends OgiveEntity
     /**
      * Set id
      *
-     * @param integer $identifier
+     * @param int $identifier
+     *
      * @return ScenarioStep
      */
     public function setId($identifier)
@@ -86,7 +88,7 @@ class ConnectorParamList extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -97,6 +99,7 @@ class ConnectorParamList extends OgiveEntity
      * Set name
      *
      * @param string $name
+     *
      * @return ConnectorParamList
      */
     public function setName($name)
@@ -119,7 +122,8 @@ class ConnectorParamList extends OgiveEntity
     /**
      * Set sort
      *
-     * @param integer $sort
+     * @param int $sort
+     *
      * @return ConnectorParamList
      */
     public function setSort($sort)
@@ -132,7 +136,7 @@ class ConnectorParamList extends OgiveEntity
     /**
      * Get sort
      *
-     * @return integer
+     * @return int
      */
     public function getSort()
     {
@@ -143,6 +147,7 @@ class ConnectorParamList extends OgiveEntity
      * Add includedCpl
      *
      * @param ConnectorParamList $connectorParamList
+     *
      * @return ConnectorParamList
      */
     public function addIncludedCpl(ConnectorParamList $connectorParamList)
@@ -156,6 +161,7 @@ class ConnectorParamList extends OgiveEntity
      * Remove includedCpl
      *
      * @param ConnectorParamList $connectorParamList
+     *
      * @return ConnectorParamList
      */
     public function removeIncludedCpl(ConnectorParamList $connectorParamList)
@@ -191,6 +197,7 @@ class ConnectorParamList extends OgiveEntity
      * Add ownerCpl
      *
      * @param ConnectorParamList $connectorParamList
+     *
      * @return ConnectorParamList
      */
     public function addOwnerCpl(ConnectorParamList $connectorParamList)
@@ -204,6 +211,7 @@ class ConnectorParamList extends OgiveEntity
      * Remove ownerCpl
      *
      * @param ConnectorParamList $connectorParamList
+     *
      * @return ConnectorParamList
      */
     public function removeOwnerCpl(ConnectorParamList $connectorParamList)
@@ -249,6 +257,7 @@ class ConnectorParamList extends OgiveEntity
      * Set connectorParams
      *
      * @param Collection connectorParams
+     *
      * @return ConnectorParamList
      */
     public function setConnectorParams($connectorParams)
@@ -262,6 +271,7 @@ class ConnectorParamList extends OgiveEntity
      * Add connectorParam
      *
      * @param ConnectorParam $connectorParam
+     *
      * @return ConnectorParamList
      */
     public function addConnectorParam(ConnectorParam $connectorParam)
@@ -276,6 +286,7 @@ class ConnectorParamList extends OgiveEntity
      * Remove connectorParam
      *
      * @param ConnectorParam $connectorParam
+     *
      * @return ConnectorParamList
      */
     public function removeConnectorParam(ConnectorParam $connectorParam)
@@ -288,7 +299,7 @@ class ConnectorParamList extends OgiveEntity
     /**
      * isLinked
      *
-     * @return boolean
+     * @return bool
      */
     public function isLinked()
     {

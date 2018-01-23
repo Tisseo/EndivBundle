@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * StopAccessibility
  */
 class StopAccessibility
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class StopAccessibility
      */
     private $stop;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class StopAccessibility
      * Set accessibilityType
      *
      * @param AccessibilityType $accessibilityType
+     *
      * @return StopAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -62,6 +60,7 @@ class StopAccessibility
      * Set stop
      *
      * @param Stop $stop
+     *
      * @return StopAccessibility
      */
     public function setStop(Stop $stop = null)

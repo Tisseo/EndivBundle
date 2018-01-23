@@ -2,43 +2,40 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
-
 /**
  * GroupObject
  */
 class EventStepFile
 {
     /**
-     * @var integer $id
+     * @var int
      */
     private $id;
 
     /**
-     * @var string $filename
+     * @var string
      */
     private $filename;
 
     /**
-     * @var string $label
+     * @var string
      */
     private $label;
 
     /**
-     * @var boolean $deleted
+     * @var bool
      */
     private $deleted;
 
     /**
-     * @var $eventStep
+     * @var
      */
     private $eventStep;
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -49,6 +46,7 @@ class EventStepFile
      * Set filename
      *
      * @param string $filename
+     *
      * @return EventStepFile
      */
     public function setFilename($filename)
@@ -72,6 +70,7 @@ class EventStepFile
      * Set groupType
      *
      * @param string $label
+     *
      * @return EventStepFile
      */
     public function setLabel($label)
@@ -93,7 +92,9 @@ class EventStepFile
 
     /**
      * Set event step
+     *
      * @param \Tisseo\EndivBundle\Entity\Ogive\EventStep
+     *
      * @return $this
      */
     public function setEventStep(EventStep $eventStep)
@@ -117,7 +118,8 @@ class EventStepFile
      * Set $deleted
      * Set to true to specify this file has been physically removed
      *
-     * @param boolean $deleted
+     * @param bool $deleted
+     *
      * @return EventStepFile
      */
     public function setDeleted($deleted)
@@ -131,7 +133,7 @@ class EventStepFile
      * Get deleted
      * Is file has been physically removed ?
      *
-     * @return boolean
+     * @return bool
      */
     public function getDeleted()
     {

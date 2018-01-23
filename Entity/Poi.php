@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Poi
  */
 class Poi
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -20,7 +18,7 @@ class Poi
     private $name;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cityId;
 
@@ -30,14 +28,14 @@ class Poi
     private $poiType;
 
     /**
-     * @var integer
+     * @var int
      */
     private $priority;
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -48,6 +46,7 @@ class Poi
      * Set name
      *
      * @param string $name
+     *
      * @return Poi
      */
     public function setName($name)
@@ -70,7 +69,8 @@ class Poi
     /**
      * Set cityId
      *
-     * @param integer $cityId
+     * @param int $cityId
+     *
      * @return Poi
      */
     public function setCityId($cityId)
@@ -83,7 +83,7 @@ class Poi
     /**
      * Get cityId
      *
-     * @return integer
+     * @return int
      */
     public function getCityId()
     {
@@ -94,6 +94,7 @@ class Poi
      * Set poiType
      *
      * @param \Tisseo\EndivBundle\Entity\PoiType $poiType
+     *
      * @return Poi
      */
     public function setPoiType(\Tisseo\EndivBundle\Entity\PoiType $poiType = null)
@@ -116,7 +117,8 @@ class Poi
     /**
      * Set priority
      *
-     * @param integer $priority
+     * @param int $priority
+     *
      * @return Poi
      */
     public function setPriority($priority)
@@ -129,7 +131,7 @@ class Poi
     /**
      * Get priority
      *
-     * @return integer
+     * @return int
      */
     public function getPriority()
     {

@@ -5,11 +5,10 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tisseo\EndivBundle\Entity\LineGroupGisContent;
 
-
 class LineGroupGisContentManager extends SortManager
 {
     /**
-     * @var ObjectManager $om
+     * @var ObjectManager
      */
     private $om = null;
 
@@ -24,7 +23,7 @@ class LineGroupGisContentManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($lineGroupGisContentId)
@@ -34,6 +33,7 @@ class LineGroupGisContentManager extends SortManager
 
     /**
      * @param $lineId
+     *
      * @return array
      */
     public function findByLine($lineId)
@@ -43,6 +43,7 @@ class LineGroupGisContentManager extends SortManager
 
     /**
      * save
+     *
      * @param LineGroupGisContent $lineGroupGisContent
      *
      * Persist and save a LineGroupGisContent into database.

@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity\Ogive;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Datasource
  */
 class Datasource extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -20,15 +18,14 @@ class Datasource extends OgiveEntity
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isEditable;
-
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class Datasource extends OgiveEntity
      * Set name
      *
      * @param string $name
+     *
      * @return Datasource
      */
     public function setName($name)
@@ -61,7 +59,8 @@ class Datasource extends OgiveEntity
     /**
      * Set isEditable
      *
-     * @param boolean $isEditable
+     * @param bool $isEditable
+     *
      * @return Datasource
      */
     public function setIsEditable($isEditable)
@@ -74,7 +73,7 @@ class Datasource extends OgiveEntity
     /**
      * Get isEditable
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsEditable()
     {

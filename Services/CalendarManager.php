@@ -2,8 +2,6 @@
 
 namespace Tisseo\EndivBundle\Services;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Tisseo\EndivBundle\Entity\Calendar;
@@ -22,26 +20,30 @@ class CalendarManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function findBy(array $array)
     {
-        return ($this->repository->findBy($array));
+        return $this->repository->findBy($array);
     }
 
-    public function advancedFindBy(array $array, $orderParams=null, $limit=null, $offset=null)
+    public function advancedFindBy(array $array, $orderParams = null, $limit = null, $offset = null)
     {
         $q = $this->repository->createQueryBuilder('q');
         $this->buildCriteria($array, $q);
 
         if (!is_null($orderParams)) {
-            foreach($orderParams as $key => $order) {
+            foreach ($orderParams as $key => $order) {
                 $q->addOrderBy('q.'.$order['columnName'], $order['orderDir']);
             }
         }
-        if (false === is_null($offset)) $q->setFirstResult($offset);
-        if (false === is_null($limit))  $q->setMaxResults($limit);
+        if (false === is_null($offset)) {
+            $q->setFirstResult($offset);
+        }
+        if (false === is_null($limit)) {
+            $q->setMaxResults($limit);
+        }
 
         return $q->getQuery()->getResult();
     }
@@ -59,15 +61,14 @@ class CalendarManager extends SortManager
         $alias = $q->getRootAliases()[0];
 
         if (count($params) > 0) {
-            foreach($params as $key => $value) {
+            foreach ($params as $key => $value) {
                 if (!empty($value)) {
                     if ($key === 'name') {
-                        $q->andWhere("UPPER(".$alias.".".$key.") LIKE UPPER('%".$value."%')");
+                        $q->andWhere('UPPER('.$alias.'.'.$key.") LIKE UPPER('%".$value."%')");
                     } else {
                         $q->andWhere(($alias.'.'.$key.' = :val_'.$key));
                         $q->setParameter('val_'.$key, $value);
                     }
-
                 }
             }
         }
@@ -101,20 +102,21 @@ class CalendarManager extends SortManager
             FROM calendar
             WHERE UPPER(unaccent(name)) LIKE UPPER(unaccent('%".$term."%'))";
 
-        if ($calendarType)
-        {
-            if (is_array($calendarType))
-                $sql .= " and calendar_type in ('".implode("','",$calendarType)."')";
-            else
+        if ($calendarType) {
+            if (is_array($calendarType)) {
+                $sql .= " and calendar_type in ('".implode("','", $calendarType)."')";
+            } else {
                 $sql .= " and calendar_type in ('".$calendarType."')";
+            }
         }
 
         if (!empty($lineVersionId)) {
-            $sql .= " and (line_version_id IS NULL OR line_version_id = :lv_id)";
+            $sql .= ' and (line_version_id IS NULL OR line_version_id = :lv_id)';
         }
 
-        if ($limit > 0)
-            $sql .= " LIMIT ".number_format($limit);
+        if ($limit > 0) {
+            $sql .= ' LIMIT '.number_format($limit);
+        }
 
         $stmt = $connection->prepare($sql);
 
@@ -127,21 +129,20 @@ class CalendarManager extends SortManager
 
         $result = array();
 
-        foreach ($calendars as $calendar)
-        {
+        foreach ($calendars as $calendar) {
             $result[] = array(
-                "name" => $calendar["name"],
-                "id" => $calendar["id"]
+                'name' => $calendar['name'],
+                'id' => $calendar['id']
             );
         }
 
         return $result;
     }
 
-    public function getCalendarBitmask($calendarId, \Datetime $startDate, \Datetime $endDate)
+    public function getCalendarBitmask($calendarId, \DatetimeInterface $startDate, \DatetimeInterface $endDate)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("select public.getcalendarbitmask(:calendarId::int, :startDate::date, :endDate::date)");
+        $stmt = $connection->prepare('select public.getcalendarbitmask(:calendarId::int, :startDate::date, :endDate::date)');
         $stmt->bindValue(':calendarId', $calendarId, \PDO::PARAM_INT);
         $stmt->bindValue(':startDate', $startDate->format('Y-m-d'), \PDO::PARAM_STR);
         $stmt->bindValue(':endDate', $endDate->format('Y-m-d'), \PDO::PARAM_STR);
@@ -149,13 +150,13 @@ class CalendarManager extends SortManager
         $stmt->execute();
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        return $result["getcalendarbitmask"];
+        return $result['getcalendarbitmask'];
     }
 
-    public function getCalendarsIntersectionBitmask($calendar1Id, $calendar2Id, \Datetime $startDate, \Datetime $endDate)
+    public function getCalendarsIntersectionBitmask($calendar1Id, $calendar2Id, \DatetimeInterface $startDate, \DatetimeInterface $endDate)
     {
         $connection = $this->em->getConnection()->getWrappedConnection();
-        $stmt = $connection->prepare("select public.getbitmaskbeetweencalendars(:calendar1Id::int, :calendar2Id::int, :startDate::date, :endDate::date)");
+        $stmt = $connection->prepare('select public.getbitmaskbeetweencalendars(:calendar1Id::int, :calendar2Id::int, :startDate::date, :endDate::date)');
         $stmt->bindValue(':calendar1Id', $calendar1Id, \PDO::PARAM_INT);
         $stmt->bindValue(':calendar2Id', $calendar2Id, \PDO::PARAM_INT);
         $stmt->bindValue(':startDate', $startDate->format('Y-m-d'), \PDO::PARAM_STR);
@@ -164,6 +165,6 @@ class CalendarManager extends SortManager
         $stmt->execute();
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        return $result["getbitmaskbeetweencalendars"];
+        return $result['getbitmaskbeetweencalendars'];
     }
 }

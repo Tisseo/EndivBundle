@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -18,7 +17,7 @@ class Route extends ObjectDatasource
     const WAY_AREA = 'Zonal';
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -81,7 +80,7 @@ class Route extends ObjectDatasource
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -92,6 +91,7 @@ class Route extends ObjectDatasource
      * Set way
      *
      * @param string $way
+     *
      * @return Route
      */
     public function setWay($way)
@@ -115,6 +115,7 @@ class Route extends ObjectDatasource
      * Set name
      *
      * @param string $name
+     *
      * @return Route
      */
     public function setName($name)
@@ -138,6 +139,7 @@ class Route extends ObjectDatasource
      * Set direction
      *
      * @param string $direction
+     *
      * @return Route
      */
     public function setDirection($direction)
@@ -161,6 +163,7 @@ class Route extends ObjectDatasource
      * Set comment
      *
      * @param Comment $comment
+     *
      * @return Route
      */
     public function setComment(Comment $comment = null)
@@ -184,6 +187,7 @@ class Route extends ObjectDatasource
      * Set lineVersion
      *
      * @param LineVersion $lineVersion
+     *
      * @return Route
      */
     public function setLineVersion(LineVersion $lineVersion = null)
@@ -207,6 +211,7 @@ class Route extends ObjectDatasource
      * Set trips
      *
      * @param Collection $trips
+     *
      * @return Route
      */
     public function setTrips(Collection $trips)
@@ -215,6 +220,7 @@ class Route extends ObjectDatasource
         foreach ($this->trips as $trip) {
             $trip->setRoute($this);
         }
+
         return $this;
     }
 
@@ -232,6 +238,7 @@ class Route extends ObjectDatasource
      * Add trips
      *
      * @param Trip $trip
+     *
      * @return Route
      */
     public function addTrip(Trip $trip)
@@ -253,13 +260,13 @@ class Route extends ObjectDatasource
     }
 
     /** Remove trips
-     *
      * @param Collection $trips
      */
     public function removeTrips(Collection $trips)
     {
-        foreach($trips as $trip)
+        foreach ($trips as $trip) {
             $this->trips->removeElement($trip);
+        }
     }
 
     /**
@@ -276,6 +283,7 @@ class Route extends ObjectDatasource
      * Set routeStops
      *
      * @param Collection $routeStops
+     *
      * @return Route
      */
     public function setRouteStops(Collection $routeStops)
@@ -284,6 +292,7 @@ class Route extends ObjectDatasource
         foreach ($this->routeStops as $routeStop) {
             $routeStop->setRoute($this);
         }
+
         return $this;
     }
 
@@ -301,6 +310,7 @@ class Route extends ObjectDatasource
      * Add routeStops
      *
      * @param RouteStop $routeStop
+     *
      * @return Route
      */
     public function addRouteStops(RouteStop $routeStop)
@@ -335,6 +345,7 @@ class Route extends ObjectDatasource
      * Set routeDatasources
      *
      * @param Collection $routeDatasources
+     *
      * @return Route
      */
     public function setRouteDatasources(Collection $routeDatasources)
@@ -343,6 +354,7 @@ class Route extends ObjectDatasource
         foreach ($this->routeDatasources as $routeDatasource) {
             $routeDatasource->setRoute($this);
         }
+
         return $this;
     }
 
@@ -360,6 +372,7 @@ class Route extends ObjectDatasource
      * Add routeDatasource
      *
      * @param RouteDatasource $routeDatasource
+     *
      * @return Route
      */
     public function addRouteDatasource(RouteDatasource $routeDatasource)
@@ -394,6 +407,7 @@ class Route extends ObjectDatasource
      * Add routeStops
      *
      * @param \Tisseo\EndivBundle\Entity\RouteStop $routeStops
+     *
      * @return Route
      */
     public function addRouteStop(\Tisseo\EndivBundle\Entity\RouteStop $routeStops)
@@ -458,7 +472,7 @@ class Route extends ObjectDatasource
      */
     public function hasTrips()
     {
-        return ($this->trips->count() > 0);
+        return $this->trips->count() > 0;
     }
 
     /**
@@ -466,7 +480,7 @@ class Route extends ObjectDatasource
      */
     public function hasTripsNotPattern()
     {
-        return ($this->getTripsNotPattern()->count() > 0);
+        return $this->getTripsNotPattern()->count() > 0;
     }
 
     /**
@@ -474,8 +488,9 @@ class Route extends ObjectDatasource
      */
     public function getLastRouteStop()
     {
-        if ($this->routeStops->count() === 0)
+        if ($this->routeStops->count() === 0) {
             return null;
+        }
 
         $criteria = Criteria::create()
             ->orderBy(array('rank' => Criteria::DESC))
@@ -492,7 +507,8 @@ class Route extends ObjectDatasource
 
     /**
      * Getting a specific Trip from the Route
-     * @param integer $tripId
+     *
+     * @param int $tripId
      */
     public function getTrip($tripId)
     {
@@ -506,6 +522,7 @@ class Route extends ObjectDatasource
 
     /**
      * Checking a Trip pattern is used by Trips or not
+     *
      * @param Trip $pattern
      */
     public function IsPatternLocked(Trip $pattern)
@@ -544,7 +561,9 @@ class Route extends ObjectDatasource
     /**
      * Getting a Trip having a TripCalendar and the same Calendars
      * from the Trip passed as parameter
+     *
      * @param Trip $trip
+     *
      * @return TripCalendar
      */
     public function getAvailableTripCalendar(Trip $trip)
@@ -558,8 +577,9 @@ class Route extends ObjectDatasource
 
         $trips = $this->trips->matching($criteria);
 
-        if ($trips->isEmpty())
+        if ($trips->isEmpty()) {
             return null;
+        }
 
         return $trips->first()->getTripCalendar();
     }
@@ -568,6 +588,7 @@ class Route extends ObjectDatasource
      * Add routeExportDestination
      *
      * @param RouteExportDestination $routeExportDestination
+     *
      * @return Route
      */
     public function addRouteExportDestination(RouteExportDestination $routeExportDestination)
@@ -601,8 +622,7 @@ class Route extends ObjectDatasource
     {
         $exportDestinations = new ArrayCollection();
 
-        foreach($this->routeExportDestinations as $routeExportDestination)
-        {
+        foreach ($this->routeExportDestinations as $routeExportDestination) {
             $exportDestinations[] = $routeExportDestination->getExportDestination();
         }
 
@@ -616,7 +636,6 @@ class Route extends ObjectDatasource
      *
      * Getting the terminus stop area
      */
-
     public function getTerminus()
     {
         $routeStops = $this->getRouteStops();

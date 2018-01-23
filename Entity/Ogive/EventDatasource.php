@@ -8,7 +8,7 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class EventDatasource extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -27,11 +27,10 @@ class EventDatasource extends OgiveEntity
      */
     private $datasource;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -42,6 +41,7 @@ class EventDatasource extends OgiveEntity
      * Set code
      *
      * @param string $code
+     *
      * @return EventDatasource
      */
     public function setCode($code)
@@ -65,6 +65,7 @@ class EventDatasource extends OgiveEntity
      * Set event
      *
      * @param Event $event
+     *
      * @return EventDatasource
      */
     public function setEvent(Event $event = null)
@@ -88,6 +89,7 @@ class EventDatasource extends OgiveEntity
      * Set datasource
      *
      * @param Datasource $datasource
+     *
      * @return EventDatasource
      */
     public function setDatasource(Datasource $datasource = null)

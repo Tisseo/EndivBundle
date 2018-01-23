@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * TransferDatasource
  */
 class TransferDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class TransferDatasource
      */
     private $transfer;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class TransferDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return TransferDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class TransferDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return TransferDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -90,6 +89,7 @@ class TransferDatasource
      * Set transfer
      *
      * @param \Tisseo\EndivBundle\Entity\Transfer $transfer
+     *
      * @return TransferDatasource
      */
     public function setTransfer(\Tisseo\EndivBundle\Entity\Transfer $transfer = null)

@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LineVersionDatasource
  */
 class LineVersionDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class LineVersionDatasource
      */
     private $lineVersion;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class LineVersionDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return LineVersionDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class LineVersionDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return LineVersionDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)
@@ -90,6 +89,7 @@ class LineVersionDatasource
      * Set lineVersion
      *
      * @param \Tisseo\EndivBundle\Entity\LineVersion $lineVersion
+     *
      * @return LineVersionDatasource
      */
     public function setLineVersion(\Tisseo\EndivBundle\Entity\LineVersion $lineVersion = null)

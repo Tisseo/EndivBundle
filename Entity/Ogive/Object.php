@@ -26,7 +26,7 @@ class Object extends OgiveEntity
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -47,7 +47,7 @@ class Object extends OgiveEntity
 
     /**
      * @var stdclass (unmapped)
-     * References the meta info of the ENDIV object
+     *               References the meta info of the ENDIV object
      */
     // TODO: using inheritance here and bringing the name automatically could be great
     private $_meta;
@@ -63,7 +63,7 @@ class Object extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -74,7 +74,8 @@ class Object extends OgiveEntity
      * Set objectType
      *
      * @param string $objectType
-     * @return Object
+     *
+     * @return object
      */
     public function setObjectType($objectType)
     {
@@ -97,7 +98,8 @@ class Object extends OgiveEntity
      * Set objectRef
      *
      * @param string $objectRef
-     * @return Object
+     *
+     * @return object
      */
     public function setObjectRef($objectRef)
     {
@@ -120,7 +122,8 @@ class Object extends OgiveEntity
      * Add groupObject
      *
      * @param GroupObject $groupObject
-     * @return Object
+     *
+     * @return object
      */
     public function addGroupObject(GroupObject $groupObject)
     {
@@ -133,7 +136,8 @@ class Object extends OgiveEntity
      * Remove groupObject
      *
      * @param GroupObject $groupObject
-     * @return Object
+     *
+     * @return object
      */
     public function removeGroupObject(GroupObject $groupObject)
     {

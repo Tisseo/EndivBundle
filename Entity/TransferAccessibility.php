@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * TransferAccessibility
  */
 class TransferAccessibility
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -24,11 +22,10 @@ class TransferAccessibility
      */
     private $transfer;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -39,6 +36,7 @@ class TransferAccessibility
      * Set accessibilityType
      *
      * @param AccessibilityType $accessibilityType
+     *
      * @return TransferAccessibility
      */
     public function setAccessibilityType(AccessibilityType $accessibilityType = null)
@@ -62,6 +60,7 @@ class TransferAccessibility
      * Set transfer
      *
      * @param Transfer $transfer
+     *
      * @return TransferAccessibility
      */
     public function setTransfer(Transfer $transfer = null)

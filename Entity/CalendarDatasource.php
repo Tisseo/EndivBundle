@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * CalendarDatasource
  */
 class CalendarDatasource
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -29,11 +27,10 @@ class CalendarDatasource
      */
     private $datasource;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +41,7 @@ class CalendarDatasource
      * Set code
      *
      * @param string $code
+     *
      * @return CalendarDatasource
      */
     public function setCode($code)
@@ -67,6 +65,7 @@ class CalendarDatasource
      * Set calendar
      *
      * @param \Tisseo\EndivBundle\Entity\Calendar $calendar
+     *
      * @return CalendarDatasource
      */
     public function setCalendar(\Tisseo\EndivBundle\Entity\Calendar $calendar = null)
@@ -90,6 +89,7 @@ class CalendarDatasource
      * Set datasource
      *
      * @param \Tisseo\EndivBundle\Entity\Datasource $datasource
+     *
      * @return CalendarDatasource
      */
     public function setDatasource(\Tisseo\EndivBundle\Entity\Datasource $datasource = null)

@@ -2,20 +2,18 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * City
  */
 class City
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $insee;
 
@@ -37,7 +35,7 @@ class City
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -47,7 +45,8 @@ class City
     /**
      * Set insee
      *
-     * @param integer $insee
+     * @param int $insee
+     *
      * @return City
      */
     public function setInsee($insee)
@@ -60,7 +59,7 @@ class City
     /**
      * Get insee
      *
-     * @return integer
+     * @return int
      */
     public function getInsee()
     {
@@ -71,6 +70,7 @@ class City
      * Set name
      *
      * @param string $name
+     *
      * @return City
      */
     public function setName($name)
@@ -94,6 +94,7 @@ class City
      * Set theGeom
      *
      * @param geometry $theGeom
+     *
      * @return City
      */
     public function setTheGeom($theGeom)
@@ -117,6 +118,7 @@ class City
      * Set mainStopArea
      *
      * @param \Tisseo\EndivBundle\Entity\StopArea $mainStopArea
+     *
      * @return City
      */
     public function setMainStopArea(\Tisseo\EndivBundle\Entity\StopArea $mainStopArea = null)
@@ -143,6 +145,6 @@ class City
      */
     public function getNameLabel()
     {
-        return $this->getName()." (".$this->getInsee().")";
+        return $this->getName().' ('.$this->getInsee().')';
     }
 }

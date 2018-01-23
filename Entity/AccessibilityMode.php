@@ -2,18 +2,16 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * AccessibilityMode
  */
 class AccessibilityMode
 {
-    const MODE_PMR = "UFR";
-    const MODE_WALK = "Pietons";
+    const MODE_PMR = 'UFR';
+    const MODE_WALK = 'Pietons';
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -22,11 +20,10 @@ class AccessibilityMode
      */
     private $name;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -37,6 +34,7 @@ class AccessibilityMode
      * Set name
      *
      * @param string $name
+     *
      * @return AccessibilityMode
      */
     public function setName($name)

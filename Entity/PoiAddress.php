@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * PoiAddress
  */
 class PoiAddress
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -20,7 +18,7 @@ class PoiAddress
     private $address;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $isEntrance;
 
@@ -34,11 +32,10 @@ class PoiAddress
      */
     private $poi;
 
-
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -49,6 +46,7 @@ class PoiAddress
      * Set address
      *
      * @param string $address
+     *
      * @return PoiAddress
      */
     public function setAddress($address)
@@ -71,7 +69,8 @@ class PoiAddress
     /**
      * Set isEntrance
      *
-     * @param boolean $isEntrance
+     * @param bool $isEntrance
+     *
      * @return PoiAddress
      */
     public function setIsEntrance($isEntrance)
@@ -84,7 +83,7 @@ class PoiAddress
     /**
      * Get isEntrance
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsEntrance()
     {
@@ -95,6 +94,7 @@ class PoiAddress
      * Set theGeom
      *
      * @param geometry $theGeom
+     *
      * @return PoiAddress
      */
     public function setTheGeom($theGeom)
@@ -118,6 +118,7 @@ class PoiAddress
      * Set poi
      *
      * @param \Tisseo\EndivBundle\Entity\Poi $poi
+     *
      * @return PoiAddress
      */
     public function setPoi(\Tisseo\EndivBundle\Entity\Poi $poi = null)

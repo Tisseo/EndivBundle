@@ -3,7 +3,6 @@
 namespace Tisseo\EndivBundle\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Tisseo\EndivBundle\Types\DateId;
 
 class DateIdType extends \Doctrine\DBAL\Types\DateType
 {
@@ -16,12 +15,10 @@ class DateIdType extends \Doctrine\DBAL\Types\DateType
     {
         $date = parent::convertToPHPValue($value, $platform);
 
-        if ( ! $date) {
+        if (!$date) {
             return $date;
         }
 
         return new DateId($date->format('Y-m-d'));
     }
 }
-
-

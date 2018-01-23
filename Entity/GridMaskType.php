@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -11,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class GridMaskType
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -47,7 +46,7 @@ class GridMaskType
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -58,6 +57,7 @@ class GridMaskType
      * Set calendarType
      *
      * @param string $calendarType
+     *
      * @return GridMaskType
      */
     public function setCalendarType($calendarType)
@@ -81,6 +81,7 @@ class GridMaskType
      * Set calendarPeriod
      *
      * @param string $calendarPeriod
+     *
      * @return GridMaskType
      */
     public function setCalendarPeriod($calendarPeriod)
@@ -104,6 +105,7 @@ class GridMaskType
      * Add gridLinkCalendarMaskTypes
      *
      * @param \Tisseo\EndivBundle\Entity\GridLinkCalendarMaskType $gridLinkCalendarMaskTypes
+     *
      * @return GridMaskType
      */
     public function addGridLinkCalendarMaskType(GridLinkCalendarMaskType $gridLinkCalendarMaskTypes)
@@ -137,6 +139,7 @@ class GridMaskType
      * Add tripCalendars
      *
      * @param \Tisseo\EndivBundle\Entity\TripCalendar $tripCalendars
+     *
      * @return GridMaskType
      */
     public function addTripCalendar(TripCalendar $tripCalendars)

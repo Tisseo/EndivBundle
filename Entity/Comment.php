@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -12,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class Comment
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -41,17 +40,19 @@ class Comment
         $this->trips = new ArrayCollection();
         $this->routes = new ArrayCollection();
 
-        if ($label !== null)
+        if ($label !== null) {
             $this->label = $label;
+        }
 
-        if ($commentText !== null)
+        if ($commentText !== null) {
             $this->commentText = $commentText;
+        }
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -62,6 +63,7 @@ class Comment
      * Set label
      *
      * @param string $label
+     *
      * @return Comment
      */
     public function setLabel($label)
@@ -85,6 +87,7 @@ class Comment
      * Set commentText
      *
      * @param string $commentText
+     *
      * @return Comment
      */
     public function setCommentText($commentText)
@@ -108,6 +111,7 @@ class Comment
      * Set trips
      *
      * @param Collection $trips
+     *
      * @return Trip
      */
     public function setTrips(Collection $trips)
@@ -116,6 +120,7 @@ class Comment
         foreach ($this->trips as $trip) {
             $trip->setComment($this);
         }
+
         return $this;
     }
 
@@ -133,6 +138,7 @@ class Comment
      * Add trip
      *
      * @param Trip $trip
+     *
      * @return Trip
      */
     public function addTrip(Trip $trip)
@@ -157,6 +163,7 @@ class Comment
      * Set routes
      *
      * @param Collection $routes
+     *
      * @return Trip
      */
     public function setRoutes(Collection $routes)
@@ -165,6 +172,7 @@ class Comment
         foreach ($this->routes as $route) {
             $route->setComment($this);
         }
+
         return $this;
     }
 
@@ -182,6 +190,7 @@ class Comment
      * Add route
      *
      * @param Route $route
+     *
      * @return Trip
      */
     public function addRoute(Route $route)

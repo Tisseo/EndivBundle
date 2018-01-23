@@ -8,12 +8,12 @@ namespace Tisseo\EndivBundle\Entity\Ogive;
 class EventStepText extends OgiveEntity
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $type;
 
@@ -35,7 +35,7 @@ class EventStepText extends OgiveEntity
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -45,7 +45,8 @@ class EventStepText extends OgiveEntity
     /**
      * Set type
      *
-     * @param integer $type
+     * @param int $type
+     *
      * @return EventStepText
      */
     public function setType($type)
@@ -58,7 +59,7 @@ class EventStepText extends OgiveEntity
     /**
      * Get type
      *
-     * @return integer
+     * @return int
      */
     public function getType()
     {
@@ -69,6 +70,7 @@ class EventStepText extends OgiveEntity
      * Set label
      *
      * @param string $label
+     *
      * @return EventStepText
      */
     public function setLabel($label)
@@ -92,6 +94,7 @@ class EventStepText extends OgiveEntity
      * Set text
      *
      * @param string $text
+     *
      * @return EventStepText
      */
     public function setText($text)
@@ -115,6 +118,7 @@ class EventStepText extends OgiveEntity
      * Set eventStep
      *
      * @param EventStep $eventStep
+     *
      * @return EventStepText
      */
     public function setEventStep(EventStep $eventStep = null)

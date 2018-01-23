@@ -23,7 +23,7 @@ class LineVersionManager extends SortManager
 
     public function findAll()
     {
-        return ($this->repository->findAll());
+        return $this->repository->findAll();
     }
 
     public function find($lineVersionId)
@@ -37,9 +37,52 @@ class LineVersionManager extends SortManager
     }
 
     /**
+     * Find the line versions who are active during $date (month)
+     *
+     * @param \Datetime $date
+     *
+     * @return mixed
+     */
+    public function findLineVersionSortedByLineNumber(\Datetime $date = null, $excludedPhysicalMode = array())
+    {
+        if (is_null($date)) {
+            $date = new \DateTime('now');
+        }
+
+        $endDate = clone $date;
+        $endDate->modify('+1 month -1 day');
+
+        $qb = $this->repository->createQueryBuilder('lv');
+
+        $qb->select('lv')
+            ->where(':startDate >=  lv.startDate')
+            ->andWhere(':endDate <= coalesce(lv.endDate, lv.plannedEndDate)');
+
+        if (!empty($excludedPhysicalMode)) {
+            $qb->join('lv.line', 'l')
+                ->join('l.physicalMode', 'pm')
+                ->andWhere($qb->expr()->notIn('pm.id', ':physicalMode'))
+                ->setParameter('physicalMode', $excludedPhysicalMode);
+        }
+
+        $query = $qb->setParameter('startDate', $date->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->getQuery();
+
+        try {
+            $lineVersions = $query->getResult();
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return $this->sortLineVersionsByNumber($lineVersions);
+    }
+
+    /**
      * findLastLineVersionOfLine
      *
-     * @param integer $lineId
+     * @param int $lineId
+     *
      * @return LineVersion or null
      *
      * Return the last version of LineVersion associated to the Line
@@ -81,6 +124,7 @@ class LineVersionManager extends SortManager
      * Find Previous LineVersion
      *
      * @param LineVersion $lineVersion
+     *
      * @return LineVersion or null
      *
      * Finding an hypothetical previous version of the LineVersion passed in
@@ -120,7 +164,8 @@ class LineVersionManager extends SortManager
     /**
      * findWithPreviousCalendars
      *
-     * @param integer $lineVersionId
+     * @param int $lineVersionId
+     *
      * @return LineVersion
      *
      * Find a LineVersion using lineVersionId.
@@ -143,17 +188,20 @@ class LineVersionManager extends SortManager
         return $lineVersion;
     }
 
-    /*
+    /**
      * findActiveLineVersions
-     * @param Datetime $now TODO: remove
-     * @param string $filter default null
-     * @param Boolean $splitByPhysicalMode default false
+     *
+     * @param Datetime $now                 TODO: remove
+     * @param string   $filter              default null
+     * @param bool     $splitByPhysicalMode default false
+     * @param int SORT_BY_LINE_NUMBER SORT_BY_PRIORITY_AND_START_OFFER
+     *
      * @return Collection $lineVersions
      *
      * Find LineVersion which are considered as active according to the current
      * date passed as parameter.
      */
-    public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false)
+    public function findActiveLineVersions(\Datetime $now, $filter = '', $splitByPhysicalMode = false, $sortBy = self::SORT_BY_NUMBER)
     {
         $query = $this->repository->createQueryBuilder('lv')
             ->where('lv.endDate is null OR (lv.endDate + 1) > :now')
@@ -161,11 +209,19 @@ class LineVersionManager extends SortManager
 
         if ($filter === 'grouplines') {
             $query->groupBy('lv.line, lv.id')->orderBy('lv.line');
-        } else if ($filter === 'schematic') {
+        } elseif ($filter === 'schematic') {
             $query->leftJoin('lv.schematic', 'sc');
         }
 
-        $result = $this->sortLineVersionsByNumber($query->getQuery()->getResult());
+        if ($sortBy === self::SORT_BY_NUMBER) {
+            $result = $this->sortLineVersionsByNumber(
+                $query->getQuery()->getResult()
+            );
+        } elseif ($sortBy === self::SORT_BY_PRIORITY_NUMBER_AND_START_OFFER) {
+            $result = $this->sortByPriorityNumberStartOffer(
+                $query->getQuery()->getResult()
+            );
+        }
 
         if ($splitByPhysicalMode) {
             $query = $this->om->createQuery("
@@ -179,11 +235,11 @@ class LineVersionManager extends SortManager
         return $result;
     }
 
-
     /**
      * @param \Datetime $date
-     * @param string $filter
-     * @param bool $splitByPhysicalMode
+     * @param string    $filter
+     * @param bool      $splitByPhysicalMode
+     *
      * @return array|mixed|null
      */
     public function findInactiveLineVersions(\DateTime $date, $filter = '', $splitByPhysicalMode = false)
@@ -263,8 +319,7 @@ class LineVersionManager extends SortManager
      * Find GridMaskTypes and their TripCalendars/Trips related to one
      * LineVersion.
      */
-    public
-    function findUnlinkedGridMaskTypes(LineVersion $lineVersion)
+    public function findUnlinkedGridMaskTypes(LineVersion $lineVersion)
     {
         /* if no gridCalendars linked to this lineVersion, search only for all related gridMaskTypes */
         $notLinked = true;
@@ -329,7 +384,7 @@ class LineVersionManager extends SortManager
             foreach ($tripCalendars as $tripCalendar) {
                 $result[$cpt][1][] = $tripCalendar;
             }
-            $cpt++;
+            ++$cpt;
         }
 
         return $result;
@@ -360,7 +415,7 @@ class LineVersionManager extends SortManager
 
         // Create new GridCalendars
         foreach ($gridCalendars as $id => $gridCalendarJson) {
-            if (strpos($id, "new") !== false) {
+            if (strpos($id, 'new') !== false) {
                 $sync = true;
                 $gridCalendar = new GridCalendar();
                 $gridCalendar->setDays($gridCalendarJson['days']);
@@ -456,7 +511,7 @@ class LineVersionManager extends SortManager
         $lineVersion = $this->find($lineVersionId);
 
         if (empty($lineVersion)) {
-            throw new \Exception("The LineVersion with id: " . $lineVersionId . " can't be found.");
+            throw new \Exception('The LineVersion with id: '.$lineVersionId." can't be found.");
         }
 
         $previousLineVersion = $this->findPreviousLineVersion($lineVersion);
@@ -466,7 +521,7 @@ class LineVersionManager extends SortManager
             $this->om->persist($previousLineVersion);
         }
 
-        /** Calendars are just isolated not deleted */
+        /* Calendars are just isolated not deleted */
         foreach ($lineVersion->getCalendars() as $calendar) {
             $calendar->setLineVersion(null);
             $this->om->persist($calendar);
@@ -561,21 +616,21 @@ class LineVersionManager extends SortManager
             }
         }
 
-        usort($stopAreas, array($this, "usortStopArea"));
+        usort($stopAreas, array($this, 'usortStopArea'));
 
         $stopAreaIds = array();
         foreach ($stopAreas as $stopArea) {
             $stopAreaIds[] = $stopArea->getId();
         }
         $connection = $this->om->getConnection();
-        $query = "SELECT DISTINCT p.name as poi_name, p.id as poi_id, s.stop_area_id as stop_area_id
+        $query = 'SELECT DISTINCT p.name as poi_name, p.id as poi_id, s.stop_area_id as stop_area_id
             FROM poi p
             JOIN poi_stop ps ON ps.poi_id = p.id
             JOIN stop s ON ps.stop_id = s.id
             WHERE s.stop_area_id IN (?)
             AND p.on_schema IS TRUE
             ORDER BY p.name
-        ";
+        ';
         $stmt = $connection->executeQuery($query, array($stopAreaIds),
             array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
         $poiArray = $stmt->fetchAll();
@@ -585,13 +640,13 @@ class LineVersionManager extends SortManager
         foreach ($stopAreas as $stopArea) {
             $stopAreaPois = array();
             foreach ($poiArray as $poi) {
-                if ($poi["stop_area_id"] == $stopArea->getId()) {
-                    $stopAreaPois[] = $poiRepository->find($poi["poi_id"]);
+                if ($poi['stop_area_id'] == $stopArea->getId()) {
+                    $stopAreaPois[] = $poiRepository->find($poi['poi_id']);
                 }
             }
             $item = array(
-                "stopArea" => $stopArea,
-                "poiArray" => $stopAreaPois
+                'stopArea' => $stopArea,
+                'poiArray' => $stopAreaPois
             );
 
             $result[] = $item;
@@ -601,9 +656,8 @@ class LineVersionManager extends SortManager
     }
 
     // used in 'getPoiByStop' method to sort an array of stops by their labels
-    function usortStopArea($a, $b)
+    public function usortStopArea($a, $b)
     {
-        return strcasecmp($a->getCity()->getName() . $a->getShortName(), $b->getCity()->getName() . $b->getShortName());
+        return strcasecmp($a->getCity()->getName().$a->getShortName(), $b->getCity()->getName().$b->getShortName());
     }
-
 }

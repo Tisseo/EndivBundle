@@ -2,15 +2,13 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Color
  */
 class Color
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -35,45 +33,44 @@ class Color
     private $hoxis;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cmykCyan;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cmykMagenta;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cmykYellow;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cmykBlack;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rgbRed;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rgbGreen;
 
     /**
-     * @var integer
+     * @var int
      */
     private $rgbBlue;
-
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -84,6 +81,7 @@ class Color
      * Set name
      *
      * @param string $name
+     *
      * @return Color
      */
     public function setName($name)
@@ -107,6 +105,7 @@ class Color
      * Set html
      *
      * @param string $html
+     *
      * @return Color
      */
     public function setHtml($html)
@@ -130,6 +129,7 @@ class Color
      * Set pantoneOc
      *
      * @param string $pantoneOc
+     *
      * @return Color
      */
     public function setPantoneOc($pantoneOc)
@@ -153,6 +153,7 @@ class Color
      * Set hoxis
      *
      * @param string $hoxis
+     *
      * @return Color
      */
     public function setHoxis($hoxis)
@@ -175,7 +176,8 @@ class Color
     /**
      * Set cmykCyan
      *
-     * @param integer $cmykCyan
+     * @param int $cmykCyan
+     *
      * @return Color
      */
     public function setCmykCyan($cmykCyan)
@@ -188,7 +190,7 @@ class Color
     /**
      * Get cmykCyan
      *
-     * @return integer
+     * @return int
      */
     public function getCmykCyan()
     {
@@ -198,7 +200,8 @@ class Color
     /**
      * Set cmykMagenta
      *
-     * @param integer $cmykMagenta
+     * @param int $cmykMagenta
+     *
      * @return Color
      */
     public function setCmykMagenta($cmykMagenta)
@@ -211,7 +214,7 @@ class Color
     /**
      * Get cmykMagenta
      *
-     * @return integer
+     * @return int
      */
     public function getCmykMagenta()
     {
@@ -221,7 +224,8 @@ class Color
     /**
      * Set cmykYellow
      *
-     * @param integer $cmykYellow
+     * @param int $cmykYellow
+     *
      * @return Color
      */
     public function setCmykYellow($cmykYellow)
@@ -234,7 +238,7 @@ class Color
     /**
      * Get cmykYellow
      *
-     * @return integer
+     * @return int
      */
     public function getCmykYellow()
     {
@@ -244,7 +248,8 @@ class Color
     /**
      * Set cmykBlack
      *
-     * @param integer $cmykBlack
+     * @param int $cmykBlack
+     *
      * @return Color
      */
     public function setCmykBlack($cmykBlack)
@@ -257,7 +262,7 @@ class Color
     /**
      * Get cmykBlack
      *
-     * @return integer
+     * @return int
      */
     public function getCmykBlack()
     {
@@ -267,7 +272,8 @@ class Color
     /**
      * Set rgbRed
      *
-     * @param integer $rgbRed
+     * @param int $rgbRed
+     *
      * @return Color
      */
     public function setRgbRed($rgbRed)
@@ -280,7 +286,7 @@ class Color
     /**
      * Get rgbRed
      *
-     * @return integer
+     * @return int
      */
     public function getRgbRed()
     {
@@ -290,7 +296,8 @@ class Color
     /**
      * Set rgbGreen
      *
-     * @param integer $rgbGreen
+     * @param int $rgbGreen
+     *
      * @return Color
      */
     public function setRgbGreen($rgbGreen)
@@ -303,7 +310,7 @@ class Color
     /**
      * Get rgbGreen
      *
-     * @return integer
+     * @return int
      */
     public function getRgbGreen()
     {
@@ -313,7 +320,8 @@ class Color
     /**
      * Set rgbBlue
      *
-     * @param integer $rgbBlue
+     * @param int $rgbBlue
+     *
      * @return Color
      */
     public function setRgbBlue($rgbBlue)
@@ -326,7 +334,7 @@ class Color
     /**
      * Get rgbBlue
      *
-     * @return integer
+     * @return int
      */
     public function getRgbBlue()
     {
