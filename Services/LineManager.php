@@ -71,14 +71,12 @@ class LineManager extends SortManager
     public function findAllWithSchematics($splitByPhysicalMode = true)
     {
         $query = $this->repository->createQueryBuilder('l')
-            ->select('l, sc, lgc, lgg, p, lv, bgc, fgc')
+            ->select('l, sc, p, lv, bgc, fgc')
             ->join('l.lineVersions', 'lv', 'with', 'lv.endDate is null or (lv.endDate + 1) > current_date()')
             ->join('l.physicalMode', 'p')
             ->leftJoin('l.schematics', 'sc')
             ->leftJoin('lv.fgColor', 'fgc')
             ->leftJoin('lv.bgColor', 'bgc')
-            ->leftJoin('l.lineGroupGisContents', 'lgc')
-            ->leftJoin('lgc.lineGroupGis', 'lgg')
             ->getQuery();
 
         $result = $this->sortLinesByNumber($query->getResult());
