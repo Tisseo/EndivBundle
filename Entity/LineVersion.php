@@ -217,6 +217,24 @@ class LineVersion extends ObjectDatasource
         return $properties;
     }
 
+    /**
+     * Get a property by name
+     *
+     * @param  string $name
+     *
+     * @return string
+     */
+    public function getPropertyValueByName($name)
+    {
+        foreach ($this->lineVersionProperties as $lineVersionProperty) {
+            if ($lineVersionProperty->getProperty()->getName() === $name) {
+                return $lineVersionProperty->getValue();
+            }
+        }
+
+        return null;
+    }
+
     public function setProperty($properties)
     {
         foreach ($this->lineVersionProperties as $lineVersionProperty) {

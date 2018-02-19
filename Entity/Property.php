@@ -7,6 +7,8 @@ namespace Tisseo\EndivBundle\Entity;
  */
 class Property
 {
+    const CERTIFIED = 'Certifiée';
+
     /**
      * @var int
      */
