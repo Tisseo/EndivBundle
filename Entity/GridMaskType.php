@@ -25,6 +25,31 @@ class GridMaskType
     private $calendarPeriod;
 
     /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @var string
+     */
+    private $scenario;
+
+    /**
+     * @var string
+     */
+    private $included;
+
+    /**
+     * @var Datetime
+     */
+    private $startDate;
+
+    /**
+     * @var Datetime
+     */
+    private $endDate;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $gridLinkCalendarMaskTypes;
@@ -99,6 +124,126 @@ class GridMaskType
     public function getCalendarPeriod()
     {
         return $this->calendarPeriod;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return GridMasktype
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get scenario
+     *
+     * @return string
+     */
+    public function getScenario()
+    {
+        return $this->scenario;
+    }
+
+    /**
+     * Set scenario
+     *
+     * @param string $scenario
+     *
+     * @return GridMasktype
+     */
+    public function setScenario($scenario)
+    {
+        $this->scenario = $scenario;
+
+        return $this;
+    }
+
+    /**
+     * Get included
+     *
+     * @return string
+     */
+    public function getIncluded()
+    {
+        return $this->included;
+    }
+
+    /**
+     * Set included
+     *
+     * @param string $included
+     *
+     * @return GridMasktype
+     */
+    public function setIncluded($included)
+    {
+        $this->included = $included;
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \Datetime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * Set startDate
+     *
+     * @param \Datetime $startDate
+     *
+     * @return GridMasktype
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get endDate
+     *
+     * @return \Datetime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * Set endDate
+     *
+     * @param \Datetime $endDate
+     *
+     * @return GridMasktype
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
     }
 
     /**
