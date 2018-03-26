@@ -25,6 +25,29 @@ Tisseo\EndivBundle\Entity\GridMaskType:
             fixed: false
             comment: 'Periode d''application du calendrier. BASE correspond a la periode hors vacances si une periode vacance existe sur cette offre et a la periode hiver sinon.'
             column: calendar_period
+        code:
+            type: string
+            nullable: true
+            length: 10
+            column: calendar_code
+        scenario:
+            type: string
+            nullable: true
+            length: 50
+            column: scenario
+        included:
+            type: string
+            nullable: true
+            length: 10
+            column: included
+        startDate:
+            type: date
+            nullable: true
+            column: start_date
+        endDate:
+            type: date
+            nullable: true
+            column: end_date
     oneToMany:
         gridLinkCalendarMaskTypes:
             targetEntity: GridLinkCalendarMaskType
