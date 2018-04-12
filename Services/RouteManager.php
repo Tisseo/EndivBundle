@@ -169,8 +169,8 @@ class RouteManager extends SortManager
             $queryBuilder->andWhere($expr->isNull('g.included'));
         } else {
             $queryBuilder
-                ->andWhere($expr->eq('g.included', ':scenario'))
-                ->setParameter('included', $scenario);
+                ->andWhere($expr->eq('g.included', ':included'))
+                ->setParameter('included', $included);
         }
 
         $queryBuilder->orderBy('g.calendarType', 'ASC');
@@ -211,8 +211,8 @@ class RouteManager extends SortManager
             $queryBuilder->andWhere($expr->isNull('g.included'));
         } else {
             $queryBuilder
-                ->andWhere($expr->eq('g.included', ':scenario'))
-                ->setParameter('included', $scenario);
+                ->andWhere($expr->eq('g.included', ':included'))
+                ->setParameter('included', $included);
         }
 
         $queryBuilder->orderBy('g.calendarPeriod', 'ASC');
