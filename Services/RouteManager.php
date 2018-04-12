@@ -143,35 +143,85 @@ class RouteManager extends SortManager
         return $result;
     }
 
-    public function getSortedTypesOfGridMaskType()
-    {
-        $result = array('Semaine', 'Samedi', 'Dimanche');
-        $query = $this->om->createQuery("
-            SELECT DISTINCT g.calendarType
-            FROM Tisseo\EndivBundle\Entity\GridMaskType g
-            WHERE g.calendarType NOT IN (:type)
-        ")
-            ->setParameter('type', $result);
+    public function getSortedTypesOfGridMaskType(
+        $included = null,
+        $scenario = null,
+        $types = array('Semaine', 'Samedi', 'Dimanche')
+    ) {
+        $queryBuilder = $this->om->createQueryBuilder('g');
+        $expr = $queryBuilder->expr();
 
-        foreach ($query->getResult() as $value) {
-            $result[] = $value['calendarType'];
+        $queryBuilder
+            ->select('DISTINCT g.calendarType')
+            ->from('Tisseo\EndivBundle\Entity\GridMaskType', 'g')
+            ->where($expr->notIn('g.calendarType', ':types'))
+            ->setParameter('types', $types);
+
+        if (!$scenario) {
+            $queryBuilder->andWhere($expr->isNull('g.scenario'));
+        } else {
+            $queryBuilder
+                ->andWhere($expr->eq('g.scenario', ':scenario'))
+                ->setParameter('scenario', $scenario);
+        }
+
+        if (!$included) {
+            $queryBuilder->andWhere($expr->isNull('g.included'));
+        } else {
+            $queryBuilder
+                ->andWhere($expr->eq('g.included', ':scenario'))
+                ->setParameter('included', $scenario);
+        }
+
+        $queryBuilder->orderBy('g.calendarType', 'ASC');
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+        $result = array_map('current', $result);
+
+        foreach (array_reverse($types) as $type) {
+            array_unshift($result, $type);
         }
 
         return $result;
     }
 
-    public function getSortedPeriodsOfGridMaskType()
-    {
-        $result = array('Base', 'Vacances', 'Ete');
-        $query = $this->om->createQuery("
-            SELECT DISTINCT g.calendarPeriod
-            FROM Tisseo\EndivBundle\Entity\GridMaskType g
-            WHERE g.calendarPeriod NOT IN (:period)
-        ")
-            ->setParameter('period', $result);
+    public function getSortedPeriodsOfGridMaskType(
+        $included = null,
+        $scenario = null,
+        $periods = array('Base', 'Vacances', 'Ete')
+    ) {
+        $queryBuilder = $this->om->createQueryBuilder('g');
+        $expr = $queryBuilder->expr();
 
-        foreach ($query->getResult() as $value) {
-            $result[] = $value['calendarPeriod'];
+        $queryBuilder
+            ->select('DISTINCT g.calendarPeriod')
+            ->from('Tisseo\EndivBundle\Entity\GridMaskType', 'g')
+            ->where($expr->notIn('g.calendarPeriod', ':periods'))
+            ->setParameter('periods', $periods);
+
+        if (!$scenario) {
+            $queryBuilder->andWhere($expr->isNull('g.scenario'));
+        } else {
+            $queryBuilder
+                ->andWhere($expr->eq('g.scenario', ':scenario'))
+                ->setParameter('scenario', $scenario);
+        }
+
+        if (!$included) {
+            $queryBuilder->andWhere($expr->isNull('g.included'));
+        } else {
+            $queryBuilder
+                ->andWhere($expr->eq('g.included', ':scenario'))
+                ->setParameter('included', $scenario);
+        }
+
+        $queryBuilder->orderBy('g.calendarPeriod', 'ASC');
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+        $result = array_map('current', $result);
+
+        foreach (array_reverse($periods) as $period) {
+            array_unshift($result, $period);
         }
 
         return $result;
