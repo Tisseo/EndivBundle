@@ -268,7 +268,7 @@ class RouteManager extends SortManager
 
             $gridMaskType = $queryBuilder->getQuery()->getOneOrNullResult();
 
-            if (!empty($gridMaskType) && !empty($data['tripCalendar'])) {
+            if (!empty($gridMaskType)) {
                 $pattern = implode(array_values($data['days']));
 
                 $queryBuilder = $this->om->createQueryBuilder();
@@ -285,7 +285,7 @@ class RouteManager extends SortManager
                     ->getQuery()
                     ->getOneOrNullResult();
 
-                if (!empty($tripCalendar)) {
+                if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
                     $queryBuilder = $this->om->createQueryBuilder();
                     $expr = $queryBuilder->expr();
 
