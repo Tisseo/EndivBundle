@@ -239,37 +239,62 @@ class RouteManager extends SortManager
     {
         foreach ($datas as $data) {
             $tripCalendar = null;
+            $queryBuilder = $this->om->createQueryBuilder();
+            $expr = $queryBuilder->expr();
 
-            $gridMaskType = $this->om->createQuery("
-                SELECT gmt FROM Tisseo\EndivBundle\Entity\GridMaskType gmt
-                WHERE gmt.calendarPeriod = :period
-                AND gmt.calendarType = :type
-            ")
+            $queryBuilder
+                ->select('gmt')
+                ->from('Tisseo\EndivBundle\Entity\GridMaskType', 'gmt')
+                ->where($expr->eq('gmt.calendarPeriod', ':period'))
+                ->andWhere($expr->eq('gmt.calendarType', ':type'))
                 ->setParameter('period', $data['calendarPeriod'])
-                ->setParameter('type', $data['calendarType'])
-                ->getOneOrNullResult();
+                ->setParameter('type', $data['calendarType']);
 
-            if (!empty($gridMaskType)) {
+            if (!array_key_exists('scenario', $data) || !$data['scenario']) {
+                $queryBuilder->andWhere($expr->isNull('gmt.scenario'));
+            } else {
+                $queryBuilder
+                    ->andWhere($expr->eq('gmt.scenario', ':scenario'))
+                    ->setParameter('scenario', $data['scenario']);
+            }
+
+            if (!array_key_exists('included', $data) || !$data['included']) {
+                $queryBuilder->andWhere($expr->isNull('gmt.included'));
+            } else {
+                $queryBuilder
+                    ->andWhere($expr->eq('gmt.included', ':included'))
+                    ->setParameter('included', $data['included']);
+            }
+
+            $gridMaskType = $queryBuilder->getQuery()->getOneOrNullResult();
+
+            if (!empty($gridMaskType) && !empty($data['tripCalendar'])) {
                 $pattern = implode(array_values($data['days']));
 
+                $queryBuilder = $this->om->createQueryBuilder();
+                $expr = $queryBuilder->expr();
+
                 // Doctrine CAST(x, y) is transformed into (x || y). x and y have to be varchars.
-                $tripCalendar = $this->om->createQuery("
-                    SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
-                    WHERE tc.gridMaskType = :gridMaskType
-                    AND CONCAT(CAST(CAST(tc.monday AS INTEGER) AS CHAR), CAST(CAST(tc.tuesday AS INTEGER) AS  CHAR), CAST(CAST(tc.wednesday AS INTEGER) AS CHAR),
-                               CAST(CAST(tc.thursday AS INTEGER) AS CHAR), CAST(CAST(tc.friday AS INTEGER) AS CHAR), CAST(CAST(tc.saturday AS INTEGER) AS CHAR),
-                               CAST(CAST(tc.sunday AS INTEGER) AS CHAR)) = :pattern
-                ")
+                $tripCalendar = $queryBuilder
+                    ->select('tc')
+                    ->from('Tisseo\EndivBundle\Entity\TripCalendar', 'tc')
+                    ->where($expr->eq('tc.gridMaskType', ':gridMaskType'))
+                    ->andWhere($expr->eq('CONCAT(CAST(CAST(tc.monday AS INTEGER) AS CHAR), CAST(CAST(tc.tuesday AS INTEGER) AS  CHAR), CAST(CAST(tc.wednesday AS INTEGER) AS CHAR), CAST(CAST(tc.thursday AS INTEGER) AS CHAR), CAST(CAST(tc.friday AS INTEGER) AS CHAR), CAST(CAST(tc.saturday AS INTEGER) AS CHAR), CAST(CAST(tc.sunday AS INTEGER) AS CHAR))', ':pattern'))
                     ->setParameter('gridMaskType', $gridMaskType)
                     ->setParameter('pattern', $pattern)
+                    ->getQuery()
                     ->getOneOrNullResult();
 
-                if (!empty($tripCalendar) && !empty($data['tripCalendar'])) {
-                    $oldTripCalendar = $this->om->createQuery("
-                        SELECT tc FROM Tisseo\EndivBundle\Entity\TripCalendar tc
-                        WHERE tc.id = :tripCalendar
-                    ")
+                if (!empty($tripCalendar)) {
+                    $queryBuilder = $this->om->createQueryBuilder();
+                    $expr = $queryBuilder->expr();
+
+                    $oldTripCalendar = $queryBuilder
+                        ->select('tc')
+                        ->from('Tisseo\EndivBundle\Entity\TripCalendar', 'tc')
+                        ->where($expr->eq('tc.id', ':tripCalendar'))
                         ->setParameter('tripCalendar', $data['tripCalendar'])
+                        ->getQuery()
                         ->getOneOrNullResult();
 
                     if (!empty($oldTripCalendar) && $oldTripCalendar->getId() === $tripCalendar->getId()) {
@@ -302,11 +327,14 @@ class RouteManager extends SortManager
 
             $tripIds = array_values($data['trips']);
 
-            $trips = $this->om->createQuery("
-                SELECT t FROM Tisseo\EndivBundle\Entity\Trip t
-                WHERE t.id IN(:trips)
-            ")
+            $queryBuilder = $this->om->createQueryBuilder();
+            $expr = $queryBuilder->expr();
+            $trips = $queryBuilder
+                ->select('t')
+                ->from('Tisseo\EndivBundle\Entity\Trip', 't')
+                ->where($expr->in('t.id', ':trips'))
                 ->setParameter('trips', $tripIds)
+                ->getQuery()
                 ->getResult();
 
             foreach ($trips as $trip) {
