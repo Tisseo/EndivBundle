@@ -72,6 +72,11 @@ class Line extends ObjectDatasource
     private $lineStatuses;
 
     /**
+     * @var \DateTime $publicationDate
+     */
+    private $publicationDate;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -678,6 +683,28 @@ class Line extends ObjectDatasource
         }
 
         return null;
+    }
+
+    /**
+     * Set publication date
+     *
+     * @param \DateTime $date
+     * @return $this
+     */
+    public function setPublicationDate($date)
+    {
+        $this->publicationDate = $date;
+        return $this;
+    }
+
+    /**
+     * Get publication date
+     *
+     * @return \DateTime
+     */
+    public function getPublicationDate()
+    {
+        return $this->publicationDate;
     }
 
     // Schematics Criteria functions
