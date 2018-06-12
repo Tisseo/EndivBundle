@@ -147,12 +147,21 @@ class StopManager extends SortManager
      *
      * if $stopAreaId argument is given, then stops that belong to this stopArea won't be returned
      */
-    public function findStopsLike($term, $stopAreaId = null, $getPhantoms = false)
+    public function findStopsLike($term, $stopAreaId = null, $getPhantoms = false, $lineVersion = null)
     {
         $specials = array('-', ' ', "'");
         $cleanTerm = str_replace($specials, '_', $term);
 
         $connection = $this->em->getConnection()->getWrappedConnection();
+
+        if (!is_null($lineVersion)) {
+            $lineVersion = $this->em->getRepository('TisseoEndivBundle:LineVersion')
+                ->find(intval($lineVersion));
+            $lvEndDate = ($lineVersion->getEndDate() != null) ?
+                $lineVersion->getEndDate()->format('Y-m-d') :
+                $lineVersion->getPlannedEndDate()->format('Y-m-d');
+            $lvStartDate = $lineVersion->getStartDate()->format('Y-m-d');
+        }
 
         $query = 'SELECT DISTINCT sh.short_name as name, c.name as city, sd.code as code, s.id as id
             FROM stop_history sh';
@@ -170,12 +179,19 @@ class StopManager extends SortManager
         if (!is_null($stopAreaId)) {
             $query .= ' AND (sa.id != :stop_area_id)';
         }
+        if (!is_null($lineVersion)) {
+            $query .= ' AND (sh.start_date < :lv_end_date AND (sh.end_date IS NULL OR sh.end_date > :lv_start_date)) ';
+        }
         $query .= ' ORDER BY sh.short_name, c.name, sd.code';
 
         $stmt = $connection->prepare($query);
         $stmt->bindValue(':term', '%'.$cleanTerm.'%');
         if (!is_null($stopAreaId)) {
             $stmt->bindValue(':stop_area_id', $stopAreaId);
+        }
+        if (!is_null($lineVersion)) {
+            $stmt->bindValue(':lv_end_date', $lvEndDate);
+            $stmt->bindValue(':lv_start_date', $lvStartDate);
         }
         $stmt->execute();
         $stopHistories = $stmt->fetchAll();
