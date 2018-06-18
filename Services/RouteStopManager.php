@@ -54,7 +54,12 @@ class RouteStopManager extends SortManager
             ->join('rs.waypoint', 'w')
             ->leftJoin('w.stop', 's')
             ->leftJoin('w.odtArea', 'oa')
-            ->leftJoin('oa.odtStops', 'os')
+            ->leftJoin(
+                'oa.odtStops',
+                'os',
+                \Doctrine\ORM\Query\Expr\Join::WITH,
+                'os.odtArea = oa AND os.startDate <= CURRENT_DATE() AND (os.endDate is NULL OR os.endDate > CURRENT_DATE())'
+            )
             ->leftJoin('os.stop', 's2')
             ->leftJoin('s.stopArea', 'sa')
             ->leftJoin('s2.stopArea', 'sa2')
@@ -88,7 +93,12 @@ class RouteStopManager extends SortManager
             ->join('rs.waypoint', 'w')
             ->leftJoin('w.stop', 's')
             ->leftJoin('w.odtArea', 'oa')
-            ->leftJoin('oa.odtStops', 'os')
+            ->leftJoin(
+                'oa.odtStops',
+                'os',
+                \Doctrine\ORM\Query\Expr\Join::WITH,
+                'os.odtArea = oa AND os.startDate <= CURRENT_DATE() AND (os.endDate is NULL OR os.endDate > CURRENT_DATE())'
+            )
             ->leftJoin('os.stop', 's2')
             ->leftJoin('s.stopArea', 'sa')
             ->leftJoin('s2.stopArea', 'sa2')
