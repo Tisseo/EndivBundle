@@ -30,6 +30,10 @@ Tisseo\EndivBundle\Entity\Line:
             type: string
             nullable: true
             column: ticketing_code
+        publicationDate:
+            type: date
+            nullable: true
+            column: publication_date
     oneToMany:
         lineDatasources:
             targetEntity: LineDatasource

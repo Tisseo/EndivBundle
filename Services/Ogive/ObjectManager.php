@@ -75,6 +75,12 @@ class ObjectManager extends OgiveManager
                 } else {
                     $meta->label = null;
                 }
+                $latestStopHistory = $objectRef->getLatestStopHistory();
+                if (!empty($latestStopHistory)) {
+                    $meta->latestStopHistoryLabel = $latestStopHistory->getShortName();
+                } else {
+                    $meta->latestStopHistoryLabel = null;
+                }
                 $meta->code = $objectRef->getStopDatasources()->first()->getCode();
                 $meta->city = ucfirst(strtolower($objectRef->getStopArea()->getCity()->getName()));
                 break;
