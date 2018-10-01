@@ -45,6 +45,12 @@ Tisseo\EndivBundle\Entity\StopHistory:
             comment: ''
             requireSQLConversion: true
             column: the_geom
+        ttsName:
+            type: string
+            length: 255
+            nullable: true
+            comment: ''
+            column: tts_name
     manyToOne:
         stop:
             targetEntity: Stop

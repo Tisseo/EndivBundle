@@ -40,6 +40,11 @@ class StopHistory
     private $theGeom;
 
     /**
+     * @var string
+     */
+    private $ttsName;
+
+    /**
      * @var \Tisseo\EndivBundle\Entity\Stop
      */
     private $stop;
@@ -54,6 +59,7 @@ class StopHistory
             $this->longName = $stopHistory->getLongName();
             $this->theGeom = $stopHistory->getTheGeom();
             $this->stop = $stopHistory->getStop();
+            $this->ttsName = $stopHistory->getTtsName();
         }
     }
 
@@ -211,6 +217,30 @@ class StopHistory
     public function getTheGeom()
     {
         return $this->theGeom;
+    }
+
+    /**
+     * Set ttsName
+     *
+     * @param string $ttsName
+     *
+     * @return StopHistory
+     */
+    public function setTtsName($ttsName)
+    {
+        $this->ttsName = $ttsName;
+
+        return $this;
+    }
+
+    /**
+     * Get ttsName
+     *
+     * @return string
+     */
+    public function getTtsName()
+    {
+        return $this->ttsName;
     }
 
     /**
