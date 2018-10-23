@@ -33,6 +33,11 @@ class Printing
     private $lineVersion;
 
     /**
+     * @var \Tisseo\EndivBundle\Entity\PrintingType
+     */
+    private $printingType;
+
+    /**
      * Get id
      *
      * @return int
@@ -137,4 +142,28 @@ class Printing
     {
         return $this->lineVersion;
     }
+
+  /**
+   * Set PrintingType
+   *
+   * @param \Tisseo\EndivBundle\Entity\PrintingType $printingType
+   *
+   * @return Printing
+   */
+  public function setPrintingType(PrintingType $printingType = null)
+  {
+    $this->printingType = $printingType;
+
+    return $this;
+  }
+
+  /**
+   * Get PrintingType
+   *
+   * @return \Tisseo\EndivBundle\Entity\PrintingType
+   */
+  public function getPrintingType()
+  {
+    return $this->printingType;
+  }
 }
