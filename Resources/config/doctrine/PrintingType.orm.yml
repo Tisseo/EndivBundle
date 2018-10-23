@@ -1,0 +1,19 @@
+Tisseo\EndivBundle\Entity\PrintingType:
+    type: entity
+    table: printing_type
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        label:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+
+    lifecycleCallbacks: {  }
