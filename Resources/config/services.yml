@@ -93,7 +93,7 @@ services:
 
     tisseo_endiv.line_version_manager:
         class: %tisseo_endiv.line_version_manager.class%
-        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.calendar_manager']
+        arguments: ['@doctrine.orm.endiv_entity_manager', '@tisseo_endiv.calendar_manager', '@translator']
 
     tisseo_endiv.non_concurrency_manager:
         class: %tisseo_endiv.non_concurrency_manager.class%
