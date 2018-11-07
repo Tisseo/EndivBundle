@@ -170,9 +170,9 @@ class LineVersion extends ObjectDatasource
 
         if ($previousLineVersion !== null) {
             if ($previousLineVersion->getEndDate() !== null) {
-                $this->startDate = $previousLineVersion->getEndDate();
+                $this->startDate = clone $previousLineVersion->getEndDate();
             } else {
-                $this->startDate = $previousLineVersion->getPlannedEndDate();
+                $this->startDate = clone $previousLineVersion->getPlannedEndDate();
             }
 
             $this->startDate->modify('+1 day');
