@@ -68,6 +68,32 @@ class TripManager
         return $array;
     }
 
+    public function getTripWithStops($id)
+    {
+        $queryBuilder = $this->om->createQueryBuilder('t');
+        $expr = $queryBuilder->expr();
+
+        $queryBuilder
+            ->select('t', 'td', 'st', 'rs', 'w', 's', 'odt', 'sd', 'sa', 'c')
+            ->from('Tisseo\EndivBundle\Entity\Trip', 't')
+            ->leftJoin('t.tripDatasources', 'td')
+            ->leftJoin('t.stopTimes', 'st')
+            ->leftJoin('st.routeStop', 'rs')
+            ->leftJoin('rs.waypoint', 'w')
+            ->leftJoin('w.stop', 's')
+            ->leftJoin('s.stopArea', 'sa')
+            ->leftJoin('sa.city', 'c')
+            ->leftJoin('w.odtArea', 'odt')
+            ->leftJoin('s.stopDatasources', 'sd')
+            ->where($expr->eq('t.id', ':id'))
+            ->setParameter(':id', $id)
+        ;
+
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result;
+    }
+
     public function hasTrips($id)
     {
         $query = $this->om->createQuery("
