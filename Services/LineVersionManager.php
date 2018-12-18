@@ -462,25 +462,29 @@ class LineVersionManager extends SortManager
                  *  lineversion startDate.
                  *  Check the days interval between old line version start date and and end date, it must be greater than 1
                  */
-                $endDate = $lineVersion->getStartDate()->modify('-1 day');
+                $endDate = clone $lineVersion->getStartDate();
                 $interval = $oldLineVersion->getStartDate()->diff($endDate);
                 if ($interval->days >= 1) {
-                  $oldLineVersion->closeDate($endDate);
+                    $oldLineVersion->closeDate($endDate);
                 } else {
-                  throw new \Exception($this->translator->trans('tisseo.paon.exception.line_version.min_duration'));
+                    throw new \Exception($this->translator->trans('tisseo.paon.exception.line_version.min_duration'));
                 }
             } else {
-                // The new line version start date must be greater than old line version end date
-                // and must be jointed with the previous line version.
-                $interval = $oldLineVersion->getEndDate()->diff($lineVersion->getStartDate());
-                if ($interval->days !== 1 || $lineVersion->getStartDate() <= $oldLineVersion->getEndDate()) {
-                  throw new \Exception(
-                    $this->translator->trans(
-                      'tisseo.paon.exception.line_version.min_interval',
-                      ['%previous_close_date%' => $oldLineVersion->getEndDate()->format('d/m/Y')]
-                    )
-                  );
-
+                if ($lineVersion->getStartDate() <= $oldLineVersion->getEndDate()) {
+                    throw new \Exception(
+                        $this->translator->trans(
+                            'tisseo.paon.exception.line_version.min_interval',
+                            ['%previous_close_date%' => $oldLineVersion->getEndDate()->format('d/m/Y')]
+                        )
+                    );
+                } else {
+                    $endDate = clone $lineVersion->getStartDate();
+                    $interval = $oldLineVersion->getStartDate()->diff($endDate);
+                    if ($interval->days >= 1) {
+                        $oldLineVersion->closeDate($endDate);
+                    } else {
+                        throw new \Exception($this->translator->trans('tisseo.paon.exception.line_version.min_duration'));
+                    }
                 }
             }
             $this->om->persist($oldLineVersion);
