@@ -4,6 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Translation\LoggingTranslator;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Entity\LineVersion;
 
@@ -13,12 +14,14 @@ class LineVersionManager extends SortManager
     /** @var \Doctrine\ORM\EntityRepository $repository */
     private $repository = null;
     private $calendarManager = null;
+    private $translator = null;
 
-    public function __construct(ObjectManager $om, CalendarManager $calendarManager)
+    public function __construct(ObjectManager $om, CalendarManager $calendarManager, LoggingTranslator $translator)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
         $this->calendarManager = $calendarManager;
+        $this->translator = $translator;
     }
 
     public function findAll()
@@ -450,12 +453,38 @@ class LineVersionManager extends SortManager
     public function create(LineVersion $lineVersion)
     {
         $oldLineVersion = $this->findLastLineVersionOfLine($lineVersion->getLine()->getId());
+
         if ($oldLineVersion) {
             if ($oldLineVersion->getEndDate() === null) {
-                $oldLineVersion->closeDate($lineVersion->getStartDate());
+
+                /*
+                 *  Previous line version haven't close date, so we close it 1 day before the the new
+                 *  lineversion startDate.
+                 *  Check the days interval between old line version start date and and end date, it must be greater than 1
+                 */
+                $endDate = clone $lineVersion->getStartDate();
+                $interval = $oldLineVersion->getStartDate()->diff($endDate);
+                if ($interval->days >= 1) {
+                    $oldLineVersion->closeDate($endDate);
+                } else {
+                    throw new \Exception($this->translator->trans('tisseo.paon.exception.line_version.min_duration'));
+                }
             } else {
-                if ($oldLineVersion->getEndDate() > $lineVersion->getStartDate()) {
-                    return;
+                if ($lineVersion->getStartDate() <= $oldLineVersion->getEndDate()) {
+                    throw new \Exception(
+                        $this->translator->trans(
+                            'tisseo.paon.exception.line_version.min_interval',
+                            ['%previous_close_date%' => $oldLineVersion->getEndDate()->format('d/m/Y')]
+                        )
+                    );
+                } else {
+                    $endDate = clone $lineVersion->getStartDate();
+                    $interval = $oldLineVersion->getStartDate()->diff($endDate);
+                    if ($interval->days >= 1) {
+                        $oldLineVersion->closeDate($endDate);
+                    } else {
+                        throw new \Exception($this->translator->trans('tisseo.paon.exception.line_version.min_duration'));
+                    }
                 }
             }
             $this->om->persist($oldLineVersion);
