@@ -4,7 +4,7 @@ namespace Tisseo\EndivBundle\Services;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Translation\LoggingTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tisseo\EndivBundle\Entity\GridCalendar;
 use Tisseo\EndivBundle\Entity\LineVersion;
 
@@ -16,7 +16,7 @@ class LineVersionManager extends SortManager
     private $calendarManager = null;
     private $translator = null;
 
-    public function __construct(ObjectManager $om, CalendarManager $calendarManager, LoggingTranslator $translator)
+    public function __construct(ObjectManager $om, CalendarManager $calendarManager, TranslatorInterface $translator)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('TisseoEndivBundle:LineVersion');
