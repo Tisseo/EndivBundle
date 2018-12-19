@@ -72,7 +72,7 @@ class Line extends ObjectDatasource
     private $lineStatuses;
 
     /**
-     * @var \DateTime $publicationDate
+     * @var \DateTime
      */
     private $publicationDate;
 
@@ -689,11 +689,13 @@ class Line extends ObjectDatasource
      * Set publication date
      *
      * @param \DateTime $date
+     *
      * @return $this
      */
     public function setPublicationDate($date)
     {
         $this->publicationDate = $date;
+
         return $this;
     }
 

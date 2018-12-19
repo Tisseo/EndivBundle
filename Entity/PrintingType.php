@@ -2,7 +2,6 @@
 
 namespace Tisseo\EndivBundle\Entity;
 
-
 /**
  * PrintingType
  */
@@ -12,7 +11,6 @@ class PrintingType
      * @var int
      */
     private $id;
-
 
     /**
      * @var string
@@ -26,7 +24,7 @@ class PrintingType
      */
     public function getId()
     {
-      return $this->id;
+        return $this->id;
     }
 
     /**
@@ -52,6 +50,4 @@ class PrintingType
     {
         return $this->label;
     }
-
-
 }

@@ -220,7 +220,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Get a property by name
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return string
      */

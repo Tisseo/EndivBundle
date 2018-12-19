@@ -456,7 +456,6 @@ class LineVersionManager extends SortManager
 
         if ($oldLineVersion) {
             if ($oldLineVersion->getEndDate() === null) {
-
                 /*
                  *  Previous line version haven't close date, so we close it 1 day before the the new
                  *  lineversion startDate.
