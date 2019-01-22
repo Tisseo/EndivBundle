@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Tisseo\EndivBundle\Entity\Stop;
 use Tisseo\EndivBundle\Entity\StopHistory;
 use Tisseo\EndivBundle\Entity\StopAccessibility;
-use Tisseo\EndivBundle\Entity\Waypoint;
 
 class StopManager extends SortManager
 {

@@ -5,7 +5,6 @@ namespace Tisseo\EndivBundle\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\Serializer\Serializer;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query;
 use Tisseo\EndivBundle\Entity\Route;
 use Tisseo\EndivBundle\Entity\RouteStop;
 
@@ -77,7 +76,7 @@ class RouteStopManager extends SortManager
             $result = $queryBuilder
                 ->getQuery()
                 ->getSingleScalarResult();
-        } catch(\Doctrine\ORM\NoResultException $e) {
+        } catch (\Doctrine\ORM\NoResultException $e) {
             $result = null;
         }
 
@@ -116,7 +115,7 @@ class RouteStopManager extends SortManager
             $result = $queryBuilder
                 ->getQuery()
                 ->getSingleScalarResult();
-        } catch(\Doctrine\ORM\NoResultException $e) {
+        } catch (\Doctrine\ORM\NoResultException $e) {
             $result = null;
         }
 

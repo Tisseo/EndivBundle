@@ -143,27 +143,27 @@ class Printing
         return $this->lineVersion;
     }
 
-  /**
-   * Set PrintingType
-   *
-   * @param \Tisseo\EndivBundle\Entity\PrintingType $printingType
-   *
-   * @return Printing
-   */
-  public function setPrintingType(PrintingType $printingType = null)
-  {
-    $this->printingType = $printingType;
+    /**
+     * Set PrintingType
+     *
+     * @param \Tisseo\EndivBundle\Entity\PrintingType $printingType
+     *
+     * @return Printing
+     */
+    public function setPrintingType(PrintingType $printingType = null)
+    {
+        $this->printingType = $printingType;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get PrintingType
-   *
-   * @return \Tisseo\EndivBundle\Entity\PrintingType
-   */
-  public function getPrintingType()
-  {
-    return $this->printingType;
-  }
+    /**
+     * Get PrintingType
+     *
+     * @return \Tisseo\EndivBundle\Entity\PrintingType
+     */
+    public function getPrintingType()
+    {
+        return $this->printingType;
+    }
 }

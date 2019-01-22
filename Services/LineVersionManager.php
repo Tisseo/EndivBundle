@@ -39,6 +39,10 @@ class LineVersionManager extends SortManager
         return $this->sortLineVersionsByNumber($this->repository->findAll());
     }
 
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null) {
+        return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
     /**
      * Find the line versions who are active during $date (month)
      *
@@ -456,7 +460,6 @@ class LineVersionManager extends SortManager
 
         if ($oldLineVersion) {
             if ($oldLineVersion->getEndDate() === null) {
-
                 /*
                  *  Previous line version haven't close date, so we close it 1 day before the the new
                  *  lineversion startDate.

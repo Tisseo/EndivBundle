@@ -31,6 +31,7 @@ class LineVersion extends ObjectDatasource
 
     /**
      * @var \DateTime
+     * @Groups({"monitoring"})
      */
     private $startDate;
 
@@ -220,7 +221,7 @@ class LineVersion extends ObjectDatasource
     /**
      * Get a property by name
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return string
      */
