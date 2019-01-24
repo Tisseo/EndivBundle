@@ -37,6 +37,8 @@ class Printing
      */
     private $printingType;
 
+    private $format;
+
     /**
      * Get id
      *
@@ -165,5 +167,27 @@ class Printing
     public function getPrintingType()
     {
         return $this->printingType;
+    }
+
+    /**
+     * Set Format
+     *
+     * @return Printing
+     */
+    public function setFormat($format = 1)
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    /**
+     * Get Format
+     *
+     * @return integer
+     */
+    public function getFormat()
+    {
+        return $this->format;
     }
 }

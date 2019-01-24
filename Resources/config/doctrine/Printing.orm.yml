@@ -30,6 +30,9 @@ Tisseo\EndivBundle\Entity\Printing:
             length: null
             fixed: false
             comment: 'Raison du tirage : initial, reassort ou correction.'
+        format:
+            type: integer
+            nullable: false
     manyToOne:
         lineVersion:
             targetEntity: LineVersion
