@@ -419,11 +419,19 @@ class LineVersion extends ObjectDatasource
      *
      * Return the total amount of printings (i.e. printing.quantity)
      */
-    public function getTotalPrintings()
+    public function getTotalPrintings($format = null)
     {
         $printings = 0;
-        foreach ($this->printings as $printing) {
-            $printings += $printing->getQuantity();
+        if ($format) {
+            foreach ($this->printings as $printing) {
+                if ($format == $printing->getFormat()) {
+                    $printings += $printing->getQuantity();
+                }
+            }
+        } else {
+            foreach ($this->printings as $printing) {
+                $printings += $printing->getQuantity();
+            }
         }
 
         return $printings;

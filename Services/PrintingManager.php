@@ -40,6 +40,7 @@ class PrintingManager
                 lv.version AS line_version_version,
                 p.quantity AS printing_quantity,
                 p.date AS printing_date,
+                CASE WHEN p.format = 1 THEN 'ligne' ELSE 'arrêt' END AS format,
                 p.comment AS printing_comment,
                 pt.label as printing_type_label
             FROM Tisseo\EndivBundle\Entity\LineVersion lv
