@@ -27,33 +27,33 @@ class StopTimeManager extends SortManager
         return empty($StopId) ? null : $this->repository->find($StopId);
     }
 
-  /**
-   * Get StopTimes with rank routeStop 1  by tripId ordered by departure time
-   *
-   * @param int $tripId Trip Id
-   * @param string $order Default to 'ASC' (ASC|DESC)
-   * @param bool $first If true, limit to 1 result (default), set it to false for no limitation
-   *
-   * @return mixed
-   */
-    public function getStopTimesByTripId($tripId, $routeStopId, $order='ASC', $first=true)
+    /**
+     * Get StopTimes with rank routeStop 1  by tripId ordered by departure time
+     *
+     * @param int    $tripId Trip Id
+     * @param string $order  Default to 'ASC' (ASC|DESC)
+     * @param bool   $first  If true, limit to 1 result (default), set it to false for no limitation
+     *
+     * @return mixed
+     */
+    public function getStopTimesByTripId($tripId, $routeStopId, $order = 'ASC', $first = true)
     {
-      $qb = $this->om->createQueryBuilder('st')
-        ->select ('st, tr, rs')
+        $qb = $this->om->createQueryBuilder('st')
+        ->select('st, tr, rs')
         ->from('Tisseo\EndivBundle\Entity\StopTime', 'st')
         ->join('st.routeStop', 'rs', 'WITH', 'st.routeStop = :routeStopId')
         ->join('st.trip', 'tr')
         ->where('st.trip = :tripId')
         ->orderBy('st.departureTime', $order);
-      if ($first) {
-        $qb->setMaxResults(1);
-      }
-      $qb->setParameters([
+        if ($first) {
+            $qb->setMaxResults(1);
+        }
+        $qb->setParameters([
         'tripId' => $tripId,
         'routeStopId' => $routeStopId,
       ]);
 
-      return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     //TODO: This seems to be bad, change/delete
