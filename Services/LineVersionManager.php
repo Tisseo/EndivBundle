@@ -39,7 +39,8 @@ class LineVersionManager extends SortManager
         return $this->sortLineVersionsByNumber($this->repository->findAll());
     }
 
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null) {
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
         return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
 

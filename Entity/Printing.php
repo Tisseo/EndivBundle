@@ -184,7 +184,7 @@ class Printing
     /**
      * Get Format
      *
-     * @return integer
+     * @return int
      */
     public function getFormat()
     {
